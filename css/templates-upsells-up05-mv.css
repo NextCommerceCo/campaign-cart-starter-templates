@@ -1,0 +1,599 @@
+/* CSS extracted from templates\upsells\up05-mv.html */
+
+/* Inline style 1 from up05-mv.html */
+html:not(.next-display-ready) [data-next-await] {
+  position: relative;
+  overflow: hidden;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-next-await] * {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+[data-next-await]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e0e0e0;
+  animation: pulse-gray 1.5s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes pulse-gray {
+
+  0%,
+  100% {
+    background-color: #e0e0e0;
+    opacity: 0.6;
+  }
+
+  50% {
+    background-color: #f5f5f5;
+    opacity: 0.8;
+  }
+}
+
+html.next-display-ready [data-next-await] * {
+  opacity: 1;
+}
+
+html.next-display-ready [data-next-await]::before {
+  display: none;
+}
+
+/* Inline style 2 from up05-mv.html */
+/* ========================================
+   DROPDOWN COMPONENTS
+======================================== */
+/* ========================================
+   BASE DROPDOWN ELEMENTS
+======================================== */
+/* Dropdown Container */
+os-dropdown {
+  display: block;
+  position: relative;
+}
+
+os-dropdown[open],
+.os-card__variant-dropdown-wrapper:has(.show) {
+  z-index: 999;
+  position: relative;
+}
+
+os-dropdown[animate-selection] .os-card__variant-dropdown-toggle {
+  overflow: hidden;
+}
+
+/* Dropdown Items */
+os-dropdown-item {
+  display: block;
+  cursor: pointer;
+}
+
+os-dropdown-item[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+os-dropdown-item.selected,
+os-dropdown-item:hover {
+  /* Add hover/selected styles here */
+}
+
+/* ========================================
+   VARIANT DROPDOWN COMPONENTS
+======================================== */
+/* Dropdown Container */
+.os-card__variant-dropdown-component {
+  position: relative;
+  width: 100%;
+}
+
+/* Dropdown Toggle */
+.os-card__variant-dropdown-toggle {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.os-card__variant-dropdown-toggle:hover {
+  border-color: #999;
+}
+
+.os-card__variant-dropdown-toggle.active,
+.dropdown-toggle.active {
+  border-color: #333;
+  box-shadow: 0 0 0 3px rgba(51, 51, 51, 0.1);
+}
+
+/* Dropdown Icon */
+.os-card__variant-dropdown-icon {
+  width: 20px;
+  height: 20px;
+  color: #6b7280;
+  transition: transform 0.15s ease;
+}
+
+.os-card__variant-dropdown-toggle.active .os-card__variant-dropdown-icon,
+.dropdown-toggle.active .dropdown-icon {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.os-card__variant-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: var(--radius--selector);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-12px) scale(0.95);
+  transform-origin: top center;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 100;
+  overflow: hidden;
+}
+
+/* Dropdown List */
+.os-card__variant-dropdown-list {
+  list-style: none;
+  padding: 8px;
+}
+
+/* Dropdown Items */
+.os-card__variant-dropdown-item {
+  border-radius: var(--radius--selector);
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.os-card__variant-dropdown-item:hover {
+  background-color: #f9f9f9;
+}
+
+.os-card__variant-dropdown-item .os-card__toggle-option {
+  padding: 0.5rem 0.75rem;
+  min-height: 2.5rem;
+}
+
+.os-card__variant-dropdown-item.selected .os-card__variant-toggle-name {
+  font-weight: 600;
+}
+
+/* ========================================
+   GENERIC DROPDOWN MENU STYLES
+======================================== */
+os-dropdown-menu,
+.os-dropdown-menu,
+[os-element="dropdown-menu"] {
+  position: absolute;
+  top: initial;
+  left: initial;
+  right: initial;
+  margin-top: 0;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.2s ease;
+}
+
+/* Show States */
+os-dropdown-menu.show,
+.os-dropdown-menu.show,
+[os-element="dropdown-menu"].show,
+.os-card__variant-dropdown-menu.show,
+.os-card__variant-dropdown-menu-v2.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* ========================================
+   DROPDOWN ARROWS & POSITIONING
+======================================== */
+.dropdown-arrow {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+  border: inherit;
+  border-right: 0;
+  border-bottom: 0;
+  transform: rotate(45deg);
+  z-index: -1;
+}
+
+os-dropdown-menu.placement-bottom .dropdown-arrow {
+  border-left: 0;
+  border-top: 0;
+  border-right: inherit;
+  border-bottom: inherit;
+}
+
+os-dropdown-menu.placement-top .dropdown-arrow {
+  border-right: 0;
+  border-bottom: 0;
+  border-left: inherit;
+  border-top: inherit;
+}
+
+os-dropdown-menu.placement-left .dropdown-arrow {
+  border-bottom: 0;
+  border-left: 0;
+  border-top: inherit;
+  border-right: inherit;
+}
+
+os-dropdown-menu.placement-right .dropdown-arrow {
+  border-top: 0;
+  border-right: 0;
+  border-bottom: inherit;
+  border-left: inherit;
+}
+
+/* ========================================
+   DROPDOWN CONTENT & ANIMATIONS
+======================================== */
+.os-dropdown__content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+.os-dropdown__option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  transform: translateY(0);
+  opacity: 1;
+  transition: transform var(--animation-duration, 0.3s) cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity calc(var(--animation-duration, 0.3s) * 0.67) ease;
+  will-change: transform, opacity;
+}
+
+/* Animation States */
+.os-dropdown__option[data-animating="out"] {
+  position: absolute;
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.os-dropdown__option[data-animating="in"] {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.os-dropdown__option[data-placement="top"][data-animating="out"] {
+  transform: translateY(100%);
+}
+
+.os-dropdown__option[data-placement="top"][data-animating="in"] {
+  transform: translateY(-100%);
+}
+
+/* Animation Types */
+.os-dropdown__option[data-animation-type="fade"][data-animating="out"],
+.os-dropdown__option[data-animation-type="fade"][data-animating="in"] {
+  transform: translateY(0);
+  opacity: 0;
+}
+
+.os-dropdown__option[data-animation-type="scale"][data-animating="out"] {
+  transform: scale(0.8);
+  opacity: 0;
+}
+
+.os-dropdown__option[data-animation-type="scale"][data-animating="in"] {
+  transform: scale(1.2);
+  opacity: 0;
+}
+
+.os-dropdown__option[data-animation-type="slide-fade"][data-animating="out"] {
+  transform: translateY(-20px);
+  opacity: 0;
+}
+
+.os-dropdown__option[data-animation-type="slide-fade"][data-animating="in"] {
+  transform: translateY(20px);
+  opacity: 0;
+}
+
+.os-dropdown__option[data-placement="top"][data-animation-type="slide-fade"][data-animating="out"] {
+  transform: translateY(20px);
+}
+
+.os-dropdown__option[data-placement="top"][data-animation-type="slide-fade"][data-animating="in"] {
+  transform: translateY(-20px);
+}
+
+/* ========================================
+   PROGRESS COMPONENTS
+======================================== */
+.progress_circle .checkmark-svg,
+.progress_circle .icon-check {
+  opacity: 0;
+  position: absolute;
+  transition: opacity 0.3s ease;
+}
+
+.progress_circle .checkmark-svg {
+  width: 20px;
+  height: 20px;
+}
+
+.progress_circle .icon-check {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.progress_circle .icon-check .checkmark-svg {
+  width: 16px;
+  height: 16px;
+}
+
+.progress_circle > div,
+.progress_circle > div:first-child {
+  transition: opacity 0.3s ease;
+}
+
+/* Progress States */
+.progress-item.active .progress_circle {
+  background-color: #000 !important;
+  border-color: #000 !important;
+  color: white !important;
+}
+
+.progress-item.active .progress-tex {
+  color: #000 !important;
+  font-weight: 600 !important;
+}
+
+.progress-item.completed .progress_circle {
+  background-color: #000 !important;
+  border-color: #000 !important;
+  color: white !important;
+}
+
+.progress-item.completed .progress_circle > div,
+.progress-item.completed .progress_circle > div:first-child {
+  opacity: 0;
+}
+
+.progress-item.completed .progress_circle .checkmark-svg,
+.progress-item.completed .progress_circle .icon-check {
+  opacity: 1;
+}
+
+.progress-item.completed .progress-tex {
+  color: #000 !important;
+  font-weight: 600 !important;
+}
+
+.progress-item.completed + .progress-divider {
+  background-color: #000 !important;
+}
+
+/* ========================================
+   UTILITY STYLES
+======================================== */
+/* Diagonal Strike */
+.diagonal-strike,
+.os--compare-diagonal {
+  position: relative;
+  display: inline-block;
+}
+
+.diagonal-strike::after,
+.os--compare-diagonal::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  right: 0;
+  border-top: 1px solid #F20404 !important;
+  transform: rotate(-10deg);
+  transform-origin: center;
+}
+
+/* ========================================
+   VARIANT OPTION STATES
+======================================== */
+/* Size Variant - Out of Stock */
+os-dropdown[next-variant-option="size"] os-dropdown-item.next-oos {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Color Variant - Out of Stock */
+os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos {
+  position: relative;
+  overflow: hidden;
+}
+
+os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos .os-card__toggle-option {
+  opacity: 0.4;
+}
+
+os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cline x1='0' y1='0' x2='100' y2='100' stroke='%23666666' stroke-width='1'/%3E%3Cline x1='100' y1='0' x2='0' y2='100' stroke='%23666666' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+}
+
+/* ========================================
+   RESPONSIVE STYLES
+======================================== */
+@media (max-width: 640px) {
+
+  os-dropdown-menu,
+  [os-element="dropdown-menu"] {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    width: auto;
+  }
+}
+
+/* ========================================
+   ACCESSIBILITY
+======================================== */
+@media (prefers-reduced-motion: reduce) {
+  .os-dropdown__option {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Inline style 3 from up05-mv.html */
+/* Striped Flow */
+[pb-component="progress-bar1"]::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(135deg,
+      rgba(255, 255, 255, .15) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(255, 255, 255, .15) 50%,
+      rgba(255, 255, 255, .15) 75%,
+      transparent 75%,
+      transparent);
+  background-size: 30px 30px;
+  animation: moveStripes 1.25s linear infinite;
+}
+
+@keyframes moveStripes {
+  to {
+    background-position: 60px 0;
+  }
+}
+
+/* Inline style 4 from up05-mv.html */
+/* Button base state */
+[data-action="submit"] {
+  position: relative;
+  /* Prevent layout shifts */
+  min-width: 100px;
+  /* Adjust based on your needs */
+  min-height: 40px;
+  /* Adjust based on your needs */
+}
+
+/* Spinner container */
+[data-button="spinner"] {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+  font-size: calc(2 * 1em);
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  color: inherit;
+  transition: opacity 0.2s ease;
+}
+
+/* Button content and icon */
+[data-button="content"],
+[data-button="icon"] {
+  transition: opacity 0.2s ease;
+}
+
+/* Loading state */
+[data-action="submit"].is-submitting {
+  cursor: not-allowed;
+}
+
+[data-action="submit"].is-submitting [data-button="spinner"] {
+  opacity: 1;
+}
+
+[data-action="submit"].is-submitting [data-button="content"],
+[data-action="submit"].is-submitting [data-button="icon"] {
+  opacity: 0;
+}
+
+/* Spinner elements */
+[data-button="spinner"] .line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 6px;
+  stroke-linecap: round;
+  transform-origin: 50% 50%;
+  animation: spinner-arc 2156ms ease-in-out infinite,
+    spinner-rotate 1829ms linear infinite;
+}
+
+[data-button="spinner"] .ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 6px;
+  opacity: 0.15;
+}
+
+/* Animations */
+@keyframes spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinner-arc {
+  0% {
+    stroke-dasharray: 0 150;
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dasharray: 100 150;
+    stroke-dashoffset: -140;
+  }
+}
+
+[swiper="sw12"] .swiper-slide_image-wrap {
+  aspect-ratio: 1 / 1;
+}
+
+[swiper="sw12"] [swiper="slider-thumbs"] .swiper-slide {
+  filter: grayscale(100%);
+  transition: filter 0.4s ease;
+  cursor: pointer;
+}
+
+[swiper="sw12"] [swiper="slider-thumbs"] .swiper-slide:focus-visible {
+  border: 2px solid #000;
+}
+
+[swiper="sw12"] [swiper="slider-thumbs"] .swiper-slide.swiper-slide-thumb-active {
+  filter: grayscale(0);
+}

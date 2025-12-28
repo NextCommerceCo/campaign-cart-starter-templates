@@ -1,0 +1,112 @@
+/* CSS extracted from templates\presells\ps03.html */
+
+/* Inline style 1 from ps03.html */
+html:not(.next-display-ready) [data-next-await] {
+  position: relative;
+  overflow: hidden;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-next-await] * {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+[data-next-await]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e0e0e0;
+  animation: pulse-gray 1.5s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes pulse-gray {
+
+  0%,
+  100% {
+    background-color: #e0e0e0;
+    opacity: 0.6;
+  }
+
+  50% {
+    background-color: #f5f5f5;
+    opacity: 0.8;
+  }
+}
+
+html.next-display-ready [data-next-await] * {
+  opacity: 1;
+}
+
+html.next-display-ready [data-next-await]::before {
+  display: none;
+}
+
+/* Inline style 2 from ps03.html */
+[data-action="submit"].is-submitting [data-button="spinner"] {
+  opacity: 1;
+  pointer-events: none;
+}
+
+[data-action="submit"].is-submitting [data-button="content"],
+[data-action="submit"].is-submitting [data-button="icon"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+[data-button="spinner"] {
+  opacity: 0;
+  pointer-events: none;
+  font-size: calc(2 * 1em);
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  color: inherit;
+  /* Inherit color from parent */
+}
+
+[data-button="spinner"] .line {
+  fill: none;
+  stroke: currentColor;
+  /* Use currentColor */
+  stroke-width: 6px;
+  opacity: 1;
+  stroke-linecap: round;
+  transform-origin: 50% 50%;
+  transform: rotate3d(0, 0, 1, 0deg);
+  animation:
+    2156ms spinner-arc ease-in-out infinite,
+    1829ms spinner-rotate linear infinite;
+}
+
+[data-button="spinner"] .ring {
+  fill: none;
+  stroke: currentColor;
+  /* Use currentColor */
+  stroke-width: 6px;
+  opacity: 0.15;
+}
+
+@keyframes spinner-rotate {
+  to {
+    transform: rotate3d(0, 0, 1, 360deg);
+  }
+}
+
+@keyframes spinner-arc {
+  from {
+    stroke-dasharray: 0 150;
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dasharray: 100 150;
+    stroke-dashoffset: -140;
+  }
+}

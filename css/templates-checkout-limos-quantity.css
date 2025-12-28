@@ -1,0 +1,93 @@
+/* CSS extracted from templates\checkout\limos-quantity.html */
+
+/* Inline style 1 from limos-quantity.html */
+html:not(.next-display-ready) [data-next-await] {
+  position: relative;
+  overflow: hidden;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-next-await] * {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+[data-next-await]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e0e0e0;
+  animation: pulse-gray 1.5s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes pulse-gray {
+
+  0%,
+  100% {
+    background-color: #e0e0e0;
+    opacity: 0.6;
+  }
+
+  50% {
+    background-color: #f5f5f5;
+    opacity: 0.8;
+  }
+}
+
+html.next-display-ready [data-next-await] * {
+  opacity: 1;
+}
+
+html.next-display-ready [data-next-await]::before {
+  display: none;
+}
+
+/* Inline style 2 from limos-quantity.html */
+/* Hide checkmark by default */
+[data-next-bump] [os-component="check"] {
+  display: none;
+}
+
+/* Show checkmark if parent has 'os--selected' in its class attribute */
+[data-next-bump][class*="next-active"] [os-component="check"] {
+  display: flex;
+}
+
+/* Inline style 3 from limos-quantity.html */
+.three-quarter-spinner {
+  animation: spin .9s linear 0s infinite;
+}
+
+/* Inline style 4 from limos-quantity.html */
+/* Remove the divider on the very last payment-method block */
+.payment-methods > .payment-method:last-child {
+  border-bottom: 0 !important;
+  /* kill the bottom border */
+}
+
+.iti__flag-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3rem !important;
+  right: 0 !important;
+  left: auto !important;
+  padding: 1px;
+}
+
+.iti--allow-dropdown input,
+.iti--allow-dropdown input[type=text],
+.iti--allow-dropdown input[type=tel],
+.iti--separate-dial-code input,
+.iti--separate-dial-code input[type=text],
+.iti--separate-dial-code input[type=tel] {
+  padding-right: 52px !important;
+  padding-left: 12px !important;
+  margin-left: 0 !important;
+}
