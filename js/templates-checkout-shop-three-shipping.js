@@ -1,97 +1,177 @@
-// JavaScript extracted from templates\checkout\shop-three\shipping.html
+/**
+ * Dynamic shipping options from campaign API
+ *
+ * Renders the shipping method list from campaign data instead of hardcoding
+ * options in the template. Place an empty container in your checkout and run
+ * this after Next is ready.
+ *
+ * Template:
+ *   <div pb-checkout-section="shipping" class="form-section">
+ *     <h1 class="form-section__title">Shipping Method</h1>
+ *     <div id="next-shipping-options-container" class="shipping-selector" role="radiogroup" aria-label="Shipping method">
+ *       <!-- Options injected here by script -->
+ *     </div>
+ *   </div>
+ * For multi-step checkout, use class="next-shipping-options-container" so every step gets the list.
+ *
+ * Usage: Include this script after the Campaign Cart SDK. It runs on next:initialized
+ *        (after campaign data is loaded). If the script loads late, call
+ *        window.nextShippingOptions.render(window.next) manually.
+ *
+ * Detecting when the shipping method changes:
+ *   window.next.on('shipping:method-changed', function (data) {
+ *     console.log('Shipping method changed:', data.methodId, data.method);
+ *     // data.methodId = ref_id (e.g. 1 or 2), data.method = { ref_id, code, price }
+ *   });
+ * Or read the current selection: window.next.getSelectedShippingMethod()
+ */
 
-// Inline script 3 from shipping.html
-window.CHECKOUT_CONFIG = {
-  currentStep: 2,
-  redirectUrl: '/templates/checkout/shop-three/information',
-  stepUrls: {
-    1: '/templates/checkout/shop-three/information',
-    2: '/templates/checkout/shop-three/shipping',
-    3: '/templates/checkout/shop-three/billing'
-  }
-};
+(function () {
+  var CONTAINER_ID = 'next-shipping-options-container';
+  var CONTAINER_CLASS = 'next-shipping-options-container';
 
-// Inline script 4 from shipping.html
-(function() {
-  'use strict';
-  // Get configuration from window
-  var config = window.CHECKOUT_CONFIG || {};
-  var currentStep = config.currentStep;
-  var redirectUrl = config.redirectUrl || '/checkout';
-  var stepUrls = config.stepUrls || {};
-  // If no step configured, don't guard this page
-  if (!currentStep || currentStep === 1) {
-    console.log('[CheckoutGuard] No guard needed for step 1 or unconfigured page');
-    return;
+  function formatPriceFallback(amount) {
+    if (amount === 0) return 'FREE';
+    return '$' + Number(amount).toFixed(2);
   }
-  try {
-    // Try to get checkout store from sessionStorage
-    var storeData = sessionStorage.getItem('next-checkout-store');
-    // If no store exists, redirect to first step
-    if (!storeData) {
-      console.warn('[CheckoutGuard] No checkout store found, redirecting to:', redirectUrl);
-      window.location.replace(redirectUrl);
+
+  function getContainers() {
+    // Fill every element with this id (handles duplicate ids e.g. multi-step forms)
+    var byId = document.querySelectorAll('[id="' + CONTAINER_ID + '"]');
+    if (byId.length) return Array.prototype.slice.call(byId);
+    return Array.prototype.slice.call(document.querySelectorAll('.' + CONTAINER_CLASS));
+  }
+
+  /**
+   * Build one shipping option element (name and price from API; structure works with display enhancer).
+   * @param {Object} method - { ref_id, code, price }
+   * @param {string} formattedPrice - Already formatted (e.g. from sdk.formatPrice)
+   * @param {boolean} isFirst - If true, this option gets the "checked" attribute
+   * @param {string} idSuffix - Optional suffix so ids are unique when multiple containers exist (e.g. "_0")
+   * @returns {HTMLElement}
+   */
+  function buildShippingOption(method, formattedPrice, isFirst, idSuffix) {
+    var refId = method.ref_id;
+    var id = 'shipping_method_' + refId + (idSuffix || '');
+
+    var wrap = document.createElement('div');
+    wrap.className = 'shipping-method cc-last__item';
+    wrap.setAttribute('data-next-shipping-id', String(refId));
+
+    var label = document.createElement('label');
+    label.setAttribute('for', id);
+    label.className = 'radio-select-shipping';
+
+    var input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'shipping_method';
+    input.id = id;
+    input.value = String(refId);
+    input.className = 'shipping-method__input';
+    if (isFirst) input.checked = true;
+
+    var left = document.createElement('div');
+    left.className = 'shipping-method-rleft';
+    var nameDiv = document.createElement('div');
+    nameDiv.setAttribute('data-next-display', 'shipping.name');
+    nameDiv.textContent = method.code || 'Shipping';
+    left.appendChild(nameDiv);
+
+    var priceWrap = document.createElement('div');
+    priceWrap.className = 'shipping_price';
+    var priceDiv = document.createElement('div');
+    priceDiv.setAttribute('data-next-display', 'shipping.cost');
+    priceDiv.textContent = formattedPrice;
+    priceWrap.appendChild(priceDiv);
+
+    label.appendChild(input);
+    label.appendChild(left);
+    label.appendChild(priceWrap);
+    wrap.appendChild(label);
+    return wrap;
+  }
+
+  /**
+   * Render shipping options into the container(s) from the Next SDK.
+   * Call after the SDK is ready (e.g. on next:initialized, or use window.next).
+   *
+   * @param {Object} sdk - Next SDK instance (e.g. window.next after next:initialized)
+   */
+  function renderShippingOptions(sdk) {
+    var containers = getContainers();
+    if (!containers.length) {
+      console.warn('[Next] Dynamic shipping: no container #' + CONTAINER_ID + ' or .' + CONTAINER_CLASS + ' found');
       return;
     }
-    var store = JSON.parse(storeData);
-    var completedStep = store.state && store.state.step ? store.state.step : 0;
-    var formData = store.state && store.state.formData ? store.state.formData : {};
-    console.log('[CheckoutGuard] Current page step:', currentStep, '| User completed step:', completedStep);
-    console.log('[CheckoutGuard] Form data:', formData);
-    // Validate that previous steps have required data
-    var hasRequiredData = true;
-    var missingFields = [];
-    var redirectToStep = 1; // Default to step 1
-    // If trying to access step 2 or higher, validate step 1 data
-    if (currentStep >= 2) {
-      var step1Required = ['email', 'fname', 'lname', 'address1', 'city', 'country', 'postal'];
-      step1Required.forEach(function(field) {
-        if (!formData[field] || (typeof formData[field] === 'string' && formData[field].trim() === '')) {
-          hasRequiredData = false;
-          missingFields.push(field);
-          redirectToStep = 1; // Missing step 1 data
-        }
+
+    // Snapshot so we are not affected if the store is updated during render
+    var raw = sdk.getShippingMethods();
+    var methods = raw && raw.length ? raw.slice(0) : [];
+    if (methods.length === 0) {
+      containers.forEach(function (container) {
+        container.innerHTML = '<p class="shipping-empty">No shipping methods available.</p>';
       });
-    }
-    // If trying to access step 3 or higher, validate step 2 data (shipping method)
-    // Only check this if step 1 data is complete
-    if (currentStep >= 3 && hasRequiredData) {
-      var shippingMethod = store.state && store.state.shippingMethod;
-      if (!shippingMethod) {
-        hasRequiredData = false;
-        missingFields.push('shippingMethod');
-        redirectToStep = 2; // Missing step 2 data, redirect to step 2
-      }
-    }
-    // If required data is missing, redirect to the appropriate step
-    if (!hasRequiredData) {
-      var targetUrl = stepUrls[redirectToStep] || redirectUrl;
-      console.warn('[CheckoutGuard] Required data missing for previous steps:', missingFields);
-      console.warn('[CheckoutGuard] Redirecting to step', redirectToStep, ':', targetUrl);
-      window.location.replace(targetUrl);
       return;
     }
-    // User hasn't completed previous step by step number
-    if (completedStep < currentStep) {
-      // Try to redirect to the last completed step + 1
-      var targetStep = completedStep;
-      var targetUrl = stepUrls[targetStep] || redirectUrl;
-      console.warn('[CheckoutGuard] User at step', completedStep, 'but trying to access step', currentStep);
-      console.warn('[CheckoutGuard] Redirecting to:', targetUrl);
-      window.location.replace(targetUrl);
-      return;
-    }
-    // If user has completed this step or beyond, allow them to stay
-    console.log('[CheckoutGuard] Access granted - user has completed step', completedStep, 'with valid data');
-  } catch (error) {
-    // If any error occurs reading the store, redirect to safety
-    console.error('[CheckoutGuard] Error checking store:', error);
-    console.warn('[CheckoutGuard] Redirecting to:', redirectUrl);
-    window.location.replace(redirectUrl);
-  }
-})();
 
-// Inline script 5 from shipping.html
-window.addEventListener('next:initialized', async function() {
-  next.setShippingMethod(1);
-});
+    containers.forEach(function (container, containerIndex) {
+      var idSuffix = containers.length > 1 ? '_' + containerIndex : '';
+      container.innerHTML = '';
+      methods.forEach(function (method, index) {
+        var amount = parseFloat(method.price || '0', 10);
+        var formatted = amount === 0 ? 'FREE' : formatPriceFallback(amount);
+        var el = buildShippingOption(method, formatted, index === 0, idSuffix);
+        container.appendChild(el);
+      });
+      container.dispatchEvent(new CustomEvent('next:shipping-options-rendered', {
+        bubbles: true,
+        detail: { count: methods.length }
+      }));
+    });
+
+    // Sync selection to SDK (dynamic radios may not have the checkout enhancer's listener)
+    bindShippingChangeToSdk(sdk);
+  }
+
+  function bindShippingChangeToSdk(sdk) {
+    if (!sdk || typeof sdk.setShippingMethod !== 'function') return;
+    var containers = getContainers();
+    containers.forEach(function (container) {
+      container.removeEventListener('change', container._nextShippingChange);
+      container._nextShippingChange = function (e) {
+        var input = e.target;
+        if (input.name === 'shipping_method' && input.type === 'radio') {
+          var methodId = parseInt(input.value, 10);
+          if (!isNaN(methodId)) sdk.setShippingMethod(methodId);
+        }
+      };
+      container.addEventListener('change', container._nextShippingChange);
+    });
+  }
+
+  // Run after campaign data is loaded (next:ready fires when module loads, before campaign;
+  // next:initialized fires after loadCampaignData and DOM enhance)
+  function getSdk() {
+    return window.next || (window.NextCommerce && window.NextCommerce.NextCommerce && window.NextCommerce.NextCommerce.getInstance && window.NextCommerce.NextCommerce.getInstance());
+  }
+
+  function tryRender() {
+    var sdk = getSdk();
+    if (sdk && typeof sdk.getShippingMethods === 'function') {
+      renderShippingOptions(sdk);
+    }
+  }
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('next:initialized', tryRender);
+    // If script loads after SDK has already initialized, next:initialized won't fire again
+    if (document.readyState === 'complete') {
+      setTimeout(tryRender, 0);
+    }
+  }
+
+  // Expose for manual use (e.g. after your own Next.init())
+  window.nextShippingOptions = {
+    render: renderShippingOptions
+  };
+})();

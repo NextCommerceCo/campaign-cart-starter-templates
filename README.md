@@ -22,219 +22,6 @@
    :::
 
 
-## Configuration
-
-:::tip
-Replace `your-api-key-here` with your actual Campaign API key from the dashboard.
-:::
-
-### JavaScript Configuration
-
-For more advanced configuration:
-
-#### Minimal Setup (Getting Started)
-
-```javascript
-// Configure before SDK loads
-window.dataLayer = window.dataLayer || [];
-window.nextReady = window.nextReady || [];
-
-window.nextConfig = {
-  apiKey: "your-api-key-here"
-};
-```
-
-#### Complete Example with Common Options
-
-```javascript
-// Configure before SDK loads
-window.dataLayer = window.dataLayer || [];
-window.nextReady = window.nextReady || [];
-
-window.nextConfig = {
-  // Required: Your Campaign Cart API key
-  apiKey: "your-api-key-here",
-  
-  // Currency behavior when country changes
-  currencyBehavior: 'auto', // 'auto' | 'manual'
-  
-  // Payment and checkout configuration
-  paymentConfig: {
-    expressCheckout: {
-      enabled: true, // Enable/disable express checkout methods
-      requireValidation: false, // Require form validation before express checkout if radio option - not express buttons
-      requiredFields: ['email', 'fname', 'lname'], // Fields required for express checkout radio option
-      methodOrder: ['paypal', 'apple_pay', 'google_pay'] // Display order of express payment method buttons
-    }
-  },
-
-  // Address and country configuration
-  addressConfig: {
-    defaultCountry: "US",
-    showCountries: ["US", "CA", "GB", "AU", "DE", "FR"],
-    dontShowStates: ["AS", "GU", "PR", "VI"]
-  },
-  
-  // Discount codes configuration
-  discounts: {
-    // Example discount code
-    // SAVE10: {
-    //     code: "SAVE10",
-    //     type: "percentage", // 'percentage' | 'fixed'
-    //     value: 10,
-    //     scope: "order", // 'package' | 'order'
-    //     description: "10% off entire order",
-    //     combinable: true, // Can be combined with other discounts
-    //     // Optional: packageIds: [1, 2], // For package-specific discounts
-    //     // Optional: minOrderValue: 50, // Minimum order value
-    //     // Optional: maxDiscount: 20 // Maximum discount amount
-    // }
-  },
-
-  profiles: {
-    // "regular": {
-    //     name: "Regular Pricing",
-    //     // No mappings needed - uses original package IDs
-    // },
-    
-    // Example: Exit intent save profile
-    // "SAVE_5": {
-    //     name: "Exit Save 5",
-    //     packageMappings: {
-    //         // Original ID -> EXIT PACKAGE ID
-    //         1: 9,
-    //         2: 10,
-    //         3: 11,
-    //         4: 12,
-    //         5: 13,
-    //     }
-    // },
-  },
-
-  // Default profile to use (if not specified, uses "regular")
-  defaultProfile: "regular",
-  
-  // Google Maps integration (for address autocomplete)
-  googleMaps: {
-    apiKey: "your-google-maps-api-key",
-    region: "US",
-    enableAutocomplete: true
-  },
-  
-  // Analytics providers configuration
-  analytics: {
-    enabled: true,
-    mode: 'auto', // 'auto' | 'manual' | 'disabled'
-    providers: {
-      // Next Campaign analytics (always enabled if analytics.enabled is true)
-      nextCampaign: {
-          enabled: true
-      },
-      // Google Tag Manager
-      gtm: {
-        enabled: false,
-        settings: {
-          containerId: "GTM-XXXXXX",
-          dataLayerName: "dataLayer"
-        },
-        // Optional: blockedEvents: ["PageView"]
-      },
-      // Facebook Pixel
-      facebook: {
-        enabled: false,
-        settings: {
-          pixelId: "YOUR_PIXEL_ID"
-        },
-        // Optional: blockedEvents: ["PageView"]
-      },
-      // RudderStack
-      rudderstack: {
-        enabled: false,
-        settings: {
-            // RudderStack configuration is handled by the RudderStack SDK itself
-            // This just enables the adapter
-        },
-        // Optional: blockedEvents: ["PageView"]
-      },
-      // Custom analytics endpoint
-      custom: {
-        enabled: false,
-        settings: {
-            endpoint: "https://your-analytics.com/track",
-            apiKey: "your-api-key"
-        }
-      }
-    }
-  },
-  
-  // UTM parameter transfer (preserve tracking params)
-  utmTransfer: {
-    enabled: true,
-    applyToExternalLinks: false, // Add UTM params to external links
-    debug: false, // Enable debug logging for UTM transfer
-    // Optional: excludedDomains: ['example.com', 'test.org'], // Domains to exclude
-    // Optional: paramsToCopy: ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid']
-  }
-};
-```
-
-### Meta Tag Configuration
-
-Configure the SDK using meta tags in your HTML head:
-
-```html
-  <!-- Campaign API Key: Optional if you wish to override the config -->
-  <meta name="next-api-key" content="your-api-key-here">
-
-  <!-- Funnel Name -->
-  <meta name="next-funnel" content="Example Funnel">
-  
-  <!-- Page Type: product, checkout, upsell, or receipt -->
-  <meta name="next-page-type" content="product">
-  
-  <!-- Next URL: Redirect after order completion (for checkout pages) -->
-  <meta name="next-success-url" content="/upsell">
-  
-  <!-- Prevent Back Navigation: Usually on first upsell page -->
-  <meta name="next-prevent-back-navigation" content="true">
-  
-  <!-- Upsell URLs: For upsell pages -->
-  <meta name="next-upsell-accept-url" content="/receipt">
-  <meta name="next-upsell-decline-url" content="/receipt">
-```
-
-## HTML Setup Example
-```html
-<!DOCTYPE html>
-<html>
-<head>
-  <!-- 1. First: Set configuration -->
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    window.nextReady = window.nextReady || [];  
-
-    window.nextConfig = {
-      apiKey: "your-api-key-here",
-    };
-  </script>
-
-  <!-- 2. Second: Metatag Configuration -->
-  
-  <!-- Page Type: product, checkout, upsell, or receipt -->
-  <meta name="next-page-type" content="product">
-  
-  <!-- Next URL: Redirect after order completion (for checkout pages) -->
-  <meta name="next-success-url" content="/upsell">
-  
-  <!-- 2. Then: Load the SDK -->
-  <!-- Replace @v0.3.10 with the latest version from GitHub releases -->
- <script src="https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v0.3.10/dist/loader.js" type="module"></script>
-</head>
-<body>
-  <!-- Your content here -->
-</body>
-</html>
-```
 
 ## Features
 
@@ -245,67 +32,187 @@ Configure the SDK using meta tags in your HTML head:
 - **Dynamic content** - Display prices, totals, and product data
 - **Conversion tools** - FOMO notifications and exit intent popups
 
-## Quick Examples
 
-### Add to Cart Button
-```html
-<button data-next-action="add-to-cart" 
-        data-next-package-id="1"
-        data-next-quantity="1">
-  Add to Cart
-</button>
-```
+## Asset paths (CSS, JS, images)
 
-### Product Selector
-```html
-<div data-next-cart-selector data-next-selection-mode="swap">
-  <div data-next-selector-card data-next-package-id="1">Option 1</div>
-  <div data-next-selector-card data-next-package-id="2">Option 2</div>
-</div>
-```
+Templates live at different folder depths (e.g. `templates/checkout/shop-two.html` vs `templates/checkout/shop-three/information.html`). Assets (`config.js`, `css/`, `js/`, `images/`) are at the **project root**.
 
-### Display Cart Total
-```html
-<span data-next-display="cart.total">$0.00</span>
-```
+- **Use relative paths** from each template to the project root:
+  - One level under `templates/` (e.g. `templates/checkout/demeter.html`) → `../../` (e.g. `../../config.js`, `../../css/...`, `../../images/...`).
+  - Two levels under `templates/` (e.g. `templates/checkout/shop-three/information.html`) → `../../../`.
+- This works for local preview and any deployment; avoid root-absolute paths (`/css/...`) unless the site is always served from the domain root. See `PATHS.md` for the full convention and alternatives.
 
-### Conditional Display
-```html
-<div data-next-show="cart.hasItems">
-  <button onclick="checkout()">Proceed to Checkout</button>
-</div>
-```
 
-## Documentation Sections
+## Utility classes — `css/next-core.css`
 
-### Core Features
+Utility classes extracted from `css/next-core.css`. Single-purpose, reusable classes for layout, typography, spacing, visibility, and theming.
 
-- **[Cart System](https://developers.nextcommerce.com/docs/campaign-cart/cart-system/)** - Cart management and controls
-- **[Upsells](https://developers.nextcommerce.com/docs/campaign-cart/upsells/)** - Post-purchase upsell flows
-- **[JavaScript API](https://developers.nextcommerce.com/docs/campaign-cart/javascript-api/)** - Complete JavaScript methods reference
-- **[Data Attributes](https://developers.nextcommerce.com/docs/campaign-cart/data-attributes/)** - Complete attribute reference
-- **[Utilities](https://developers.nextcommerce.com/docs/campaign-cart/utilities/)** - FOMO, exit intent, and debugging tools
+---
 
-### Reference
+### 1. Visibility & display
 
-- **[Events](https://developers.nextcommerce.com/docs/campaign-cart/javascript-api/events)** - SDK event system
-- **[Analytics Configuration](https://developers.nextcommerce.com/docs/campaign-cart/analytics/configuration/)** - Analytics configuration options
+| Class | CSS | Description |
+|-------|-----|-------------|
+| `.hide` | `display: none` | Hide element |
+| `.layer` | `justify-content: center; align-items: center; position: absolute; inset: 0%` | Full-bleed overlay layer (flex centered) |
 
-## Verification
+**Responsive visibility:** `-up` = hidden at that width and up, `-down` = hidden at that width and down. `.hide-mobile-up` (≥480px), `.hide-md-up` (≥768px), `.hide-tablet-up` (≥992px); `.hide-tablet-down` (≤991px), `.hide-md-down` (≤767px), `.hide-mobile-down` (≤479px).
 
-Verify the SDK loaded correctly by opening your browser console:
+---
 
-```javascript
-// Check if SDK is loaded
-console.log(window.next ? 'SDK Loaded' : 'SDK Not Found');
+### 2. Overflow
 
-// Check SDK version
-if (window.next) {
-  console.log('SDK Version:', next.version);
-  console.log('Config:', next.getConfig());
-}
-```
+| Class | CSS |
+|-------|-----|
+| `.overflow-hidden` | `overflow: hidden` |
+| `.overflow-scroll` | `overflow: scroll` |
+| `.overflow-auto` | `overflow: auto` |
 
-## Browser Support
+---
 
-The SDK supports all modern browsers including Chrome, Firefox, Safari, and Edge.
+### 3. Z-index
+
+| Class | CSS |
+|-------|-----|
+| `.z-index-1` | `z-index: 1; position: relative` |
+| `.z-index-2` | `z-index: 2; position: relative` |
+
+---
+
+### 4. Max-width
+
+| Class | CSS |
+|-------|-----|
+| `.max-width-full` | `width: 100%; max-width: none` |
+| `.max-width-xxlarge` … `.max-width-xxsmall` | 80rem down to 20rem |
+| `.max-50ch` | `max-width: 50ch` |
+
+Responsive: `.max-width-full-tablet`, `.max-width-full-mobile-landscape`, `.max-width-full-mobile-portrait`.
+
+---
+
+### 5. Containers
+
+Centered block with max-width and horizontal auto margins: `.container-large` (80rem), `.container-medium` (64rem), `.container-small` (48rem), `.container-xsmall`, `.container-12`.
+
+---
+
+### 6. Spacing
+
+| Class | Description |
+|-------|-------------|
+| `.spacing-clean` | `margin: 0; padding: 0` |
+| `.padding-xxsmall` | `padding: .5rem` |
+| `.negative-margin-tm` | Pull content to viewport edges on tablet/mobile |
+
+---
+
+### 7. Typography — size
+
+`.text-3xs`, `.text-xs`, `.text-sm`, `.text-md`, `.text-reg`, `.text-lg`, `.text-h5`, `.text-2xl`
+
+---
+
+### 8. Typography — weight
+
+`.text-weight-normal`, `.text-weight-semibold`, `.text-weight-bold` · `.tw-300`, `.tw-500`, `.tw-600`, `.tw-700`, `.tw-800`
+
+---
+
+### 9. Typography — display (headlines)
+
+`.display-xs`, `.display-sm`, `.display-md`, `.display-lg`, `.display-xl`, `.display-2xl` — large display/headline styles with balanced wrapping.
+
+---
+
+### 10. Typography — type scale
+
+`.ts-2xs`, `.ts-tiny`
+
+---
+
+### 11. Typography — alignment & decoration
+
+`.text-left`, `.text-center`, `.text-right`, `.text-muted`, `.font-bold`, `.text-italic`, `.text-underline`, `.text-strike`, `.text-uppercase`, `.text-no-wrap`, `.text-break`, `.text-clip-bg`
+
+---
+
+### 12. Color — text (semantic)
+
+`.text-main`, `.text-surface`, `.text-accent`, `.color-destructive`, `.color-accent`
+
+---
+
+### 13. Color — background (brand)
+
+Uses `:root` variables: `.bg-color-primary`, `.bg-color-secondary`, `.bg-color-secondary--light`, `.bg-color-tertiary`, `.bg-color-tertiary--light`, `.bg-color-accent`, `.bg-color-complimentary1`, `.bg-color-complimentary2`
+
+---
+
+### 14. Color — background (gradients)
+
+Positioned gradient overlays (use on a wrapper with `position: relative`): `.bg-gd-top`, `.bg-gd-bottom`, `.bg-gd-left`, `.bg-gd-right`
+
+---
+
+### 15. Color — background (utility)
+
+`.bg-primary`
+
+---
+
+### 16. Layout — flex
+
+`.st-flex-hori`, `.vertical-wrap`, `.horizontal-wrap`, `.vflex-left-top`, `.hflex-left-center`, `.hflex-left-stretch`, `.display-col`, `.display-row` · Gap modifiers: `.cc-tiny`, `.cc-xs`, `.cc-s`, `.cc-m`, `.cc-l`, `.cc-xl`, `.cc-2xs`; `.vertical-wrap.va-middle`
+
+---
+
+### 17. Layout — grid
+
+**grid-cust:** `.grid-6`, `.cc-2-1`, `.cc-1-2`, `.cc-horizontal`, `.cc-2col`  
+**grid-{n}col-{spacing}:** `wide` / `standard` / `compact` for 2, 3, 4, 6 columns  
+**grid-custom:** `.grid-11`, `.grid-7`, `.grid-2col-upsell`, `.grid-1-2`
+
+**Grid placement:** Use on grid children for placement/alignment.
+
+| Class | CSS |
+|-------|-----|
+| `.grid-cell` | `grid-area: span 1 / span 1 / span 1 / span 1` |
+| `.grid-span-col-2` | `grid-area: span 1 / span 2 / span 1 / span 2` |
+| `.justify-self-start` | `justify-self: start` |
+| `.justify-self-end` | `justify-self: end` |
+| `.align-self-center` | `align-self: center` |
+| `.align-self-stretch` | `align-self: stretch` |
+| `.place-self-center-stretch` | `place-self: center stretch` |
+
+Responsive: `.grid-cell--sm` — same grid-area only at `max-width: 767px`.
+
+---
+
+### 18. Alignment & sizing
+
+`.align-center`, `.mt-auto`, `.width-full`, `.height-full`
+
+---
+
+### 19. Effects
+
+`.opacity-0`, `.opacity-50`, `.box-shadow`
+
+---
+
+### 20. Position
+
+`.sticky` · `.sticky.feature10` sets `top: 6rem`
+
+---
+
+### Naming conventions
+
+- **max-width-\*** — Width caps · **container-\*** — Centered containers
+- **display-\*** — Headline typography or flex direction
+- **text-\*** — Font size/weight · **tw-\*** — Font weight · **ts-\*** — Type scale
+- **bg-color-\*** — Brand backgrounds · **bg-gd-\*** — Gradient overlays
+- **ct-\*** — Semantic chips · **st-\*** — Structural layout
+**Source:** All classes are in `css/next-core.css`; responsive variants are in `@media` blocks there.
+

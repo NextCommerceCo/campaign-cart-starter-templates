@@ -2,9 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>V1</title>
-    <meta content="V1" property="og:title">
-    <meta content="V1" property="twitter:title">
+    <title>UP01</title>
+    <meta content="UP01" property="og:title">
+    <meta content="UP01" property="twitter:title">
     <meta content="width=device-width, initial-scale=1" name="viewport">
 
     <link rel="dns-prefetch" href="//campaigns.apps.29next.com">
@@ -20,13 +20,9 @@
     <!-- Campaign Loader Script -->
     <script src="https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v0.3.10/dist/loader.js" type="module"></script>
 
-    <!-- NEXT Metatags -->
-    <meta name="next-page-type" content="upsell">
 
-
-    <link href="../../css/normalize.css" rel="stylesheet" type="text/css">
-    <link href="../../css/next-staging-core.css" rel="stylesheet" type="text/css">
-    <link href="../../css/templates-upsells-up01.css" rel="stylesheet" type="text/css">
+    <link href="../../css/next-core.css" rel="stylesheet" type="text/css">
+    <link href="../../css/upsells.css" rel="stylesheet" type="text/css">
 
 
     <link href="../../images/favicon.png" rel="shortcut icon" type="image/x-icon">
@@ -40,73 +36,242 @@
     <div class="page-wrapper">
 
       <div class="main-wrapper" data-next-upsell="offer" data-next-package-id="8">
-        <div pb-component="progress-bar1" class="progress-bar">
-          <div class="custom-code w-embed">
-
+        <div class="announcement">
+          <div class="announcement__block">
+            <div class="announcement__text"><strong>Special Offer Unlocked - Do Not Close This Page</strong></div>
           </div>
         </div>
-        <section class="section cc-custom cc-up1">
-          <div class="container cc-small">
-            <div class="upsell-wrapper">
-              <div class="upsell-navbar_header"><img src="../../images/next-logo.png" loading="eager" alt="" class="brand-logo">
-                <div class="upsell-steps">
-                  <div class="os-bundle__selector">
-                    <div class="os-bundle__progress-bar">
-                      <div class="os-bundle__progress-fill"></div>
-                    </div>
-                    <div class="os-bundle__option os-bundle__option--active">
-                      <div class="os-bundle__option-circle2 os-bundle__option-circle--active">
-                        <div>1</div>
-                      </div>
-                      <div class="os-bundle__option-content">
-                        <div class="os-bundle__option-quantity"><strong>Checkout</strong></div>
-                      </div>
-                    </div>
-                    <div class="os-bundle__option">
-                      <div class="os-bundle__option-circle2">
-                        <div>2</div>
-                      </div>
-                      <div class="os-bundle__option-content">
-                        <div class="os-bundle__option-quantity">Special Deal</div>
+        <nav class="upsell-nav">
+          <div class="container">
+            <div class="upsell-nav__wrapper">
+              <div class="upsell-nav__left">
+                <div class="upsell-nav__logo"><img src="../../images/next-logo.png" loading="eager" alt="" class="brand-logo"></div>
+              </div>
+              <div class="upsell-nav__right">
+                <div class="upsell-nav__steps">
+                  <div class="upsell-nav__stepper">
+                    
+                    <div class="upsell-nav__step">
+                      
+                      <div class="upsell-nav__step-content">
+                        <div class="upsell-nav__step-label">Checkout</div>
                       </div>
                     </div>
-                    <div class="os-bundle__option">
-                      <div class="os-bundle__option-circle2">
-                        <div>3</div>
+                    <div class="upsell-nav__step">
+                     
+                      <div class="upsell-nav__step-content">
+                        <div class="upsell-nav__step-label"> &#8250; </div>
                       </div>
-                      <div class="os-bundle__option-content">
-                        <div class="os-bundle__option-quantity">Summary</div>
+                    </div>
+                    <div class="upsell-nav__step upsell-nav__step--active">
+                     
+                      <div class="upsell-nav__step-content">
+                        <div class="upsell-nav__step-label">Upgrades</div>
+                      </div>
+                    </div>
+                    <div class="upsell-nav__step">
+                     
+                      <div class="upsell-nav__step-content">
+                        <div class="upsell-nav__step-label"> &#8250; </div>
+                      </div>
+                    </div>
+                    <div class="upsell-nav__step">
+                    
+                      <div class="upsell-nav__step-content">
+                        <div class="upsell-nav__step-label">Summary</div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="upsell-success">
-                <div class="upsell-success__container">
-                  <div class="upsell-confirmation_icon w-embed"><svg width="100%" height="100%" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M49 25C49 38.2548 38.2548 49 25 49C11.7452 49 1 38.2548 1 25C1 11.7452 11.7452 1 25 1C38.2548 1 49 11.7452 49 25Z" stroke="currentColor" stroke-width="2"></path>
-                      <path d="M15 24.5113L22.3067 31.818L35.1247 19" stroke="currentColor" stroke-width="2"></path>
-                    </svg></div>
-                  <div class="upsell-success_container-content">
-                    <h2 class="upsell-confirmaton__title">CONGRATULATIONS! Your Order Is Complete!</h2>
-                    <div class="receipt-subtitle">Add the following deals to your order with only one click!<br></div>
-                  </div>
-                </div>
-              </div>
+            </div>
+          </div>
+        </nav>
+        <section class="section upsell-header">
+          <div class="container">
+            <div class="upsell-header__inner">
+              <div class="upsell-header__title">Wait! Your Order Isn't Complete</div>
+              <div class="upsell-header__offer">Special Discount: Get 1 More <span data-next-display="package.name"></span> For Only <span data-next-display="package.price">$14.95</span></div>
+              <div class="upsell-header__suboffer">Add this to your order and get a <span data-next-display="package.savingsPercentage" data-next-show="package.hasSavings">50</span> discount<br></div>
+            </div>
+          </div>
+        </section>
+        <section class="section upsell-box">
+          <div class="container">
+            <div data-next-upsell="offer" data-next-package-id="8" class="upsell-wrapper">
               <div class="upsell-container">
-                <div class="upsell-header">
-                  <div class="text-sm tw-600 u-text-uppercase">Bonus: You Qualify For <span data-next-display="package.name">An Extra Luxe Upgrade</span>!</div>
-                  <div class="display-md">Upgrade your sheets to extra luxe for up to <span data-next-display="package.savingsPercentage" data-next-show="package.hasSavings">37</span> OFF<span data-next-show="package.hasSavings">!</span><span data-next-hide="package.hasSavings">.</span></div>
-                  <div class="text-sm">Want an ultra-luxurious, smooth, and extra silky feel with your silver infused sheets? With the Extra Luxe you'll upgrade your sleep even further.<br></div>
-                </div>
-                <div class="upsell-content__wrapper">
-                  <div class="u-grid-2col-standard">
-                    <div>
-                      <div pb-component="swiper" class="slider2_component">
-                        <div swiper="sw12" class="slider_component is-v9">
+                <div data-pb-slot="content" class="grid-full flex-col flex-horizontal-lg-up">
+                  <div class="upsell-content__column">
+                    <div class="upsell-offer__card">
+                 
+                        <h2 class="display-lg"><span data-next-display="package.name">Product Title</span></h2>
+         
+                      <div class="review_component cc-sm margin-12">
+                        <div class="review_component-wrapper">
+                          <div class="review_stars-wrapper cc-color cc-black">
+                            <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                                <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
+                              </svg></div>
+                            <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                                <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
+                              </svg></div>
+                            <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                                <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
+                              </svg></div>
+                            <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                                <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
+                              </svg></div>
+                            <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                                <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
+                              </svg></div>
+                          </div>
+                          <div class="font-bold">(19,569 Ratings)</div>
+                        </div>
+                      </div>
+                       
+                      <div class="divider_line _25"></div>
+                      <div class="upsell-offer__bullets">
+                        <div class="bullet_inner-one">
+                          <div class="hero_bullet-features-box-inner">
+                            <div class="bullet-features-icon-box">
+                              <div class="bullet_features-icon-svg w-embed"><svg width="100%" height="100%" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <g clip-path="url(#clip0_114_142)">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.930023C4.48 0.930023 0 5.41002 0 10.93C0 16.45 4.48 20.93 10 20.93C15.52 20.93 20 16.45 20 10.93C20 5.41002 15.52 0.930023 10 0.930023ZM9.99994 18.9302C5.58994 18.9302 1.99994 15.3402 1.99994 10.9302C1.99994 6.52025 5.58994 2.93025 9.99994 2.93025C14.4099 2.93025 17.9999 6.52025 17.9999 10.9302C17.9999 15.3402 14.4099 18.9302 9.99994 18.9302ZM8.00003 13.1002L14.59 6.51021L16 7.93021L8.00003 15.9302L4.00003 11.9302L5.41003 10.5202L8.00003 13.1002Z" fill="currentColor"></path>
+                                  </g>
+                                  <defs>
+                                    <clipPath id="clip0_114_142">
+                                      <rect width="20" height="20" fill="white" transform="translate(0 0.930023)"></rect>
+                                    </clipPath>
+                                  </defs>
+                                </svg></div>
+                            </div>
+                            <div class="bullet-features-text-box">
+                              <div class="text-size-regular text-weight-bold">The standard chunk of Lorem Ipsum</div>
+                            </div>
+                          </div>
+                          <div class="hero_bullet-features-box-inner">
+                            <div class="bullet-features-icon-box">
+                              <div class="bullet_features-icon-svg w-embed"><svg width="100%" height="100%" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <g clip-path="url(#clip0_114_142)">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.930023C4.48 0.930023 0 5.41002 0 10.93C0 16.45 4.48 20.93 10 20.93C15.52 20.93 20 16.45 20 10.93C20 5.41002 15.52 0.930023 10 0.930023ZM9.99994 18.9302C5.58994 18.9302 1.99994 15.3402 1.99994 10.9302C1.99994 6.52025 5.58994 2.93025 9.99994 2.93025C14.4099 2.93025 17.9999 6.52025 17.9999 10.9302C17.9999 15.3402 14.4099 18.9302 9.99994 18.9302ZM8.00003 13.1002L14.59 6.51021L16 7.93021L8.00003 15.9302L4.00003 11.9302L5.41003 10.5202L8.00003 13.1002Z" fill="currentColor"></path>
+                                  </g>
+                                  <defs>
+                                    <clipPath id="clip0_114_142">
+                                      <rect width="20" height="20" fill="white" transform="translate(0 0.930023)"></rect>
+                                    </clipPath>
+                                  </defs>
+                                </svg></div>
+                            </div>
+                            <div class="bullet-features-text-box">
+                              <div class="text-size-regular text-weight-bold">Contrary to popular belief, Lorem Ipsum</div>
+                            </div>
+                          </div>
+                          <div class="hero_bullet-features-box-inner">
+                            <div class="bullet-features-icon-box">
+                              <div class="bullet_features-icon-svg w-embed"><svg width="100%" height="100%" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <g clip-path="url(#clip0_114_142)">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.930023C4.48 0.930023 0 5.41002 0 10.93C0 16.45 4.48 20.93 10 20.93C15.52 20.93 20 16.45 20 10.93C20 5.41002 15.52 0.930023 10 0.930023ZM9.99994 18.9302C5.58994 18.9302 1.99994 15.3402 1.99994 10.9302C1.99994 6.52025 5.58994 2.93025 9.99994 2.93025C14.4099 2.93025 17.9999 6.52025 17.9999 10.9302C17.9999 15.3402 14.4099 18.9302 9.99994 18.9302ZM8.00003 13.1002L14.59 6.51021L16 7.93021L8.00003 15.9302L4.00003 11.9302L5.41003 10.5202L8.00003 13.1002Z" fill="currentColor"></path>
+                                  </g>
+                                  <defs>
+                                    <clipPath id="clip0_114_142">
+                                      <rect width="20" height="20" fill="white" transform="translate(0 0.930023)"></rect>
+                                    </clipPath>
+                                  </defs>
+                                </svg></div>
+                            </div>
+                            <div class="bullet-features-text-box">
+                              <div class="text-size-regular text-weight-bold">Lorem Ipsum has been the industry's</div>
+                            </div>
+                          </div>
+                          <div class="hero_bullet-features-box-inner">
+                            <div class="bullet-features-icon-box">
+                              <div class="bullet_features-icon-svg w-embed"><svg width="100%" height="100%" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <g clip-path="url(#clip0_114_142)">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.930023C4.48 0.930023 0 5.41002 0 10.93C0 16.45 4.48 20.93 10 20.93C15.52 20.93 20 16.45 20 10.93C20 5.41002 15.52 0.930023 10 0.930023ZM9.99994 18.9302C5.58994 18.9302 1.99994 15.3402 1.99994 10.9302C1.99994 6.52025 5.58994 2.93025 9.99994 2.93025C14.4099 2.93025 17.9999 6.52025 17.9999 10.9302C17.9999 15.3402 14.4099 18.9302 9.99994 18.9302ZM8.00003 13.1002L14.59 6.51021L16 7.93021L8.00003 15.9302L4.00003 11.9302L5.41003 10.5202L8.00003 13.1002Z" fill="currentColor"></path>
+                                  </g>
+                                  <defs>
+                                    <clipPath id="clip0_114_142">
+                                      <rect width="20" height="20" fill="white" transform="translate(0 0.930023)"></rect>
+                                    </clipPath>
+                                  </defs>
+                                </svg></div>
+                            </div>
+                            <div class="bullet-features-text-box">
+                              <div class="text-size-regular text-weight-bold">Lorem Ipsum is simply dummy text<br></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="divider_line margin-32"></div>
+                      <div class="checkout-button-wrapper">
+                        <div class="select-quantity-wrapper">
+                          <div class="upsell-offer__qty-label">
+                            <div>Select Quantity</div>
+                            <div class="right-bullet-icon w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z"></path>
+                              </svg></div>
+                          </div>
+                          <div class="upsell-offer__quantity-row">
+                            <div data-next-upsell-quantity-toggle="1" class="upsell-offer__qty-btn next-selected">
+                              <div>1</div>
+                            </div>
+                            <div data-next-upsell-quantity-toggle="2" class="upsell-offer__qty-btn">
+                              <div>2</div>
+                            </div>
+                            <div data-next-upsell-quantity-toggle="3" class="upsell-offer__qty-btn">
+                              <div>3</div>
+                            </div>
+                            <div data-next-upsell-quantity-toggle="4" class="upsell-offer__qty-btn">
+                              <div>4</div>
+                            </div>
+                            <div data-next-upsell-quantity-toggle="5" class="upsell-offer__qty-btn">
+                              <div>5</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="prices-text-wrapper">
+                          <div class="price-wrapper">
+                            <div class="text-sm tw-600">Retail Price</div>
+                            <div id="originalPrice" data-next-multiply-quantity="" data-next-display="package.price_retail" class="upsell-offer__price diagonal-strike color-muted">$49.99</div>
+                            <div class="text-xs font-bold"><strike>+$4.95 SHIPPING</strike></div>
+                          </div>
+                          <div class="upsell-offer__divider"></div>
+                          <div class="price-wrapper">
+                            <div class="upsell-offer__price-heading">
+                              <div class="text-sm tw-600">Offer Price</div>
+                              <div class="text-sm font-bold color-primary" data-next-show="package.hasSavings">(<span data-next-display="package.savingsPercentage">56</span> OFF)</div>
+                            </div>
+                            <div id="currentPrice" data-next-multiply-quantity="true" data-next-display="package.price_total" class="upsell-offer__price">$21.25</div>
+                            <div class="text-xs font-bold color-primary">+ FREE SHIPPING</div>
+                          </div>
+                        </div>
+                        <a data-next-upsell-action="add" href="#" class="button" pb-animate="pulse-upsell">
+                          <div data-button="content" class="button_content">
+                            <div>Yes, Add to My Order</div>
+                          </div><svg viewBox="0 0 50 50" data-button="spinner" class="button_spinner">
+                            <circle class="ring ring" cx="25" cy="25" r="22.5"></circle>
+                            <circle cx="25" cy="25" r="22.5" class="line"></circle>
+                          </svg>
 
-                          <div class="slider2_component-wrapper">
-                            <div swiper="slider-main" class="swiper is-v9-main">
+                        </a>
+                        <div class="upsell-ships-info">
+                          <img class="upsell-ships-info__icon" src="../../images/usps.png" alt="USPS">
+                          <p class="upsell-ships-info__text">All orders ship from the USA <img class="upsell-ships-info__flag" src="../../images/united-states-flag-icon.webp" alt=""> via USPS within 1 business day. A tracking number will be issued to your email.</p>
+                        </div>
+                        <div class="payment-img-wrapper hide-tablet-up">
+                          <div class="trust-badge invert"><img loading="lazy" src="../../images/icons8-lock-24_1icons8-lock-24.png" alt="" class="trust-badge__icon">
+                            <div class="badge-text-black">100% Encrypted &amp; Secure Checkout</div>
+                          </div><img loading="lazy" src="../../images/upsell-payment-logos.svg" alt="" class="credit-card__flags">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div data-pb-element="image-column" class="upsell-offer__image-column">
+                    <div>
+                      <div data-component="swiper" data-variant="sw1">
+                        <div class="slider_component">
+                          <div class="slider_component-wrapper">
+                            <div swiper="slider-main" class="swiper">
                               <div class="swiper-wrapper">
                                 <div class="swiper-slide">
                                   <div class="swiper-slide_inner">
@@ -147,11 +312,11 @@
                                   </svg></div>
                               </div>
                               <div class="slider2_thumbs-wrap is-sw22">
-                                <div thumbsslider="" swiper="slider-thumbs" class="swiper is-v9-thumbs">
+                                <div thumbsslider="" swiper="slider-thumbs" class="swiper">
                                   <div class="swiper-wrapper">
                                     <div class="swiper-slide is-thumb swiper-slide-thumb-active">
                                       <div class="swiper-slide_inner">
-                                        <div class="swiper-slide_image-wrap"><img loading="eager" data-next-display="package.image" src="../../images/1x1_2.svg" alt="" class="cover"></div>
+                                        <div class="swiper-slide_image-wrap"><img loading="eager" src="../../images/1x1_2.svg" data-next-display="package.image" alt="" class="cover"></div>
                                       </div>
                                     </div>
                                     <div class="swiper-slide is-thumb">
@@ -189,121 +354,25 @@
                               </div>
                             </div>
                           </div>
-                          <div class="custom-code w-embed w-script">
-
-                          </div>
                         </div>
                       </div>
                     </div>
-                    <div class="u-vertical-wrap">
-                      <div class="review_component cc-sm">
-                        <div class="review_component-wrapper">
-                          <div class="review_stars-wrapper cc-color cc-black">
-                            <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
-                              </svg></div>
-                            <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
-                              </svg></div>
-                            <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
-                              </svg></div>
-                            <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
-                              </svg></div>
-                            <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
-                              </svg></div>
-                          </div>
-                          <div class="u-font-bold">10,078+ FIVE-STAR COMPANY REVIEWS</div>
-                        </div>
-                      </div>
-                      <div pb-component="ba13" class="next-booster">
-                        <div class="booster__wrapper">
-                          <div class="booster__content-2 flex-left">
-                            <div pb-animate="rotate" class="next-icon cc-2em w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--carbon" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32">
-                                <path fill="currentColor" d="M15 19h2v2h-2zm0 4h2v2h-2z"></path>
-                                <path fill="currentColor" d="M23 11.67V4h3V2H6v2h3v7.67a2 2 0 0 0 .4 1.2L11.75 16L9.4 19.13a2 2 0 0 0-.4 1.2V28H6v2h20v-2h-3v-7.67a2 2 0 0 0-.4-1.2L20.25 16l2.35-3.13a2 2 0 0 0 .4-1.2M21 4v7H11V4Zm0 16.33V28H11v-7.67L14.25 16L12 13h8l-2.25 3Z"></path>
-                              </svg></div>
-                            <div class="ts-2xs"><strong>ONE-TIME OFFER</strong> – ONLY AVAILABLE WITH THIS <strong>CURRENT ORDER</strong>. <span class="text-destructive tw-600">YOU WILL NEVER SEE THIS AGAIN.</span></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div>Tens of thousands of our customers eventually upgrade to the <span data-next-display="package.name">Extra Luxe sheets</span> because they are truly irresistible! Now you can take advantage of the <span data-next-display="package.name">Extra Luxe sheets</span> for <strong>only <span data-next-display="package.price">$50</span> per set.</strong><br></div>
-                      <div class="list-container">
-                        <ul role="list" class="list w-list-unstyled">
-                          <li class="list__item">
-                            <div class="list_icon u-color-accent w-embed"><svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 22C6.477 22 2 17.523 2 12C2 6.477 6.477 2 12 2C17.523 2 22 6.477 22 12C22 17.523 17.523 22 12 22ZM11.003 16L18.073 8.929L16.659 7.515L11.003 13.172L8.174 10.343L6.76 11.757L11.003 16Z" fill="currentColor"></path>
-                              </svg></div>
-                            <div><strong>COOLIT™ technology</strong> helps keep you up to an extra 3.6°F cooler for optimal sleep</div>
-                          </li>
-                          <li class="list__item">
-                            <div class="list_icon u-color-accent w-embed"><svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 22C6.477 22 2 17.523 2 12C2 6.477 6.477 2 12 2C17.523 2 22 6.477 22 12C22 17.523 17.523 22 12 22ZM11.003 16L18.073 8.929L16.659 7.515L11.003 13.172L8.174 10.343L6.76 11.757L11.003 16Z" fill="currentColor"></path>
-                              </svg></div>
-                            <div><strong>Patented True Grip® technology</strong> ensures an extra snug fit to keep your fitted sheet in place</div>
-                          </li>
-                          <li class="list__item">
-                            <div class="list_icon u-color-accent w-embed"><svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 22C6.477 22 2 17.523 2 12C2 6.477 6.477 2 12 2C17.523 2 22 6.477 22 12C22 17.523 17.523 22 12 22ZM11.003 16L18.073 8.929L16.659 7.515L11.003 13.172L8.174 10.343L6.76 11.757L11.003 16Z" fill="currentColor"></path>
-                              </svg></div>
-                            <div>Also made with <strong>Miracle Clean &amp; Cool™</strong>: Our Premium Eucalyptus Blend with Sateen Weave<br></div>
-                          </li>
-                        </ul>
-                      </div>
-                      <div class="upsell-summary">
-                        <div class="upsell-summary_row">
-                          <div class="upsell-summary_prices">
-                            <div class="upsell_summary-price cc-reg" data-next-show="package.hasSavings"><span data-next-display="package.comparePrice">$69</span></div>
-                            <div class="upsell_summary-price cc-sale"><span data-next-display="package.price">$49</span>*</div>
-                            <div class="upsell_summary-price cc-savings" data-next-show="package.hasSavings">(<span data-next-display="package.savingsPercentage">28</span> OFF)</div>
-                          </div>
-                          <div class="ts-2xs u-text-uppercase tw-600">Special Price</div>
-                          <div class="upsell_summary-flex">
-                            <div class="text-xs">*Plus any applicable taxes</div>
-                            <div class="next-booster cc-success">
-                              <div class="booster__wrapper">
-                                <div class="booster__content-3 cc-center">
-                                  <div class="booster_inner flex-left">
-                                    <div pb-animate="pulsate" class="pb-component__icon w-embed"><svg width="10px" height="10px" viewBox="0 0 10 10" version="1.1" xmlnsxlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M4.5 9C6.98528 9 9 6.98528 9 4.5C9 2.01472 6.98528 0 4.5 0C2.01472 0 0 2.01472 0 4.5C0 6.98528 2.01472 9 4.5 9Z" transform="translate(0.5 0.5)" id="Oval" fill="CurrentColor" fill-rule="evenodd" stroke="none"></path>
-                                      </svg></div>
-                                    <div>Deal reserved for: <strong>10:00</strong> <strong>min</strong></div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="upsell-cta_wrapper">
-                        <a href="#" class="button w-inline-block" data-next-upsell-action="add">
-                          <div data-button="content" class="button_content">
-                            <div id="cta_text">Yes, Add To My Order with 1-Click-buy!</div>
-                          </div><svg viewBox="0 0 50 50" data-button="spinner" class="button_spinner">
-                            <circle class="ring ring" cx="25" cy="25" r="22.5"></circle>
-                            <circle cx="25" cy="25" r="22.5" class="line"></circle>
-                          </svg>
-
-                        </a>
-                        <a data-next-upsell-action="skip" href="#" class="upsell-link w-inline-block">
-                          <div class="text-sm tw-600">No, thank you! I don't want to get this one-time-only offer.</div>
-                        </a>
-                      </div>
-                      <div class="upsell-mbg1">
-                        <div class="pb-component__icon _w-8 w-embed"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 41 41" width="100%" height="100%">
-                            <g>
-                              <g id="Layer_1">
-                                <path fill="CurrentColor" d="M15.1,19.1h1.8v5.5h-1.8v-5.5ZM26,19.1c0,0-.1-.1-.2-.1s-.2,0-.3,0h-3s-.4,0-.3-.3c.2-.6.3-1.3.4-1.9,0,0-.1-1.2-.4-1.6,0-.1-.2-.2-.3-.3-.1,0-.2,0-.4,0-.1,0-.2,0-.4.1-.1,0-.2.2-.2.3-.2.3,0,1.4,0,1.5,0,.4-1,2-1.3,2.7,0,0,0,.1-.2.2,0,0-.1,0-.2,0h-1v4.7c.2,0,1.1,0,1.1,0,.2,0,.4.3.6.3h4.6c.2,0,.4,0,.5-.2.1-.1.2-.3.2-.5,0-.1,0-.3,0-.4,0-.1-.2-.2-.3-.3,0,0,0,0,.1,0,0,0,.2,0,.3,0,0,0,.2,0,.2-.2,0,0,.1-.1.1-.2,0,0,0-.2,0-.3,0-.1,0-.3,0-.4,0-.1-.2-.2-.3-.3,0,0,0,0,0,0,.2,0,.4,0,.5-.2.1-.1.2-.3.2-.5,0-.1,0-.3-.1-.4,0-.1-.2-.2-.3-.3,0,0,0,0,0,0,.2,0,.3-.1.5-.2.1-.1.2-.3.2-.5,0,0,0-.2,0-.2,0,0,0-.1-.1-.2ZM38,23.1c0,.2.3.8.5,1.2.4.7.8,1.4.6,2.1-.2.7-1,1.1-1.8,1.4-.4.2-1,.4-1.1.6-.1.2,0,.8.1,1.2.2.8.3,1.6-.1,2.2-.5.6-1.3.7-2.1.8-.4,0-1,.1-1.2.3-.2.2-.2.8-.3,1.2,0,.8-.2,1.6-.8,2.1-.6.5-1.5.3-2.2.1-.4,0-1-.2-1.2-.1-.2.1-.4.7-.6,1.1-.3.7-.7,1.5-1.4,1.8-.7.2-1.4-.2-2.1-.6-.4-.2-.9-.5-1.2-.5-.2,0-.6.5-.9.8-.5.6-1.1,1.2-1.9,1.2s-1.4-.7-1.9-1.2c-.3-.3-.7-.8-.9-.8-.2,0-.8.3-1.2.5-.7.4-1.4.8-2.1.6-.7-.2-1.1-1-1.4-1.8-.2-.4-.4-1-.6-1.1-.2-.1-.8,0-1.2.1-.8.2-1.6.3-2.2-.1-.6-.5-.7-1.3-.8-2.1,0-.4-.1-1-.3-1.2s-.8-.2-1.2-.3c-.8,0-1.6-.2-2.1-.8-.5-.6-.3-1.5-.1-2.2,0-.4.2-1,.1-1.2-.1-.2-.7-.4-1.1-.6-.7-.3-1.5-.7-1.8-1.4-.2-.7.2-1.4.6-2.1.2-.4.5-.9.5-1.2,0-.2-.5-.6-.8-.9-.6-.5-1.2-1.1-1.2-1.9s.7-1.4,1.2-1.9c.3-.3.8-.7.8-.9,0-.2-.3-.8-.5-1.2-.4-.7-.8-1.4-.6-2.1.2-.7,1-1.1,1.8-1.4.4-.2,1-.4,1.1-.6.1-.2,0-.8-.1-1.2-.2-.8-.3-1.6.1-2.2.5-.6,1.3-.7,2.1-.8.4,0,1-.1,1.2-.3.2-.2.2-.8.3-1.2,0-.8.2-1.6.8-2.1.6-.5,1.5-.3,2.2-.1.4,0,1,.2,1.2.1.2-.1.4-.7.6-1.1.3-.7.7-1.5,1.4-1.8.7-.2,1.4.2,2.1.6.4.2.9.5,1.2.5.2,0,.6-.5.9-.8.5-.6,1.1-1.2,1.9-1.2s1.4.7,1.9,1.2c.3.3.7.8.9.8.2,0,.8-.3,1.2-.5.7-.4,1.4-.8,2.1-.6.7.2,1.1,1,1.4,1.8.2.4.4,1,.6,1.1.2.1.8,0,1.2-.1.8-.2,1.6-.3,2.2.1.6.5.7,1.3.8,2.1,0,.4.1,1,.3,1.2.2.2.8.2,1.2.3.8,0,1.6.2,2.1.8.5.6.3,1.5.1,2.2,0,.4-.2,1-.1,1.2.1.2.7.4,1.1.6.7.3,1.5.7,1.8,1.4.2.7-.2,1.4-.6,2.1-.2.4-.5.9-.5,1.2,0,.2.5.6.8.9.6.5,1.2,1.1,1.2,1.9s-.7,1.4-1.2,1.9c-.3.3-.8.7-.8.9ZM7.6,15.4c0,0,0,.2,0,.2,0,0,0,.1.1.2,0,0,.1.1.2.1,0,0,.2,0,.2,0,0,0,.2,0,.2,0,0,0,.1,0,.2-.1,0,0,.1-.1.1-.2,0-.2.2-.3.2-.5,0,0,0-.2,0-.2,0,0,0-.2,0-.2,0,0,0-.2-.1-.2s-.1-.1-.2-.2c0,0-.2,0-.2,0,0,0-.2,0-.2,0,0,0-.1,0-.2.1,0,0-.1.1-.1.2,0,.2-.2.4-.3.6,0,0,0,.2,0,.2ZM6.7,18.2c0,0,0,.2,0,.2,0,0,0,.2,0,.2,0,0,.1.1.2.2s.1,0,.2,0c.2,0,.3,0,.5,0,.1,0,.2-.2.3-.4,0-.2,0-.4.1-.6,0,0,0-.2,0-.2,0,0,0-.2,0-.2,0,0,0-.1-.2-.2,0,0-.1,0-.2-.1,0,0-.2,0-.2,0,0,0-.2,0-.2,0s-.1,0-.2.2c0,0,0,.1,0,.2,0,.2,0,.4-.1.6ZM6.7,21.8c.1.1.3.2.4.2,0,0,.2,0,.2,0,0,0,.1,0,.2-.1,0,0,0-.1.1-.2,0,0,0-.2,0-.2,0-.2,0-.4,0-.6,0,0,0-.2,0-.2,0,0,0-.1-.1-.2,0,0-.1-.1-.2-.1,0,0-.2,0-.2,0-.2,0-.3,0-.4.2-.1.1-.2.3-.2.4,0,.2,0,.4,0,.6,0,.2,0,.3.2.4ZM7.8,24.9c.2,0,.3-.2.4-.3,0-.1,0-.3,0-.5,0-.2-.1-.4-.1-.6,0-.2-.1-.3-.3-.4-.1,0-.3-.1-.5,0-.2,0-.3.1-.4.3s-.1.3,0,.5c0,.2.1.4.2.6,0,.2.2.3.3.4.1,0,.3,0,.5,0ZM9.3,26.8c0-.2-.2-.3-.3-.5,0-.1-.2-.2-.4-.3s-.3,0-.5,0-.3.2-.3.4c0,.2,0,.3,0,.5,0,.2.2.4.3.6,0,.1.2.2.4.3.2,0,.3,0,.5,0,.1,0,.2-.2.3-.4s0-.3,0-.5ZM9.4,13.4c.1,0,.3.1.5.1.2,0,.3-.1.4-.2.1-.2.2-.3.4-.4,0,0,0-.1.1-.2,0,0,0-.2,0-.2,0,0,0-.2,0-.2,0,0,0-.1-.1-.2,0,0-.1,0-.2-.1,0,0-.2,0-.2,0,0,0-.2,0-.2,0,0,0-.1,0-.2.1-.1.2-.3.3-.4.5,0,.1-.1.3-.1.5,0,.2.1.3.2.4ZM11.2,29.5c0,0,0-.2,0-.2,0,0,0-.1-.1-.2-.1-.1-.3-.3-.4-.4-.1-.1-.3-.2-.4-.2-.2,0-.3,0-.4.1-.1.1-.2.3-.2.4,0,.2,0,.3.1.4.1.2.3.3.4.5.1.1.3.2.4.2.2,0,.3,0,.4-.2,0,0,.1-.1.1-.2s0-.2,0-.2ZM11.4,11.1c.1.1.3.2.4.2.2,0,.3,0,.5-.1.1-.1.3-.2.5-.4.1,0,.2-.2.2-.4,0-.2,0-.3-.1-.5,0-.1-.2-.2-.4-.2-.2,0-.3,0-.5.1-.2.1-.3.3-.5.4-.1.1-.2.3-.2.4,0,.2,0,.3.1.5ZM13.5,31.4c0,0,0-.2,0-.2,0,0-.1-.1-.2-.2-.2-.1-.3-.2-.5-.3,0,0-.1,0-.2-.1,0,0-.2,0-.2,0-.2,0-.3.1-.4.2,0,.1-.1.3-.1.5,0,0,0,.2,0,.2,0,0,0,.1.2.2.2.1.3.2.5.4.1,0,.3.1.5,0,.2,0,.3-.1.4-.3,0,0,0-.1,0-.2,0,0,0-.2,0-.2ZM33.4,17.6c0,0-.2,0-.2,0,0,0-.2,0-.2,0,0,0-.1.1-.2.2,0,0,0,.1,0,.2,0,0,0,.2,0,.2,0,.2,0,.4.1.6,0,.2.1.3.2.4.1,0,.3.1.5.1,0,0,.2,0,.2,0,0,0,.1,0,.2-.2,0,0,0-.1.1-.2,0,0,0-.2,0-.2,0-.2,0-.4-.1-.6,0,0,0-.2,0-.2s-.1-.1-.2-.2-.1,0-.2,0ZM31.8,15.1c0,.2,0,.3,0,.5,0,.2.2.3.2.5,0,.1.2.3.3.3s.3,0,.5,0c.2,0,.3-.2.3-.3s0-.3,0-.5c0-.2-.2-.4-.3-.6,0,0,0-.1-.1-.2,0,0-.1,0-.2-.1,0,0-.2,0-.2,0,0,0-.2,0-.2,0-.1,0-.3.2-.3.3ZM25.5,9.2c0,.2.2.3.3.4.3.1.5.2.8.3.1,0,.3,0,.4-.1.1,0,.2-.2.2-.3s0-.3,0-.4c0-.1-.1-.2-.3-.3-.2-.1-.4-.2-.6-.3-.1,0-.3,0-.5,0-.2,0-.3.2-.4.3,0,.1,0,.3,0,.5ZM22.7,8.2c0,0,0,.2,0,.2,0,0,0,.1.2.2,0,0,.1,0,.2,0,.2,0,.7.2.7.2.1,0,.3,0,.4-.2s.2-.2.2-.4c0-.1,0-.3,0-.4,0-.1-.2-.2-.4-.3-.2,0-.4-.1-.6-.2-.2,0-.3,0-.5,0-.1,0-.2.2-.3.4,0,0,0,.2,0,.2ZM19.7,7.7c0,.2,0,.3.2.4.1.1.3.2.4.2h.6c.2,0,.3,0,.4-.2.1-.1.2-.3.2-.4,0-.2,0-.3-.2-.4-.1-.1-.3-.2-.4-.2-.2,0-.6,0-.6,0,0,0-.2,0-.2,0,0,0-.1,0-.2.1,0,0,0,.1-.1.2s0,.2,0,.2ZM16.7,8.2c0,.1.1.3.2.3s.2.1.4.1c.1,0,.6-.1.7-.1,0,0,.2,0,.2,0,0,0,.1-.1.2-.2,0,0,0-.1,0-.2,0,0,0-.2,0-.2,0,0,0-.2,0-.2,0,0-.1-.1-.2-.2,0,0-.1,0-.2,0,0,0-.2,0-.2,0-.2,0-.4,0-.6.1-.2,0-.3.1-.4.3,0,.1-.1.3,0,.5ZM13.8,9.2c0,.1.1.3.2.3s.2.1.4.1c.3,0,.5-.2.8-.3,0,0,.1,0,.2-.1,0,0,0-.1.1-.2,0,0,0-.2,0-.2,0,0,0-.2,0-.2,0,0,0-.1-.1-.2,0,0-.1,0-.2-.1,0,0-.2,0-.2,0,0,0-.2,0-.2,0-.2,0-.4.2-.6.3-.1,0-.2.2-.3.3,0,.1,0,.3,0,.4ZM15.9,32.8c0,0,0-.2,0-.2,0,0,0-.1-.1-.2,0,0-.1-.1-.2-.1,0,0-.2,0-.3-.1,0,0-.2,0-.2,0,0,0-.2,0-.2,0,0,0-.1,0-.2.1,0,0-.1.1-.1.2s0,.2,0,.2c0,0,0,.2,0,.2,0,0,0,.1.1.2,0,0,.1.1.2.1,0,0,.2,0,.3.1.2,0,.3,0,.5,0,.2,0,.3-.2.3-.3,0,0,0-.2,0-.2ZM22.8,31.4l-1.7-.3-.8-1.6-.8,1.6-1.7.3,1.2,1.3-.3,1.8,1.5-.8,1.5.8-.3-1.8,1.2-1.3ZM25.8,32.6c0-.2-.2-.3-.3-.3-.1,0-.3,0-.5,0,0,0-.2,0-.3.1,0,0-.1,0-.2.1,0,0-.1.1-.1.2s0,.2,0,.2c0,0,0,.2,0,.2,0,.2.2.3.3.3.1,0,.3,0,.5,0,.1,0,.2,0,.3-.1.1,0,.3-.2.3-.3,0-.1,0-.3,0-.5ZM26.4,23.9c0,0,0-.1,0-.2.3-.4.4-.8.4-1.2,0-.1,0-.2,0-.3.2-.3.3-.7.3-1.1,0-.1,0-.3,0-.4.2-.3.3-.7.3-1.1,0-.2,0-.5-.1-.7s-.2-.4-.4-.6c-.2-.2-.4-.3-.6-.4s-.5-.1-.7-.1h-1.8c0-.4.1-.7.1-1.1,0-.7-.2-2.3-1.4-2.9-.4-.2-.8-.2-1.2-.2s-.8.3-1.1.6c-.5.5-.6,1.2-.5,1.9,0,0,0,.5,0,.5-.1.4-.7,1.3-.9,1.8h-.5c0-.1-.1-.3-.2-.4-.1,0-.2-.1-.4-.1h-2.5c-.3,0-.6.1-.9.4s-.4.5-.4.9v5.5c0,.3.1.6.4.9.2.2.5.4.9.4h2.5c.1,0,.2,0,.3-.1.1,0,.2-.2.2-.3,0,0,.8,0,.8,0,.2.1.4.3.7.3.1,0,.2,0,.4,0h4.6c.5,0,1-.2,1.4-.6s.5-.9.5-1.4ZM28.5,31.5c0-.2,0-.3,0-.5,0-.1-.2-.2-.4-.3-.2,0-.3,0-.5,0-.2.1-.3.2-.5.3,0,0-.1,0-.2.2,0,0,0,.1,0,.2,0,0,0,.2,0,.2,0,0,0,.2,0,.2,0,.1.2.2.4.3.2,0,.3,0,.5,0,.2-.1.4-.2.5-.3.1,0,.2-.2.2-.4ZM28.7,11.5c.1.1.3.2.4.1.2,0,.3,0,.4-.2,0,0,0-.1.1-.2,0,0,0-.2,0-.2,0,0,0-.2,0-.2,0,0,0-.1-.1-.2-.2-.1-.3-.3-.5-.4-.1-.1-.3-.1-.5-.1-.2,0-.3,0-.4.2-.1.1-.1.3-.1.5,0,.2,0,.3.2.4.2.1.3.2.4.4ZM30.8,29.4c0-.2,0-.3-.2-.4-.1-.1-.3-.2-.4-.2-.2,0-.3,0-.4.2-.1.1-.3.3-.4.4,0,0-.1.1-.1.2,0,0,0,.2,0,.2s0,.2,0,.2c0,0,0,.1.1.2.1.1.3.2.4.2s.3,0,.4-.2c.1-.2.3-.3.4-.5.1-.1.2-.3.2-.4ZM31.1,13.9c.2,0,.3,0,.5-.1.1,0,.2-.2.2-.4s0-.3-.1-.5c-.1-.2-.2-.3-.4-.5,0,0-.1-.1-.2-.2,0,0-.1,0-.2,0,0,0-.2,0-.2,0,0,0-.2,0-.2.1,0,0-.1.1-.2.2,0,0,0,.2,0,.2,0,0,0,.2,0,.2,0,0,0,.2.1.2.1.2.2.3.3.5,0,.1.2.2.4.2ZM32.6,27c0,0,0-.2,0-.2,0,0,0-.2-.1-.2,0,0-.1-.1-.2-.2,0,0-.1,0-.2,0,0,0-.2,0-.2,0,0,0-.2,0-.2.1,0,0-.1.1-.2.2,0,.2-.2.3-.3.5,0,0,0,.1,0,.2,0,0,0,.2,0,.2,0,0,0,.2,0,.2,0,0,.1.1.2.2,0,0,.1,0,.2,0,0,0,.2,0,.2,0,0,0,.2,0,.2,0,0,0,.1-.1.2-.2.1-.2.2-.4.3-.5,0,0,0-.1,0-.2ZM33.6,23.9c0-.1-.2-.2-.4-.3-.2,0-.3,0-.5,0-.1,0-.2.2-.3.4,0,.2-.1.4-.2.6,0,0,0,.2,0,.2,0,0,0,.2,0,.2,0,0,0,.1.1.2,0,0,.1,0,.2.1,0,0,.2,0,.2,0,0,0,.2,0,.2,0,0,0,.1,0,.2-.2,0,0,0-.1.1-.2,0-.2.1-.4.2-.6,0-.2,0-.3,0-.5ZM34.2,21.2c0-.2,0-.3-.2-.4-.1-.1-.3-.2-.4-.2-.2,0-.3,0-.4.2-.1.1-.2.3-.2.4,0,.2,0,.4,0,.6,0,.2,0,.3.1.4.1.1.3.2.4.2.2,0,.3,0,.4-.1.1-.1.2-.3.2-.4,0-.2,0-.4,0-.6Z"></path>
-                              </g>
-                            </g>
-                          </svg></div>
-                        <div class="u-font-bold">30-Day Money Back Guarantee</div>
-                      </div>
+                    <div class="payment-img-wrapper hide-tablet-down">
+                      <div class="trust-badge invert"><img loading="lazy" src="../../images/icons8-lock-24_1icons8-lock-24.png" alt="" class="trust-badge__icon">
+                        <div class="badge-text-black">100% Encrypted &amp; Secure Checkout</div>
+                      </div><img loading="lazy" src="../../images/upsell-payment-logos.svg" alt="" class="credit-card__flags">
                     </div>
                   </div>
                 </div>
+              </div>
+              <div class="cc-decline-wrapper">
+                <a data-next-upsell-action="skip" href="#" class="upsell-link cc-decline cc-upsell4">
+                  <div class="next-icon cc-1-25em w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--carbon" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32">
+                      <path fill="currentColor" d="M16 2C8.2 2 2 8.2 2 16s6.2 14 14 14s14-6.2 14-14S23.8 2 16 2m0 26C9.4 28 4 22.6 4 16S9.4 4 16 4s12 5.4 12 12s-5.4 12-12 12"></path>
+                      <path fill="currentColor" d="M21.4 23L16 17.6L10.6 23L9 21.4l5.4-5.4L9 10.6L10.6 9l5.4 5.4L21.4 9l1.6 1.6l-5.4 5.4l5.4 5.4z"></path>
+                    </svg></div>
+                  <div class="text-sm tw-600 cc-upsell4">No thank you, I don’t want this one-time offer</div>
+                </a>
               </div>
             </div>
           </div>
@@ -318,7 +387,8 @@
                   <a href="#" class="footer_legal-link">Privacy Policy</a>
                   <a href="#" class="footer_legal-link">Terms of Service</a>
                 </div>
-                <div class="text-xs">Copyright © 2025 Next Commerce</div>
+                <div class="text-xs">Copyright © <span class="copyright-year"></span> Next Commerce</div>
+<script>(function(){ var y = new Date().getFullYear(); document.querySelectorAll('.copyright-year').forEach(function(el){ el.textContent = y; }); })();</script>
               </div>
             </div>
           </div>

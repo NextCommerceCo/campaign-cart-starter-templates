@@ -1452,7 +1452,7 @@ if (document.readyState === 'loading') {
 }
 
 // Inline script 4 from olympus-mv-full.html
-document.querySelectorAll('[swiper="sw12"]').forEach((sliderComponent) => {
+document.querySelectorAll('[data-component="swiper"][data-variant="sw1"]').forEach((sliderComponent) => {
   const sliderMain = sliderComponent.querySelector('[swiper="slider-main"]');
   const sliderThumbs = sliderComponent.querySelector('[swiper="slider-thumbs"]');
   const buttonNextEl = sliderComponent.querySelector('[swiper="next-button"]');

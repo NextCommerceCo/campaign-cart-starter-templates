@@ -1,14 +1,14 @@
-// JavaScript extracted from templates\upsells\up01.html
+// JavaScript extracted from templates\upsells\up04.html
 
-// Inline script 4 from up01.html
-document.querySelectorAll('[swiper="sw12"]').forEach((sliderComponent) => {
+// Inline script 4 from up04.html
+document.querySelectorAll('[data-component="swiper"][data-variant="sw1"]').forEach((sliderComponent) => {
   const sliderMain = sliderComponent.querySelector('[swiper="slider-main"]');
   const sliderThumbs = sliderComponent.querySelector('[swiper="slider-thumbs"]');
   const buttonNextEl = sliderComponent.querySelector('[swiper="next-button"]');
   const buttonPrevEl = sliderComponent.querySelector('[swiper="prev-button"]');
   // Initialize thumbs swiper first
   const thumbsSwiper = new Swiper(sliderThumbs, {
-    slidesPerView: 6, // Show a fixed number of thumbs
+    slidesPerView: 5, // Show a fixed number of thumbs
     spaceBetween: 10,
     freeMode: false, // Disable free mode for proper controlled movement
     watchSlidesProgress: true,
@@ -16,11 +16,11 @@ document.querySelectorAll('[swiper="sw12"]').forEach((sliderComponent) => {
     centerInsufficientSlides: true, // Prevents misalignment when fewer thumbs exist
     breakpoints: {
       768: {
-        slidesPerView: 6, // Adjust for desktop
+        slidesPerView: 5, // Adjust for desktop
         spaceBetween: 10,
       },
       480: {
-        slidesPerView: 6, // Adjust for mobile
+        slidesPerView: 5, // Adjust for mobile
         spaceBetween: 8,
       },
     },
@@ -49,10 +49,3 @@ document.querySelectorAll('[swiper="sw12"]').forEach((sliderComponent) => {
     });
   }
 });
-
-// Inline script 5 from up01.html
-function preventBack() {
-  window.history.forward();
-}
-setTimeout(preventBack, 0);
-window.onunload = function() {};

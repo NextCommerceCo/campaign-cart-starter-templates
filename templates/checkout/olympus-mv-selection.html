@@ -22,9 +22,8 @@
     <script src="https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v0.3.10/dist/loader.js" type="module"></script>
 
 
-    <link href="../../css/normalize.css" rel="stylesheet" type="text/css">
-    <link href="../../css/next-staging-core.css" rel="stylesheet" type="text/css">
-    <link href="../../css/templates-checkout-olympus-mv-selection.css" rel="stylesheet" type="text/css">
+    <link href="../../css/next-core.css" rel="stylesheet" type="text/css">
+    <link href="../../css/checkout.css" rel="stylesheet" type="text/css">
 
 
     <link href="../../images/favicon.png" rel="shortcut icon" type="image/x-icon">
@@ -41,14 +40,11 @@
   <body>
     <div class="page-wrapper">
 
-      <div class="w-embed">
-
-      </div>
       <div class="main-wrapper">
         <div data-next-hide="param.banner=='n'" class="section_header">
           <div class="announcement">
             <div class="announcement__block">
-              <div class="announcement__text">GET UP TO 40% OFF NOW! <span class="text-span-53">USE PROMO CODE:</span></div>
+              <div class="announcement__text">GET UP TO 40% OFF NOW! <span class="announcement__promo-label">USE PROMO CODE:</span></div>
               <div class="announcement__right">
                 <div class="announcement__code-wrapper">
                   <div class="announcement__code">SPRINGSAVE</div>
@@ -82,7 +78,7 @@
           </div>
         </div>
         <div class="checkout-progress">
-          <div class="container-18 cc-small">
+          <div class="container cc-small">
             <div class="progress-wrapper">
               <div class="step">
                 <div class="step-label active">Checkout</div>
@@ -100,7 +96,7 @@
           </div>
         </div>
         <div class="section-checkout cc-gray">
-          <div class="container cc-small">
+          <div class="container cc-medium">
             <div class="olympus-2_step--wraper">
               <div class="show-tablet">
                 <div class="mobile-header">
@@ -267,9 +263,6 @@
                         </div>
                         <div data-next-component="quantity-cta" class="checkout_cta-sec"><button data-next-action="select-variants" class="button cc-gold">
                             <div data-next-component="loader" class="submit-button__loader">
-                              <div class="w-embed">
-
-                              </div>
                               <div class="three-quarter-spinner black"></div>
                             </div>
                             <div data-next-component="button-info" class="submit-button__content">
@@ -422,9 +415,6 @@
                         </div>
                         <div class="checkout_cta-sec"><button data-next-action="checkout" class="button cc-gold">
                             <div data-pb-element="checkout-button-spinner" class="submit-button__loader">
-                              <div class="w-embed">
-
-                              </div>
                               <div class="three-quarter-spinner black"></div>
                             </div>
                             <div data-pb-element="checkout-button-info" class="submit-button__content">
@@ -508,7 +498,7 @@
                     </div>
                     <div data-next-hide="param.reviews == 'n'" class="review_grid cc-wrap">
                       <div class="checkout-review">
-                        <div id="w-node-d94d2262-5767-8613-ca42-730474559b35-74559b34" class="review1_content">
+                        <div class="review1_content grid-cell">
                           <div class="div-block-535">
                             <div class="review_stars w-embed"><svg width="100%" height="100%" viewBox="0 0 71 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <rect width="13" height="13" rx="2" fill="currentColor"></rect>
@@ -533,7 +523,7 @@
                         </div>
                       </div>
                       <div class="checkout-review">
-                        <div id="w-node-d94d2262-5767-8613-ca42-730474559b35-74559b34" class="review1_content">
+                        <div class="review1_content grid-cell">
                           <div class="div-block-535">
                             <div class="review_stars w-embed"><svg width="100%" height="100%" viewBox="0 0 71 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <rect width="13" height="13" rx="2" fill="currentColor"></rect>
@@ -574,7 +564,8 @@
                   <a href="#" class="footer_legal-link">Privacy Policy</a>
                   <a href="#" class="footer_legal-link">Terms of Service</a>
                 </div>
-                <div class="text-xs">Copyright © 2025 Next Commerce</div>
+                <div class="text-xs">Copyright © <span class="copyright-year"></span> Next Commerce</div>
+<script>(function(){ var y = new Date().getFullYear(); document.querySelectorAll('.copyright-year').forEach(function(el){ el.textContent = y; }); })();</script>
               </div>
             </div>
           </div>
