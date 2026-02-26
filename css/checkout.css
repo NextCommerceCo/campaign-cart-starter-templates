@@ -1165,6 +1165,67 @@ html.wf-design-mode pageblock-modal[preview-modal="true"][data-variant="left-pan
   background-color: #fff;
 }
 
+/* ========================================
+   CHECKOUT REVIEW – Limos variant (with image)
+   Same BEM as olympus (checkout-review__*) with --with-image modifier.
+======================================== */
+.checkout-review--with-image {
+  border-radius: var(--radius--cards);
+  background-color: #fff;
+  border: 1px solid #ececec;
+  flex-flow: column;
+  align-items: flex-start;
+  width: 100%;
+  padding: 1.5rem;
+  display: flex;
+}
+.checkout-review--with-image .checkout-review__header {
+  grid-column-gap: 0.75rem;
+  grid-row-gap: 0.75rem;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  display: flex;
+}
+.checkout-review--with-image .checkout-review__stars {
+  flex-flow: column;
+  align-items: flex-start;
+  flex: 1;
+  display: flex;
+}
+.checkout-review--with-image .checkout-review__body {
+  margin-top: 8px;
+  width: 100%;
+}
+.checkout-review__meta {
+  grid-column-gap: 7px;
+  grid-row-gap: 7px;
+  justify-content: start;
+  align-items: center;
+  margin-top: 12px;
+  font-size: var(--font-size--xs);
+  line-height: 1.2;
+  display: flex;
+}
+
+.checkout-review__body {
+  grid-row-gap: 0.5rem;
+  flex-direction: column;
+  width: 100%;
+  display: flex;
+}
+
+.checkout-review--with-image .checkout-review__verified-wrap {
+  grid-column-gap: 4px;
+  grid-row-gap: 4px;
+  letter-spacing: 0;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  line-height: 1;
+  display: flex;
+}
+
 /* ===========================
    Next Modal (generic)
 =========================== */

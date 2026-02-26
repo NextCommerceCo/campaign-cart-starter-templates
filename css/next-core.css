@@ -4285,7 +4285,7 @@ figcaption {
 }
 
 .show-tablet {
-  display: none;
+  display: none !important;
 }
 
 .exp-checkout {
@@ -9458,7 +9458,7 @@ figcaption {
   margin-right: 15px;
 }
 
-.review-descriptions {
+.checkout-review__description {
   font-size: var(--font-size--sm);
 }
 
@@ -9577,7 +9577,7 @@ figcaption {
   display: flex;
 }
 
-.review-titles {
+.checkout-review__title {
   font-size: var(--font-size--sm);
   font-weight: 700;
 }
@@ -9660,7 +9660,7 @@ figcaption {
   display: flex;
 }
 
-.review_grid {
+.checkout-reviews {
   grid-column-gap: 16px;
   grid-row-gap: 16px;
   grid-template-rows: auto;
@@ -9669,7 +9669,7 @@ figcaption {
   display: grid;
 }
 
-.review_grid.cc-wrap {
+.checkout-reviews.cc-wrap {
   flex-flow: column;
   display: flex;
 }
@@ -10065,34 +10065,34 @@ figcaption {
 
 /* Responsive hide utilities (-up = hidden at this width and up, -down = hidden at this width and down) */
 @media screen and (min-width: 480px) {
-  .hide-mobile-up { display: none; }
+  .hide-mobile-up { display: none !important; }
 }
 
 /* Flex utilities – apply from breakpoint up (md: 768px, lg: 992px, xl: 1280px) */
 @media screen and (min-width: 768px) {
-  .hide-md-up { display: none; }
-  .flex-md-up { display: flex; }
-  .flex-col-md-up { flex-direction: column; display: flex;flex-direction: column; }
-  .flex-horizontal-md-up { display: flex; justify-content: center; align-items: stretch;flex-direction: row; }
-  .flex-center-md-up { display: flex; justify-content: center; align-items: center; }
-  .flex-between-md-up { display: flex; justify-content: space-between; align-items: center; }
+  .hide-md-up { display: none !important; }
+  .flex-md-up { display: flex !important; }
+  .flex-col-md-up { flex-direction: column; display: flex !important;flex-direction: column; }
+  .flex-horizontal-md-up { display: flex !important; justify-content: center; align-items: stretch;flex-direction: row; }
+  .flex-center-md-up { display: flex !important; justify-content: center; align-items: center; }
+  .flex-between-md-up { display: flex !important; justify-content: space-between; align-items: center; }
 }
 
 @media screen and (min-width: 992px) {
-  .hide-tablet-up { display: none; }
-  .flex-lg-up { display: flex; }
-  .flex-col-lg-up { flex-direction: column; display: flex;flex-direction: column; }
-  .flex-horizontal-lg-up { display: flex; justify-content: center; align-items: stretch;flex-direction: row; }
-  .flex-center-lg-up { display: flex; justify-content: center; align-items: center; }
-  .flex-between-lg-up { display: flex; justify-content: space-between; align-items: center; }
+  .hide-tablet-up { display: none !important; }
+  .flex-lg-up { display: flex !important; }
+  .flex-col-lg-up { flex-direction: column; display: flex !important;flex-direction: column; }
+  .flex-horizontal-lg-up { display: flex !important; justify-content: center; align-items: stretch;flex-direction: row; }
+  .flex-center-lg-up { display: flex !important; justify-content: center; align-items: center; }
+  .flex-between-lg-up { display: flex !important; justify-content: space-between; align-items: center; }
 }
 
 @media screen and (min-width: 1280px) {
-  .flex-xl-up { display: flex; }
-  .flex-col-xl-up { flex-direction: column; display: flex;flex-direction: column; }
-  .flex-horizontal-xl-up { display: flex; justify-content: center; align-items: stretch;flex-direction: row; }
-  .flex-center-xl-up { display: flex; justify-content: center; align-items: center; }
-  .flex-between-xl-up { display: flex; justify-content: space-between; align-items: center; }
+  .flex-xl-up { display: flex !important; }
+  .flex-col-xl-up { flex-direction: column; display: flex !important;flex-direction: column; }
+  .flex-horizontal-xl-up { display: flex !important; justify-content: center; align-items: stretch;flex-direction: row; }
+  .flex-center-xl-up { display: flex !important; justify-content: center; align-items: center; }
+  .flex-between-xl-up { display: flex !important; justify-content: space-between; align-items: center; }
 
   .text-size-regular.text-weight-bold.max-width-custom, .text-size-small.text-weight-bold.max-width-custom {
     max-width: 57rem;
@@ -10117,11 +10117,11 @@ figcaption {
 
 /* Flex utilities – apply at breakpoint and down (xl: 1279px, lg: 991px, md: 767px) */
 @media screen and (max-width: 1279px) {
-  .flex-xl-down { display: flex; }
-  .flex-col-xl-down { flex-direction: column; display: flex;flex-direction: column;    }
-  .flex-horizontal-xl-down { display: flex; justify-content: center; align-items: stretch; flex-direction: row; }
-  .flex-center-xl-down { display: flex; justify-content: center; align-items: center; }
-  .flex-between-xl-down { display: flex; justify-content: space-between; align-items: center; }
+  .flex-xl-down { display: flex !important; }
+  .flex-col-xl-down { flex-direction: column; display: flex !important;flex-direction: column;    }
+  .flex-horizontal-xl-down { display: flex !important; justify-content: center; align-items: stretch; flex-direction: row; }
+  .flex-center-xl-down { display: flex !important; justify-content: center; align-items: center; }
+  .flex-between-xl-down { display: flex !important; justify-content: space-between; align-items: center; }
 }
 
 @media screen and (max-width: 991px) {
@@ -10136,7 +10136,7 @@ figcaption {
     --_text---font-family--secondary: Inter;
   }
 
-  .hide-tablet-down { display: none; }
+  .hide-tablet-down { display: none !important; }
 
   h1 {
     font-size: var(--font-size--6xl);
@@ -10178,11 +10178,11 @@ figcaption {
   .display-lg {
     font-size: var(--font-size--3xl);
   }
-  .flex-lg-down { display: flex; }
-  .flex-col-lg-down { flex-direction: column; display: flex;flex-direction: column; }
-  .flex-horizontal-lg-down { display: flex; justify-content: center; align-items: stretch;flex-direction: row; }
-  .flex-center-lg-down { display: flex; justify-content: center; align-items: center; }
-  .flex-between-lg-down { display: flex; justify-content: space-between; align-items: center; }
+  .flex-lg-down { display: flex !important; }
+  .flex-col-lg-down { flex-direction: column; display: flex !important;flex-direction: column; }
+  .flex-horizontal-lg-down { display: flex !important; justify-content: center; align-items: stretch;flex-direction: row; }
+  .flex-center-lg-down { display: flex !important; justify-content: center; align-items: center; }
+  .flex-between-lg-down { display: flex !important; justify-content: space-between; align-items: center; }
   .custom-code {
     display: none;
   }
@@ -10492,7 +10492,7 @@ figcaption {
   }
 
   .show-tablet {
-    display: block;
+    display: block !important;
   }
 
   .express-checkout__buttons {
@@ -11857,7 +11857,7 @@ figcaption {
     --_text---font-family--secondary: Inter;
   }
 
-  .hide-md-down { display: none; }
+  .hide-md-down { display: none !important; }
 
   h1 {
     font-size: var(--font-size--4xl);
@@ -11884,11 +11884,11 @@ figcaption {
     font-size: var(--font-size--lg);
   }
 
-  .flex-md-down { display: flex; }
-  .flex-col-md-down { flex-direction: column; display: flex;flex-direction: column;  }
-  .flex-horizontal-md-down { display: flex; justify-content: center; align-items: stretch;flex-direction: row; }
-  .flex-center-md-down { display: flex; justify-content: center; align-items: center; }
-  .flex-between-md-down { display: flex; justify-content: space-between; align-items: center; }
+  .flex-md-down { display: flex !important; }
+  .flex-col-md-down { flex-direction: column; display: flex !important;flex-direction: column;  }
+  .flex-horizontal-md-down { display: flex !important; justify-content: center; align-items: stretch;flex-direction: row; }
+  .flex-center-md-down { display: flex !important; justify-content: center; align-items: center; }
+  .flex-between-md-down { display: flex !important; justify-content: space-between; align-items: center; }
 
   .max-width-full-mobile-landscape {
     width: 100%;
@@ -12454,7 +12454,7 @@ figcaption {
     width: 100%;
   }
 
-  .review_grid {
+  .checkout-reviews {
     flex-flow: column;
     display: flex;
   }
@@ -12492,7 +12492,7 @@ figcaption {
     --_text---font-family--secondary: Inter;
   }
 
-  .hide-mobile-down { display: none; }
+  .hide-mobile-down { display: none !important; }
 
   h1 {
     font-size: var(--font-size--4xl);

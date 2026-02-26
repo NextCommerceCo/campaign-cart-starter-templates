@@ -1021,8 +1021,27 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   align-items: center;
 }
 
+.upsell-header-bar__wrapper {
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  display: flex;
+}
+
+.upsell-header-bar__left {
+  display: flex;
+  align-items: center;
+}
+
+.upsell-header-bar__logo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
 /* ========================================
-   UPSELL NAV (step content inside upsell-header-bar__right)
+   UPSELL HEADER BAR STEP CONTENT (inside upsell-header-bar__right)
 ======================================== */
 .upsell-header-bar__steps {
   min-width: 0;
@@ -1099,7 +1118,8 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 }
 
 @media screen and (max-width: 991px) {
-  .upsell-header-bar__inner {
+  .upsell-header-bar__inner,
+  .upsell-header-bar__wrapper {
     min-height: 4rem;
     padding-top: 0;
     padding-bottom: 0;
@@ -1112,7 +1132,8 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 }
 
 @media screen and (max-width: 767px) {
-  .upsell-header-bar__inner {
+  .upsell-header-bar__inner,
+  .upsell-header-bar__wrapper {
     flex-direction: column;
     gap: 8px;
     padding-top: .75rem;
