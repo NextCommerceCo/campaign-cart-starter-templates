@@ -35,7 +35,7 @@
 
     <!--  SWIPERJS  -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   </head>
   <body>
     <div class="page-wrapper">
@@ -54,17 +54,20 @@
             </div>
           </div>
         </div>
-        <nav class="checkout__header-top">
-          <div class="container cc-medium">
-            <div class="checkout__header-brand"><img src="../../images/next-logo.png" loading="eager" alt="" class="brand-logo">
-              <div class="mg-section tablet-spacer"><img loading="lazy" src="../../images/1x1_2.svg" alt="" class="mg-image">
-                <div class="mg-text hide-tablet">90 - Day 100%<br>Money Back Guarantee</div>
-                <div class="questions-text">Questions?<br>Call: <a href="tel:+18888316810" class="link-tel">1 (888) 831-6810</a>
+        <section class="checkout-header">
+          <div class="container">
+            <div class="checkout-header__inner">
+              <div class="checkout-header__brand"><img src="../../images/next-logo.png" loading="eager" alt="" class="brand-logo"></div>
+              <div class="checkout-header__extras">
+                <div class="mg-section tablet-spacer"><img loading="lazy" src="../../images/90d.webp" alt="" class="mg-image">
+                  <div class="mg-text hide-tablet">90 - Day 100%<br>Money Back Guarantee</div>
+                  <div class="questions-text">Questions?<br>Call: <a href="tel:+18888316810" class="link-tel">1 (888) 831-6810</a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </nav>
+        </section>
         <div class="encrypted-banner">
           <div class="padding-global">
             <div class="contain small">
@@ -96,10 +99,12 @@
           </div>
         </div>
         <div class="section-checkout cc-gray">
-          <div class="container cc-medium">
-            <div class="checkout-wrapper new-size">
-              <div class="checkout__left">
-                <div data-next-await="" data-next-hide="param.timer == 'n'" class="hide-tablet">
+          <div class="container">
+            <div class="checkout-wrapper">
+              <div class="checkout-layout__left">
+                <div class="checkout-layout__content">
+                  <div class="checkout-layout__content-inner">
+                <div  data-next-hide="param.timer == 'n'" class="hide-tablet">
                   <div data-next-hide="param.timer == 'n'" class="scarcity-banner">
                     <div class="scarcity-banner__left">
                       <div class="promo-wrapper">
@@ -466,7 +471,7 @@
                           </div><img loading="lazy" src="https://cdn.prod.website-files.com/67ec42fd75dae41c564624c5/67ec42fd75dae41c56462e31_67e1aef91560b7501b1fa583_Group%20469529.svg" alt="" class="credit-card__flags">
                         </div>
                         <div class="show-tablet">
-                          <div class="checkout__guarantee-section"><img loading="lazy" src="../../images/68d8cf1ab5110cdf02097bac_Group 469513.avif" alt="" class="image-246 cc-guarantee">
+                          <div class="checkout__guarantee-section"><img loading="lazy" src="../../images/90d.webp" alt="" class="image-246 cc-guarantee">
                             <div class="text-xs-2"><strong>90 Day Money-Back Guarantee:</strong> Feel safe knowing you are protected with a 90 day guarantee. Simply send the item(s) back in the original packaging to receive a full refund or replacement, less S&amp;H.</div>
                           </div>
                         </div>
@@ -474,9 +479,11 @@
                     </div>
                   </form>
                 </div>
+                  </div>
+                </div>
               </div>
-              <div class="checkout__right is-first">
-                <div class="checkout__form-container is-sticky">
+              <div class="checkout-layout__right">
+                <div class="checkout-right__content checkout-right__content--sticky">
                   <div data-next-await="" data-next-hide="param.timer == 'n'" class="show-tablet">
                     <div data-next-hide="param.timer == 'n'" class="scarcity-banner">
                       <div class="scarcity-banner__left">
@@ -501,23 +508,33 @@
                         <div class="hero_review-box cc-last">
                           <div class="review_component cc-sm cc-last">
                             <div class="review_component-wrapper">
-                              <div class="review_stars w-embed"><svg width="100%" height="100%" viewBox="0 0 71 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <rect width="13" height="13" rx="2" fill="currentColor"></rect>
-                                  <path d="M6.3375 1.95001L7.39552 5.20627H10.8194L8.04942 7.21875L9.10744 10.475L6.3375 8.46253L3.56756 10.475L4.62558 7.21875L1.85565 5.20627H5.27948L6.3375 1.95001Z" fill="white"></path>
-                                  <rect x="14.3" width="13" height="13" rx="2" fill="currentColor"></rect>
-                                  <path d="M20.6375 1.95001L21.6956 5.20627H25.1194L22.3495 7.21875L23.4075 10.475L20.6375 8.46253L17.8676 10.475L18.9256 7.21875L16.1557 5.20627H19.5795L20.6375 1.95001Z" fill="white"></path>
-                                  <rect x="28.6001" width="13" height="13" rx="2" fill="currentColor"></rect>
-                                  <path d="M34.9376 1.95001L35.9956 5.20627H39.4195L36.6495 7.21875L37.7075 10.475L34.9376 8.46253L32.1677 10.475L33.2257 7.21875L30.4557 5.20627H33.8796L34.9376 1.95001Z" fill="white"></path>
-                                  <rect x="42.9001" width="13" height="13" rx="2" fill="currentColor"></rect>
-                                  <path d="M49.2376 1.95001L50.2957 5.20627H53.7195L50.9496 7.21875L52.0076 10.475L49.2376 8.46253L46.4677 10.475L47.5257 7.21875L44.7558 5.20627H48.1796L49.2376 1.95001Z" fill="white"></path>
-                                  <rect x="57.1996" width="13" height="13" rx="2" fill="currentColor"></rect>
-                                  <path d="M63.537 1.95007L64.595 5.20633H68.0188L65.2489 7.21881L66.3069 10.4751L63.537 8.46259L60.767 10.4751L61.825 7.21881L59.0551 5.20633H62.4789L63.537 1.95007Z" fill="white"></path>
-                                </svg></div>
+                              <div class="star_wrapper">
+                                <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                                    <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
+                                  </svg></div>
+                                <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                                    <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
+                                  </svg></div>
+                                <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                                    <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
+                                  </svg></div>
+                                <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                                    <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
+                                  </svg></div>
+                                <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                                    <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
+                                  </svg></div>
+                              </div>
                               <div>201,191+ Grounded Customers</div>
                             </div>
                           </div>
                         </div>
-                        <h1 class="display-olympus">Next Commerce Shirts</h1>
+                        <h1 class="display-md">Next Commerce Shirts</h1>
                       </div>
                     </div>
                   </div>
@@ -611,7 +628,7 @@
                     </div>
                   </div>
                   <div class="hide-tablet">
-                    <div class="checkout__guarantee-section"><img loading="lazy" src="../../images/68d8cf1ab5110cdf02097bac_Group 469513.avif" alt="" class="image-246 cc-guarantee">
+                    <div class="checkout__guarantee-section"><img loading="lazy" src="../../images/90d.webp" alt="" class="image-246 cc-guarantee">
                       <div class="text-xs-2"><strong>90 Day Money-Back Guarantee:</strong> Feel safe knowing you are protected with a 90 day guarantee. Simply send the item(s) back in the original packaging to receive a full refund or replacement, less S&amp;H.</div>
                     </div>
                   </div>
@@ -621,7 +638,7 @@
           </div>
         </div>
         <footer class="footer_section">
-          <div class="container cc-medium">
+          <div class="container">
             <div class="footer_layout">
               <div class="footer_copy-info">
                 <div class="footer_link-wrapper">
@@ -642,6 +659,6 @@
 
 
 
-    <script defer="" src="../../js/templates-checkout-olympus-mv-billing.js"></script>
+    <script defer="" src="../../js/checkout-olympus-mv-billing.js"></script>
   </body>
 </html>

@@ -37,7 +37,7 @@
 
     <!--  SWIPERJS  -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   </head>
   <body>
     <div class="page-wrapper">
@@ -56,17 +56,20 @@
             </div>
           </div>
         </div>
-        <nav class="checkout__header-top">
-          <div class="container cc-medium">
-            <div class="checkout__header-brand"><img src="../../images/next-logo.png" loading="eager" alt="" class="brand-logo">
-              <div class="mg-section tablet-spacer"><img loading="lazy" src="../../images/1x1_2.svg" alt="" class="mg-image">
-                <div class="mg-text hide-tablet">90 - Day 100%<br>Money Back Guarantee</div>
-                <div class="questions-text">Questions?<br>Call: <a href="tel:+18888316810" class="link-tel">1 (888) 831-6810</a>
+        <section class="checkout-header">
+          <div class="container">
+            <div class="checkout-header__inner">
+              <div class="checkout-header__brand"><img src="../../images/next-logo.png" loading="eager" alt="" class="brand-logo"></div>
+              <div class="checkout-header__extras">
+                <div class="mg-section tablet-spacer"><img loading="lazy" src="../../images/90d.webp" alt="" class="mg-image">
+                  <div class="mg-text hide-tablet">90 - Day 100%<br>Money Back Guarantee</div>
+                  <div class="questions-text">Questions?<br>Call: <a href="tel:+18888316810" class="link-tel">1 (888) 831-6810</a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </nav>
+        </section>
         <div class="encrypted-banner">
           <div class="padding-global">
             <div class="contain small">
@@ -98,42 +101,48 @@
           </div>
         </div>
         <div class="section-checkout cc-gray">
-          <div class="container cc-medium">
-            <div class="olympus-wrapper">
+          <div class="container">
+            <div class="checkout-page-layout">
               <div class="show-tablet">
                 <div class="heading-box">
                   <div class="hero_review-box">
                     <div class="review_component cc-sm">
                       <div class="review_component-wrapper">
-                        <div class="review_stars-wrapper">
-                          <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                              <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
+                        <div class="star_wrapper">
+                          <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                              <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
                             </svg></div>
-                          <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                              <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
+                          <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                              <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
                             </svg></div>
-                          <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                              <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
+                          <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                              <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
                             </svg></div>
-                          <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                              <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
+                          <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                              <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
                             </svg></div>
-                          <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                              <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
+                          <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                              <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
                             </svg></div>
                         </div>
                         <div>TRUSTED BY 180,000+ FAMILIES</div>
                       </div>
                     </div>
                   </div>
-                  <h1 class="display-xl"><span>Product Name</span></h1>
-                  <div class="text-reg"><strong>2025 New &amp; Improved, Easy Bait Set-Up Mosquito Control</strong></div>
+                  <h1 class="display-md"><span>Product Name</span></h1>
+                  <div class="text-reg"><strong>2025 New &amp; Improved, Premium product bundle</strong></div>
                 </div>
               </div>
-              <div class="checkout-wrapper new-size">
-                <div class="olympus-checkout__left">
-                  <div class="olympus-checkout__left-wrapper">
-                    <div class="olympus-checkout__left-slider">
+              <div class="checkout-wrapper">
+                <div class="checkout-layout__left">
+                  <div class="checkout-layout__content">
+                    <div class="checkout-layout__content-inner">
+                    <div class="checkout-media__wrapper">
                       <div data-component="swiper" data-variant="sw1">
                         <div class="slider_component">
                           <div class="slider_component-wrapper">
@@ -220,122 +229,107 @@
                               </div>
                             </div>
                           </div>
-                          <div class="custom-code w-embed w-script">
-
-                          </div>
                         </div>
                       </div>
                     </div>
-                    <div class="icons-grids">
+                    <div class="icons-grids hide-tablet-down">
                       <div class="icon-image">
                         <div class="icon-img"><img loading="eager" src="../../images/1x1_2.svg" alt="" class="cover"></div>
-                        <div class="text-xs">Benefit number one</div>
+                        <div class="text-xs">Benefit one</div>
                       </div>
                       <div class="icon-image">
                         <div class="icon-img"><img loading="eager" src="../../images/1x1_2.svg" alt="" class="cover"></div>
-                        <div class="text-xs">Benefit number one</div>
+                        <div class="text-xs">Benefit two</div>
                       </div>
                       <div class="icon-image">
                         <div class="icon-img"><img loading="eager" src="../../images/1x1_2.svg" alt="" class="cover"></div>
-                        <div class="text-xs">Benefit number one</div>
+                        <div class="text-xs">Benefit three</div>
+                      </div>
+                      <div class="icon-image">
+                        <div class="icon-img"><img loading="eager" src="../../images/1x1_2.svg" alt="" class="cover"></div>
+                        <div class="text-xs">Benefit four</div>
                       </div>
                     </div>
-                    <div class="hide-tablet">
-                      <div class="review_grid">
+              
+                    <div class="checkout-reviews hide-tablet-down">
                         <div class="checkout-review">
-                          <div class="review1_content grid-cell">
-                            <div class="div-block-535">
-                              <div class="review_stars w-embed"><svg width="100%" height="100%" viewBox="0 0 71 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <rect width="13" height="13" rx="2" fill="currentColor"></rect>
-                                  <path d="M6.3375 1.95001L7.39552 5.20627H10.8194L8.04942 7.21875L9.10744 10.475L6.3375 8.46253L3.56756 10.475L4.62558 7.21875L1.85565 5.20627H5.27948L6.3375 1.95001Z" fill="white"></path>
-                                  <rect x="14.3" width="13" height="13" rx="2" fill="currentColor"></rect>
-                                  <path d="M20.6375 1.95001L21.6956 5.20627H25.1194L22.3495 7.21875L23.4075 10.475L20.6375 8.46253L17.8676 10.475L18.9256 7.21875L16.1557 5.20627H19.5795L20.6375 1.95001Z" fill="white"></path>
-                                  <rect x="28.6001" width="13" height="13" rx="2" fill="currentColor"></rect>
-                                  <path d="M34.9376 1.95001L35.9956 5.20627H39.4195L36.6495 7.21875L37.7075 10.475L34.9376 8.46253L32.1677 10.475L33.2257 7.21875L30.4557 5.20627H33.8796L34.9376 1.95001Z" fill="white"></path>
-                                  <rect x="42.9001" width="13" height="13" rx="2" fill="currentColor"></rect>
-                                  <path d="M49.2376 1.95001L50.2957 5.20627H53.7195L50.9496 7.21875L52.0076 10.475L49.2376 8.46253L46.4677 10.475L47.5257 7.21875L44.7558 5.20627H48.1796L49.2376 1.95001Z" fill="white"></path>
-                                  <rect x="57.1996" width="13" height="13" rx="2" fill="currentColor"></rect>
-                                  <path d="M63.537 1.95007L64.595 5.20633H68.0188L65.2489 7.21881L66.3069 10.4751L63.537 8.46259L60.767 10.4751L61.825 7.21881L59.0551 5.20633H62.4789L63.537 1.95007Z" fill="white"></path>
-                                </svg></div>
+                          <div class="checkout-review__body grid-cell">
+                            <div class="checkout-review__stars">
+                              <div class="review_component cc-sm"><div class="review_component-wrapper"><div class="star_wrapper"><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div></div></div></div>
                             </div>
-                            <p class="review-titles">Woke up without the soreness<br></p>
-                            <p class="review-descriptions">I’ve had morning back pain for years, and this is the first thing that’s helped without taking something. I didn’t expect a sheet to make that kind of difference, but it really does.<br></p>
-                            <div class="div-block-536">
+                            <p class="checkout-review__title">Woke up without the soreness<br></p>
+                            <p class="checkout-review__description">I’ve had morning back pain for years, and this is the first thing that’s helped without taking something. I didn’t expect a sheet to make that kind of difference, but it really does.<br></p>
+                            <div class="checkout-review__meta">
                               <div class="review-auth">Daniel K.</div>
                               <div class="review-auth">|</div>
-                              <div class="text-block-4-copy">Verified Customer</div>
+                              <div class="checkout-review__verified">Verified Customer</div>
                             </div>
                           </div>
                         </div>
                         <div class="checkout-review">
-                          <div class="review1_content grid-cell">
-                            <div class="div-block-535">
-                              <div class="review_stars w-embed"><svg width="100%" height="100%" viewBox="0 0 71 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <rect width="13" height="13" rx="2" fill="currentColor"></rect>
-                                  <path d="M6.3375 1.95001L7.39552 5.20627H10.8194L8.04942 7.21875L9.10744 10.475L6.3375 8.46253L3.56756 10.475L4.62558 7.21875L1.85565 5.20627H5.27948L6.3375 1.95001Z" fill="white"></path>
-                                  <rect x="14.3" width="13" height="13" rx="2" fill="currentColor"></rect>
-                                  <path d="M20.6375 1.95001L21.6956 5.20627H25.1194L22.3495 7.21875L23.4075 10.475L20.6375 8.46253L17.8676 10.475L18.9256 7.21875L16.1557 5.20627H19.5795L20.6375 1.95001Z" fill="white"></path>
-                                  <rect x="28.6001" width="13" height="13" rx="2" fill="currentColor"></rect>
-                                  <path d="M34.9376 1.95001L35.9956 5.20627H39.4195L36.6495 7.21875L37.7075 10.475L34.9376 8.46253L32.1677 10.475L33.2257 7.21875L30.4557 5.20627H33.8796L34.9376 1.95001Z" fill="white"></path>
-                                  <rect x="42.9001" width="13" height="13" rx="2" fill="currentColor"></rect>
-                                  <path d="M49.2376 1.95001L50.2957 5.20627H53.7195L50.9496 7.21875L52.0076 10.475L49.2376 8.46253L46.4677 10.475L47.5257 7.21875L44.7558 5.20627H48.1796L49.2376 1.95001Z" fill="white"></path>
-                                  <rect x="57.1996" width="13" height="13" rx="2" fill="currentColor"></rect>
-                                  <path d="M63.537 1.95007L64.595 5.20633H68.0188L65.2489 7.21881L66.3069 10.4751L63.537 8.46259L60.767 10.4751L61.825 7.21881L59.0551 5.20633H62.4789L63.537 1.95007Z" fill="white"></path>
-                                </svg></div>
+                          <div class="checkout-review__body grid-cell">
+                            <div class="checkout-review__stars">
+                              <div class="review_component cc-sm"><div class="review_component-wrapper"><div class="star_wrapper"><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div></div></div></div>
                             </div>
-                            <p class="review-titles">Woke up without the soreness<br></p>
-                            <p class="review-descriptions">I’ve had morning back pain for years, and this is the first thing that’s helped without taking something. I didn’t expect a sheet to make that kind of difference, but it really does.<br></p>
-                            <div class="div-block-536">
+                            <p class="checkout-review__title">Woke up without the soreness<br></p>
+                            <p class="checkout-review__description">I’ve had morning back pain for years, and this is the first thing that’s helped without taking something. I didn’t expect a sheet to make that kind of difference, but it really does.<br></p>
+                            <div class="checkout-review__meta">
                               <div class="review-auth">Daniel K.</div>
                               <div class="review-auth">|</div>
-                              <div class="text-block-4-copy">Verified Customer</div>
+                              <div class="checkout-review__verified">Verified Customer</div>
                             </div>
                           </div>
                         </div>
-                      </div>
                     </div>
                   </div>
                 </div>
-                <div class="olympus-checkout__right">
-                  <div class="checkout__form-container">
+                </div>
+                <div class="checkout-layout__right">
+                  <div class="checkout-layout__form">
+                    <div class="checkout__form-container">
                     <div class="hide-tablet">
                       <div class="hero_heading-box">
                         <div class="heading-box">
                           <div class="hero_review-box">
                             <div class="review_component cc-sm">
                               <div class="review_component-wrapper">
-                                <div class="review_stars-wrapper">
-                                  <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                      <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
+                                <div class="star_wrapper">
+                                  <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                                      <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
                                     </svg></div>
-                                  <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                      <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
+                                  <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                                      <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
                                     </svg></div>
-                                  <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                      <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
+                                  <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                                      <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
                                     </svg></div>
-                                  <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                      <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
+                                  <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                                      <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
                                     </svg></div>
-                                  <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                      <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
+                                  <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                                      <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
                                     </svg></div>
                                 </div>
                                 <div>TRUSTED BY 180,000+ FAMILIES</div>
                               </div>
                             </div>
                           </div>
-                          <h1 class="display-xl"><span>Product Name</span></h1>
-                          <div class="text-reg"><strong>2025 New &amp; Improved, Easy Bait Set-Up Mosquito Control</strong></div>
+                          <h1 class="display-md"><span>Product Name</span></h1>
+                          <div class="text-reg"><strong>2025 New &amp; Improved, Premium product bundle</strong></div>
                         </div>
                         <div class="sub-head-text">
-                          <div>Easily Stop Mosquitoes and Enjoy Outdoors Again</div>
+                          <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
                         </div>
                       </div>
                     </div>
                     <div class="show-tablet">
-                      <div class="sub-head-text cc-olympus">
-                        <div>Improve your health while you sleep</div>
+                      <div class="sub-head-text sub-head-text--divider">
+                        <div>Sed do eiusmod tempor incididunt ut labore et dolore.</div>
                       </div>
                     </div>
                     <div data-next-hide="param.timer == 'n'" class="scarcity-banner">
@@ -528,7 +522,7 @@
                           <div class="_2step__size-guide">
                             <div class="size_chart-wrapper">
                               <div>Not sure on size? Check the chart &gt;</div>
-                              <div data-pb-modal-trigger="size-guide" class="size_chart-right">
+                              <div class="size_chart-right next-modal__trigger" role="button" tabindex="0" data-modal-target="#next-size-modal">
                                 <div class="size_chart-icon w-embed"><svg width="39" height="14" viewBox="0 0 39 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <g clip-path="url(#clip0_205_1498)">
                                       <mask id="mask0_205_1498" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="39" height="14">
@@ -647,8 +641,8 @@
                               </div>
                             </div>
                             <div class="guarantee-section-wrapper">
-                              <div class="guarantee-section"><img loading="lazy" src="../../images/1x1_2.svg" alt="" class="image-10">
-                                <div class="text-xs"><strong>30 Day Money-Back Guarantee:</strong> Feel safe knowing you're protected. Try it risk-free and return it within 30 days for a full refund or replacement—no questions asked.</div>
+<div class="guarantee-section"><img loading="lazy" src="../../images/90d.webp" alt="" class="image-10">
+                              <div class="text-xs-2"><strong>90 Day Money-Back Guarantee:</strong> Feel safe knowing you are protected with a 90 day guarantee. Simply send the item(s) back in the original packaging to receive a full refund or replacement, less S&amp;H.</div>
                               </div>
                             </div>
                             <div class="form-section form-section--last">
@@ -812,7 +806,7 @@
                               </div>
                             </div>
                             <div class="form-section form-section--last">
-                              <div class="cart-box cc-olympus">
+                              <div class="cart-box cart-box--card">
                                 <div class="summary-wrapper">
                                   <div class="order-summary">
                                     <div class="order-summary__content">
@@ -954,10 +948,60 @@
                                 </div>
                               </div><img loading="lazy" src="https://cdn.prod.website-files.com/67ec42fd75dae41c564624c5/67ec42fd75dae41c56462e31_67e1aef91560b7501b1fa583_Group%20469529.svg" alt="" class="credit-card__flags">
                             </div>
+                            <div class="icons-grids hide-tablet-up">
+                              <div class="icon-image">
+                                <div class="icon-img"><img loading="eager" src="../../images/1x1_2.svg" alt="" class="cover"></div>
+                                <div class="text-xs">Benefit one</div>
+                              </div>
+                              <div class="icon-image">
+                                <div class="icon-img"><img loading="eager" src="../../images/1x1_2.svg" alt="" class="cover"></div>
+                                <div class="text-xs">Benefit two</div>
+                              </div>
+                              <div class="icon-image">
+                                <div class="icon-img"><img loading="eager" src="../../images/1x1_2.svg" alt="" class="cover"></div>
+                                <div class="text-xs">Benefit three</div>
+                              </div>
+                              <div class="icon-image">
+                                <div class="icon-img"><img loading="eager" src="../../images/1x1_2.svg" alt="" class="cover"></div>
+                                <div class="text-xs">Benefit four</div>
+                              </div>
+                            </div>
+                      
+                            <div class="checkout-reviews hide-tablet-up">
+                                <div class="checkout-review">
+                                  <div class="checkout-review__body grid-cell">
+                                    <div class="checkout-review__stars">
+                                      <div class="review_component cc-sm"><div class="review_component-wrapper"><div class="star_wrapper"><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div></div></div></div>
+                                    </div>
+                                    <p class="checkout-review__title">Woke up without the soreness<br></p>
+                                    <p class="checkout-review__description">I’ve had morning back pain for years, and this is the first thing that’s helped without taking something. I didn’t expect a sheet to make that kind of difference, but it really does.<br></p>
+                                    <div class="checkout-review__meta">
+                                      <div class="review-auth">Daniel K.</div>
+                                      <div class="review-auth">|</div>
+                                      <div class="checkout-review__verified">Verified Customer</div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="checkout-review">
+                                  <div class="checkout-review__body grid-cell">
+                                    <div class="checkout-review__stars">
+                                      <div class="review_component cc-sm"><div class="review_component-wrapper"><div class="star_wrapper"><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div></div></div></div>
+                                    </div>
+                                    <p class="checkout-review__title">Woke up without the soreness<br></p>
+                                    <p class="checkout-review__description">I’ve had morning back pain for years, and this is the first thing that’s helped without taking something. I didn’t expect a sheet to make that kind of difference, but it really does.<br></p>
+                                    <div class="checkout-review__meta">
+                                      <div class="review-auth">Daniel K.</div>
+                                      <div class="review-auth">|</div>
+                                      <div class="checkout-review__verified">Verified Customer</div>
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
                           </div>
                         </div>
                       </form>
                     </div>
+                  </div>
                   </div>
                 </div>
               </div>
@@ -965,7 +1009,7 @@
           </div>
         </div>
         <footer class="footer_section">
-          <div class="container cc-medium">
+          <div class="container">
             <div class="footer_layout">
               <div class="footer_copy-info">
                 <div class="footer_link-wrapper">
@@ -979,86 +1023,86 @@
               </div>
             </div>
           </div>
-        </footer><pageblock-modal data-modal-id="size-guide" data-animation="fade" data-variant="" preview-modal="false" class="pageblock-component-wrapper">
-          <div data-pb-modal="overlay" class="pb-overlay"></div>
-          <div aria-modal="true" role="dialog" data-pb-modal="sheet" class="pb-modal">
-            <div class="pb-modal_content">
-              <div class="pb-modal_header">
-                <div class="pb-modal_header-content">
-                  <div class="pb-modal_title cc-title">Size Chart</div>
-                  <div class="pb-modal_title">Next Shirts Sizing</div>
-                </div><button data-pb-modal="close" role="button" class="pb-modal_button">
-                  <div class="pb-modal__close-2 w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                      <path fill="currentColor" d="M18.3 5.71a.996.996 0 0 0-1.41 0L12 10.59L7.11 5.7A.996.996 0 1 0 5.7 7.11L10.59 12L5.7 16.89a.996.996 0 1 0 1.41 1.41L12 13.41l4.89 4.89a.996.996 0 1 0 1.41-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"></path>
-                    </svg></div>
-                </button>
-              </div>
-              <div class="pb-modal_info">
-                <div class="modal-size-guide">
-                  <div class="modal-size_row">
-                    <div class="modal-size_cell left">
-                      <div>Single</div>
-                    </div>
-                    <div class="modal-size_cell">
-                      <div>39" x 75" x 15"</div>
-                    </div>
-                  </div>
-                  <div class="modal-size_row">
-                    <div class="modal-size_cell left">
-                      <div>Twin XL</div>
-                    </div>
-                    <div class="modal-size_cell">
-                      <div>39" x 80" x 15"</div>
-                    </div>
-                  </div>
-                  <div class="modal-size_row">
-                    <div class="modal-size_cell left">
-                      <div>Double</div>
-                    </div>
-                    <div class="modal-size_cell">
-                      <div>54" x 75" x 15"</div>
-                    </div>
-                  </div>
-                  <div class="modal-size_row">
-                    <div class="modal-size_cell left">
-                      <div>Queen</div>
-                    </div>
-                    <div class="modal-size_cell">
-                      <div>60" x 80" x 15"</div>
-                    </div>
-                  </div>
-                  <div class="modal-size_row">
-                    <div class="modal-size_cell left">
-                      <div>King</div>
-                    </div>
-                    <div class="modal-size_cell">
-                      <div>76" x 80" x 15"</div>
-                    </div>
-                  </div>
-                  <div class="modal-size_row last">
-                    <div class="modal-size_cell left">
-                      <div>Cali King</div>
-                    </div>
-                    <div class="modal-size_cell">
-                      <div>72" x 84" x 15"</div>
-                    </div>
-                  </div>
-                </div>
+        </footer>
+        <!-- Next size chart modal (standalone component) -->
+        <div id="next-size-modal" class="next-modal" aria-hidden="true">
+          <div class="next-modal__overlay" data-next-modal-close=""></div>
+          <div class="next-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="next-size-modal-title">
+            <div class="next-modal__header">
+              <h2 id="next-size-modal-title" class="next-modal__title">Size chart</h2>
+              <button type="button" class="next-modal__close" aria-label="Close" data-next-modal-close="">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M0.317912 13.9531C-0.10513 14.3763 -0.105064 15.0622 0.318042 15.4852C0.741149 15.9082 1.42707 15.9082 1.8501 15.4851L7.90078 9.43337L13.952 15.4845C14.375 15.9076 15.061 15.9076 15.484 15.4845C15.907 15.0615 15.907 14.3755 15.484 13.9525L9.43272 7.90121L15.4836 1.8493C15.9065 1.42619 15.9065 0.740272 15.4834 0.317241C15.0603 -0.105801 14.3743 -0.105736 13.9513 0.31737L7.90056 6.36916L1.84937 0.317891C1.4263 -0.105173 0.740369 -0.105173 0.317306 0.317891C-0.105769 0.740965 -0.105769 1.42689 0.317306 1.84996L6.36873 7.90132L0.317912 13.9531Z" fill="currentColor"></path>
+                </svg>
+              </button>
+            </div>
+            <div class="next-modal__content">
+              <h3 class="next-modal__subtitle">SIZE CHART</h3>
+              <table class="next-modal__table">
+                <thead>
+                  <tr>
+                    <th>SIZE</th>
+                    <th>US/CA</th>
+                    <th>EU</th>
+                    <th>UK/AU/NZ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="font-weight: 700">XS</td>
+                    <td>0–2</td>
+                    <td>32–34</td>
+                    <td>4–6</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 700">S</td>
+                    <td>2–4</td>
+                    <td>34–36</td>
+                    <td>6–8</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 700">M</td>
+                    <td>6–8</td>
+                    <td>38–40</td>
+                    <td>10–12</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 700">L</td>
+                    <td>10–12</td>
+                    <td>42–44</td>
+                    <td>14–16</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 700">XL</td>
+                    <td>14–16</td>
+                    <td>46–48</td>
+                    <td>18–20</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 700">2XL</td>
+                    <td>18–20</td>
+                    <td>50–52</td>
+                    <td>22–24</td>
+                  </tr>
+                  <tr>
+                    <td style="font-weight: 700">3XL</td>
+                    <td>22–24</td>
+                    <td>54–56</td>
+                    <td>26–28</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="next-modal__visual" aria-label="Sizing guidance image">
+                <img src="../../images/4x3.svg" alt="Visual sizing guidance" loading="lazy">
               </div>
             </div>
           </div>
-          <div class="modal-css w-embed">
-
-
-          </div>
-        </pageblock-modal>
+        </div>
       </div>
     </div>
 
 
-    <script defer="" src="https://cdn.jsdelivr.net/npm/@floating-ui/core@1.7.2"></script>
-    <script defer="" src="https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.7.2"></script>
-    <script defer="" src="../../js/templates-checkout-olympus-mv-full.js"></script>
+    <script defer="" src="../../js/checkout-olympus-mv-full.js"></script>
     <script defer="" src="https://cdn.jsdelivr.net/npm/@pageblock/attributes-modal@latest/index.umd.js"></script>
 
 

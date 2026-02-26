@@ -1451,45 +1451,33 @@ if (document.readyState === 'loading') {
   window.progressBar = new ProgressBar();
 }
 
-// Inline script 4 from olympus-mv-full.html
-document.querySelectorAll('[data-component="swiper"][data-variant="sw1"]').forEach((sliderComponent) => {
-  const sliderMain = sliderComponent.querySelector('[swiper="slider-main"]');
-  const sliderThumbs = sliderComponent.querySelector('[swiper="slider-thumbs"]');
-  const buttonNextEl = sliderComponent.querySelector('[swiper="next-button"]');
-  const buttonPrevEl = sliderComponent.querySelector('[swiper="prev-button"]');
-  // Initialize thumbs swiper first
-  const thumbsSwiper = new Swiper(sliderThumbs, {
-    slidesPerView: 6, // Show a fixed number of thumbs
-    spaceBetween: 10,
-    freeMode: false, // Disable free mode for proper controlled movement
-    watchSlidesProgress: true,
-    watchOverflow: true, // Prevent extra spacing when fewer slides exist
-    centerInsufficientSlides: true, // Prevents misalignment when fewer thumbs exist
-    breakpoints: {
-      768: {
-        slidesPerView: 6, // Adjust for desktop
-        spaceBetween: 10,
+// Swiper gallery: init after DOM + Swiper are ready (Swiper script is deferred)
+function initSwiperGalleries() {
+  if (typeof Swiper === 'undefined') return;
+  document.querySelectorAll('[data-component="swiper"][data-variant="sw1"]').forEach((sliderComponent) => {
+    const sliderMain = sliderComponent.querySelector('[swiper="slider-main"]');
+    const sliderThumbs = sliderComponent.querySelector('[swiper="slider-thumbs"]');
+    const buttonNextEl = sliderComponent.querySelector('[swiper="next-button"]');
+    const buttonPrevEl = sliderComponent.querySelector('[swiper="prev-button"]');
+    if (!sliderMain || !sliderThumbs) return;
+    const thumbsSwiper = new Swiper(sliderThumbs, {
+      slidesPerView: 6,
+      spaceBetween: 10,
+      freeMode: false,
+      watchSlidesProgress: true,
+      watchOverflow: true,
+      centerInsufficientSlides: true,
+      breakpoints: {
+        768: { slidesPerView: 6, spaceBetween: 10 },
+        480: { slidesPerView: 6, spaceBetween: 8 },
       },
-      480: {
-        slidesPerView: 6, // Adjust for mobile
-        spaceBetween: 8,
-      },
-    },
-  });
-  // Initialize main swiper with thumbs navigation
-  new Swiper(sliderMain, {
-    slidesPerView: 1,
-    spaceBetween: 0,
-    navigation: {
-      nextEl: buttonNextEl,
-      prevEl: buttonPrevEl,
-    },
-    thumbs: {
-      swiper: thumbsSwiper,
-    },
-  });
-  // Add keyboard accessibility for thumbs
-  if (sliderThumbs) {
+    });
+    new Swiper(sliderMain, {
+      slidesPerView: 1,
+      spaceBetween: 0,
+      navigation: { nextEl: buttonNextEl, prevEl: buttonPrevEl },
+      thumbs: { swiper: thumbsSwiper },
+    });
     sliderThumbs.querySelectorAll('.swiper-slide').forEach((slide, index) => {
       slide.addEventListener('keydown', (event) => {
         if (event.key === 'Enter' || event.key === ' ') {
@@ -1498,11 +1486,121 @@ document.querySelectorAll('[data-component="swiper"][data-variant="sw1"]').forEa
         }
       });
     });
+  });
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSwiperGalleries);
+} else {
+  initSwiperGalleries();
+}
+
+// NEXT modal size chart (generic component)
+(function () {
+  function onReady(fn) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fn, { once: true });
+    } else {
+      fn();
+    }
   }
-});
+
+  onReady(() => {
+    const body = document.body;
+    const defaultTarget = '#next-size-modal';
+
+    function getTargetFromTrigger(el) {
+      return (
+        el.getAttribute('data-modal-target') ||
+        el.getAttribute('href') ||
+        defaultTarget
+      );
+    }
+
+    function getFocusable(container) {
+      return container.querySelectorAll(
+        'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+      );
+    }
+
+    function openModal(modal) {
+      if (!modal) return;
+      modal.classList.add('next-modal--open');
+      modal.setAttribute('aria-hidden', 'false');
+      body.classList.add('next-modal-open');
+
+      const focusables = getFocusable(modal);
+      const focusTarget =
+        modal.querySelector('.next-modal__close') || focusables[0];
+      if (focusTarget) focusTarget.focus();
+
+      function onKey(e) {
+        if (e.key === 'Escape') {
+          closeModal(modal);
+        } else if (e.key === 'Tab') {
+          const f = Array.from(getFocusable(modal));
+          if (!f.length) return;
+          const first = f[0];
+          const last = f[f.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+
+      modal._nextModalKeyHandler = onKey;
+      document.addEventListener('keydown', onKey);
+    }
+
+    function closeModal(modal) {
+      if (!modal) return;
+      modal.classList.remove('next-modal--open');
+      modal.setAttribute('aria-hidden', 'true');
+      body.classList.remove('next-modal-open');
+      if (modal._nextModalKeyHandler) {
+        document.removeEventListener('keydown', modal._nextModalKeyHandler);
+        delete modal._nextModalKeyHandler;
+      }
+    }
+
+    // Trigger buttons
+    document.querySelectorAll('.next-modal__trigger').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetSel = getTargetFromTrigger(btn);
+        const modal =
+          document.querySelector(targetSel) ||
+          document.querySelector(defaultTarget);
+        openModal(modal);
+      });
+      btn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          btn.click();
+        }
+      });
+    });
+
+    // Overlay and close buttons
+    document.addEventListener('click', (e) => {
+      const overlayClicked = e.target.matches(
+        '.next-modal__overlay[data-next-modal-close]'
+      );
+      const closeBtn = e.target.closest('[data-next-modal-close]');
+      if (!overlayClicked && !closeBtn) return;
+      const modal =
+        e.target.closest('.next-modal') ||
+        document.querySelector(defaultTarget);
+      closeModal(modal);
+    });
+  });
+})();
 
 // Inline script 9 from olympus-mv-full.html
-document.querySelectorAll('[data-next-element="timer"]').forEach(timer => {
+document.querySelectorAll('[data-next-element="timer"]').forEach((timer) => {
   let [minutes, seconds] = timer.textContent.split(':').map(Number);
   let total = minutes * 60 + seconds;
   setInterval(() => {
@@ -1510,7 +1608,10 @@ document.querySelectorAll('[data-next-element="timer"]').forEach(timer => {
     total--;
     const m = Math.floor(total / 60);
     const s = total % 60;
-    timer.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    timer.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(
+      2,
+      '0'
+    )}`;
     if (total === 0) timer.style.color = '#ff4444';
     else if (total <= 60) timer.style.color = '#ff9800';
   }, 1000);

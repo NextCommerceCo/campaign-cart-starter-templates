@@ -1,88 +1,49 @@
-// JavaScript extracted from templates\landing-pages\lp03.html
+// JavaScript extracted from templates\upsells\up03.html
 
-// Inline script 4 from lp03.html
-function initiateSlider() {
-  document.querySelectorAll('[swiper="sw08"]').forEach((sliderComponent) => {
-    let currentSlide = 0;
-    const swiperStyle = document.createElement('style');
-    swiperStyle.innerHTML = `.swiper-button-disabled {opacity: 30%!important}`;
-    document.body.appendChild(swiperStyle);
-    const numberOfSlides = document
-      .querySelector('[swiper="thumbnails-holder"]')
-      .querySelectorAll('[swiper="gallery-thumbnail"]').length - 1;
-    const sliderEl = sliderComponent.querySelector('[swiper="slider"]');
+// Swiper gallery: init after DOM + Swiper are ready (Swiper script is deferred)
+function initSwiperGalleries() {
+  if (typeof Swiper === 'undefined') return;
+  document.querySelectorAll('[data-component="swiper"][data-variant="sw1"]').forEach((sliderComponent) => {
+    const sliderMain = sliderComponent.querySelector('[swiper="slider-main"]');
+    const sliderThumbs = sliderComponent.querySelector('[swiper="slider-thumbs"]');
     const buttonNextEl = sliderComponent.querySelector('[swiper="next-button"]');
     const buttonPrevEl = sliderComponent.querySelector('[swiper="prev-button"]');
-    const scrollbarEl = sliderComponent.querySelector('[swiper="scrollbar"]');
-    const paginationEl = sliderComponent.querySelector('[swiper="pagination"]');
-    const swiperModule = new Swiper(sliderEl, {
-      slidesPerView: 1,
-      spaceBetween: 16,
-      direction: 'horizontal',
-      navigation: {
-        nextEl: buttonNextEl,
-        prevEl: buttonPrevEl,
-      },
-      on: {
-        slideChange: function() {
-          currentSlide = this.activeIndex;
-          updateActiveStates(currentSlide);
-        },
-      },
-      pagination: {
-        el: paginationEl,
-      },
+    if (!sliderMain || !sliderThumbs) return;
+    const thumbsSwiper = new Swiper(sliderThumbs, {
+      slidesPerView: 6,
+      spaceBetween: 10,
+      freeMode: false,
+      watchSlidesProgress: true,
+      watchOverflow: true,
+      centerInsufficientSlides: true,
       breakpoints: {
-        768: {
-          spaceBetween: 32,
-        },
+        768: { slidesPerView: 6, spaceBetween: 10 },
+        480: { slidesPerView: 6, spaceBetween: 8 },
       },
     });
-    if (currentSlide == 0) {
-      buttonPrevEl.classList.add('swiper-button-disabled');
-    } else {
-      buttonPrevEl.classList.remove('swiper-button-disabled');
-    }
-    document.querySelectorAll('[swiper="thumbnails-holder"]').forEach((container) =>
-      container.querySelectorAll('[swiper="gallery-thumbnail"]').forEach((el, i) => {
-        el.style.userSelect = 'none';
-        el.addEventListener('click', (e) => {
-          swiperModule.slideTo(i);
-          currentSlide = i;
-          updateActiveStates(currentSlide);
-        });
-      })
-    );
-    // Initial state
-    updateActiveStates(0);
+    new Swiper(sliderMain, {
+      slidesPerView: 1,
+      spaceBetween: 0,
+      navigation: { nextEl: buttonNextEl, prevEl: buttonPrevEl },
+      thumbs: { swiper: thumbsSwiper },
+    });
+    sliderThumbs.querySelectorAll('.swiper-slide').forEach((slide, index) => {
+      slide.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          thumbsSwiper.slideTo(index, 300);
+        }
+      });
+    });
   });
 }
-
-function updateActiveStates(activeIndex) {
-  // Update thumbnails
-  document.querySelectorAll('[swiper="thumbnails-holder"]').forEach((container) =>
-    container.querySelectorAll('[swiper="gallery-thumbnail"]').forEach((el, i) => {
-      if (i === activeIndex) {
-        el.setAttribute('swiper-state', 'active');
-        el.classList.add('is-current');
-      } else {
-        el.removeAttribute('swiper-state');
-        el.classList.remove('is-current');
-      }
-    })
-  );
-  // Update slides
-  document.querySelectorAll('.swiper-slide').forEach((slide, i) => {
-    if (i === activeIndex) {
-      slide.classList.add('is-current');
-    } else {
-      slide.classList.remove('is-current');
-    }
-  });
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSwiperGalleries);
+} else {
+  initSwiperGalleries();
 }
-initiateSlider();
 
-// Inline script 5 from lp03.html
+// Inline script 5 from up02.html
 class PBAccordion {
   constructor() {
     this.cleanupInitialState();

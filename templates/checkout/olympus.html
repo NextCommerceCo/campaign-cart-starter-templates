@@ -34,23 +34,26 @@
 
     <!--  SWIPERJS  -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   </head>
   <body>
     <div class="page-wrapper">
       <div class="main-wrapper">
 
-        <nav class="checkout__header-top">
-          <div class="container cc-medium">
-            <div class="checkout__header-brand"><img src="../../images/next-logo.png" loading="eager" alt="" class="brand-logo">
-              <div class="mg-section tablet-spacer"><img loading="lazy" src="../../images/1x1_2.svg" alt="" class="mg-image">
-                <div class="mg-text hide-tablet">90 - Day 100%<br>Money Back Guarantee</div>
-                <div class="questions-text">Questions?<br>Call: <a href="tel:+18888316810" class="link-tel">1 (888) 831-6810</a>
+        <section class="checkout-header">
+          <div class="container">
+            <div class="checkout-header__inner">
+              <div class="checkout-header__brand"><img src="../../images/next-logo.png" loading="eager" alt="" class="brand-logo"></div>
+              <div class="checkout-header__extras">
+                <div class="mg-section tablet-spacer"><img loading="lazy" src="../../images/90d.webp" alt="" class="mg-image">
+                  <div class="mg-text hide-tablet">90 - Day 100%<br>Money Back Guarantee</div>
+                  <div class="questions-text">Questions?<br>Call: <a href="tel:+18888316810" class="link-tel">1 (888) 831-6810</a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </nav>
+        </section>
         <div class="encrypted-banner">
           <div class="padding-global">
             <div class="contain small">
@@ -63,141 +66,68 @@
             </div>
           </div>
         </div>
-        <div data-next-skeleton="" class="skeleton-wrapper">
-          <nav class="checkout__header-top">
-            <div class="container cc-medium">
-              <div class="checkout__header-brand"><img src="../../images/next-logo.png" loading="eager" alt="" class="brand-logo">
-                <div class="mg-section tablet-spacer"><img loading="lazy" src="../../images/1x1_2.svg" alt="" class="mg-image">
-                  <div class="mg-text hide-tablet">90 - Day 100%<br>Money Back Guarantee</div>
-                  <div class="questions-text">Questions?<br>Call: <a href="tel:+18888316810" class="link-tel">1 (888) 831-6810</a>
-                  </div>
-                </div>
+        <div class="checkout-progress">
+          <div class="container cc-small">
+            <div class="progress-wrapper">
+              <div class="step">
+                <div class="step-label active">Checkout</div>
               </div>
-            </div>
-          </nav>
-          <div class="encrypted-banner">
-            <div class="container cc-small">
-              <div class="scarcity-banner__content">
-                <div class="security-banner__icon w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2m-6 9c-1.1 0-2-.9-2-2s.9-2 2-2s2 .9 2 2s-.9 2-2 2m3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1z"></path>
-                  </svg></div>
-                <div class="security-banner__text">100% Encrypted &amp; Secure Checkout</div>
+              <div class="line line-active arrow-active"></div>
+              <div class="step">
+                <div class="step-label">Bonus Deals</div>
               </div>
-            </div>
-          </div>
-          <div class="section-checkout">
-            <div class="container cc-medium">
-              <div class="olympus-wrapper">
-                <div class="progress-container">
-                  <div class="step">
-                    <div class="step-label active">Checkout</div>
-                  </div>
-                  <div class="line line-active arrow-active"></div>
-                  <div class="step">
-                    <div class="step-label">Bonus Deals</div>
-                  </div>
-                  <div class="line line-inactive arrow-inactive"></div>
-                  <div class="step">
-                    <div class="step-label">Summary</div>
-                  </div>
+              <div class="line line-inactive arrow-inactive"></div>
+              <div class="step">
+                <div class="step-label">Summary</div>
+              </div>
 
-                </div>
-                <div class="show-tablet">
-                  <div class="heading-box">
-                    <div class="skeleton skeleton-text skeleton-text--large"></div>
-                    <div class="skeleton skeleton-text skeleton-text--large skeleton-height--large"></div>
-                    <div class="skeleton skeleton-text skeleton-text--large"></div>
-                  </div>
-                </div>
-                <div class="checkout-wrapper new-size">
-                  <div class="olympus-checkout__left">
-                    <div class="skeleton skeleton-image"></div>
-                  </div>
-                  <div class="olympus-checkout__right">
-                    <div class="checkout__form-container">
-                      <div class="hide-tablet">
-                        <div class="hero_heading-box">
-                          <div class="heading-box">
-                            <div class="skeleton skeleton-text skeleton-text--large"></div>
-                            <div class="skeleton skeleton-text skeleton-text--large skeleton-height--large"></div>
-                            <div class="skeleton skeleton-text skeleton-text--large"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="skeleton skeleton-box skeleton-box--xs"></div>
-                      <div class="checkout-form">
-                        <form>
-                          <div class="form-content">
-                            <div class="form-sections">
-                              <div class="form-section form-section--first">
-                                <div class="skeleton skeleton-text skeleton-text--large"></div>
-                                <div class="skeleton skeleton-box skeleton-box-card"></div>
-                                <div class="skeleton skeleton-box skeleton-box-card"></div>
-                                <div class="skeleton skeleton-box skeleton-box-card"></div>
-                              </div>
-                            </div>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
-        <div class="section-checkout">
-          <div class="container cc-medium">
-            <div class="olympus-wrapper">
-              <div class="progress-container">
-                <div class="step">
-                  <div class="step-label active">Checkout</div>
-                </div>
-                <div class="line line-active arrow-active"></div>
-                <div class="step">
-                  <div class="step-label">Bonus Deals</div>
-                </div>
-                <div class="line line-inactive arrow-inactive"></div>
-                <div class="step">
-                  <div class="step-label">Summary</div>
-                </div>
-
-              </div>
+        <div class="section-checkout cc-gray">
+          <div class="container">
+            <div class="checkout-page-layout">
               <div class="show-tablet">
                 <div class="heading-box">
                   <div class="hero_review-box">
                     <div class="review_component cc-sm">
                       <div class="review_component-wrapper">
-                        <div class="review_stars-wrapper">
-                          <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                              <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
+                        <div class="star_wrapper">
+                          <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                              <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
                             </svg></div>
-                          <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                              <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
+                          <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                              <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
                             </svg></div>
-                          <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                              <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
+                          <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                              <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
                             </svg></div>
-                          <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                              <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
+                          <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                              <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
                             </svg></div>
-                          <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                              <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
+                          <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                              <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
                             </svg></div>
                         </div>
                         <div>TRUSTED BY 180,000+ FAMILIES</div>
                       </div>
                     </div>
                   </div>
-                  <h1 class="display-xl"><span>Product Name</span></h1>
-                  <div class="text-reg"><strong>2025 New &amp; Improved, Easy Bait Set-Up Mosquito Control</strong></div>
+                  <h1 class="display-md"><span>Product Name</span></h1>
+                  <div class="text-reg"><strong>2025 New &amp; Improved, Premium product bundle</strong></div>
                 </div>
               </div>
-              <div class="checkout-wrapper new-size">
-                <div class="olympus-checkout__left">
-                  <div class="olympus-checkout__left-wrapper">
-                    <div class="olympus-checkout__left-slider">
-                      <div data-component="swiper" data-variant="sw1">
+              <div class="checkout-wrapper">
+                <div class="checkout-layout__left">
+                  <div class="checkout-layout__content">
+                    <div class="checkout-layout__content-inner">
+                      <div class="checkout-media__wrapper" >
+                        <div data-component="swiper" data-variant="sw1">
                         <div class="slider_component">
                           <div class="slider_component-wrapper">
                             <div swiper="slider-main" class="swiper">
@@ -283,77 +213,64 @@
                               </div>
                             </div>
                           </div>
-                          <div class="custom-code w-embed w-script">
-
-                          </div>
                         </div>
                       </div>
                     </div>
-                    <div class="icons-grids">
+                    <div class="icons-grids hide-tablet-down">
                       <div class="icon-image">
                         <div class="icon-img"><img loading="eager" src="../../images/1x1_2.svg" alt="" class="cover"></div>
-                        <div class="text-xs">Benefit number one</div>
+                        <div class="text-xs">Benefit one</div>
                       </div>
                       <div class="icon-image">
                         <div class="icon-img"><img loading="eager" src="../../images/1x1_2.svg" alt="" class="cover"></div>
-                        <div class="text-xs">Benefit number one</div>
+                        <div class="text-xs">Benefit two</div>
                       </div>
                       <div class="icon-image">
                         <div class="icon-img"><img loading="eager" src="../../images/1x1_2.svg" alt="" class="cover"></div>
-                        <div class="text-xs">Benefit number one</div>
+                        <div class="text-xs">Benefit three</div>
+                      </div>
+                      <div class="icon-image">
+                        <div class="icon-img"><img loading="eager" src="../../images/1x1_2.svg" alt="" class="cover"></div>
+                        <div class="text-xs">Benefit four</div>
                       </div>
                     </div>
-                    <div class="hide-tablet">
-                      <div class="sub-hero">
-                        <div class="benefit_section">
-                          <div class="benefit-text">Why [Product] Works</div>
-                          <div>Our botanically-derived bait safely tempts and traps mosquitoes (when used as directed), so you can finally enjoy your outdoor spaces with peace of mind.</div>
-                        </div>
-                        <div class="benefit_section">
-                          <div class="benefit-text">What Customers Are Saying About Us:</div>
-                          <div>
-                            <div class="reviews-stacks">
-                              <div class="fb-review-cards"><img loading="lazy" src="../../images/icon.svg" alt="" class="fb_review_imageee">
-                                <div class="facebook_review-container">
-                                  <div class="fb-review_card__header">
-                                    <div class="tw-600">[Name]</div>
-                                  </div>
-                                  <div class="text-sm">This really made a difference in my daily routine. Super easy to set up and totally worth it.</div>
-                                  <div class="fb-icons-right"><img loading="lazy" src="https://uploads-ssl.webflow.com/615cebda24bf7c53248868cb/615d09894399f6a7fe7b247d_icon1.png" alt="" class="fb-icon">
-                                    <div class="text-block-377">12</div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="fb-review-cards"><img loading="lazy" src="../../images/icon.svg" alt="" class="fb_review_imageee">
-                                <div class="facebook_review-container">
-                                  <div class="fb-review_card__header">
-                                    <div class="tw-600">[Name]</div>
-                                  </div>
-                                  <div class="text-sm">If you're on the fence, go for it. No hassle, no weird smell, and fast results. I’ve already recommended it to friends.</div>
-                                  <div class="fb-icons-right"><img loading="lazy" src="https://uploads-ssl.webflow.com/615cebda24bf7c53248868cb/615d09894399f6a7fe7b247d_icon1.png" alt="" class="fb-icon"><img loading="lazy" src="https://uploads-ssl.webflow.com/615cebda24bf7c53248868cb/615d09894399f6d7a47b2479_icon2.png" alt="" class="fb-icon">
-                                    <div class="text-block-377">68</div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="fb-review-cards"><img loading="lazy" src="../../images/icon.svg" alt="" class="fb_review_imageee">
-                                <div class="facebook_review-container">
-                                  <div class="fb-review_card__header">
-                                    <div class="tw-600">[Name]</div>
-                                  </div>
-                                  <div class="text-sm">Absolutely love it. So glad it's finally back in stock. I stocked up this time!</div>
-                                  <div class="fb-icons-right"><img loading="lazy" src="https://uploads-ssl.webflow.com/615cebda24bf7c53248868cb/615d09894399f6a7fe7b247d_icon1.png" alt="" class="fb-icon"><img loading="lazy" src="https://uploads-ssl.webflow.com/615cebda24bf7c53248868cb/615d09894399f6d7a47b2479_icon2.png" alt="" class="fb-icon">
-                                    <div class="text-block-377">44</div>
-                                  </div>
-                                </div>
-                              </div>
+              
+                    <div class="checkout-reviews hide-tablet-down">
+                        <div class="checkout-review">
+                          <div class="checkout-review__body grid-cell">
+                            <div class="checkout-review__stars">
+                              <div class="review_component cc-sm"><div class="review_component-wrapper"><div class="star_wrapper"><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div></div></div></div>
+                            </div>
+                            <p class="checkout-review__title">Woke up without the soreness<br></p>
+                            <p class="checkout-review__description">I’ve had morning back pain for years, and this is the first thing that’s helped without taking something. I didn’t expect a sheet to make that kind of difference, but it really does.<br></p>
+                            <div class="checkout-review__meta">
+                              <div class="review-auth">Daniel K.</div>
+                              <div class="review-auth">|</div>
+                              <div class="checkout-review__verified">Verified Customer</div>
                             </div>
                           </div>
                         </div>
-                      </div>
+                        <div class="checkout-review">
+                          <div class="checkout-review__body grid-cell">
+                            <div class="checkout-review__stars">
+                              <div class="review_component cc-sm"><div class="review_component-wrapper"><div class="star_wrapper"><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div></div></div></div>
+                            </div>
+                            <p class="checkout-review__title">Woke up without the soreness<br></p>
+                            <p class="checkout-review__description">I’ve had morning back pain for years, and this is the first thing that’s helped without taking something. I didn’t expect a sheet to make that kind of difference, but it really does.<br></p>
+                            <div class="checkout-review__meta">
+                              <div class="review-auth">Daniel K.</div>
+                              <div class="review-auth">|</div>
+                              <div class="checkout-review__verified">Verified Customer</div>
+                            </div>
+                          </div>
+                        </div>
                     </div>
+                   
                   </div>
                 </div>
-                <div class="olympus-checkout__right">
+                </div>
+                <div class="checkout-layout__right">
+                  <div class="checkout-layout__form">
                   <div class="checkout__form-container">
                     <div class="hide-tablet">
                       <div class="hero_heading-box">
@@ -361,38 +278,38 @@
                           <div class="hero_review-box">
                             <div class="review_component cc-sm">
                               <div class="review_component-wrapper">
-                                <div class="review_stars-wrapper">
-                                  <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                      <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
-                                    </svg></div>
-                                  <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                      <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
-                                    </svg></div>
-                                  <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                      <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
-                                    </svg></div>
-                                  <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                      <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
-                                    </svg></div>
-                                  <div class="review_component-star w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                      <path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path>
-                                    </svg></div>
+                                <div class="star_wrapper">
+                                <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                                    <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
+                                  </svg></div>
+                                <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                                    <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
+                                  </svg></div>
+                                <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                                    <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
+                                  </svg></div>
+                                <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                                    <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
+                                  </svg></div>
+                                <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                                    <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
+                                  </svg></div>
                                 </div>
                                 <div>TRUSTED BY 180,000+ FAMILIES</div>
                               </div>
                             </div>
                           </div>
-                          <h1 class="display-xl"><span>Product Name</span></h1>
-                          <div class="text-reg"><strong>2025 New &amp; Improved, Easy Bait Set-Up Mosquito Control</strong></div>
+                          <h1 class="display-md"><span>Product Name</span></h1>
+                          <div class="text-reg"><strong>2025 New &amp; Improved, Premium product bundle</strong></div>
                         </div>
                         <div class="sub-head-text">
-                          <div>Easily Stop Mosquitoes and Enjoy Outdoors Again</div>
+                          <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
                         </div>
-                      </div>
-                    </div>
-                    <div class="show-tablet">
-                      <div class="sub-head-text">
-                        <div>Easily Stop Mosquitoes and Enjoy Outdoors Again</div>
                       </div>
                     </div>
                     <div data-next-hide="param.timer == 'n'" class="scarcity-banner">
@@ -664,6 +581,73 @@
                                 </div>
                               </div>
                             </div>
+                            <!-- Prepurchase upsell: add-on bump container -->
+                        <div data-component="prepurchase-upsell" data-variant="check01" data-next-await="">
+                          <div class="bump-card" data-next-package-sync="2,3,4" data-next-bump="" data-next-package-id="6">
+                            <!-- Bump header (toggle) -->
+                            <div data-next-toggle="toggle" class="bump__header-left next-active">
+                              <div class="bump__header-content">
+                                <div class="bump__checkbox">
+                                  <div os-component="check" class="checkbox__icon w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--fe" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m6 10l-2 2l6 6L20 8l-2-2l-8 8z"></path></svg></div>
+                                </div>
+                                <div class="bump__title">Get Extended Warranty</div>
+                              </div>
+                            </div>
+                            <!-- Bump body: price, list, image -->
+                            <div class="bump__body">
+                              <div class="bump__content">
+                                <div class="bump__content-wrap">
+                                  <div class="bump__price">
+                                    <div data-next-display="package.price_retail_total" class="bump__price-reg">$29.99</div>
+                                    <div data-next-display="package.price_total" class="bump__price-sale">$9.99</div>
+                                  </div>
+                                  <div class="list-container cc-2xs">
+                                    <ul role="list" class="list w-list-unstyled">
+                                    <li class="list__item">
+                                      <div class="list_icon w-embed"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
+                                      <div>1 year with our replacement and protection</div>
+                                    </li>
+                                    <li class="list__item">
+                                      <div class="list_icon w-embed"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
+                                      <div>Accidental Damage Protection</div>
+                                    </li>
+                                    <li class="list__item">
+                                      <div class="list_icon w-embed"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
+                                      <div>Express Replacement Service</div>
+                                    </li>
+                                    <li class="list__item">
+                                      <div class="list_icon w-embed"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
+                                      <div>24/7 Priority Customer Support</div>
+                                    </li>
+                                    </ul>
+                                  </div>
+                                </div>
+                                <img data-next-display="package.6.image" loading="lazy" alt="" src="../../images/1x1_1.svg" class="bump__image">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- Prepurchase upsell: switch-style bump variation -->
+                        <div data-component="prepurchase-upsell" data-variant="switch" data-next-await="">
+                          <div class="bump-card bump-card--switch" data-next-bump="" data-next-package-id="12">
+                            <div data-next-toggle="toggle" class="bump__header-left bump__head--switch next-active">
+                              <div class="bump__head-inner">
+                                <span class="bump__title">Shipping Insurance &amp; Loss Prevention</span>
+                                <span class="bump__switch" aria-hidden="true">
+                                  <span class="bump__switch-slider"></span>
+                                </span>
+                              </div>
+                            </div>
+                            <div class="bump__body">
+                              <div class="bump__content">
+                                <p class="bump__description">
+                                  Total shipping coverage and extended warranty. Breakage, loss, delays, porch pirates — even defects. 100% protected for just
+                                  <span data-next-display="package.12.price" class="display-visible">$9.99</span>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                             <div class="form-section form-section--last">
                               <div class="form-section__header">
                                 <h1 class="form-section__title">4. Payment Method</h1>
@@ -826,7 +810,7 @@
                               </div>
                             </div>
                             <div class="form-section form-section--last">
-                              <div class="cart-box cc-olympus">
+                              <div class="cart-box cart-box--card">
                                 <div class="summary-wrapper">
                                   <div class="order-summary">
                                     <div class="order-summary__content">
@@ -845,16 +829,16 @@
                                               <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z"></path>
                                             </svg></div>
                                         </div>
-                                        <div data-group-items="" data-next-cart-items="" class="cart-items__list">
+                                        <div data-next-hide="cart.isEmpty"><template id="cart-item-template" class="item-template os-show">
                                           <div data-cart-item-id="{item.id}" class="cart-item">
                                             <div class="cart-item__wrapper">
                                               <div class="cart-item__details cc-left-0">
                                                 <div class="cart-item__content">
                                                   <div class="cart-item__description">
                                                     <div class="cart-item__header">
-                                                      <div pb-cart="line_item-title" class="cart-item__title os-bold">{item.name}</div>
+                                                      <div class="cart-item__title os-bold">{item.name}</div>
                                                     </div>
-                                                    <div class="os--badge">Save&nbsp; <span data-card-price="total-savings-percentage">40%</span></div>
+                                                    
                                                   </div>
                                                   <div class="cart-item__pricing">
                                                     <div id="line_compare" pb-cart="line_item-compare_price" class="cart-price diagonal-strike">{item.lineCompare}</div>
@@ -864,9 +848,11 @@
                                               </div>
                                             </div>
                                           </div>
+                                        </template>
+                                          <div data-item-template-id="cart-item-template" data-next-cart-items="" class="cart-items__list"></div>
                                         </div>
                                       </div>
-                                      <div>
+                                      <div class="hide">
                                         <div class="shipping-note">Shipping and tax will be settled upon checkout confirmation</div>
                                       </div>
                                       <div data-next-hide="cart.isEmpty" class="order-totals">
@@ -874,7 +860,7 @@
                                           <div class="order-totals__label">Subtotal</div>
                                           <div data-next-display="cart.subtotal" class="order-totals__value">$138.30<br></div>
                                         </div>
-                                        <div data-next-show="cart.hasSavings" class="order-totals__section cc-olympus">
+                                        <div data-next-show="cart.hasSavings" class="order-totals__section order-totals__section--inset">
                                           <div class="order-totals__line">
                                             <div class="order-totals__label-group">
                                               <div class="order-totals__label ts-lg tw-600">Today you saved<br></div>
@@ -893,10 +879,9 @@
                                             </div>
                                             <div class="accordion__right">
                                               <div data-next-display="cart.shipping" class="order-totals__value">$7.99<br></div>
-                                              <div data-next-display="cart.shipping" class="order-totals__value">FREE<br></div>
                                             </div>
                                           </div>
-                                          <div class="coupon-tags">
+                                          <div class="coupon-tags" data-next-show="cart.hasFreeShipping">
                                             <div class="coupon-tag__summary">
                                               <div class="coupon-tag__remove w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" focusable="false" aria-hidden="true" class="a8x1wu10 a8x1wuz _1fragem1y _1fragemof _1fragemkk _1fragemka _1fragemnm" fill="none" stroke="currentColor">
                                                   <path stroke-linecap="round" d="M7.284 1.402h4.964a.35.35 0 0 1 .35.35v4.964a.7.7 0 0 1-.205.495L7.49 12.115a.7.7 0 0 1-.99 0L1.885 7.5a.7.7 0 0 1 0-.99L6.79 1.607a.7.7 0 0 1 .495-.205Z"></path>
@@ -947,6 +932,8 @@
                           </div>
                         </div>
                       </form>
+
+                      
                     </div>
                     <div class="checkout-footer">
                       <div class="trust-badges">
@@ -972,27 +959,57 @@
                         </div>
                       </div><img loading="lazy" src="https://cdn.prod.website-files.com/67ec42fd75dae41c564624c5/67ec42fd75dae41c56462e31_67e1aef91560b7501b1fa583_Group%20469529.svg" alt="" class="credit-card__flags">
                     </div>
-                    <div class="guarantee-section"><img loading="lazy" src="../../images/1x1_2.svg" alt="" class="image-10">
-                      <div class="text-xs"><strong>30 Day Money-Back Guarantee:</strong> Feel safe knowing you're protected. Try it risk-free and return it within 30 days for a full refund or replacement—no questions asked.</div>
-                    </div>
-                    <div class="div-block-1625">
-                      <div class="feature-list__title">Have a Question? We Can Help!</div>
-                      <div class="info-grid">
-                        <div class="info-box">
-                          <div class="text-reg tw-600">Shipping Time?</div>
-                          <div class="text-sm">Ships fast within 3–4 business days.</div>
-                        </div>
-                        <div class="info-divider"></div>
-                        <div class="info-box">
-                          <div class="text-reg tw-600">Shipping From?</div>
-                          <div class="text-sm">All packages ship from the United States.</div>
-                        </div>
-                        <div class="info-divider"></div>
-                        <div class="info-box">
-                          <div class="text-reg tw-600">Refund Policy?</div>
-                          <div class="text-sm">Easy, hassle-free refunds within 30 days.</div>
-                        </div>
+                    <div class="icons-grids hide-tablet-up">
+                      <div class="icon-image">
+                        <div class="icon-img"><img loading="eager" src="../../images/1x1_2.svg" alt="" class="cover"></div>
+                        <div class="text-xs">Benefit one</div>
                       </div>
+                      <div class="icon-image">
+                        <div class="icon-img"><img loading="eager" src="../../images/1x1_2.svg" alt="" class="cover"></div>
+                        <div class="text-xs">Benefit two</div>
+                      </div>
+                      <div class="icon-image">
+                        <div class="icon-img"><img loading="eager" src="../../images/1x1_2.svg" alt="" class="cover"></div>
+                        <div class="text-xs">Benefit three</div>
+                      </div>
+                      <div class="icon-image">
+                        <div class="icon-img"><img loading="eager" src="../../images/1x1_2.svg" alt="" class="cover"></div>
+                        <div class="text-xs">Benefit four</div>
+                      </div>
+                    </div>
+              
+                    <div class="checkout-reviews hide-tablet-up">
+                        <div class="checkout-review">
+                          <div class="checkout-review__body grid-cell">
+                            <div class="checkout-review__stars">
+                              <div class="review_component cc-sm"><div class="review_component-wrapper"><div class="star_wrapper"><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div></div></div></div>
+                            </div>
+                            <p class="checkout-review__title">Woke up without the soreness<br></p>
+                            <p class="checkout-review__description">I’ve had morning back pain for years, and this is the first thing that’s helped without taking something. I didn’t expect a sheet to make that kind of difference, but it really does.<br></p>
+                            <div class="checkout-review__meta">
+                              <div class="review-auth">Daniel K.</div>
+                              <div class="review-auth">|</div>
+                              <div class="checkout-review__verified">Verified Customer</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="checkout-review">
+                          <div class="checkout-review__body grid-cell">
+                            <div class="checkout-review__stars">
+                              <div class="review_component cc-sm"><div class="review_component-wrapper"><div class="star_wrapper"><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div></div></div></div>
+                            </div>
+                            <p class="checkout-review__title">Woke up without the soreness<br></p>
+                            <p class="checkout-review__description">I’ve had morning back pain for years, and this is the first thing that’s helped without taking something. I didn’t expect a sheet to make that kind of difference, but it really does.<br></p>
+                            <div class="checkout-review__meta">
+                              <div class="review-auth">Daniel K.</div>
+                              <div class="review-auth">|</div>
+                              <div class="checkout-review__verified">Verified Customer</div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="guarantee-section"><img loading="lazy" src="../../images/90d.webp" alt="" class="image-10">
+                      <div class="text-xs"><strong>90 Day Money-Back Guarantee:</strong> Feel safe knowing you're protected. Try it risk-free and return it within 90 days for a full refund or replacement—no questions asked.</div>
                     </div>
                   </div>
                 </div>
@@ -1000,28 +1017,29 @@
             </div>
           </div>
         </div>
-        <footer class="footer_section">
-          <div class="container cc-medium">
-            <div class="footer_layout">
-              <div class="footer_copy-info">
-                <div class="footer_link-wrapper">
-                  <a href="#" class="footer_legal-link">Shipping Policy</a>
-                  <a href="#" class="footer_legal-link">Refund Policy</a>
-                  <a href="#" class="footer_legal-link">Privacy Policy</a>
-                  <a href="#" class="footer_legal-link">Terms of Service</a>
-                </div>
-                <div class="text-xs">Copyright © <span class="copyright-year"></span> Next Commerce</div>
-<script>(function(){ var y = new Date().getFullYear(); document.querySelectorAll('.copyright-year').forEach(function(el){ el.textContent = y; }); })();</script>
+        
+      </div>
+      <footer class="footer_section">
+        <div class="container">
+          <div class="footer_layout">
+            <div class="footer_copy-info">
+              <div class="footer_link-wrapper">
+                <a href="#" class="footer_legal-link">Shipping Policy</a>
+                <a href="#" class="footer_legal-link">Refund Policy</a>
+                <a href="#" class="footer_legal-link">Privacy Policy</a>
+                <a href="#" class="footer_legal-link">Terms of Service</a>
               </div>
+              <div class="text-xs">Copyright © <span class="copyright-year"></span> Next Commerce</div>
+<script>(function(){ var y = new Date().getFullYear(); document.querySelectorAll('.copyright-year').forEach(function(el){ el.textContent = y; }); })();</script>
             </div>
           </div>
-        </footer>
-      </div>
+        </div>
+      </footer>
     </div>
 
 
 
 
-    <script defer="" src="../../js/templates-checkout-olympus.js"></script>
+    <script defer="" src="../../js/checkout-olympus.js"></script>
   </body>
 </html>

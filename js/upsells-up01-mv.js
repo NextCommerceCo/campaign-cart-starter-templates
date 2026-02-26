@@ -1053,45 +1053,33 @@ if (window.next?.addUpsell) {
   window.upsellController = new UpsellController();
 }
 
-// Inline script 4 from up05-mv.html
-document.querySelectorAll('[data-component="swiper"][data-variant="sw1"]').forEach((sliderComponent) => {
-  const sliderMain = sliderComponent.querySelector('[swiper="slider-main"]');
-  const sliderThumbs = sliderComponent.querySelector('[swiper="slider-thumbs"]');
-  const buttonNextEl = sliderComponent.querySelector('[swiper="next-button"]');
-  const buttonPrevEl = sliderComponent.querySelector('[swiper="prev-button"]');
-  // Initialize thumbs swiper first
-  const thumbsSwiper = new Swiper(sliderThumbs, {
-    slidesPerView: 5, // Show a fixed number of thumbs
-    spaceBetween: 10,
-    freeMode: false, // Disable free mode for proper controlled movement
-    watchSlidesProgress: true,
-    watchOverflow: true, // Prevent extra spacing when fewer slides exist
-    centerInsufficientSlides: true, // Prevents misalignment when fewer thumbs exist
-    breakpoints: {
-      768: {
-        slidesPerView: 5, // Adjust for desktop
-        spaceBetween: 10,
+// Swiper gallery: init after DOM + Swiper are ready (Swiper script is deferred)
+function initSwiperGalleries() {
+  if (typeof Swiper === 'undefined') return;
+  document.querySelectorAll('[data-component="swiper"][data-variant="sw1"]').forEach((sliderComponent) => {
+    const sliderMain = sliderComponent.querySelector('[swiper="slider-main"]');
+    const sliderThumbs = sliderComponent.querySelector('[swiper="slider-thumbs"]');
+    const buttonNextEl = sliderComponent.querySelector('[swiper="next-button"]');
+    const buttonPrevEl = sliderComponent.querySelector('[swiper="prev-button"]');
+    if (!sliderMain || !sliderThumbs) return;
+    const thumbsSwiper = new Swiper(sliderThumbs, {
+      slidesPerView: 5,
+      spaceBetween: 10,
+      freeMode: false,
+      watchSlidesProgress: true,
+      watchOverflow: true,
+      centerInsufficientSlides: true,
+      breakpoints: {
+        768: { slidesPerView: 5, spaceBetween: 10 },
+        480: { slidesPerView: 5, spaceBetween: 8 },
       },
-      480: {
-        slidesPerView: 5, // Adjust for mobile
-        spaceBetween: 8,
-      },
-    },
-  });
-  // Initialize main swiper with thumbs navigation
-  new Swiper(sliderMain, {
-    slidesPerView: 1,
-    spaceBetween: 0,
-    navigation: {
-      nextEl: buttonNextEl,
-      prevEl: buttonPrevEl,
-    },
-    thumbs: {
-      swiper: thumbsSwiper,
-    },
-  });
-  // Add keyboard accessibility for thumbs
-  if (sliderThumbs) {
+    });
+    new Swiper(sliderMain, {
+      slidesPerView: 1,
+      spaceBetween: 0,
+      navigation: { nextEl: buttonNextEl, prevEl: buttonPrevEl },
+      thumbs: { swiper: thumbsSwiper },
+    });
     sliderThumbs.querySelectorAll('.swiper-slide').forEach((slide, index) => {
       slide.addEventListener('keydown', (event) => {
         if (event.key === 'Enter' || event.key === ' ') {
@@ -1100,5 +1088,10 @@ document.querySelectorAll('[data-component="swiper"][data-variant="sw1"]').forEa
         }
       });
     });
-  }
-});
+  });
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSwiperGalleries);
+} else {
+  initSwiperGalleries();
+}

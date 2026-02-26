@@ -41,8 +41,8 @@
           <div class="checkout__content">
             <div class="checkout__layout">
               <div class="checkout__column checkout__column--left">
-                <div class="checkout__form-container cc-checkout">
-                  <div class="checkout__header-brand cc-shop"><img src="../../../images/next-logo.png" loading="eager" alt="" class="brand-logo"></div>
+                <div class="checkout__form-container checkout__form-container--main">
+                  <div class="checkout-header__brand justify-center"><img src="../../../images/next-logo.png" loading="eager" alt="" class="brand-logo"></div>
                   <div class="order-summary-mobile">
                     <div data-initial-state="closed" data-next-accordion="order-summary" data-open-text="Hide Order Summary" data-close-text="Show Order Summary" data-toggle-class="next-expanded" class="order-summary-mobile__accordion">
                       <div data-next-accordion-trigger="order-summary" class="order-summary__trigger">
@@ -239,9 +239,6 @@
                           <div class="bump__description">Get peace of mind with <span data-next-display="package.6.name">Shipping Guarantee</span> in the event your delivery is damaged, stolen, or lost during transit for <span data-next-display="package.price">$1.99</span></div>
                         </div>
                       </div>
-                      <div class="custom-code w-embed">
-
-                      </div>
                     </div>
                   </div>
                   <div data-next-express-checkout="container" class="exp-checkout">
@@ -345,7 +342,6 @@
                             </div>
                           </div>
                           <div class="submit-section cc-shop__three">
-                            <div></div>
                             <div class="submit-section__button"><button os-checkout-payment="combo" data-action="submit" type="submit" class="submit-button cc-shop__three">
                                 <div data-pb-element="checkout-button-spinner" class="submit-button__loader">
                                   <div class="three-quarter-spinner black"></div>
@@ -375,8 +371,8 @@
                 </div>
               </div>
               <div class="checkout__column checkout__column--right">
-                <div class="rtc-right-container">
-                  <div class="summary-desktop">
+                <div class="checkout__summary">
+                  <div class="summary-desktop" >
                     <div class="summary-wrap">
                       <div class="summary-holder">
                         <div class="order-summary">
@@ -424,7 +420,7 @@
                                 <div data-item-template-id="cart-item-template" data-next-cart-items="" class="cart-items__list"></div>
                               </div>
                             </div>
-                            <div data-next-hide="cart.isEmpty" class="coupon-section">
+                            <div data-next-hide="cart.isEmpty" class="coupon-section" data-next-await>
                               <div class="coupon-form">
                                 <div data-auto-apply="true" data-next-coupon="input" data-placeholder="Promo code (optional)" data-button-text="Apply" class="coupon-form__row">
                                   <div class="form-group">
@@ -448,7 +444,7 @@
                                 </div>
                               </div>
                             </div>
-                            <div data-next-content="">
+                            <div data-next-content=""  data-next-await>
                               <div data-next-hide="cart.isEmpty" class="order-totals">
                                 <div class="order-totals__section">
                                   <div class="order-totals__line">
@@ -531,9 +527,5 @@
         </div>
       </div>
     </div>
-
-
-    <!-- Consolidated Custom CSS -->
-
   </body>
 </html>

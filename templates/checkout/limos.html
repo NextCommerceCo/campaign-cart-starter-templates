@@ -51,14 +51,12 @@
             </div>
           </div>
         </div>
-        <nav class="limos-header">
+        <section class="checkout-header checkout-header--lg">
           <div class="container cc-medium">
-            <div class="limos-header__wrapper">
-              <div class="limos-header__left">
-                <div class="limos-header__logo-wrapper"><img src="../../images/next-logo.png" loading="eager" alt="" class="brand-logo"></div>
-              </div>
-              <div class="limos-header__right">
-                <div class="checkout__secure-icon w-embed"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 92 36">
+            <div class="checkout-header__inner checkout-header__inner--center">
+              <div class="checkout-header__brand"><img src="../../images/next-logo.png" loading="eager" alt="" class="brand-logo"></div>
+              <div class="checkout-header__right">
+                <div class="checkout-header__secure-icon w-embed"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 92 36">
                     <rect x="1" y="1" width="90" height="34" rx="3.5" ry="3.5" fill="none" stroke="currentColor" stroke-width="2"></rect>
                     <g fill="currentColor">
                       <path d="M28.5,13.4h1.7c0,.7.6,1.1,1.4,1.1s1.2-.3,1.2-.8-.4-.7-1.2-.8l-.8-.2c-1.3-.3-2.1-1-2.1-2.1s1.2-2.3,2.9-2.3,2.9,1,2.9,2.4h-1.7c0-.5-.5-.9-1.2-.9s-1.1.3-1.1.7.4.7,1.1.8l.7.2c1.5.3,2.3,1,2.3,2.3s-1.1,2.3-3,2.3-3.1-.9-3.1-2.6Z"></path>
@@ -81,11 +79,11 @@
               </div>
             </div>
           </div>
-        </nav>
-        <div class="limos-checkout">
+        </section>
+        <div class="checkout-main">
           <div class="container cc-medium">
-            <div class="limos__layout">
-              <div class="limos__column--left">
+            <div class="checkout-wrapper checkout-wrapper--full-height">
+              <div class="checkout-layout__left checkout-layout__left--wide">
                 <div class="checkout-banners">
                   <div class="scarcity-banner">
                     <div class="scarcity-banner__left">
@@ -124,9 +122,9 @@
                         </div>
                         <div class="checkout__package-media-wrapper"><img src="../../images/1x1_1.svg" loading="lazy" data-next-display="package.image" alt="" class="checkout__package-media"></div>
                         <div class="checkout__package-content">
-                          <div data-next-display="package.price_retail_total" class="limos__package-regular">$119.98</div>
-                          <div data-next-display="package.finalPriceTotal" class="limos__package-sale">$59.99</div>
-                          <div class="limos__package-savings">You Save <span data-next-display="package.totalSavingsAmount">$59.99</span></div>
+                          <div data-next-display="package.price_retail_total" class="package-price--regular">$119.98</div>
+                          <div data-next-display="package.finalPriceTotal" class="package-price--sale">$59.99</div>
+                          <div class="package-savings">You Save <span data-next-display="package.totalSavingsAmount">$59.99</span></div>
                         </div>
                       </div>
                     </div>
@@ -136,10 +134,10 @@
                   <div class="checkout-features__section">
                     <div class="checkout-divider hide-tablet">
                       <div class="checkout-divider__line"></div>
-                      <div class="checkout-divider__text cc-limos">The Quality Promise</div>
+                      <div class="checkout-divider__text checkout-divider__text--heading">The Quality Promise</div>
                       <div class="checkout-divider__line"></div>
                     </div>
-                    <div class="checkout-features__column-limos">
+                    <div class="checkout-features__column checkout-features__column--stacked">
                       <div class="checkout-features__item cc-wrap-mobile">
                         <div class="checkout-features__item-image--wrapper">
                           <div class="checkout-features__icon w-embed"><svg width="100%" height="100%" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -214,7 +212,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="trust-bar__limos-mobile">
+                <div class="trust-bar trust-bar--mobile">
                   <div class="encrypted-banner">
                     <div class="container cc-small">
                       <div class="scarcity-banner__content">
@@ -226,6 +224,7 @@
                     </div>
                   </div>
                 </div>
+                
                 <div data-next-express-checkout="container" class="exp-checkout__inline">
                   <div class="exp-checkout__inline-header">
                     <div class="express-checkout__title-inline">Express Checkout</div>
@@ -242,32 +241,32 @@
                 <div class="checkout-form">
                   <form data-next-checkout="form" id="combo_form" method="post" next-no-error-style="" next-show-validation-icons="">
                     <div class="form-content">
-                      <div class="form-sections cc-limos">
+                      <div class="form-sections form-sections--floating">
                         <div class="form-section">
                           <div class="form-section__header">
                             <h1 class="form-section__title">Shipping address</h1>
-                            <div class="form-section__subtitle cc-limos">Where do we send your Product?<br></div>
+                            <div class="form-section__subtitle form-section__subtitle--floating">Where do we send your Product?<br></div>
 
                           </div>
                           <div data-next-component="shipping-form">
-                            <div class="form-grid cc-limos">
+                            <div class="form-grid form-grid--floating">
                               <div class="form-grid__row">
                                 <div class="form-group">
-                                  <div class="form-input"><label for="email" class="label-checkout cc-limos">Email</label><input autocomplete="email" os-checkout-validate="required" name="email" data-name="Email" type="email" id="email" placeholder="Email*" data-next-checkout-field="email" data-label-behavior="placeholder" class="input-flds cc-limos"></div>
+                                  <div class="form-input"><label for="email" class="label-checkout label-checkout--floating">Email</label><input autocomplete="email" os-checkout-validate="required" name="email" data-name="Email" type="email" id="email" placeholder="Email*" data-next-checkout-field="email" data-label-behavior="placeholder" class="input-flds input-flds--floating"></div>
                                 </div>
                               </div>
-                              <div data-next-component="shipping-field-row" class="form-grid__row cc-limos">
+                              <div data-next-component="shipping-field-row" class="form-grid__row form-grid__row--floating">
                                 <div class="form-group">
-                                  <div class="form-input"><label for="shipping_fname" class="label-checkout cc-limos">First Name</label><input autocomplete="given-name" os-checkout-validate="required" placeholder="First Name*" maxlength="256" name="shipping_fname" data-name="Shipping First Name" type="text" id="shipping_fname" data-next-checkout-field="fname" data-label-behavior="placeholder" class="input-flds cc-limos"></div>
+                                  <div class="form-input"><label for="shipping_fname" class="label-checkout label-checkout--floating">First Name</label><input autocomplete="given-name" os-checkout-validate="required" placeholder="First Name*" maxlength="256" name="shipping_fname" data-name="Shipping First Name" type="text" id="shipping_fname" data-next-checkout-field="fname" data-label-behavior="placeholder" class="input-flds input-flds--floating"></div>
                                 </div>
                                 <div class="form-group">
-                                  <div class="form-input"><label for="shipping_lname" class="label-checkout cc-limos">Last Name</label><input autocomplete="family-name" os-checkout-validate="required" placeholder="Last Name*" maxlength="256" name="shipping_lname" data-name="Shipping Lirst Name" type="text" id="shipping_lname" data-next-checkout-field="lname" data-label-behavior="placeholder" class="input-flds cc-limos"></div>
+                                  <div class="form-input"><label for="shipping_lname" class="label-checkout label-checkout--floating">Last Name</label><input autocomplete="family-name" os-checkout-validate="required" placeholder="Last Name*" maxlength="256" name="shipping_lname" data-name="Shipping Lirst Name" type="text" id="shipping_lname" data-next-checkout-field="lname" data-label-behavior="placeholder" class="input-flds input-flds--floating"></div>
                                 </div>
                               </div>
                               <div data-next-component="shipping-field-row" class="form-grid__row">
                                 <div class="form-group">
-                                  <div class="form-input"><label for="shipping_country" class="label-checkout cc-limos">Country</label>
-                                    <div class="select-form-wrapper"><select autocomplete="country-name" os-checkout-validate="required" data-next-checkout-field="country" data-label-behavior="placeholder" class="input-flds select-field cc-limos">
+                                  <div class="form-input"><label for="shipping_country" class="label-checkout label-checkout--floating">Country</label>
+                                    <div class="select-form-wrapper"><select autocomplete="country-name" os-checkout-validate="required" data-next-checkout-field="country" data-label-behavior="placeholder" class="input-flds input-flds--floating select-field">
                                         <option value="">Select Country</option>
                                       </select>
                                       <div class="caret-down">
@@ -285,23 +284,23 @@
                                     <div class="form-input-icon w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" focusable="false" aria-hidden="true" class="a8x1wuy a8x1wux *1fragem32 *1fragempz *1fragemly *1fragemlo _1fragemp6">
                                         <circle cx="6" cy="6" r="4" fill="none" stroke="currentColor" stroke-width="1"></circle>
                                         <path fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" d="m9.25 9.25 2.5 2.5"></path>
-                                      </svg></div><label for="shipping_address1" class="label-checkout cc-limos">Address</label><input autocomplete="address-line1" os-checkout-validate="required" placeholder="Address*" data-next-checkout-field="address1" data-label-behavior="placeholder" class="input-flds cc-limos">
+                                      </svg></div><label for="shipping_address1" class="label-checkout label-checkout--floating">Address</label><input autocomplete="address-line1" os-checkout-validate="required" placeholder="Address*" data-next-checkout-field="address1" data-label-behavior="placeholder" class="input-flds input-flds--floating">
                                   </div>
                                 </div>
                               </div>
-                              <div data-next-component="location" class="form-grid cc-limos next-hidden">
+                              <div data-next-component="location" class="form-grid form-grid--floating next-hidden">
                                 <div data-next-component="shipping-field-row" class="form-grid__row">
                                   <div class="form-group">
-                                    <div class="form-input"><label for="shipping_address2" class="label-checkout cc-limos">Apartment, suite, etc. (optional)</label><input autocomplete="address-line2" name="shipping_address2" data-name="Shipping Address 2" type="text" id="shipping_addres2" placeholder="Apartment, suite, etc. (optional)" maxlength="256" data-next-checkout-field="address2" data-label-behavior="placeholder" class="input-flds cc-limos"></div>
+                                    <div class="form-input"><label for="shipping_address2" class="label-checkout label-checkout--floating">Apartment, suite, etc. (optional)</label><input autocomplete="address-line2" name="shipping_address2" data-name="Shipping Address 2" type="text" id="shipping_addres2" placeholder="Apartment, suite, etc. (optional)" maxlength="256" data-next-checkout-field="address2" data-label-behavior="placeholder" class="input-flds input-flds--floating"></div>
                                   </div>
                                 </div>
-                                <div data-next-component="shipping-field-row" data-os-component="location" class="form-grid__row cc-limos">
+                                <div data-next-component="shipping-field-row" data-os-component="location" class="form-grid__row form-grid__row--floating">
                                   <div class="form-group">
-                                    <div class="form-input"><label for="shipping_city" class="label-checkout cc-limos">City</label><input autocomplete="address-level2" os-checkout-validate="required" placeholder="City*" maxlength="256" name="shipping_city" data-name="Shipping City" type="text" id="shipping_city" pattern="^[A-Za-z\s]+$" data-next-checkout-field="city" data-label-behavior="placeholder" class="input-flds cc-limos"></div>
+                                    <div class="form-input"><label for="shipping_city" class="label-checkout label-checkout--floating">City</label><input autocomplete="address-level2" os-checkout-validate="required" placeholder="City*" maxlength="256" name="shipping_city" data-name="Shipping City" type="text" id="shipping_city" pattern="^[A-Za-z\s]+$" data-next-checkout-field="city" data-label-behavior="placeholder" class="input-flds input-flds--floating"></div>
                                   </div>
                                   <div class="form-group">
-                                    <div class="form-input"><label for="shipping_province" class="label-checkout cc-limos">State</label>
-                                      <div class="select-form-wrapper"><select autocomplete="address-level1" os-checkout-validate="required" name="shipping_province" data-name="Shipping Province" type="select" id="shipping_province" data-next-checkout-field="province" data-label-behavior="placeholder" class="input-flds select-field cc-limos">
+                                    <div class="form-input"><label for="shipping_province" class="label-checkout label-checkout--floating">State</label>
+                                      <div class="select-form-wrapper"><select autocomplete="address-level1" os-checkout-validate="required" name="shipping_province" data-name="Shipping Province" type="select" id="shipping_province" data-next-checkout-field="province" data-label-behavior="placeholder" class="input-flds input-flds--floating select-field">
                                           <option value="">Select State</option>
                                         </select>
                                         <div class="caret-down">
@@ -313,12 +312,12 @@
                                     </div>
                                   </div>
                                   <div class="form-group">
-                                    <div class="form-input"><label for="shipping_postal_code" class="label-checkout cc-limos">ZIP Code</label><input autocomplete="postal-code" os-checkout-validate="required" placeholder="ZIP Code*" maxlength="10" name="shipping_postal_code" data-name="Shipping Postal Code" type="text" id="shipping_postal_code" inputmode="numeric" pattern="(^\d{5}$)|(^\d{5}-\d{4}$)" data-next-checkout-field="postal" data-label-behavior="placeholder" class="input-flds cc-limos"></div>
+                                    <div class="form-input"><label for="shipping_postal_code" class="label-checkout label-checkout--floating">ZIP Code</label><input autocomplete="postal-code" os-checkout-validate="required" placeholder="ZIP Code*" maxlength="10" name="shipping_postal_code" data-name="Shipping Postal Code" type="text" id="shipping_postal_code" inputmode="numeric" pattern="(^\d{5}$)|(^\d{5}-\d{4}$)" data-next-checkout-field="postal" data-label-behavior="placeholder" class="input-flds input-flds--floating"></div>
                                   </div>
                                 </div>
                                 <div data-next-component="shipping-field-row" class="form-grid__row">
                                   <div class="form-group">
-                                    <div class="form-input"><label for="phone" class="label-checkout cc-limos">Phone</label><input autocomplete="tel-full" name="phone" data-name="Phone" type="tel" id="phone" placeholder="201-555-0123" data-next-checkout-field="phone" data-label-behavior="placeholder" class="input-flds cc-limos">
+                                    <div class="form-input"><label for="phone" class="label-checkout label-checkout--floating">Phone</label><input autocomplete="tel-full" name="phone" data-name="Phone" type="tel" id="phone" placeholder="201-555-0123" data-next-checkout-field="phone" data-label-behavior="placeholder" class="input-flds input-flds--floating">
 
                                     </div>
                                   </div>
@@ -374,7 +373,7 @@
                                   <div class="payment-method__icons"><img loading="lazy" src="../../images/cc-visa.svg" alt="" class="payment-method__icon payment-method__icon--visa"><img loading="lazy" src="../../images/cc_master.svg" alt="" class="payment-method__icon payment-method__icon--mastercard"><img loading="lazy" src="../../images/cc_amex.svg" alt="" class="payment-method__icon payment-method__icon--amex"><img loading="lazy" src="../../images/cc_discover.svg" alt="" class="payment-method__icon payment-method__icon--discover"></div>
                                 </label></div>
                               <div data-next-payment-form="credit" os-checkout-element="credit-form" os-shipping-method-same="true" class="payment-method__form payment-method__form--expanded">
-                                <div class="payment-method__content cc-limos">
+                                <div class="payment-method__content payment-method__content--floating">
                                   <div data-next-component="credit-error" class="next-toast-handler">
                                     <div class="tip1_bar is-warning">
                                       <div data-next-component="credit-error-text" class="text-sm">Error message</div>
@@ -386,15 +385,15 @@
                                         <div class="form-input">
                                           <div data-next-tooltip="All transactions are secure and encrypted." class="form-input-icon w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" focusable="false" aria-hidden="true" class="a8x1wuy a8x1wux *1fragem32 *1fragempm *1fragemlo *1fragemle _1fragemot">
                                               <path fill="none" stroke="currentColor" stroke-width="1" d="M2.5 7c0-.966.784-1.75 1.75-1.75h5.5c.966 0 1.75.784 1.75 1.75v3.5a1.75 1.75 0 0 1-1.75 1.75h-5.5A1.75 1.75 0 0 1 2.5 10.5zm7-1.75V4.22c0-1.364-1.12-2.47-2.5-2.47S4.5 2.856 4.5 4.22v1.03"></path>
-                                            </svg></div><label for="cc-number" class="label-checkout cc-limos">Card Number</label>
-                                          <div data-label-behavior="placeholder" data-next-checkout-field="cc-number" class="input-flds spreedly-field cc-limos"></div>
+                                            </svg></div><label for="cc-number" class="label-checkout label-checkout--floating">Card Number</label>
+                                          <div data-label-behavior="placeholder" data-next-checkout-field="cc-number" class="input-flds input-flds--floating spreedly-field"></div>
                                         </div>
                                       </div>
                                     </div>
                                     <div class="form-grid__row">
                                       <div class="form-group">
                                         <div class="form-input">
-                                          <div class="select-form-wrapper"><label for="credit_card_exp_month" class="label-checkout cc-limos">Exp. Month</label><select autocomplete="cc-exp-month" data-placeholder="Exp. Month" placeholder="Exp. Month" name="credit_card_exp_month" id="credit_card_exp_month" data-name="Credit Card Exp. Month" data-next-checkout-field="exp-month" data-label-behavior="placeholder" class="input-flds select-field cc-limos">
+                                          <div class="select-form-wrapper"><label for="credit_card_exp_month" class="label-checkout label-checkout--floating">Exp. Month</label><select autocomplete="cc-exp-month" data-placeholder="Exp. Month" placeholder="Exp. Month" name="credit_card_exp_month" id="credit_card_exp_month" data-name="Credit Card Exp. Month" data-next-checkout-field="exp-month" data-label-behavior="placeholder" class="input-flds input-flds--floating select-field">
                                               <option value="">Exp. Month</option>
                                             </select>
                                             <div class="caret-down">
@@ -407,7 +406,7 @@
                                       </div>
                                       <div class="form-group">
                                         <div class="form-input">
-                                          <div class="select-form-wrapper"><label for="credit_card_exp_year" class="label-checkout cc-limos">Exp. Year</label><select autocomplete="cc-exp-year" data-placeholder="Exp. Year" placeholder="Exp. Year" name="credit_card_exp_year" id="credit_card_exp_year" data-name="Credit Card Exp. Year" data-next-checkout-field="exp-year" data-label-behavior="placeholder" class="input-flds select-field cc-limos">
+                                          <div class="select-form-wrapper"><label for="credit_card_exp_year" class="label-checkout label-checkout--floating">Exp. Year</label><select autocomplete="cc-exp-year" data-placeholder="Exp. Year" placeholder="Exp. Year" name="credit_card_exp_year" id="credit_card_exp_year" data-name="Credit Card Exp. Year" data-next-checkout-field="exp-year" data-label-behavior="placeholder" class="input-flds input-flds--floating select-field">
                                               <option value="">Exp. Year</option>
                                             </select>
                                             <div class="caret-down">
@@ -419,7 +418,7 @@
                                         </div>
                                       </div>
                                       <div class="form-group">
-                                        <div class="form-input"><label for="cvv" class="label-checkout cc-limos">CVV</label>
+                                        <div class="form-input"><label for="cvv" class="label-checkout label-checkout--floating">CVV</label>
                                           <div data-next-tooltip="3-digit security code usually found on the back of your card. American Express cards have a 4-digit code located on the front." class="form-input-icon w-embed"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="100%" height="100%" focusable="false" aria-hidden="true" class="a8x1wuy a8x1wux *1fragem32 *1fragempm *1fragemlo *1fragemle _1fragemot">
                                               <g clip-path="url(#a)">
                                                 <circle cx="7" cy="7" r="5.5" fill="none" stroke="currentColor" stroke-width="1"></circle>
@@ -432,7 +431,7 @@
                                                 </clipPath>
                                               </defs>
                                             </svg></div>
-                                          <div data-next-checkout-field="cvv" class="input-flds spreedly-field cc-limos"></div>
+                                          <div data-next-checkout-field="cvv" class="input-flds input-flds--floating spreedly-field"></div>
                                         </div>
                                       </div>
                                     </div>
@@ -506,8 +505,8 @@
                             </div>
                           </div>
                         </div>
-                        <!-- Prepurchase upsell (limos): add-on bump container -->
-                        <div data-component="prepurchase-upsell" data-variant="limos" data-next-await="">
+                        <!-- Prepurchase upsell: add-on bump container -->
+                        <div data-component="prepurchase-upsell" data-variant="check01" data-next-await="">
                           <div class="bump-card" data-next-package-sync="2,3,4" data-next-bump="" data-next-package-id="6">
                             <!-- Bump header (toggle) -->
                             <div data-next-toggle="toggle" class="bump__header-left next-active">
@@ -552,18 +551,39 @@
                             </div>
                           </div>
                         </div>
-                        <div class="submit-section cc-lumos">
+                        <!-- Prepurchase upsell: switch-style bump variation -->
+                        <div data-component="prepurchase-upsell" data-variant="switch" data-next-await="">
+                          <div class="bump-card bump-card--switch" data-next-bump="" data-next-package-id="12">
+                            <div data-next-toggle="toggle" class="bump__header-left bump__head--switch next-active">
+                              <div class="bump__head-inner">
+                                <span class="bump__title">Shipping Insurance &amp; Loss Prevention</span>
+                                <span class="bump__switch" aria-hidden="true">
+                                  <span class="bump__switch-slider"></span>
+                                </span>
+                              </div>
+                            </div>
+                            <div class="bump__body">
+                              <div class="bump__content">
+                                <p class="bump__description">
+                                  Total shipping coverage and extended warranty. Breakage, loss, delays, porch pirates — even defects. 100% protected for just
+                                  <span data-next-display="package.12.price" class="display-visible">$9.99</span>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="submit-section submit-section--no-margin-top">
                           <div class="submit-section__button">
-                            <button os-checkout-payment="combo" data-action="submit" type="submit" class="submit-button cc-limos">
+                            <button os-checkout-payment="combo" data-action="submit" type="submit" class="submit-button submit-button--compact">
                               <div data-pb-element="checkout-button-spinner" class="submit-button__loader">
                                 <div class="three-quarter-spinner black"></div>
                               </div>
                               <div data-pb-element="checkout-button-info" class="submit-button__content">
-                                <div class="submit-button__text cc-limos">
+                                <div class="submit-button__text submit-button__text--row">
                                   <div class="submit-button__icon w-embed"><svg width="100%" height="100%" viewBox="0 0 22 27" fill="none" xmlns="http://www.w3.org/2000/svg">
                                       <path d="M18.5352 10.1287H17.6968V6.89234C17.6968 3.02664 14.912 0 10.9295 0C6.94695 0 4.22207 3.08657 4.22207 6.89234V10.0988C4.22207 10.1287 4.22207 10.1287 4.22207 10.0988H3.38364C1.52713 10.0988 0.0299437 11.5971 0 13.485V23.6138C0 25.4717 1.49719 26.97 3.38364 27H18.5352C20.3917 27 21.8889 25.5017 21.9188 23.6138V13.485C21.9188 11.6271 20.3917 10.1287 18.5352 10.1287ZM5.89892 10.1287V6.89234C5.89892 4.01554 7.8752 1.67814 10.9295 1.67814C13.9538 1.67814 16.0199 3.9556 16.0199 6.89234V10.0988C16.0199 10.1287 16.0199 10.1287 16.0199 10.0988H5.89892C5.89892 10.1287 5.89892 10.1287 5.89892 10.1287ZM20.212 23.6138C20.212 24.5427 19.4634 25.2919 18.5352 25.2919H3.38364C2.45539 25.2919 1.70679 24.5427 1.70679 23.6138V13.485C1.70679 12.556 2.45539 11.8069 3.38364 11.8069H18.5352C19.4634 11.8069 20.212 12.556 20.212 13.485V23.6138ZM12.6363 16.8713C12.6363 17.5006 12.3069 18.04 11.7978 18.3396V21.0966C11.7978 21.576 11.4086 21.9356 10.9594 21.9356C10.4803 21.9356 10.121 21.5461 10.121 21.0966V18.3396C9.61194 18.04 9.28256 17.5006 9.28256 16.8713C9.28256 15.9423 10.0312 15.1931 10.9594 15.1931C11.8877 15.1632 12.6363 15.9123 12.6363 16.8713Z" fill="currentColor"></path>
                                     </svg></div>
-                                  <div data-i18n="complete_purchase" class="submit-button__main-text cc-limos">COMPLETE YOUR SECURE PURCHASE</div>
+                                  <div data-i18n="complete_purchase" class="submit-button__main-text submit-button__main-text--md">COMPLETE YOUR SECURE PURCHASE</div>
                                 </div>
                               </div>
                             </button>
@@ -584,7 +604,7 @@
                   </div><img loading="lazy" src="../../images/Group-120.svg" alt="" class="credit-card__flags">
                 </div>
                 <div class="hide-tablet">
-                  <div class="checkout-footer-links cc-limos">
+                  <div class="checkout-footer-links checkout-footer-links--compact">
                     <a href="#" class="link">
                       <div>Return policy</div>
                     </a>
@@ -596,24 +616,157 @@
                     </a>
                   </div>
                 </div>
+                <div class="order-summary--card hide-tablet-up">
+                  <div data-initial-state="closed" data-next-accordion="order-summary" data-open-text="Hide Order Summary" data-close-text="Show Order Summary" data-toggle-class="next-expanded" class="order-summary__accordion">
+                    <div data-next-accordion-trigger="order-summary" class="order-summary__accordion-trigger">
+                      <div class="order-summary__accordion-inner">
+                        <div class="order-summary__accordion-head">
+                          <div data-next-accordion-text="order-summary" class="summary-toggle__text">Order Summary</div>
+                          <div os-summary-icon="" class="order-summary__accordion-icon w-embed"><svg width="100%" height="100%" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M6.97098 8L0.0683905 0.5L13.8736 0.500001L6.97098 8Z" fill="#707070"></path>
+                            </svg></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div data-next-accordion-panel="order-summary" class="order-summary__accordion-panel">
+                      <div class="order-summary--accordion">
+                        <div class="order-summary__content">
+                          <div class="cart-items">
+                            <div data-next-component="scroll-hint" class="cart-items__scroll-hint cart-items__scroll-hint--active">
+                              <div>Scroll for more items</div>
+                              <div class="icon__view-more w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                                  <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z"></path>
+                                </svg></div>
+                            </div>
+                            <div data-next-hide="cart.isEmpty"><template id="cart-item-template" class="item-template os-show">
+                                <div data-cart-item-id="{item.id}" class="cart-item">
+                                  <div class="cart-item__wrapper">
+                                    <div class="cart-item__image-container">
+                                      <div class="cart-item__quantity-badge">
+                                        <div class="cart-item__quantity">{item.quantity}</div>
+                                      </div><img src="{item.image}" class="cart-item__image">
+                                    </div>
+                                    <div class="cart-item__details">
+                                      <div class="cart-item__content">
+                                        <div class="cart-item__description">
+                                          <div class="cart-item__header">
+                                            <div pb-cart="line_item-title" class="cart-item__title">{item.name}</div>
+                                          </div>
+                                          <div pb-cart="line_item-frequency" class="cart-item__frequency">One time purchase</div>
+                                          <div class="quantity-controls hide">
+                                            <div id="quantity_-item.packageId" data-flavor="original" class="cart-quantity-controls__container">
+                                              <div data-package-id="{item.packageId}" data-next-quantity="decrease" role="button" class="quantity-controls__button quantity-controls__button--decrease">-</div>
+                                              <div pb-cart="line_item-quantity" class="quantity-controls__display">{item.quantity}</div>
+                                              <div data-package-id="{item.packageId}" data-next-quantity="increase" role="button" class="quantity-controls__button quantity-controls__button--increase">+</div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="cart-item__pricing">
+                                          <div id="line_compare" pb-cart="line_item-compare_price" class="cart-price price--original">{item.unitComparePrice}</div>
+                                          <div class="checkout__line-item__final-price">{item.discountedPrice}</div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </template>
+                              <div data-item-template-id="cart-item-template" data-next-cart-items="" class="cart-items__list"></div>
+                            </div>
+                          </div>
+                          <div data-next-content="">
+                            <div data-next-hide="cart.isEmpty" class="order-totals">
+                              <div class="order-totals__section">
+                                <div class="order-totals__line">
+                                  <div class="order-totals__label">Subtotal</div>
+                                  <div data-include-discounts="" data-next-display="cart.subtotal" class="order-totals__value">$0.00<br></div>
+                                </div>
+                              </div>
+                              <div class="order-totals__section">
+                                <div class="order-totals__line">
+                                  <div class="order-totals__label-group">
+                                    <div class="order-totals__label">Shipping<br></div>
+                                  </div>
+                                  <div class="order-totals__value-group">
+                                    <div data-next-display="cart.shipping" class="order-totals__value">FREE<br></div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="order-totals__section hide">
+                                <div class="order-totals__line">
+                                  <div class="order-totals__label-group">
+                                    <div class="order-totals__label">Estimated taxes<br></div>
+                                    <div data-checkout-tooltip-position="top" data-checkout-tooltip="The final tax amount and total will be confirmed by email or text after your place your order." class="info-icons w-embed"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" focusable="false" aria-hidden="true" class="a8x1wu10 a8x1wuz _1fragem1y _1fragemof _1fragemkk _1fragemka _1fragemnm" fill="none" stroke="currentColor">
+                                        <circle cx="7" cy="7" r="5.6" stroke="currentColor"></circle>
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5.6 5.1c.2-1.3 2.6-1.3 2.8 0S6.95 6.4 6.95 7.45m.055 2.35H7v.005h.005z"></path>
+                                        <circle cx="7" cy="9.7" r="0.1" fill="currentColor"></circle>
+                                      </svg></div>
+                                  </div>
+                                  <div class="order-totals__value-group">
+                                    <div class="order-totals__value">$0.70<br></div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="order-totals__section shipping-message hide">
+                                <div>Shipping and tax will be settled uponcheckout confirmation</div>
+                              </div>
+                              <div data-next-show="cart.hasSavings" class="order-totals__section">
+                                <div class="order-totals__line">
+                                  <div class="order-totals__label-group">
+                                    <div class="order-totals__label">Today You Saved<br></div>
+                                  </div>
+                                  <div class="order-totals__value-group">
+                                    <div class="order-totals__label">Discount:<br></div>
+                                    <div data-next-display="cart.totalSavingsAmount" class="order-totals__value">$0.00<br></div>
+                                    <div class="badge badge--small">
+                                      <div class="label__wrapper cc-sm">
+                                        <div class="badge__text"><span data-next-display="cart.totalSavingsPercentage">0%</span> OFF</div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="order-totals__section cc-total">
+                                <div class="order-totals__line order-totals__line--total">
+                                  <div class="order-totals__label order-totals__label--total">Grand Total:</div>
+                                  <div class="order-totals__value-group">
+                                    <div data-next-display="cart.currency" class="summary-total__coin">USD<br></div>
+                                    <div data-next-display="cart.total" class="order-totals__value order-totals__value--total">$0.00</div>
+                                  </div>
+                                </div>
+                                <div data-next-show="cart.hasSavings" class="order-totals__savings">
+                                  <div class="order-totals__savings-content">
+                                    <div class="order-totals__savings-icon w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 18 18" focusable="false" aria-hidden="true" class="a8x1wu10 a8x1wuz _1fragem1y _1fragemof _1fragemkk _1fragemka _1fragemnm" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m10.802 15.686 5.367-5.368a.15.15 0 0 0 .046-.109V4.144m-2.998-.95h-5.67a.16.16 0 0 0-.11.046L1.779 8.897a.154.154 0 0 0 0 .219l5.594 5.593c.06.06.158.06.218 0l5.658-5.657a.15.15 0 0 0 .045-.11v-5.67a.077.077 0 0 0-.077-.077Zm-3.06 3.749a.643.643 0 1 1-1.286 0 .643.643 0 0 1 1.286 0m-.648-.005h.01v.01h-.01z"></path>
+                                      </svg></div>
+                                    <div class="order-totals__savings-text">TOTAL SAVINGS <span data-next-display="cart.totalSavingsAmount">$0.00</span><br></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="limos__column--right">
-                <div class="limos__right-bg"></div>
-                <div class="summary-desktop cc-limos">
-                  <div class="order-summary-limos">
-                    <div data-initial-state="closed" data-next-accordion="order-summary" data-open-text="Hide Order Summary" data-close-text="Show Order Summary" data-toggle-class="next-expanded" class="order-summary__limos">
-                      <div data-next-accordion-trigger="order-summary" class="order-summary__limos--tigger">
-                        <div class="order-summary__limos--inner">
-                          <div class="order-summary__limos--wrapp">
+              <div class="checkout-layout__right checkout-layout__right--sidebar">
+                <div class="checkout-layout__sidebar-bg"></div>
+                <div class="summary-desktop summary-desktop--stacked">
+                  <div class="order-summary--card"  data-next-await>
+                    <div data-initial-state="closed" data-next-accordion="order-summary" data-open-text="Hide Order Summary" data-close-text="Show Order Summary" data-toggle-class="next-expanded" class="order-summary__accordion" >
+                      <div data-next-accordion-trigger="order-summary" class="order-summary__accordion-trigger" >
+                        <div class="order-summary__accordion-inner">
+                          <div class="order-summary__accordion-head">
                             <div data-next-accordion-text="order-summary" class="summary-toggle__text">Order Summary</div>
-                            <div os-summary-icon="" class="limos-summary-icon w-embed"><svg width="100%" height="100%" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <div os-summary-icon="" class="order-summary__accordion-icon w-embed"><svg width="100%" height="100%" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6.97098 8L0.0683905 0.5L13.8736 0.500001L6.97098 8Z" fill="#707070"></path>
                               </svg></div>
                           </div>
                         </div>
                       </div>
-                      <div data-next-accordion-panel="order-summary" class="order-summary__limos--pannel">
-                        <div class="order-summary cc-limos">
+                      <div data-next-accordion-panel="order-summary" class="order-summary__accordion-panel">
+                        <div class="order-summary--accordion">
                           <div class="order-summary__content">
                             <div class="cart-items">
                               <div data-next-component="scroll-hint" class="cart-items__scroll-hint cart-items__scroll-hint--active">
@@ -738,10 +891,10 @@
                       <div class="checkout-features__section">
                         <div class="checkout-divider hide-tablet">
                           <div class="checkout-divider__line"></div>
-                          <div class="checkout-divider__text cc-limos">The Quality Promise</div>
+                          <div class="checkout-divider__text checkout-divider__text--heading">The Quality Promise</div>
                           <div class="checkout-divider__line"></div>
                         </div>
-                        <div class="checkout-features__column-limos">
+                        <div class="checkout-features__column checkout-features__column--stacked">
                           <div class="checkout-features__item cc-wrap-mobile">
                             <div class="checkout-features__item-image--wrapper">
                               <div class="checkout-features__icon w-embed"><svg width="100%" height="100%" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -820,16 +973,16 @@
                       <div class="checkout-features__header-divider">
                         <div class="checkout-divider">
                           <div class="checkout-divider__line"></div>
-                          <div class="checkout-divider__text cc-limos">Customer Reviews</div>
+                          <div class="checkout-divider__text checkout-divider__text--heading">Customer Reviews</div>
                           <div class="checkout-divider__line"></div>
                         </div>
                         <div class="checkout-reviews__count">4.8/5 based on 87,793+ Reviews</div>
                       </div>
                       <div class="checkout-features__column">
-                        <div class="limos_review-box">
-                          <div class="star_text-img-wrapper">
-                            <div class="star_text-wrapper">
-                              <div class="text-md text-weight-bold">AMAZING!</div>
+                        <div class="checkout-review checkout-review--with-image">
+                          <div class="checkout-review__header">
+                            <div class="checkout-review__stars">
+                              <div class="checkout-review__headline text-md text-weight-bold">AMAZING!</div>
                               <div class="star_wrapper">
                                 <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
@@ -854,13 +1007,13 @@
                               </div>
                             </div><img loading="lazy" src="../../images/1x1_2.svg" alt="" class="checkout-reviews__image">
                           </div>
-                          <div class="margin-8">
-                            <div class="text-sm">I was nervous it might feel flimsy, but despite being impressively lightweight, this cane has proven rock-solid. No wobble, no worries.</div>
+                          <div class="checkout-review__body">
+                            <div class="checkout-review__description text-sm">I was nervous it might feel flimsy, but despite being impressively lightweight, this cane has proven rock-solid. No wobble, no worries.</div>
                           </div>
-                          <div class="customer_name-wrapper">
-                            <div class="customer_text-name">John U.</div>
+                          <div class="checkout-review__meta">
+                            <div class="review-auth">John U.</div>
                             <div class="black-line"></div>
-                            <div class="icon-review__wrapper">
+                            <div class="checkout-review__verified-wrap">
                               <div class="icon_size-16 w-embed"><svg width="100%" height="100%" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <g clip-path="url(#clip0_1001_491)">
                                     <path d="M15.0584 9.5375C14.7439 9.0483 14.4294 8.57658 14.1149 8.08738C14.0451 7.98256 14.0451 7.91267 14.1149 7.80784C14.4294 7.33612 14.7264 6.8644 15.0409 6.39267C15.4078 5.83359 15.2156 5.29198 14.5867 5.06485C14.0625 4.87267 13.5384 4.66301 13.0143 4.47083C12.9094 4.43589 12.857 4.366 12.857 4.2437C12.8395 3.66715 12.8046 3.0906 12.7697 2.53152C12.7347 1.92003 12.263 1.5706 11.669 1.72784C11.1099 1.86761 10.5508 2.02485 10.0092 2.18209C9.88691 2.21704 9.81702 2.18209 9.72966 2.09474C9.38024 1.64048 9.01334 1.2037 8.66391 0.766921C8.27955 0.277725 7.68552 0.277725 7.28369 0.766921C6.93426 1.2037 6.56736 1.64048 6.23541 2.07727C6.14805 2.19956 6.0607 2.21704 5.92093 2.18209C5.37932 2.02485 4.83771 1.88508 4.45334 1.78025C3.70208 1.60554 3.24783 1.90255 3.21288 2.53152C3.17794 3.10807 3.143 3.68462 3.12552 4.27865C3.12552 4.40094 3.07311 4.45336 2.96828 4.50577C2.42667 4.71543 1.88507 4.92508 1.34346 5.13474C0.784377 5.36187 0.609664 5.90347 0.941617 6.41014C1.2561 6.89934 1.57058 7.37106 1.88506 7.86025C1.95495 7.96508 1.95495 8.03497 1.88506 8.15727C1.55311 8.64646 1.23863 9.13566 0.924145 9.64233C0.627134 10.1141 0.819316 10.6731 1.34345 10.8828C1.88506 11.0924 2.44414 11.3021 2.98575 11.5118C3.10805 11.5467 3.14299 11.6166 3.14299 11.7389C3.16046 12.298 3.23035 12.8396 3.23035 13.3986C3.23035 13.9577 3.71954 14.4644 4.40092 14.2547C4.94253 14.08 5.48414 13.9577 6.02575 13.8005C6.13058 13.7655 6.20046 13.783 6.27035 13.8878C6.63724 14.3421 6.98667 14.7789 7.35356 15.2331C7.7554 15.7223 8.33196 15.7223 8.71632 15.2331C9.08322 14.7789 9.43265 14.3421 9.79954 13.8878C9.86943 13.8005 9.92184 13.7655 10.0441 13.8005C10.6032 13.9577 11.1623 14.0975 11.7214 14.2547C12.2979 14.412 12.7871 14.0626 12.8046 13.4685C12.8395 12.892 12.8745 12.3154 12.892 11.7214C12.892 11.5816 12.9618 11.5292 13.0667 11.4943C13.5908 11.3021 14.1324 11.0924 14.6566 10.8828C15.2156 10.6032 15.3904 10.0442 15.0584 9.5375ZM10.8828 6.67221L7.38851 10.1665C7.30116 10.2538 7.17886 10.3237 7.05656 10.3412C7.02162 10.3412 6.96921 10.3586 6.93426 10.3586C6.77702 10.3586 6.60231 10.2888 6.48001 10.1665L5.04737 8.73382C4.80277 8.48922 4.80277 8.08738 5.04737 7.84278C5.29196 7.59819 5.6938 7.59819 5.9384 7.84278L6.91679 8.82117L9.95679 5.78118C10.2014 5.53658 10.6032 5.53658 10.8478 5.78118C11.1274 6.02577 11.1274 6.42761 10.8828 6.67221Z" fill="#00B67A"></path>
@@ -871,14 +1024,14 @@
                                     </clipPath>
                                   </defs>
                                 </svg></div>
-                              <div>Verified Customer</div>
+                              <div class="checkout-review__verified">Verified Customer</div>
                             </div>
                           </div>
                         </div>
-                        <div class="limos_review-box">
-                          <div class="star_text-img-wrapper">
-                            <div class="star_text-wrapper">
-                              <div class="text-md text-weight-bold">AMAZING!</div>
+                        <div class="checkout-review checkout-review--with-image">
+                          <div class="checkout-review__header">
+                            <div class="checkout-review__stars">
+                              <div class="checkout-review__headline text-md text-weight-bold">AMAZING!</div>
                               <div class="star_wrapper">
                                 <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
@@ -903,13 +1056,13 @@
                               </div>
                             </div><img loading="lazy" src="../../images/1x1_2.svg" alt="" class="checkout-reviews__image">
                           </div>
-                          <div class="margin-8">
-                            <div class="text-sm">I was nervous it might feel flimsy, but despite being impressively lightweight, this cane has proven rock-solid. No wobble, no worries.</div>
+                          <div class="checkout-review__body">
+                            <div class="checkout-review__description text-sm">I was nervous it might feel flimsy, but despite being impressively lightweight, this cane has proven rock-solid. No wobble, no worries.</div>
                           </div>
-                          <div class="customer_name-wrapper">
-                            <div class="customer_text-name">John U.</div>
+                          <div class="checkout-review__meta">
+                            <div class="review-auth">John U.</div>
                             <div class="black-line"></div>
-                            <div class="icon-review__wrapper">
+                            <div class="checkout-review__verified-wrap">
                               <div class="icon_size-16 w-embed"><svg width="100%" height="100%" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <g clip-path="url(#clip0_1001_491)">
                                     <path d="M15.0584 9.5375C14.7439 9.0483 14.4294 8.57658 14.1149 8.08738C14.0451 7.98256 14.0451 7.91267 14.1149 7.80784C14.4294 7.33612 14.7264 6.8644 15.0409 6.39267C15.4078 5.83359 15.2156 5.29198 14.5867 5.06485C14.0625 4.87267 13.5384 4.66301 13.0143 4.47083C12.9094 4.43589 12.857 4.366 12.857 4.2437C12.8395 3.66715 12.8046 3.0906 12.7697 2.53152C12.7347 1.92003 12.263 1.5706 11.669 1.72784C11.1099 1.86761 10.5508 2.02485 10.0092 2.18209C9.88691 2.21704 9.81702 2.18209 9.72966 2.09474C9.38024 1.64048 9.01334 1.2037 8.66391 0.766921C8.27955 0.277725 7.68552 0.277725 7.28369 0.766921C6.93426 1.2037 6.56736 1.64048 6.23541 2.07727C6.14805 2.19956 6.0607 2.21704 5.92093 2.18209C5.37932 2.02485 4.83771 1.88508 4.45334 1.78025C3.70208 1.60554 3.24783 1.90255 3.21288 2.53152C3.17794 3.10807 3.143 3.68462 3.12552 4.27865C3.12552 4.40094 3.07311 4.45336 2.96828 4.50577C2.42667 4.71543 1.88507 4.92508 1.34346 5.13474C0.784377 5.36187 0.609664 5.90347 0.941617 6.41014C1.2561 6.89934 1.57058 7.37106 1.88506 7.86025C1.95495 7.96508 1.95495 8.03497 1.88506 8.15727C1.55311 8.64646 1.23863 9.13566 0.924145 9.64233C0.627134 10.1141 0.819316 10.6731 1.34345 10.8828C1.88506 11.0924 2.44414 11.3021 2.98575 11.5118C3.10805 11.5467 3.14299 11.6166 3.14299 11.7389C3.16046 12.298 3.23035 12.8396 3.23035 13.3986C3.23035 13.9577 3.71954 14.4644 4.40092 14.2547C4.94253 14.08 5.48414 13.9577 6.02575 13.8005C6.13058 13.7655 6.20046 13.783 6.27035 13.8878C6.63724 14.3421 6.98667 14.7789 7.35356 15.2331C7.7554 15.7223 8.33196 15.7223 8.71632 15.2331C9.08322 14.7789 9.43265 14.3421 9.79954 13.8878C9.86943 13.8005 9.92184 13.7655 10.0441 13.8005C10.6032 13.9577 11.1623 14.0975 11.7214 14.2547C12.2979 14.412 12.7871 14.0626 12.8046 13.4685C12.8395 12.892 12.8745 12.3154 12.892 11.7214C12.892 11.5816 12.9618 11.5292 13.0667 11.4943C13.5908 11.3021 14.1324 11.0924 14.6566 10.8828C15.2156 10.6032 15.3904 10.0442 15.0584 9.5375ZM10.8828 6.67221L7.38851 10.1665C7.30116 10.2538 7.17886 10.3237 7.05656 10.3412C7.02162 10.3412 6.96921 10.3586 6.93426 10.3586C6.77702 10.3586 6.60231 10.2888 6.48001 10.1665L5.04737 8.73382C4.80277 8.48922 4.80277 8.08738 5.04737 7.84278C5.29196 7.59819 5.6938 7.59819 5.9384 7.84278L6.91679 8.82117L9.95679 5.78118C10.2014 5.53658 10.6032 5.53658 10.8478 5.78118C11.1274 6.02577 11.1274 6.42761 10.8828 6.67221Z" fill="#00B67A"></path>
@@ -920,14 +1073,14 @@
                                     </clipPath>
                                   </defs>
                                 </svg></div>
-                              <div>Verified Customer</div>
+                              <div class="checkout-review__verified">Verified Customer</div>
                             </div>
                           </div>
                         </div>
-                        <div class="limos_review-box">
-                          <div class="star_text-img-wrapper">
-                            <div class="star_text-wrapper">
-                              <div class="text-md text-weight-bold">AMAZING!</div>
+                        <div class="checkout-review checkout-review--with-image">
+                          <div class="checkout-review__header">
+                            <div class="checkout-review__stars">
+                              <div class="checkout-review__headline text-md text-weight-bold">AMAZING!</div>
                               <div class="star_wrapper">
                                 <div class="star_img w-embed"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
@@ -952,13 +1105,13 @@
                               </div>
                             </div><img loading="lazy" src="../../images/1x1_2.svg" alt="" class="checkout-reviews__image">
                           </div>
-                          <div class="margin-8">
-                            <div class="text-sm">I was nervous it might feel flimsy, but despite being impressively lightweight, this cane has proven rock-solid. No wobble, no worries.</div>
+                          <div class="checkout-review__body">
+                            <div class="checkout-review__description text-sm">I was nervous it might feel flimsy, but despite being impressively lightweight, this cane has proven rock-solid. No wobble, no worries.</div>
                           </div>
-                          <div class="customer_name-wrapper">
-                            <div class="customer_text-name">John U.</div>
+                          <div class="checkout-review__meta">
+                            <div class="review-auth">John U.</div>
                             <div class="black-line"></div>
-                            <div class="icon-review__wrapper">
+                            <div class="checkout-review__verified-wrap">
                               <div class="icon_size-16 w-embed"><svg width="100%" height="100%" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <g clip-path="url(#clip0_1001_491)">
                                     <path d="M15.0584 9.5375C14.7439 9.0483 14.4294 8.57658 14.1149 8.08738C14.0451 7.98256 14.0451 7.91267 14.1149 7.80784C14.4294 7.33612 14.7264 6.8644 15.0409 6.39267C15.4078 5.83359 15.2156 5.29198 14.5867 5.06485C14.0625 4.87267 13.5384 4.66301 13.0143 4.47083C12.9094 4.43589 12.857 4.366 12.857 4.2437C12.8395 3.66715 12.8046 3.0906 12.7697 2.53152C12.7347 1.92003 12.263 1.5706 11.669 1.72784C11.1099 1.86761 10.5508 2.02485 10.0092 2.18209C9.88691 2.21704 9.81702 2.18209 9.72966 2.09474C9.38024 1.64048 9.01334 1.2037 8.66391 0.766921C8.27955 0.277725 7.68552 0.277725 7.28369 0.766921C6.93426 1.2037 6.56736 1.64048 6.23541 2.07727C6.14805 2.19956 6.0607 2.21704 5.92093 2.18209C5.37932 2.02485 4.83771 1.88508 4.45334 1.78025C3.70208 1.60554 3.24783 1.90255 3.21288 2.53152C3.17794 3.10807 3.143 3.68462 3.12552 4.27865C3.12552 4.40094 3.07311 4.45336 2.96828 4.50577C2.42667 4.71543 1.88507 4.92508 1.34346 5.13474C0.784377 5.36187 0.609664 5.90347 0.941617 6.41014C1.2561 6.89934 1.57058 7.37106 1.88506 7.86025C1.95495 7.96508 1.95495 8.03497 1.88506 8.15727C1.55311 8.64646 1.23863 9.13566 0.924145 9.64233C0.627134 10.1141 0.819316 10.6731 1.34345 10.8828C1.88506 11.0924 2.44414 11.3021 2.98575 11.5118C3.10805 11.5467 3.14299 11.6166 3.14299 11.7389C3.16046 12.298 3.23035 12.8396 3.23035 13.3986C3.23035 13.9577 3.71954 14.4644 4.40092 14.2547C4.94253 14.08 5.48414 13.9577 6.02575 13.8005C6.13058 13.7655 6.20046 13.783 6.27035 13.8878C6.63724 14.3421 6.98667 14.7789 7.35356 15.2331C7.7554 15.7223 8.33196 15.7223 8.71632 15.2331C9.08322 14.7789 9.43265 14.3421 9.79954 13.8878C9.86943 13.8005 9.92184 13.7655 10.0441 13.8005C10.6032 13.9577 11.1623 14.0975 11.7214 14.2547C12.2979 14.412 12.7871 14.0626 12.8046 13.4685C12.8395 12.892 12.8745 12.3154 12.892 11.7214C12.892 11.5816 12.9618 11.5292 13.0667 11.4943C13.5908 11.3021 14.1324 11.0924 14.6566 10.8828C15.2156 10.6032 15.3904 10.0442 15.0584 9.5375ZM10.8828 6.67221L7.38851 10.1665C7.30116 10.2538 7.17886 10.3237 7.05656 10.3412C7.02162 10.3412 6.96921 10.3586 6.93426 10.3586C6.77702 10.3586 6.60231 10.2888 6.48001 10.1665L5.04737 8.73382C4.80277 8.48922 4.80277 8.08738 5.04737 7.84278C5.29196 7.59819 5.6938 7.59819 5.9384 7.84278L6.91679 8.82117L9.95679 5.78118C10.2014 5.53658 10.6032 5.53658 10.8478 5.78118C11.1274 6.02577 11.1274 6.42761 10.8828 6.67221Z" fill="#00B67A"></path>
@@ -969,7 +1122,7 @@
                                     </clipPath>
                                   </defs>
                                 </svg></div>
-                              <div>Verified Customer</div>
+                              <div class="checkout-review__verified">Verified Customer</div>
                             </div>
                           </div>
                         </div>
@@ -978,8 +1131,8 @@
                   </div>
                 </div>
               </div>
-              <div class="limos__footer">
-                <div class="checkout-footer-links cc-limos">
+              <div class="checkout-footer">
+                <div class="checkout-footer-links checkout-footer-links--compact">
                   <a href="#" class="link">
                     <div>Return policy</div>
                   </a>
@@ -1000,6 +1153,6 @@
 
 
 
-    <script defer="" src="../../js/templates-checkout-limos.js"></script>
+    <script defer="" src="../../js/checkout-limos.js"></script>
   </body>
 </html>

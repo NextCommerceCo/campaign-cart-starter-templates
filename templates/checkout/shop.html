@@ -32,22 +32,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
-    <!-- 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
- -->
-    <!--  Initialize nextConfig with spreedly styles  -->
-
   </head>
   <body>
     <div class="page-wrapper">
 
       <div class="main-wrapper">
+        <section class="checkout-header checkout-header--lg">
+          <div class="container">
+            <div class="checkout-header__inner checkout-header__inner--center">
+              <div class="checkout-header__brand"><img src="../../images/next-logo.png" loading="eager" alt="" class="brand-logo"></div>
+            </div>
+          </div>
+        </section>
         <div class="checkout-content">
           <div class="checkout__content">
             <div class="checkout__layout">
               <div class="checkout__column checkout__column--left">
-                <div class="checkout__form-container cc-checkout">
-                  <div class="checkout__header-brand cc-shop"><img src="../../images/next-logo.png" loading="eager" alt="" class="brand-logo"></div>
+                <div class="checkout__form-container checkout__form-container--main">
+                  <div class="checkout-header__brand justify-center"><img src="../../images/next-logo.png" loading="eager" alt="" class="brand-logo"></div>
                   <div class="order-summary-mobile">
                     <div data-initial-state="closed" data-next-accordion="order-summary" data-open-text="Hide Order Summary" data-close-text="Show Order Summary" data-toggle-class="next-expanded" class="order-summary-mobile__accordion">
                       <div data-next-accordion-trigger="order-summary" class="order-summary__trigger">
@@ -74,7 +76,8 @@
                                     <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z"></path>
                                   </svg></div>
                               </div>
-                              <div data-next-hide="cart.isEmpty"><template id="cart-item-template" class="item-template os-show">
+                              <div data-next-hide="cart.isEmpty">
+                                <template id="cart-item-template" class="item-template os-show">
                                   <div data-cart-item-id="{item.id}" class="cart-item">
                                     <div class="cart-item__wrapper">
                                       <div class="cart-item__image-container">
@@ -109,7 +112,7 @@
                                 <div data-item-template-id="cart-item-template" data-next-cart-items="" class="cart-items__list"></div>
                               </div>
                             </div>
-                            <div data-next-hide="cart.isEmpty" class="coupon-section">
+                            <div data-next-hide="cart.isEmpty" class="coupon-section" data-next-await>
                               <div class="coupon-form">
                                 <div data-auto-apply="true" data-next-coupon="input" data-placeholder="Promo code (optional)" data-button-text="Apply" class="coupon-form__row">
                                   <div class="form-group">
@@ -133,7 +136,7 @@
                                 </div>
                               </div>
                             </div>
-                            <div data-next-content="">
+                            <div data-next-content="" data-next-await>
                               <div data-next-hide="cart.isEmpty" class="order-totals">
                                 <div class="order-totals__section">
                                   <div class="order-totals__line">
@@ -209,7 +212,7 @@
                       </div>
                     </div>
                   </div>
-                  <div data-component="prepurchase-upsell" data-next-await="" data-next-package-sync="2,3,4" data-next-bump="" data-next-package-id="6" class="next-active">
+                  <div data-component="prepurchase-upsell" data-variant="check02" data-next-await="" data-next-package-sync="2,3,4" data-next-bump="" data-next-package-id="6" class="next-active">
                       <div data-next-toggle="toggle" class="bump__header next-active">
                         <div class="bump__header-content">
                           <div class="bump__checkbox">
@@ -231,9 +234,6 @@
                         <div class="bump__content"><img data-next-display="package.6.image" loading="lazy" alt="" src="../../images/icon.svg" class="bump__image">
                           <div class="bump__description">Get peace of mind with <span data-next-display="package.6.name">Shipping Guarantee</span> in the event your delivery is damaged, stolen, or lost during transit for <span data-next-display="package.price">$1.99</span></div>
                         </div>
-                      </div>
-                      <div class="custom-code w-embed">
-
                       </div>
                   </div>
                   <div data-next-express-checkout="container" class="exp-checkout">
@@ -538,7 +538,7 @@
                       </div>
                     </form>
                   </div>
-                  <div class="guarantee-section"><img loading="lazy" src="../../images/1x1_2.svg" alt="" class="image-10">
+                  <div class="guarantee-section"><img loading="lazy" src="../../images/30d.webp" alt="" class="image-10">
                     <div class="text-xs"><strong>30 Day Money-Back Guarantee:</strong> Feel safe knowing you're protected. Try it risk-free and return it within 30 days for a full refund or replacement—no questions asked.</div>
                   </div>
                   <div class="checkout-footer-links">
@@ -555,7 +555,7 @@
                 </div>
               </div>
               <div class="checkout__column checkout__column--right">
-                <div class="rtc-right-container">
+                <div class="checkout__summary">
                   <div class="summary-desktop">
                     <div class="summary-wrap">
                       <div class="summary-holder">
@@ -604,7 +604,7 @@
                                 <div data-item-template-id="cart-item-template" data-next-cart-items="" class="cart-items__list"></div>
                               </div>
                             </div>
-                            <div data-next-hide="cart.isEmpty" class="coupon-section">
+                            <div data-next-hide="cart.isEmpty" class="coupon-section" data-next-await>
                               <div class="coupon-form">
                                 <div data-auto-apply="true" data-next-coupon="input" data-placeholder="Promo code (optional)" data-button-text="Apply" class="coupon-form__row">
                                   <div class="form-group">
@@ -628,7 +628,7 @@
                                 </div>
                               </div>
                             </div>
-                            <div data-next-content="">
+                            <div data-next-content="" data-next-await>
                               <div data-next-hide="cart.isEmpty" class="order-totals">
                                 <div class="order-totals__section">
                                   <div class="order-totals__line">
@@ -711,16 +711,5 @@
         </div>
       </div>
     </div>
-
-    <!-- 
-<script src="https://core.spreedly.com/iframe/iframe-v1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"></script>
- -->
-
-
-
-
-    <script defer="" src="../../js/templates-checkout-shop.js"></script>
   </body>
 </html>

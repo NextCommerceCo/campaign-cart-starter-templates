@@ -991,16 +991,16 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 }
 
 /* ========================================
-   UPSELL NAV (shared across all upsell templates)
+   UPSELL HEADER BAR (top bar – same pattern as checkout-header)
 ======================================== */
-.upsell-nav {
+.upsell-header-bar {
   border-bottom: 1px solid #dedede;
   flex-flow: column;
   align-items: stretch;
   display: flex;
 }
 
-.upsell-nav__wrapper {
+.upsell-header-bar__inner {
   justify-content: space-between;
   align-items: center;
   padding-top: 1rem;
@@ -1008,21 +1008,27 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   display: flex;
 }
 
-.upsell-nav__left {
+.upsell-header-bar__brand {
+  display: flex;
+  align-items: center;
   flex-shrink: 0;
 }
 
-.upsell-nav__right {
+.upsell-header-bar__right {
   grid-column-gap: 2rem;
   grid-row-gap: 2rem;
   display: flex;
+  align-items: center;
 }
 
-.upsell-nav__steps {
+/* ========================================
+   UPSELL NAV (step content inside upsell-header-bar__right)
+======================================== */
+.upsell-header-bar__steps {
   min-width: 0;
 }
 
-.upsell-nav__stepper {
+.upsell-header-bar__stepper {
   flex-flow: row;
   justify-content: space-between;
   display: flex;
@@ -1030,7 +1036,7 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   gap: .875rem;
 }
 
-.upsell-nav__progress-bar {
+.upsell-header-bar__progress-bar {
   background-color: var(--brand--color--surface);
   height: .25rem;
   position: absolute;
@@ -1039,14 +1045,14 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   right: 2rem;
 }
 
-.upsell-nav__progress-fill {
+.upsell-header-bar__progress-fill {
   background-color: var(--brand--color--primary);
   border-radius: 100px;
   width: 25%;
   height: 100%;
 }
 
-.upsell-nav__step {
+.upsell-header-bar__step {
   z-index: 10;
   text-align: center;
   flex-flow: column;
@@ -1056,12 +1062,12 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   color: #6c757d;
 }
 
-.upsell-nav__step--active {
+.upsell-header-bar__step--active {
   color: var(--brand--color--black);
   font-weight: 700;
 }
 
-.upsell-nav__step-circle {
+.upsell-header-bar__step-circle {
   background-color: var(--brand--color--surface);
   color: var(--neutral--700);
   border-radius: 50%;
@@ -1073,56 +1079,66 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   display: flex;
 }
 
-.upsell-nav__step-circle.upsell-nav__step-circle--active {
+.upsell-header-bar__step-circle.upsell-header-bar__step-circle--active {
   background-color: var(--brand--color--primary);
   color: var(--brand--color--primary-foreground);
   font-weight: 700;
 }
 
-.upsell-nav__step-content {
+.upsell-header-bar__step-content {
   display: block;
 }
 
-.upsell-nav__step-label {
+.upsell-header-bar__step-label {
   font-size: 1rem;
   text-transform: uppercase;
   
 }
-.upsell-nav__step-label.small {
+.upsell-header-bar__step-label.small {
   font-size: .685rem;
 }
 
 @media screen and (max-width: 991px) {
-  .upsell-nav__wrapper {
+  .upsell-header-bar__inner {
     min-height: 4rem;
     padding-top: 0;
     padding-bottom: 0;
   }
 
-  .upsell-nav__right {
+  .upsell-header-bar__right {
     grid-column-gap: 1rem;
     grid-row-gap: 1rem;
   }
 }
 
 @media screen and (max-width: 767px) {
-  .upsell-nav__steps {
+  .upsell-header-bar__inner {
+    flex-direction: column;
+    gap: 8px;
+    padding-top: .75rem;
+    padding-bottom: .7rem;
+  }
+
+  .upsell-header-bar__right {
+    grid-column-gap: .5rem;
+    grid-row-gap: .5rem;
+  }
+
+  .upsell-header-bar__steps {
     min-width: 170px;
   }
 
-  .upsell-nav__progress-bar {
+  .upsell-header-bar__progress-bar {
     top: .5rem;
-    left: 1rem;
-    right: 1rem;
   }
 
-  .upsell-nav__step-circle {
+  .upsell-header-bar__step-circle {
     width: 1.15rem;
     height: 1.15rem;
     font-size: .685rem;
   }
 
-  .upsell-nav__step-label {
+  .upsell-header-bar__step-label {
     font-size: var(--font-size--xs);
   }
 }
