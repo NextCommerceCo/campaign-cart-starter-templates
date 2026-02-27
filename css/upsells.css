@@ -416,6 +416,11 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 
 
 /* Section variants */
+.section--pad-2-4 {
+  padding-top: var(--spacing--2);
+  padding-bottom: var(--spacing--4);
+}
+
 .section.upsell-note {
   padding-top: var(--spacing--1);
   padding-bottom: var(--spacing--1);
@@ -1113,7 +1118,8 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   text-transform: uppercase;
   
 }
-.upsell-header-bar__step-label.small {
+.upsell-header-bar__step-label.small,
+.upsell-header-bar__step-label--small {
   font-size: .685rem;
 }
 

@@ -38,6 +38,21 @@ window.CHECKOUT_CONFIG = {
     var formData = store.state && store.state.formData ? store.state.formData : {};
     console.log('[CheckoutGuard] Current page step:', currentStep, '| User completed step:', completedStep);
     console.log('[CheckoutGuard] Form data:', formData);
+    // Hide phone review row if no phone was captured
+    try {
+      if (!formData.phone || (typeof formData.phone === 'string' && formData.phone.trim() === '')) {
+        var phoneReviewEl = document.querySelector('[data-next-checkout-review="phone"]');
+        if (phoneReviewEl) {
+          var phoneRow = phoneReviewEl.closest('.checkout__form-row');
+          if (phoneRow) {
+            phoneRow.classList.add('hide');
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('[CheckoutGuard] Unable to hide phone review row:', e);
+    }
+
     // Validate that previous steps have required data
     var hasRequiredData = true;
     var missingFields = [];

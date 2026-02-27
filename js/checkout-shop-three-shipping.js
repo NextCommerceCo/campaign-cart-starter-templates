@@ -55,7 +55,7 @@
     var id = 'shipping_method_' + refId + (idSuffix || '');
 
     var wrap = document.createElement('div');
-    wrap.className = 'shipping-method cc-last__item';
+    wrap.className = 'shipping-method shipping-method--last-item';
     wrap.setAttribute('data-next-shipping-id', String(refId));
 
     var label = document.createElement('label');

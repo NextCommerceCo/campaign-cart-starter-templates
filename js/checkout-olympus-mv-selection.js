@@ -1678,3 +1678,108 @@ document.querySelectorAll('[data-next-element="timer"]').forEach(timer => {
     else if (total <= 60) timer.style.color = '#ff9800';
   }, 1000);
 });
+
+// Next size chart modal (standalone component)
+(function () {
+  function onReady(fn) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fn, { once: true });
+    } else {
+      fn();
+    }
+  }
+
+  onReady(() => {
+    const body = document.body;
+    const defaultTarget = '#next-size-modal';
+
+    function getTargetFromTrigger(el) {
+      return (
+        el.getAttribute('data-modal-target') ||
+        el.getAttribute('href') ||
+        defaultTarget
+      );
+    }
+
+    function getFocusable(container) {
+      return container.querySelectorAll(
+        'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+      );
+    }
+
+    function openModal(modal) {
+      if (!modal) return;
+      modal.classList.add('next-modal--open');
+      modal.setAttribute('aria-hidden', 'false');
+      body.classList.add('next-modal-open');
+
+      const focusables = getFocusable(modal);
+      const focusTarget =
+        modal.querySelector('.next-modal__close') || focusables[0];
+      if (focusTarget) focusTarget.focus();
+
+      function onKey(e) {
+        if (e.key === 'Escape') {
+          closeModal(modal);
+        } else if (e.key === 'Tab') {
+          const f = Array.from(getFocusable(modal));
+          if (!f.length) return;
+          const first = f[0];
+          const last = f[f.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+
+      modal._nextModalKeyHandler = onKey;
+      document.addEventListener('keydown', onKey);
+    }
+
+    function closeModal(modal) {
+      if (!modal) return;
+      modal.classList.remove('next-modal--open');
+      modal.setAttribute('aria-hidden', 'true');
+      body.classList.remove('next-modal-open');
+      if (modal._nextModalKeyHandler) {
+        document.removeEventListener('keydown', modal._nextModalKeyHandler);
+        delete modal._nextModalKeyHandler;
+      }
+    }
+
+    // Trigger buttons
+    document.querySelectorAll('.next-modal__trigger').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetSel = getTargetFromTrigger(btn);
+        const modal =
+          document.querySelector(targetSel) ||
+          document.querySelector(defaultTarget);
+        openModal(modal);
+      });
+      btn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          btn.click();
+        }
+      });
+    });
+
+    // Overlay and close buttons
+    document.addEventListener('click', (e) => {
+      const overlayClicked = e.target.matches(
+        '.next-modal__overlay[data-next-modal-close]'
+      );
+      const closeBtn = e.target.closest('[data-next-modal-close]');
+      if (!overlayClicked && !closeBtn) return;
+      const modal =
+        e.target.closest('.next-modal') ||
+        document.querySelector(defaultTarget);
+      closeModal(modal);
+    });
+  });
+})();
