@@ -17,21 +17,21 @@ window.nextConfig = {
       requiredFields: ['email', 'fname', 'lname'], // Fields required for express checkout radio option
       methodOrder: ['paypal', 'apple_pay', 'google_pay'] // Display order of express payment method buttons
     },
-    cardInputConfig: {
-      fieldType: {
-        number: "tel",   // 'number' | 'text' | 'tel'
-        cvv: "tel"
-      },
-      numberFormat: "prettyFormat", // 'prettyFormat' | 'plainFormat' | 'maskedFormat'
-      labels: { number: "", cvv: "" },
-      titles: { number: "", cvv: "" },
-      placeholders: { number: "", cvv: "" },
-      styles: {
-        number: "",
-        cvv: "",
-        placeholder: ""
-      },
-    }
+    // cardInputConfig: {
+    //   fieldType: {
+    //     number: "tel",   // 'number' | 'text' | 'tel'
+    //     cvv: "tel"
+    //   },
+    //   numberFormat: "prettyFormat", // 'prettyFormat' | 'plainFormat' | 'maskedFormat'
+    //   labels: { number: "", cvv: "" },
+    //   titles: { number: "", cvv: "" },
+    //   placeholders: { number: "", cvv: "" },
+    //   styles: {
+    //     number: "",
+    //     cvv: "",
+    //     placeholder: ""
+    //   },
+    // }
   },
 
   // Address and country configuration
@@ -88,6 +88,7 @@ window.nextConfig = {
   },
   
   // Analytics providers configuration
+  storeName: 'store-name', // Required for purchase deduplication with NEXT Storefront Meta App
   analytics: {
     enabled: true,
     mode: 'auto', // 'auto' | 'manual' | 'disabled'
