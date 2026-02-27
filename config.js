@@ -16,14 +16,29 @@ window.nextConfig = {
       requireValidation: false, // Require form validation before express checkout if radio option - not express buttons
       requiredFields: ['email', 'fname', 'lname'], // Fields required for express checkout radio option
       methodOrder: ['paypal', 'apple_pay', 'google_pay'] // Display order of express payment method buttons
+    },
+    cardInputConfig: {
+      fieldType: {
+        number: "tel",   // 'number' | 'text' | 'tel'
+        cvv: "tel"
+      },
+      numberFormat: "prettyFormat", // 'prettyFormat' | 'plainFormat' | 'maskedFormat'
+      labels: { number: "", cvv: "" },
+      titles: { number: "", cvv: "" },
+      placeholders: { number: "", cvv: "" },
+      styles: {
+        number: "",
+        cvv: "",
+        placeholder: ""
+      },
     }
   },
 
   // Address and country configuration
   addressConfig: {
-    defaultCountry: "US",
-    showCountries: ["US"],
-    dontShowStates: ["AS", "GU", "PR", "VI"]
+    defaultCountry: "US", // Low-priority fallback when campaign list is empty
+    showCountries: ["US", "CA", "GB"], // Deprecated – campaign API provides countries; fallback only
+    dontShowStates: ["AS", "GU", "PR", "VI"], // State codes to hide from dropdowns
   },
   
   // Discount codes configuration

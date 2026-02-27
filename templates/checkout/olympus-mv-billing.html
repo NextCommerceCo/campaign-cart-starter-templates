@@ -22,9 +22,8 @@
     <script src="https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v0.3.10/dist/loader.js" type="module"></script>
 
 
-    <link href="../../css/normalize.css" rel="stylesheet" type="text/css">
-    <link href="../../css/next-staging-core.css" rel="stylesheet" type="text/css">
-    <link href="../../css/templates-checkout-olympus-mv-billing.css" rel="stylesheet" type="text/css">
+    <link href="../../css/next-core.css" rel="stylesheet" type="text/css">
+    <link href="../../css/checkout.css" rel="stylesheet" type="text/css">
 
 
     <link href="../../images/favicon.png" rel="shortcut icon" type="image/x-icon">
@@ -36,7 +35,7 @@
 
     <!--  SWIPERJS  -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   </head>
   <body>
     <div class="page-wrapper">
@@ -45,7 +44,7 @@
         <div data-next-hide="param.banner=='n'" class="section_header">
           <div class="announcement">
             <div class="announcement__block">
-              <div class="announcement__text">GET UP TO 40% OFF NOW! <span class="text-span-53">USE PROMO CODE:</span></div>
+              <div class="announcement__text">GET UP TO 40% OFF NOW! <span class="announcement__promo-label">USE PROMO CODE:</span></div>
               <div class="announcement__right">
                 <div class="announcement__code-wrapper">
                   <div class="announcement__code">SPRINGSAVE</div>
@@ -55,22 +54,25 @@
             </div>
           </div>
         </div>
-        <nav class="checkout__header-top">
-          <div class="container cc-medium">
-            <div class="checkout__header-brand"><img src="../../images/next-logo.png" loading="eager" alt="" class="brand-logo">
-              <div class="mg-section tablet-spacer"><img loading="lazy" src="../../images/1x1_2.svg" alt="" class="mg-image">
-                <div class="mg-text hide-tablet">90 - Day 100%<br>Money Back Guarantee</div>
-                <div class="questions-text">Questions?<br>Call: <a href="tel:+18888316810" class="link-tel">1 (888) 831-6810</a>
+        <section class="checkout-header">
+          <div class="container">
+            <div class="checkout-header__inner">
+              <div class="checkout-header__brand"><img src="../../images/next-logo.png" loading="eager" alt="" class="brand-logo"></div>
+              <div class="checkout-header__extras">
+                <div class="mg-section tablet-spacer"><img loading="lazy" src="../../images/90d.webp" alt="" class="mg-image">
+                  <div class="mg-text hide-tablet">90 - Day 100%<br>Money Back Guarantee</div>
+                  <div class="questions-text">Questions?<br>Call: <a href="tel:+18888316810" class="link-tel">1 (888) 831-6810</a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </nav>
+        </section>
         <div class="encrypted-banner">
           <div class="padding-global">
             <div class="contain small">
               <div class="scarcity-banner__content">
-                <div class="encrypted-banner__icon w-embed"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                <div class="encrypted-banner__icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
                     <path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2m-6 9c-1.1 0-2-.9-2-2s.9-2 2-2s2 .9 2 2s-.9 2-2 2m3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1z"></path>
                   </svg></div>
                 <div class="text-sm">100% Encrypted &amp; Secure Checkout</div>
@@ -79,7 +81,7 @@
           </div>
         </div>
         <div class="checkout-progress">
-          <div class="container-18 cc-small">
+          <div class="container cc-small">
             <div class="progress-wrapper">
               <div class="step">
                 <div class="step-label active">Checkout</div>
@@ -97,14 +99,16 @@
           </div>
         </div>
         <div class="section-checkout cc-gray">
-          <div class="container cc-medium">
-            <div class="checkout-wrapper new-size">
-              <div class="checkout__left">
-                <div data-next-await="" data-next-hide="param.timer == 'n'" class="hide-tablet">
+          <div class="container">
+            <div class="checkout-wrapper">
+              <div class="checkout-layout__left">
+                <div class="checkout-layout__content">
+                  <div class="checkout-layout__content-inner">
+                <div  data-next-hide="param.timer == 'n'" class="hide-tablet">
                   <div data-next-hide="param.timer == 'n'" class="scarcity-banner">
                     <div class="scarcity-banner__left">
                       <div class="promo-wrapper">
-                        <div class="next-icon w-embed"><svg width="100%" height="100%" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <div class="next-icon"><svg width="100%" height="100%" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M9.92733 14.8667C9.45828 14.7997 9.0224 14.5862 8.682 14.2567C8.48255 14.0749 8.25137 13.9314 8 13.8333C7.74888 13.9304 7.51772 14.0728 7.318 14.2533C6.86133 14.6027 6.344 14.998 5.78466 14.8173C5.20733 14.63 5.01933 13.9913 4.85133 13.4273C4.79792 13.1772 4.70233 12.938 4.56866 12.72C4.31736 12.6585 4.05738 12.6405 3.8 12.6667C3.21533 12.6813 2.55533 12.6987 2.2 12.2133C1.84466 11.728 2.06666 11.1113 2.26133 10.5647C2.36838 10.324 2.43181 10.0662 2.44866 9.80334C2.28405 9.61525 2.08997 9.45516 1.874 9.32934C1.38533 8.99601 0.831329 8.61601 0.831329 8.00001C0.831329 7.38401 1.38533 7.00534 1.874 6.67067C2.09017 6.54487 2.28429 6.38452 2.44866 6.19601C2.43341 5.93369 2.37179 5.67615 2.26666 5.43534C2.07333 4.88867 1.85466 4.26867 2.20533 3.78667C2.556 3.30467 3.218 3.32001 3.80533 3.33334C4.0636 3.35949 4.32445 3.34145 4.57666 3.28001C4.70801 3.06147 4.80155 2.82233 4.85333 2.57267C5.01866 2.00934 5.20733 1.37267 5.78666 1.18267C6.34866 1.00001 6.86333 1.39667 7.32 1.74667C7.51912 1.92702 7.74959 2.06937 8 2.16667C8.25111 2.06958 8.48228 1.92722 8.682 1.74667C9.13733 1.39667 9.656 1.00001 10.2153 1.18267C10.7933 1.37001 10.982 2.00867 11.1487 2.57267C11.2021 2.82278 11.2977 3.06197 11.4313 3.28001C11.6827 3.34126 11.9426 3.3593 12.2 3.33334C12.784 3.31667 13.4447 3.30067 13.8 3.78667C14.1553 4.27267 13.9333 4.88867 13.7387 5.43601C13.6309 5.67752 13.5666 5.93615 13.5487 6.20001C13.7134 6.38825 13.9077 6.54835 14.124 6.67401C14.6127 7.00734 15.1667 7.38734 15.1667 8.00334C15.1667 8.61934 14.6127 8.99867 14.124 9.33267C13.9073 9.4583 13.7129 9.61891 13.5487 9.80801C13.5663 10.0701 13.6297 10.3271 13.736 10.5673C13.93 11.1147 14.1493 11.7347 13.7973 12.2173C13.4453 12.7 12.7853 12.684 12.1973 12.67C11.9393 12.6431 11.6785 12.6612 11.4267 12.7233C11.293 12.9414 11.1974 13.1806 11.144 13.4307C10.9787 13.9947 10.79 14.6307 10.2107 14.8207C10.1192 14.8505 10.0236 14.866 9.92733 14.8667ZM4.09866 11.6667C4.46973 11.6361 4.84097 11.7236 5.15933 11.9167C5.50359 12.2475 5.7326 12.68 5.81266 13.1507C5.86739 13.4082 5.9669 13.6542 6.10666 13.8773C6.32031 13.761 6.52138 13.623 6.70666 13.4653C7.05836 13.1207 7.51202 12.899 8 12.8333C8.48638 12.8981 8.93895 13.1179 9.29066 13.46C9.47961 13.6279 9.69523 13.7631 9.92866 13.86C10.0413 13.6315 10.128 13.3911 10.1873 13.1433C10.2668 12.6725 10.4959 12.2398 10.8407 11.9093C11.2644 11.6812 11.7506 11.5961 12.2267 11.6667C12.4856 11.6929 12.7472 11.6746 13 11.6127C12.9574 11.3674 12.8881 11.1275 12.7933 10.8973C12.5802 10.4636 12.5118 9.97289 12.598 9.49734C12.8036 9.07237 13.1407 8.72497 13.5593 8.50667C13.7875 8.37242 13.9919 8.20121 14.164 8.00001C13.9917 7.79976 13.7873 7.62945 13.5593 7.49601C13.1418 7.2773 12.8055 6.93026 12.6 6.50601C12.5131 6.02938 12.5816 5.53746 12.7953 5.10267C12.8989 4.86691 12.962 4.61539 12.982 4.35867C12.7319 4.32252 12.4786 4.31402 12.2267 4.33334C11.7504 4.40272 11.2644 4.31693 10.8407 4.08867C10.4959 3.75826 10.2668 3.32554 10.1873 2.85467C10.1326 2.59711 10.0331 2.35116 9.89333 2.12801C9.67968 2.24432 9.47861 2.38238 9.29333 2.54001C8.94091 2.88266 8.48732 3.10244 8 3.16667C7.51362 3.10189 7.06104 2.88215 6.70933 2.54001C6.52039 2.37212 6.30476 2.23693 6.07133 2.14001C5.95872 2.36853 5.87196 2.60891 5.81266 2.85667C5.73242 3.32656 5.50367 3.75835 5.16 4.08867C4.73581 4.31635 4.24982 4.4021 3.77333 4.33334C3.51436 4.30705 3.2528 4.32531 3 4.38734C3.04326 4.63224 3.11254 4.87182 3.20666 5.10201C3.41957 5.53585 3.48824 6.02638 3.40266 6.50201C3.19692 6.92706 2.85986 7.27463 2.44133 7.49334C2.24133 7.63001 1.86666 7.88534 1.83333 8.00667C2.00971 8.2011 2.21474 8.36746 2.44133 8.50001C2.85939 8.72003 3.19553 9.06879 3.4 9.49467C3.48631 9.97138 3.41762 10.4632 3.204 10.898C3.10086 11.1339 3.03798 11.3854 3.018 11.642C3.26745 11.6777 3.52007 11.686 3.77133 11.6667C3.88133 11.6667 3.99066 11.6613 4.09866 11.6613V11.6667Z" fill="currentColor"></path>
                             <path d="M7.33334 9.83335C7.26768 9.83347 7.20264 9.82057 7.14199 9.7954C7.08134 9.77022 7.02628 9.73327 6.98001 9.68668L5.64668 8.35335C5.55836 8.25856 5.51027 8.1332 5.51256 8.00366C5.51485 7.87413 5.56732 7.75054 5.65893 7.65893C5.75054 7.56732 5.87413 7.51485 6.00366 7.51256C6.1332 7.51028 6.25856 7.55836 6.35334 7.64668L7.38001 8.67335L9.70001 6.93335C9.8061 6.85378 9.93944 6.81962 10.0707 6.83837C10.202 6.85712 10.3204 6.92726 10.4 7.03335C10.4796 7.13943 10.5137 7.27278 10.495 7.40406C10.4762 7.53533 10.4061 7.65378 10.3 7.73335L7.63334 9.73335C7.54691 9.79847 7.44157 9.83359 7.33334 9.83335Z" fill="currentColor"></path>
                           </svg></div>
@@ -127,65 +131,12 @@
                         <div data-next-component="express-error-text" class="text-sm">Error message</div>
                       </div>
                     </div>
-                    <div data-next-express-checkout="buttons" class="express-checkout__buttons"><button data-next-express-checkout="paypal" data-action="submit" class="payment-btn cc-paypal">
-                        <div class="w-embed">
-                          <!--?xml version="1.0" encoding="UTF-8"?-->
-                          <svg width="86px" height="22px" viewBox="0 0 86 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                            <title>paypal</title>
-                            <g id="-Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                              <g id="express-checkout-cta" transform="translate(-204.000000, -15.000000)" fill-rule="nonzero">
-                                <g id="paypal" transform="translate(204.000000, 15.000000)">
-                                  <path d="M66.4793651,5.73913043 L61.8380952,5.73913043 C61.5650794,5.73913043 61.2920635,6.01242236 61.1555556,6.28571429 L59.2444444,18.310559 C59.2444444,18.5838509 59.3809524,18.7204969 59.6539683,18.7204969 L62.1111111,18.7204969 C62.384127,18.7204969 62.5206349,18.5838509 62.5206349,18.310559 L63.0666667,14.8944099 C63.0666667,14.621118 63.3396825,14.3478261 63.7492063,14.3478261 L65.2507937,14.3478261 C68.3904762,14.3478261 70.1650794,12.8447205 70.5746032,9.83850932 C70.847619,8.60869565 70.5746032,7.51552795 70.0285714,6.83229814 C69.2095238,6.14906832 67.9809524,5.73913043 66.4793651,5.73913043 M67.0253968,10.2484472 C66.752381,11.8881988 65.5238095,11.8881988 64.2952381,11.8881988 L63.4761905,11.8881988 L64.0222222,8.74534161 C64.0222222,8.60869565 64.1587302,8.47204969 64.431746,8.47204969 L64.7047619,8.47204969 C65.5238095,8.47204969 66.3428571,8.47204969 66.752381,9.01863354 C67.0253968,9.1552795 67.0253968,9.56521739 67.0253968,10.2484472" id="Shape" fill="#139AD6"></path>
-                                  <g id="Group" transform="translate(25.800000, 5.739130)" fill="#263B80">
-                                    <path d="M7.23492063,0 L2.59365079,0 C2.32063492,0 2.04761905,0.273291925 1.91111111,0.546583851 L0,12.5714286 C0,12.8447205 0.136507937,12.9813665 0.40952381,12.9813665 L2.59365079,12.9813665 C2.86666667,12.9813665 3.13968254,12.7080745 3.27619048,12.4347826 L3.82222222,9.1552795 C3.82222222,8.88198758 4.0952381,8.60869565 4.5047619,8.60869565 L6.00634921,8.60869565 C9.14603175,8.60869565 10.9206349,7.10559006 11.3301587,4.09937888 C11.6031746,2.86956522 11.3301587,1.77639752 10.784127,1.0931677 C9.96507937,0.409937888 8.87301587,0 7.23492063,0 M7.78095238,4.50931677 C7.50793651,6.14906832 6.27936508,6.14906832 5.05079365,6.14906832 L4.36825397,6.14906832 L4.91428571,3.00621118 C4.91428571,2.86956522 5.05079365,2.73291925 5.32380952,2.73291925 L5.5968254,2.73291925 C6.41587302,2.73291925 7.23492063,2.73291925 7.64444444,3.27950311 C7.78095238,3.41614907 7.91746032,3.82608696 7.78095238,4.50931677" id="Shape"></path>
-                                    <path d="M21.2952381,4.37267081 L19.1111111,4.37267081 C18.9746032,4.37267081 18.7015873,4.50931677 18.7015873,4.64596273 L18.5650794,5.32919255 L18.4285714,5.05590062 C17.8825397,4.37267081 16.9269841,4.09937888 15.8349206,4.09937888 C13.3777778,4.09937888 11.1936508,6.01242236 10.784127,8.60869565 C10.5111111,9.97515528 10.9206349,11.2049689 11.6031746,12.0248447 C12.2857143,12.8447205 13.2412698,13.1180124 14.4698413,13.1180124 C16.5174603,13.1180124 17.6095238,11.8881988 17.6095238,11.8881988 L17.4730159,12.5714286 C17.4730159,12.8447205 17.6095238,12.9813665 17.8825397,12.9813665 L19.9301587,12.9813665 C20.2031746,12.9813665 20.4761905,12.7080745 20.6126984,12.4347826 L21.8412698,4.7826087 C21.7047619,4.64596273 21.431746,4.37267081 21.2952381,4.37267081 M18.1555556,8.74534161 C17.8825397,9.97515528 16.9269841,10.931677 15.5619048,10.931677 C14.8793651,10.931677 14.3333333,10.6583851 14.0603175,10.3850932 C13.7873016,9.97515528 13.6507937,9.42857143 13.6507937,8.74534161 C13.7873016,7.51552795 14.8793651,6.55900621 16.1079365,6.55900621 C16.7904762,6.55900621 17.2,6.83229814 17.6095238,7.10559006 C18.0190476,7.51552795 18.1555556,8.19875776 18.1555556,8.74534161" id="Shape"></path>
-                                  </g>
-                                  <path d="M80.4031746,10.1118012 L78.2190476,10.1118012 C78.0825397,10.1118012 77.8095238,10.2484472 77.8095238,10.3850932 L77.6730159,11.068323 L77.5365079,10.7950311 C76.9904762,10.1118012 76.0349206,9.83850932 74.9428571,9.83850932 C72.4857143,9.83850932 70.3015873,11.7515528 69.8920635,14.3478261 C69.6190476,15.7142857 70.0285714,16.9440994 70.7111111,17.7639752 C71.3936508,18.5838509 72.3492063,18.8571429 73.5777778,18.8571429 C75.6253968,18.8571429 76.7174603,17.6273292 76.7174603,17.6273292 L76.5809524,18.310559 C76.5809524,18.5838509 76.7174603,18.7204969 76.9904762,18.7204969 L79.0380952,18.7204969 C79.3111111,18.7204969 79.584127,18.447205 79.7206349,18.173913 L80.9492063,10.5217391 C80.8126984,10.3850932 80.6761905,10.1118012 80.4031746,10.1118012 M77.2634921,14.484472 C76.9904762,15.7142857 76.0349206,16.6708075 74.6698413,16.6708075 C73.9873016,16.6708075 73.4412698,16.3975155 73.168254,16.1242236 C72.8952381,15.7142857 72.7587302,15.1677019 72.7587302,14.484472 C72.8952381,13.2546584 73.9873016,12.2981366 75.215873,12.2981366 C75.8984127,12.2981366 76.3079365,12.5714286 76.7174603,12.8447205 C77.2634921,13.2546584 77.4,13.9378882 77.2634921,14.484472" id="Shape" fill="#139AD6"></path>
-                                  <path d="M58.9714286,10.1118012 L56.6507937,10.1118012 C56.3777778,10.1118012 56.2412698,10.2484472 56.1047619,10.3850932 L53.1015873,15.0310559 L51.7365079,10.6583851 C51.6,10.3850932 51.4634921,10.2484472 51.0539683,10.2484472 L48.8698413,10.2484472 C48.5968254,10.2484472 48.4603175,10.5217391 48.4603175,10.7950311 L50.9174603,18.0372671 L48.5968254,21.3167702 C48.4603175,21.5900621 48.5968254,22 48.8698413,22 L51.0539683,22 C51.3269841,22 51.4634921,21.863354 51.6,21.7267081 L59.1079365,10.931677 C59.5174603,10.5217391 59.2444444,10.1118012 58.9714286,10.1118012" id="Path" fill="#263B80"></path>
-                                  <path d="M82.9968254,6.14906832 L81.0857143,18.447205 C81.0857143,18.7204969 81.2222222,18.8571429 81.4952381,18.8571429 L83.4063492,18.8571429 C83.6793651,18.8571429 83.952381,18.5838509 84.0888889,18.310559 L86,6.28571429 C86,6.01242236 85.8634921,5.8757764 85.5904762,5.8757764 L83.4063492,5.8757764 C83.2698413,5.73913043 83.1333333,5.8757764 82.9968254,6.14906832" id="Path" fill="#139AD6"></path>
-                                  <path d="M15.6984127,1.63975155 C14.7428571,0.546583851 12.968254,4.85463981e-15 10.5111111,4.85463981e-15 L3.68571429,4.85463981e-15 C3.27619048,4.85463981e-15 2.86666667,0.409937888 2.73015873,0.819875776 L0,18.7204969 C0,19.1304348 0.273015873,19.4037267 0.546031746,19.4037267 L4.77777778,19.4037267 L5.86984127,12.7080745 L5.86984127,12.9813665 C6.00634921,12.5714286 6.41587302,12.1614907 6.82539683,12.1614907 L8.87301587,12.1614907 C12.831746,12.1614907 15.8349206,10.5217391 16.7904762,6.01242236 C16.7904762,5.8757764 16.7904762,5.73913043 16.7904762,5.60248447 C16.6539683,5.60248447 16.6539683,5.60248447 16.7904762,5.60248447 C16.9269841,3.82608696 16.6539683,2.73291925 15.6984127,1.63975155" id="Path" fill="#263B80"></path>
-                                  <path d="M16.6539683,5.60248447 L16.6539683,5.60248447 C16.6539683,5.73913043 16.6539683,5.8757764 16.6539683,6.01242236 C15.6984127,10.6583851 12.6952381,12.1614907 8.73650794,12.1614907 L6.68888889,12.1614907 C6.27936508,12.1614907 5.86984127,12.5714286 5.73333333,12.9813665 L4.36825397,21.3167702 C4.36825397,21.5900621 4.5047619,21.863354 4.91428571,21.863354 L8.46349206,21.863354 C8.87301587,21.863354 9.28253968,21.5900621 9.28253968,21.1801242 L9.28253968,21.0434783 L9.96507937,16.8074534 L9.96507937,16.5341615 C9.96507937,16.1242236 10.3746032,15.8509317 10.784127,15.8509317 L11.3301587,15.8509317 C14.7428571,15.8509317 17.4730159,14.484472 18.1555556,10.3850932 C18.4285714,8.74534161 18.2920635,7.24223602 17.4730159,6.28571429 C17.3365079,6.01242236 17.0634921,5.73913043 16.6539683,5.60248447" id="Path" fill="#139AD6"></path>
-                                  <path d="M15.6984127,5.19254658 C15.5619048,5.19254658 15.4253968,5.05590062 15.2888889,5.05590062 C15.152381,5.05590062 15.015873,5.05590062 14.8793651,4.91925466 C14.3333333,4.7826087 13.7873016,4.7826087 13.1047619,4.7826087 L7.78095238,4.7826087 C7.64444444,4.7826087 7.50793651,4.7826087 7.37142857,4.91925466 C7.0984127,5.05590062 6.96190476,5.32919255 6.96190476,5.60248447 L5.86984127,12.7080745 L5.86984127,12.9813665 C6.00634921,12.5714286 6.41587302,12.1614907 6.82539683,12.1614907 L8.87301587,12.1614907 C12.831746,12.1614907 15.8349206,10.5217391 16.7904762,6.01242236 C16.7904762,5.8757764 16.7904762,5.73913043 16.9269841,5.60248447 C16.6539683,5.46583851 16.5174603,5.32919255 16.2444444,5.32919255 C15.8349206,5.19254658 15.8349206,5.19254658 15.6984127,5.19254658" id="Path" fill="#232C65"></path>
-                                </g>
-                              </g>
-                            </g>
-                          </svg>
-                        </div>
-                        <div next-slot="spinner" class="payment-btn-spinner">
-                          <div class="spinner"></div>
-                        </div>
-                      </button><button data-next-express-checkout="apple_pay" data-action="submit" class="payment-btn cc-apple-pay">
-                        <div class="payment-btn__logo w-embed">
-                          <!--?xml version="1.0" encoding="UTF-8"?-->
-                          <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" height="100%" viewBox="0 0 512 252.2">
-                            <!--  Generator: Adobe Illustrator 29.3.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 146)   -->
-                            <defs>
-                            </defs>
-                            <path class="st0" fill="white" d="M93.6,69.1c-6,7.1-15.6,12.7-25.2,11.9-1.2-9.6,3.5-19.8,9-26.1,6-7.3,16.5-12.5,25-12.9,1,10-2.9,19.8-8.8,27.1M102.3,82.9c-13.9-.8-25.8,7.9-32.4,7.9s-16.8-7.5-27.8-7.3c-14.3.2-27.6,8.3-34.9,21.2-15,25.8-3.9,64,10.6,85,7.1,10.4,15.6,21.8,26.8,21.4,10.6-.4,14.8-6.9,27.6-6.9s16.6,6.9,27.8,6.7c11.6-.2,18.9-10.4,26-20.8,8.1-11.8,11.4-23.3,11.6-23.9-.2-.2-22.4-8.7-22.6-34.3-.2-21.4,17.5-31.6,18.3-32.2-10-14.8-25.6-16.4-31-16.8M182.6,53.9v155.9h24.2v-53.3h33.5c30.6,0,52.1-21,52.1-51.4s-21.1-51.2-51.3-51.2h-58.5ZM206.8,74.3h27.9c21,0,33,11.2,33,30.9s-12,31-33.1,31h-27.8v-61.9ZM336.6,211c15.2,0,29.3-7.7,35.7-19.9h.5v18.7h22.4v-77.6c0-22.5-18-37-45.7-37s-44.7,14.7-45.4,34.9h21.8c1.8-9.6,10.7-15.9,22.9-15.9s23.1,6.9,23.1,19.6v8.6l-30.2,1.8c-28.1,1.7-43.3,13.2-43.3,33.2s15.7,33.6,38.2,33.6ZM343.1,192.5c-12.9,0-21.1-6.2-21.1-15.7s7.9-15.5,23-16.4l26.9-1.7v8.8c0,14.6-12.4,25-28.8,25ZM425.1,252.2c23.6,0,34.7-9,44.4-36.3l42.5-119.2h-24.6l-28.5,92.1h-.5l-28.5-92.1h-25.3l41,113.5-2.2,6.9c-3.7,11.7-9.7,16.2-20.4,16.2s-5.6-.2-7.1-.4v18.7c1.4.4,7.4.6,9.2.6Z"></path>
-                          </svg>
-                        </div>
-                        <div next-slot="spinner" class="payment-btn-spinner">
-                          <div class="spinner"></div>
-                        </div>
-                      </button><button data-next-express-checkout="google_pay" data-action="submit" class="payment-btn cc-google-pay">
-                        <div class="payment-btn__logo w-embed">
-                          <!--?xml version="1.0" encoding="UTF-8"?-->
-                          <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 41 20.3" width="100%" height="100%">
-                            <path fill="#ffffff" fill-rule="evenodd" d="M19.5,5.9v4.1h2.5c.6,0,1.1-.2,1.5-.6.4-.4.6-.9.6-1.4s-.2-1-.6-1.4c-.4-.4-.9-.6-1.5-.6h-2.5ZM19.5,11.5v4.7h-1.5V4.5h4c1,0,1.9.3,2.6,1,.7.7,1.1,1.5,1.1,2.5s-.4,1.8-1.1,2.5c-.7.7-1.6,1-2.6,1h-2.5s0,0,0,0ZM27.2,13.7c0,.4.2.7.5,1,.3.3.7.4,1.2.4.6,0,1.2-.2,1.7-.7.5-.5.7-1,.7-1.6-.5-.4-1.1-.6-2-.6s-1.1.1-1.5.4c-.4.3-.6.7-.6,1.1M29.1,7.9c1.1,0,2,.3,2.6.9.6.6,1,1.4,1,2.4v4.9h-1.4v-1.1h0c-.6.9-1.5,1.4-2.5,1.4s-1.6-.3-2.2-.8c-.6-.5-.9-1.2-.9-2s.3-1.5.9-2,1.5-.7,2.5-.7,1.6.2,2.2.5v-.3c0-.5-.2-1-.6-1.3-.4-.4-.9-.6-1.5-.5-.8,0-1.5.4-2,1.1l-1.3-.8c.7-1,1.8-1.6,3.2-1.6M41,8.2l-5,11.5h-1.6l1.9-4-3.3-7.5h1.6l2.4,5.7h0l2.3-5.8h1.6Z"></path>
-                            <path fill="#4285f4" fill-rule="evenodd" d="M13.4,10.4c0-.5,0-.9-.1-1.4h-6.3v2.6h3.6c-.2.8-.6,1.6-1.3,2v1.7h2.2c1.3-1.2,2-2.9,2-4.9"></path>
-                            <path fill="#34a853" fill-rule="evenodd" d="M7,17c1.8,0,3.3-.6,4.5-1.6l-2.2-1.7c-.6.4-1.4.6-2.3.6-1.8,0-3.2-1.2-3.8-2.8H1v1.7c1.1,2.3,3.5,3.7,6,3.7"></path>
-                            <path fill="#fabb05" fill-rule="evenodd" d="M3.2,11.6c-.3-.8-.3-1.7,0-2.6v-1.7H1c-.5.9-.7,2-.7,3,0,1.1.3,2.1.7,3l2.2-1.7h0Z"></path>
-                            <path fill="#e94235" fill-rule="evenodd" d="M7,6.2c1,0,1.9.3,2.6,1h0s1.9-1.9,1.9-1.9c-1.2-1.1-2.7-1.7-4.5-1.7-2.5,0-4.9,1.4-6,3.7l2.2,1.7c.5-1.6,2-2.8,3.8-2.8"></path>
-                          </svg>
-                        </div>
-                        <div next-slot="spinner" class="payment-btn-spinner">
-                          <div class="spinner"></div>
-                        </div>
-                      </button></div>
+                    <!-- Buttons are injected by campaign-cart ExpressCheckoutContainerEnhancer -->
+                    <div data-next-express-checkout="buttons" class="express-checkout__buttons"></div>
                   </div>
                   <div class="divider-section">
                     <div class="divider-section__line-2"></div>
-                    <div data-i18n="pay_cc" class="divider-section__text-2">OR</div>
+                    <div class="divider-section__text-2">OR</div>
                     <div class="divider-section__line-2"></div>
                   </div>
                 </div>
@@ -221,7 +172,7 @@
                                         <option value="">Select Country</option>
                                       </select>
                                       <div class="caret-down">
-                                        <div class="select-arrow w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <div class="select-arrow"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                                             <polyline points="2 4.75 7 9.25 12 4.75"></polyline>
                                           </svg></div>
                                       </div>
@@ -232,7 +183,7 @@
                               <div data-next-component="shipping-field-row" class="form-grid__row">
                                 <div class="form-group">
                                   <div class="form-input">
-                                    <div class="form-input-icon w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" focusable="false" aria-hidden="true" class="a8x1wuy a8x1wux *1fragem32 *1fragempz *1fragemly *1fragemlo _1fragemp6">
+                                    <div class="form-input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" focusable="false" aria-hidden="true" class="a8x1wuy a8x1wux *1fragem32 *1fragempz *1fragemly *1fragemlo _1fragemp6">
                                         <circle cx="6" cy="6" r="4" fill="none" stroke="currentColor" stroke-width="1"></circle>
                                         <path fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" d="m9.25 9.25 2.5 2.5"></path>
                                       </svg></div><label for="shipping_address1" class="label-checkout">Address</label><input autocomplete="address-line1" os-checkout-validate="required" placeholder="Address*" data-next-checkout-field="address1" class="input-flds">
@@ -255,7 +206,7 @@
                                           <option value="">Select State</option>
                                         </select>
                                         <div class="caret-down">
-                                          <div class="select-arrow w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                          <div class="select-arrow"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                                               <polyline points="2 4.75 7 9.25 12 4.75"></polyline>
                                             </svg></div>
                                         </div>
@@ -282,34 +233,38 @@
                           <div class="shipping_method-wrapper">
                             <div>Enter your shipping address to view available shipping methods.</div>
                           </div>
-                          <div os-component="shipping-mode" class="shipping-selector">
-                            <div class="shipping-method"><label id="combo_mode_shipping" shipping_mode="1" class="radio-select-shipping"><input type="radio" name="shipping_method" id="shipping_method_1" data-name="Shipping Method" class="payment-method__input" checked="" value="1">
+                          <div class="shipping-selector" role="radiogroup" aria-labelledby="shipping-method-title">
+                            <!-- Option 1: value must match campaign shipping_methods[].ref_id -->
+                            <div class="shipping-method" data-next-shipping-id="1">
+                              <label for="shipping_method_1" class="radio-select-shipping">
+                                <input type="radio"
+                                       name="shipping_method"
+                                       id="shipping_method_1"
+                                       value="1"
+                                       class="payment-method__input"
+                                       checked>
                                 <div class="shipping-method-rleft">
-                                  <div>Standard Shipping</div>
-                                  <div class="text-block-369">Testing a default shipping description for customization.</div>
+                                  <div data-next-display="shipping.name"></div>
+                                  <div class="shipping-option__description">Testing a default shipping description for customization.</div>
                                 </div>
                                 <div class="shipping_price">
-                                  <div>$0.00</div>
+                                  <div data-next-display="shipping.cost">$0.00</div>
                                 </div>
-                              </label></div>
-                            <div class="shipping-method"><label id="combo_mode_shipping" shipping_mode="2" class="radio-select-shipping"><input type="radio" name="shipping_method" id="shipping_method_2" data-name="Shipping Method" class="payment-method__input" checked="" value="2">
+                              </label>
+                            </div>
+                            <!-- Option 2 -->
+                            <div class="shipping-method cc-last__item" data-next-shipping-id="2">
+                              <label for="shipping_method_2" class="radio-select-shipping">
+                                <input type="radio" name="shipping_method" id="shipping_method_2" value="2" class="payment-method__input">
                                 <div class="shipping-method-rleft">
-                                  <div>Subscription Shipping</div>
-                                  <div class="text-block-369">Testing a default shipping description for customization.</div>
+                                  <div data-next-display="shipping.name"></div>
+                                  <div class="shipping-option__description">Testing a default shipping description for customization.</div>
                                 </div>
                                 <div class="shipping_price">
-                                  <div>$5.00</div>
+                                  <div data-next-display="shipping.cost">$5.00</div>
                                 </div>
-                              </label></div>
-                            <div class="shipping-method cc-last"><label id="combo_mode_shipping" shipping_mode="3" class="radio-select-shipping"><input type="radio" name="shipping_method" id="shipping_method_3" data-name="Shipping Method" class="payment-method__input" checked="" value="3">
-                                <div class="shipping-method-rleft">
-                                  <div>Expedited: Standard Overnight</div>
-                                  <div class="text-block-369">Get the fastest shipping with our premium insured expedited shipping service.</div>
-                                </div>
-                                <div class="shipping_price">
-                                  <div>$28.00</div>
-                                </div>
-                              </label></div>
+                              </label>
+                            </div>
                           </div>
                         </div>
                         <div class="form-section form-section--last">
@@ -320,10 +275,14 @@
                           </div>
                           <div class="payment-methods">
                             <div data-next-payment-method="credit" class="payment-method next-selected">
-                              <div class="payment-method__header"><label id="combo_mode_credit" combo_mode="credit" class="payment-method__label"><input type="radio" name="payment_method" id="combo_mode_credit" data-name="Combo Mode" class="payment-method__input" checked="" value="credit">
+                              <div class="payment-method__header">
+                                <label for="combo_mode_credit" combo_mode="credit" class="payment-method__label">
+                                  <input type="radio" name="payment_method" id="combo_mode_credit" data-name="Combo Mode" class="payment-method__input" checked="" value="credit">
                                   <div class="payment-method__title">Credit Card</div>
-                                  <div class="payment-method__icons"><img loading="lazy" src="https://uploads-ssl.webflow.com/61f98dd058ae6109cf705231/61f98dd058ae6161337052a5_cc_visa.svg" alt="" class="payment-method__icon payment-method__icon--visa"><img loading="lazy" src="https://uploads-ssl.webflow.com/61f98dd058ae6109cf705231/61f98dd058ae61ca777052a4_cc_master.svg" alt="" class="payment-method__icon payment-method__icon--mastercard"><img loading="lazy" src="https://uploads-ssl.webflow.com/61f98dd058ae6109cf705231/61f98dd058ae6128807052a3_cc_amex.svg" alt="" class="payment-method__icon payment-method__icon--amex"><img loading="lazy" src="https://uploads-ssl.webflow.com/61f98dd058ae6109cf705231/61f98dd058ae61e8567052ad_cc_discover.svg" alt="" class="payment-method__icon payment-method__icon--discover"></div>
-                                </label></div>
+                                  <div class="payment-method__icons">
+                                    <img loading="lazy" src="../../images/cc-visa.svg" alt="" class="payment-method__icon payment-method__icon--visa"><img loading="lazy" src="../../images/cc_master.svg" alt="" class="payment-method__icon payment-method__icon--mastercard"><img loading="lazy" src="../../images/cc_amex.svg" alt="" class="payment-method__icon payment-method__icon--amex"><img loading="lazy" src="../../images/cc_discover.svg" alt="" class="payment-method__icon payment-method__icon--discover"></div>
+                                </label>
+                              </div>
                               <div data-next-payment-form="credit" os-checkout-element="credit-form" os-shipping-method-same="true" class="payment-method__form payment-method__form--expanded">
                                 <div class="payment-method__content">
                                   <div data-next-component="credit-error" class="next-toast-handler">
@@ -335,7 +294,7 @@
                                     <div class="form-grid__row">
                                       <div class="form-group">
                                         <div class="form-input">
-                                          <div data-next-tooltip="All transactions are secure and encrypted." class="form-input-icon w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" focusable="false" aria-hidden="true" class="a8x1wuy a8x1wux *1fragem32 *1fragempm *1fragemlo *1fragemle _1fragemot">
+                                          <div data-next-tooltip="All transactions are secure and encrypted." class="form-input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" focusable="false" aria-hidden="true" class="a8x1wuy a8x1wux *1fragem32 *1fragempm *1fragemlo *1fragemle _1fragemot">
                                               <path fill="none" stroke="currentColor" stroke-width="1" d="M2.5 7c0-.966.784-1.75 1.75-1.75h5.5c.966 0 1.75.784 1.75 1.75v3.5a1.75 1.75 0 0 1-1.75 1.75h-5.5A1.75 1.75 0 0 1 2.5 10.5zm7-1.75V4.22c0-1.364-1.12-2.47-2.5-2.47S4.5 2.856 4.5 4.22v1.03"></path>
                                             </svg></div>
                                           <div data-next-checkout-field="cc-number" class="input-flds spreedly-field"></div>
@@ -349,7 +308,7 @@
                                               <option value="">Exp. Month</option>
                                             </select>
                                             <div class="caret-down">
-                                              <div class="select-arrow w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                              <div class="select-arrow"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                                                   <polyline points="2 4.75 7 9.25 12 4.75"></polyline>
                                                 </svg></div>
                                             </div>
@@ -362,7 +321,7 @@
                                               <option value="">Exp. Year</option>
                                             </select>
                                             <div class="caret-down">
-                                              <div class="select-arrow w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                              <div class="select-arrow"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                                                   <polyline points="2 4.75 7 9.25 12 4.75"></polyline>
                                                 </svg></div>
                                             </div>
@@ -371,7 +330,7 @@
                                       </div>
                                       <div class="form-group">
                                         <div class="form-input">
-                                          <div data-next-tooltip="3-digit security code usually found on the back of your card. American Express cards have a 4-digit code located on the front." class="form-input-icon w-embed"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="100%" height="100%" focusable="false" aria-hidden="true" class="a8x1wuy a8x1wux *1fragem32 *1fragempm *1fragemlo *1fragemle _1fragemot">
+                                          <div data-next-tooltip="3-digit security code usually found on the back of your card. American Express cards have a 4-digit code located on the front." class="form-input-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="100%" height="100%" focusable="false" aria-hidden="true" class="a8x1wuy a8x1wux *1fragem32 *1fragempm *1fragemlo *1fragemle _1fragemot">
                                               <g clip-path="url(#a)">
                                                 <circle cx="7" cy="7" r="5.5" fill="none" stroke="currentColor" stroke-width="1"></circle>
                                                 <path stroke-linejoin="round" fill="none" stroke="currentColor" stroke-width="1" d="M6.99 10.24h.02v.02h-.02z"></path>
@@ -390,7 +349,7 @@
                                   </div>
                                   <div class="billing-address">
                                     <div os-input-field="use-shipping-address" class="checkbox-wrapper"><label class="checkout__checkbox"><input type="checkbox" name="use_shipping_address" id="use_shipping_address" data-name="Use Shipping Address" class="checkbox__input" checked="">
-                                        <div class="checkbox__label">Use shiping address as billing address</div>
+                                        <div class="checkbox__label">Use shipping address as billing address</div>
                                       </label></div>
                                     <div os-checkout-element="different-billing-address" class="billing-address__form">
                                       <h1 class="form-section__title cc-billing">Billing Address</h1>
@@ -401,10 +360,16 @@
                               </div>
                             </div>
                             <div data-next-payment-method="paypal" class="payment-method">
-                              <div class="payment-method__header"><label id="combo_mode_paypal" combo_mode="paypal" class="payment-method__label"><input type="radio" name="payment_method" id="combo_mode_paypal" data-name="Combo Mode" class="payment-method__input" value="paypal">
+                              <div class="payment-method__header">
+                                <label for="combo_mode_paypal" combo_mode="paypal" class="payment-method__label">
+                                  <input type="radio" name="payment_method" id="combo_mode_paypal" data-name="Combo Mode" class="payment-method__input" value="paypal">
                                   <div class="payment-method__title">PayPal</div>
-                                  <div class="payment-method__icons"><img loading="lazy" src="https://uploads-ssl.webflow.com/6143e22a819db6854e8347a4/6143e22a819db6767c8347c0_paypal-logo.svg" alt="" class="image-5"><img loading="lazy" src="https://uploads-ssl.webflow.com/6143e22a819db6854e8347a4/6143e22a819db66ebb8347c5_paypal-txt.svg" alt="" class="image-4"></div>
-                                </label></div>
+                                  <div class="payment-method__icons">
+                                    <img loading="lazy" src="../../images/paypal-logo.svg" alt="" class="payment-method__icon--paypal-logo">
+                                    <img loading="lazy" src="../../images/paypal-txt.svg" alt="" class="payment-method__icon--paypal-txt">
+                                  </div>
+                                </label>
+                              </div>
                               <div data-next-payment-form="paypal" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
                                 <div class="payment-method__content">
                                   <div data-next-component="paypal-error" class="next-toast-handler">
@@ -412,7 +377,7 @@
                                       <div data-next-component="paypal-error-text" class="text-sm">Error message</div>
                                     </div>
                                   </div>
-                                  <div class="payment-method__info"><img loading="lazy" src="https://uploads-ssl.webflow.com/6143e22a819db6854e8347a4/6143e22a819db641438347c6_paypal.svg" alt="" class="payment-method__info-image">
+                                  <div class="payment-method__info"><img loading="lazy" src="../../images/paypal.svg" alt="" class="payment-method__info-image">
                                     <h4 class="payment-method__info-title">Complete your transaction via Paypal</h4>
                                     <div class="payment-method__info-text">
                                       <p class="checkout-form-secure">PayPal will open in a new tab.<br></p>
@@ -421,14 +386,57 @@
                                 </div>
                               </div>
                             </div>
+                            <div data-next-payment-method="klarna" class="payment-method">
+                              <div class="payment-method__header">
+                                <label for="combo_mode_klarna" combo_mode="klarna" class="payment-method__label">
+                                  <input
+                                    type="radio"
+                                    name="payment_method"
+                                    id="combo_mode_klarna"
+                                    data-name="Combo Mode"
+                                    class="payment-method__input"
+                                    value="klarna"
+                                  />
+                                  <div class="payment-method__title">Klarna - Flexible Payments</div>
+                            
+                                  <div class="payment-method__icons">
+                                    <img loading="lazy" src="../../images/klarna-logo.svg" alt="" class="payment-method__icon--klarna-logo">
+                                  </div>
+                                </label>
+                              </div>
+                            
+                              <div data-next-payment-form="klarna" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
+                                <div class="payment-method__content">
+                                  <div data-next-component="klarna-error" class="next-toast-handler">
+                                    <div class="tip1_bar is-warning">
+                                      <div data-next-component="klarna-error-text" class="text-sm">Error message</div>
+                                    </div>
+                                  </div>
+                            
+                                  <div class="payment-method__info">
+                                    <div class="payment-method__info-image">
+                                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-252.3 356.1 163 80.9" preserveAspectRatio="xMidYMid meet" width="100%" height="100%" class="zjrzY">
+                                        <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2" d="M-108.9 404.1v30c0 1.1-.9 2-2 2H-231c-1.1 0-2-.9-2-2v-75c0-1.1.9-2 2-2h120.1c1.1 0 2 .9 2 2v37m-124.1-29h124.1"></path>
+                                        <circle cx="-227.8" cy="361.9" r="1.8" fill="currentColor"></circle>
+                                        <circle cx="-222.2" cy="361.9" r="1.8" fill="currentColor"></circle>
+                                        <circle cx="-216.6" cy="361.9" r="1.8" fill="currentColor"></circle>
+                                        <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2" d="M-128.7 400.1H-92m-3.6-4.1 4 4.1-4 4.1"></path>
+                                      </svg>
+                                    </div>
+                            
+                                    <h4 class="payment-method__info-title">
+                                      After clicking “Complete Purchase”, you will be redirected to Klarna to complete your purchase securely.
+                                    </h4>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            
                           </div>
                         </div>
                         <div class="submit-section">
                           <div class="submit-section__button"><button os-checkout-payment="combo" data-action="submit" type="submit" class="button cc-gold">
                               <div data-pb-element="checkout-button-spinner" class="submit-button__loader">
-                                <div class="w-embed">
-
-                                </div>
                                 <div class="three-quarter-spinner black"></div>
                               </div>
                               <div data-pb-element="checkout-button-info" class="submit-button__content">
@@ -441,14 +449,14 @@
                         <div class="checkout-footer">
                           <div class="trust-badges">
                             <div class="trust-badge__item">
-                              <div class="trust-badge--icon w-embed"><svg width="100%" height="100%" viewBox="0 0 21 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <div class="trust-badge--icon"><svg width="100%" height="100%" viewBox="0 0 21 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <path d="M10.2857 0.5C6.97714 0.5 4.28571 3.23949 4.28571 6.60714V10.0969H2.57143C1.14857 10.0969 0 11.266 0 12.7143V22.3112C0 23.7595 1.14857 24.9286 2.57143 24.9286H18C19.4229 24.9286 20.5714 23.7595 20.5714 22.3112V12.7143C20.5714 11.266 19.4229 10.0969 18 10.0969H16.2857V6.60714C16.2857 3.23949 13.5943 0.5 10.2857 0.5ZM6 6.60714C6 4.19918 7.92 2.2449 10.2857 2.2449C12.6514 2.2449 14.5714 4.19918 14.5714 6.60714V10.0969H6V6.60714ZM18.8571 12.7143V22.3112C18.8571 22.7911 18.4714 23.1837 18 23.1837H2.57143C2.1 23.1837 1.71429 22.7911 1.71429 22.3112V12.7143C1.71429 12.2344 2.1 11.8418 2.57143 11.8418H18C18.4714 11.8418 18.8571 12.2344 18.8571 12.7143Z" fill="#5C5C5E"></path>
                                   <path d="M10.2857 13.587C8.87138 13.587 7.71423 14.7473 7.71423 16.1869C7.71423 17.3123 8.41709 18.3069 9.45423 18.6646C9.43709 18.717 9.42852 18.7606 9.42852 18.813V20.5579C9.42852 21.0377 9.81423 21.4303 10.2857 21.4303C10.7571 21.4303 11.1428 21.0377 11.1428 20.5579V18.813C11.1428 18.7606 11.1257 18.7083 11.1171 18.6646C12.4628 18.2022 13.1828 16.7191 12.7285 15.3581C12.3771 14.2937 11.3914 13.5783 10.2942 13.587H10.2857ZM10.2857 17.0768C9.81423 17.0768 9.42852 16.6842 9.42852 16.2043C9.42852 15.7245 9.81423 15.3319 10.2857 15.3319C10.7571 15.3319 11.1428 15.7245 11.1428 16.2043C11.1428 16.6842 10.7571 17.0768 10.2857 17.0768Z" fill="#5C5C5E"></path>
                                 </svg></div>
                               <div class="trust-badge--text">SECURE<br>SSL ENCRYPTION</div>
                             </div>
                             <div class="trust-badge__item">
-                              <div class="trust-badge--icon w-embed"><svg width="100%" height="100%" viewBox="0 0 24 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <div class="trust-badge--icon"><svg width="100%" height="100%" viewBox="0 0 24 27" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <g clip-path="url(#clip0_213_4831)">
                                     <path d="M11.4991 0.503307C11.285 0.520446 11.0854 0.617568 10.9379 0.771819C8.34589 3.47122 4.63146 4.69666 0.8505 4.78807C0.378964 4.79664 0 5.17941 0 5.64502C0 16.177 4.67196 24.1466 11.3198 26.1776C11.4846 26.2262 11.6611 26.2262 11.826 26.1776C18.4738 24.1495 23.1429 16.1798 23.1429 5.64502C23.1429 5.17941 22.7639 4.79664 22.2924 4.78807C18.5114 4.69666 14.797 3.47122 12.2021 0.771819C12.0198 0.580433 11.7624 0.483312 11.4962 0.503307H11.4991ZM11.5714 2.52857C14.2734 4.99659 17.8026 6.16776 21.3609 6.41057C21.1352 15.8742 16.9203 22.6213 11.5714 24.4237C6.22254 22.6241 2.00475 15.8742 1.782 6.41342C5.34021 6.17062 8.87239 4.99945 11.5714 2.53143V2.52857ZM16.4546 9.34991C16.2289 9.3642 16.0177 9.46132 15.8673 9.627L10.4056 15.2772L7.84832 12.752C7.50986 12.4178 6.95732 12.4178 6.61886 12.752C6.28039 13.0862 6.28039 13.6318 6.61886 13.966L9.801 17.1082C10.1424 17.4424 10.692 17.4367 11.0276 17.1025C11.0305 17.0996 11.0363 17.0939 11.0391 17.0911L17.1141 10.8067C17.4497 10.4668 17.4439 9.92693 17.0997 9.59557C16.929 9.4299 16.6947 9.34134 16.4546 9.35277V9.34991Z" fill="#5C5C5E"></path>
                                   </g>
@@ -463,7 +471,7 @@
                           </div><img loading="lazy" src="https://cdn.prod.website-files.com/67ec42fd75dae41c564624c5/67ec42fd75dae41c56462e31_67e1aef91560b7501b1fa583_Group%20469529.svg" alt="" class="credit-card__flags">
                         </div>
                         <div class="show-tablet">
-                          <div class="checkout__guarantee-section"><img loading="lazy" src="../../images/Group-469513_1Group-469513.avif" alt="" class="image-246 cc-guarantee">
+                          <div class="checkout__guarantee-section"><img loading="lazy" src="../../images/90d.webp" alt="" class="image-246 cc-guarantee">
                             <div class="text-xs-2"><strong>90 Day Money-Back Guarantee:</strong> Feel safe knowing you are protected with a 90 day guarantee. Simply send the item(s) back in the original packaging to receive a full refund or replacement, less S&amp;H.</div>
                           </div>
                         </div>
@@ -471,50 +479,45 @@
                     </div>
                   </form>
                 </div>
-              </div>
-              <div class="checkout__right is-first">
-                <div class="checkout__form-container is-sticky">
-                  <div data-next-await="" data-next-hide="param.timer == 'n'" class="show-tablet">
-                    <div data-next-hide="param.timer == 'n'" class="scarcity-banner">
-                      <div class="scarcity-banner__left">
-                        <div class="promo-wrapper">
-                          <div class="next-icon w-embed"><svg width="100%" height="100%" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M9.92733 14.8667C9.45828 14.7997 9.0224 14.5862 8.682 14.2567C8.48255 14.0749 8.25137 13.9314 8 13.8333C7.74888 13.9304 7.51772 14.0728 7.318 14.2533C6.86133 14.6027 6.344 14.998 5.78466 14.8173C5.20733 14.63 5.01933 13.9913 4.85133 13.4273C4.79792 13.1772 4.70233 12.938 4.56866 12.72C4.31736 12.6585 4.05738 12.6405 3.8 12.6667C3.21533 12.6813 2.55533 12.6987 2.2 12.2133C1.84466 11.728 2.06666 11.1113 2.26133 10.5647C2.36838 10.324 2.43181 10.0662 2.44866 9.80334C2.28405 9.61525 2.08997 9.45516 1.874 9.32934C1.38533 8.99601 0.831329 8.61601 0.831329 8.00001C0.831329 7.38401 1.38533 7.00534 1.874 6.67067C2.09017 6.54487 2.28429 6.38452 2.44866 6.19601C2.43341 5.93369 2.37179 5.67615 2.26666 5.43534C2.07333 4.88867 1.85466 4.26867 2.20533 3.78667C2.556 3.30467 3.218 3.32001 3.80533 3.33334C4.0636 3.35949 4.32445 3.34145 4.57666 3.28001C4.70801 3.06147 4.80155 2.82233 4.85333 2.57267C5.01866 2.00934 5.20733 1.37267 5.78666 1.18267C6.34866 1.00001 6.86333 1.39667 7.32 1.74667C7.51912 1.92702 7.74959 2.06937 8 2.16667C8.25111 2.06958 8.48228 1.92722 8.682 1.74667C9.13733 1.39667 9.656 1.00001 10.2153 1.18267C10.7933 1.37001 10.982 2.00867 11.1487 2.57267C11.2021 2.82278 11.2977 3.06197 11.4313 3.28001C11.6827 3.34126 11.9426 3.3593 12.2 3.33334C12.784 3.31667 13.4447 3.30067 13.8 3.78667C14.1553 4.27267 13.9333 4.88867 13.7387 5.43601C13.6309 5.67752 13.5666 5.93615 13.5487 6.20001C13.7134 6.38825 13.9077 6.54835 14.124 6.67401C14.6127 7.00734 15.1667 7.38734 15.1667 8.00334C15.1667 8.61934 14.6127 8.99867 14.124 9.33267C13.9073 9.4583 13.7129 9.61891 13.5487 9.80801C13.5663 10.0701 13.6297 10.3271 13.736 10.5673C13.93 11.1147 14.1493 11.7347 13.7973 12.2173C13.4453 12.7 12.7853 12.684 12.1973 12.67C11.9393 12.6431 11.6785 12.6612 11.4267 12.7233C11.293 12.9414 11.1974 13.1806 11.144 13.4307C10.9787 13.9947 10.79 14.6307 10.2107 14.8207C10.1192 14.8505 10.0236 14.866 9.92733 14.8667ZM4.09866 11.6667C4.46973 11.6361 4.84097 11.7236 5.15933 11.9167C5.50359 12.2475 5.7326 12.68 5.81266 13.1507C5.86739 13.4082 5.9669 13.6542 6.10666 13.8773C6.32031 13.761 6.52138 13.623 6.70666 13.4653C7.05836 13.1207 7.51202 12.899 8 12.8333C8.48638 12.8981 8.93895 13.1179 9.29066 13.46C9.47961 13.6279 9.69523 13.7631 9.92866 13.86C10.0413 13.6315 10.128 13.3911 10.1873 13.1433C10.2668 12.6725 10.4959 12.2398 10.8407 11.9093C11.2644 11.6812 11.7506 11.5961 12.2267 11.6667C12.4856 11.6929 12.7472 11.6746 13 11.6127C12.9574 11.3674 12.8881 11.1275 12.7933 10.8973C12.5802 10.4636 12.5118 9.97289 12.598 9.49734C12.8036 9.07237 13.1407 8.72497 13.5593 8.50667C13.7875 8.37242 13.9919 8.20121 14.164 8.00001C13.9917 7.79976 13.7873 7.62945 13.5593 7.49601C13.1418 7.2773 12.8055 6.93026 12.6 6.50601C12.5131 6.02938 12.5816 5.53746 12.7953 5.10267C12.8989 4.86691 12.962 4.61539 12.982 4.35867C12.7319 4.32252 12.4786 4.31402 12.2267 4.33334C11.7504 4.40272 11.2644 4.31693 10.8407 4.08867C10.4959 3.75826 10.2668 3.32554 10.1873 2.85467C10.1326 2.59711 10.0331 2.35116 9.89333 2.12801C9.67968 2.24432 9.47861 2.38238 9.29333 2.54001C8.94091 2.88266 8.48732 3.10244 8 3.16667C7.51362 3.10189 7.06104 2.88215 6.70933 2.54001C6.52039 2.37212 6.30476 2.23693 6.07133 2.14001C5.95872 2.36853 5.87196 2.60891 5.81266 2.85667C5.73242 3.32656 5.50367 3.75835 5.16 4.08867C4.73581 4.31635 4.24982 4.4021 3.77333 4.33334C3.51436 4.30705 3.2528 4.32531 3 4.38734C3.04326 4.63224 3.11254 4.87182 3.20666 5.10201C3.41957 5.53585 3.48824 6.02638 3.40266 6.50201C3.19692 6.92706 2.85986 7.27463 2.44133 7.49334C2.24133 7.63001 1.86666 7.88534 1.83333 8.00667C2.00971 8.2011 2.21474 8.36746 2.44133 8.50001C2.85939 8.72003 3.19553 9.06879 3.4 9.49467C3.48631 9.97138 3.41762 10.4632 3.204 10.898C3.10086 11.1339 3.03798 11.3854 3.018 11.642C3.26745 11.6777 3.52007 11.686 3.77133 11.6667C3.88133 11.6667 3.99066 11.6613 4.09866 11.6613V11.6667Z" fill="currentColor"></path>
-                              <path d="M7.33334 9.83335C7.26768 9.83347 7.20264 9.82057 7.14199 9.7954C7.08134 9.77022 7.02628 9.73327 6.98001 9.68668L5.64668 8.35335C5.55836 8.25856 5.51027 8.1332 5.51256 8.00366C5.51485 7.87413 5.56732 7.75054 5.65893 7.65893C5.75054 7.56732 5.87413 7.51485 6.00366 7.51256C6.1332 7.51028 6.25856 7.55836 6.35334 7.64668L7.38001 8.67335L9.70001 6.93335C9.8061 6.85378 9.93944 6.81962 10.0707 6.83837C10.202 6.85712 10.3204 6.92726 10.4 7.03335C10.4796 7.13943 10.5137 7.27278 10.495 7.40406C10.4762 7.53533 10.4061 7.65378 10.3 7.73335L7.63334 9.73335C7.54691 9.79847 7.44157 9.83359 7.33334 9.83335Z" fill="currentColor"></path>
-                            </svg></div>
-                          <div class="scarcity_title">CODE25</div>
-                        </div>
-                        <div class="scarcity_subtitle">PROMO APPLIED</div>
-                      </div>
-                      <div class="scarcity-banner__right">
-                        <div data-os-timer-replace-entire-content="true" data-os-element="timer-text" data-os-timer-expiry-text="Almost Gone" data-os-timer-duration="600" data-os-timer-persistence-id="lem-checkout" class="scarcity-sale">Your order is reserved for: <span data-next-element="timer" class="scarcity-counter">09:55</span>. Stay on this page.</div>
-                      </div>
-                    </div>
                   </div>
+                </div>
+              </div>
+              <div class="checkout-layout__right">
+                <div class="checkout-right__content checkout-right__content--sticky">
                   <div class="hide-tablet">
                     <div class="hero_heading-box">
                       <div class="checkout__heading-box">
                         <div class="text-reg cc-red">New &amp; Improved 2025 Edition</div>
-                        <div class="hero_review-box cc-last">
-                          <div class="review_component cc-sm cc-last">
+                        <div class="hero_review-box hero_review-box--last">
+                          <div class="review_component cc-sm">
                             <div class="review_component-wrapper">
-                              <div class="review_stars w-embed"><svg width="100%" height="100%" viewBox="0 0 71 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <rect width="13" height="13" rx="2" fill="currentColor"></rect>
-                                  <path d="M6.3375 1.95001L7.39552 5.20627H10.8194L8.04942 7.21875L9.10744 10.475L6.3375 8.46253L3.56756 10.475L4.62558 7.21875L1.85565 5.20627H5.27948L6.3375 1.95001Z" fill="white"></path>
-                                  <rect x="14.3" width="13" height="13" rx="2" fill="currentColor"></rect>
-                                  <path d="M20.6375 1.95001L21.6956 5.20627H25.1194L22.3495 7.21875L23.4075 10.475L20.6375 8.46253L17.8676 10.475L18.9256 7.21875L16.1557 5.20627H19.5795L20.6375 1.95001Z" fill="white"></path>
-                                  <rect x="28.6001" width="13" height="13" rx="2" fill="currentColor"></rect>
-                                  <path d="M34.9376 1.95001L35.9956 5.20627H39.4195L36.6495 7.21875L37.7075 10.475L34.9376 8.46253L32.1677 10.475L33.2257 7.21875L30.4557 5.20627H33.8796L34.9376 1.95001Z" fill="white"></path>
-                                  <rect x="42.9001" width="13" height="13" rx="2" fill="currentColor"></rect>
-                                  <path d="M49.2376 1.95001L50.2957 5.20627H53.7195L50.9496 7.21875L52.0076 10.475L49.2376 8.46253L46.4677 10.475L47.5257 7.21875L44.7558 5.20627H48.1796L49.2376 1.95001Z" fill="white"></path>
-                                  <rect x="57.1996" width="13" height="13" rx="2" fill="currentColor"></rect>
-                                  <path d="M63.537 1.95007L64.595 5.20633H68.0188L65.2489 7.21881L66.3069 10.4751L63.537 8.46259L60.767 10.4751L61.825 7.21881L59.0551 5.20633H62.4789L63.537 1.95007Z" fill="white"></path>
-                                </svg></div>
+                              <div class="star_wrapper">
+                                <div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                                    <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
+                                  </svg></div>
+                                <div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                                    <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
+                                  </svg></div>
+                                <div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                                    <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
+                                  </svg></div>
+                                <div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                                    <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
+                                  </svg></div>
+                                <div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+                                    <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
+                                  </svg></div>
+                              </div>
                               <div>201,191+ Grounded Customers</div>
                             </div>
                           </div>
                         </div>
-                        <h1 class="display-olympus">Next Commerce Shirts</h1>
+                        <h1 class="display-md">Next Commerce Shirts</h1>
                       </div>
                     </div>
                   </div>
@@ -537,7 +540,7 @@
                                           <div class="cc-item-variant">Size: {item.variantSize}</div>
                                           <div class="cc-item-variant">Color: {item.variantColor}</div>
                                         </div>
-                                        <a href="/templates/checkout/olympus-mv-selection?showSelection=true" class="edit-order_text w-inline-block">
+                                        <a href="/templates/checkout/olympus-mv-selection?showSelection=true" class="edit-order_text">
                                           <div>Edit Order</div>
                                         </a>
                                       </div>
@@ -583,7 +586,7 @@
                                 </div>
                                 <div class="coupon-tags">
                                   <div class="coupon-tag__summary">
-                                    <div class="coupon-tag__remove w-embed"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" focusable="false" aria-hidden="true" class="a8x1wu10 a8x1wuz _1fragem1y _1fragemof _1fragemkk _1fragemka _1fragemnm" fill="none" stroke="currentColor">
+                                    <div class="coupon-tag__remove"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" focusable="false" aria-hidden="true" class="a8x1wu10 a8x1wuz _1fragem1y _1fragemof _1fragemkk _1fragemka _1fragemnm" fill="none" stroke="currentColor">
                                         <path stroke-linecap="round" d="M7.284 1.402h4.964a.35.35 0 0 1 .35.35v4.964a.7.7 0 0 1-.205.495L7.49 12.115a.7.7 0 0 1-.99 0L1.885 7.5a.7.7 0 0 1 0-.99L6.79 1.607a.7.7 0 0 1 .495-.205Z"></path>
                                         <circle cx="9.1" cy="4.9" r="0.7" fill="currentColor"></circle>
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M9.102 4.897h-.005v.005h.005z"></path>
@@ -596,7 +599,7 @@
                                 <div class="order-totals__line order-totals__line--total">
                                   <div class="order-totals__label order-totals__label--total">Grand Total:</div>
                                   <div class="order-totals__value-group">
-                                    <div class="summary-total__coin">USD<br></div>
+                                    <div data-next-display="cart.currency" class="summary-total__coin">USD<br></div>
                                     <div data-next-display="cart.total" class="order-totals__value order-totals__value--total">$109.96</div>
                                   </div>
                                 </div>
@@ -608,7 +611,7 @@
                     </div>
                   </div>
                   <div class="hide-tablet">
-                    <div class="checkout__guarantee-section"><img loading="lazy" src="../../images/Group-469513_1Group-469513.avif" alt="" class="image-246 cc-guarantee">
+                    <div class="checkout__guarantee-section"><img loading="lazy" src="../../images/90d.webp" alt="" class="image-246 cc-guarantee">
                       <div class="text-xs-2"><strong>90 Day Money-Back Guarantee:</strong> Feel safe knowing you are protected with a 90 day guarantee. Simply send the item(s) back in the original packaging to receive a full refund or replacement, less S&amp;H.</div>
                     </div>
                   </div>
@@ -618,7 +621,7 @@
           </div>
         </div>
         <footer class="footer_section">
-          <div class="container cc-medium">
+          <div class="container">
             <div class="footer_layout">
               <div class="footer_copy-info">
                 <div class="footer_link-wrapper">
@@ -627,7 +630,8 @@
                   <a href="#" class="footer_legal-link">Privacy Policy</a>
                   <a href="#" class="footer_legal-link">Terms of Service</a>
                 </div>
-                <div class="text-xs">Copyright © 2025 Next Commerce</div>
+                <div class="text-xs">Copyright © <span class="copyright-year"></span> Next Commerce</div>
+<script>(function(){ var y = new Date().getFullYear(); document.querySelectorAll('.copyright-year').forEach(function(el){ el.textContent = y; }); })();</script>
               </div>
             </div>
           </div>
@@ -638,6 +642,6 @@
 
 
 
-    <script defer="" src="../../js/templates-checkout-olympus-mv-billing.js"></script>
+    <script defer="" src="../../js/checkout.js"></script>
   </body>
 </html>

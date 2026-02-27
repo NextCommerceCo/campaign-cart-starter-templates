@@ -2,9 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Shop</title>
-    <meta content="Shop" property="og:title">
-    <meta content="Shop" property="twitter:title">
+    <title>Billing</title>
+    <meta content="Billing" property="og:title">
+    <meta content="Billing" property="twitter:title">
     <meta content="width=device-width, initial-scale=1" name="viewport">
 
     <link rel="dns-prefetch" href="//campaigns.apps.29next.com">
@@ -12,7 +12,7 @@
     <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
 
     <!-- Campaign Configuration -->
-    <script src="../../config.js"></script>
+    <script src="../../../config.js"></script>
     <!-- NEXT Metatags -->
     <meta name="next-funnel" content="Example Funnel">
     <meta name="next-success-url" content="/demo/upsell">
@@ -21,15 +21,17 @@
     <script src="https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v0.3.10/dist/loader.js" type="module"></script>
 
 
-    <link href="../../css/next-core.css" rel="stylesheet" type="text/css">
-    <link href="../../css/checkout.css" rel="stylesheet" type="text/css">
+    <link href="../../../css/next-core.css" rel="stylesheet" type="text/css">
+    <link href="../../../css/checkout.css" rel="stylesheet" type="text/css">
 
 
-    <link href="../../images/favicon.png" rel="shortcut icon" type="image/x-icon">
-    <link href="../../images/webclip.png" rel="apple-touch-icon">
+    <link href="../../../images/favicon.png" rel="shortcut icon" type="image/x-icon">
+    <link href="../../../images/webclip.png" rel="apple-touch-icon">
 
 
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
 
 
   </head>
@@ -37,19 +39,12 @@
     <div class="page-wrapper">
 
       <div class="main-wrapper">
-        <section class="checkout-header checkout-header--lg">
-          <div class="container">
-            <div class="checkout-header__inner checkout-header__inner--center">
-              <div class="checkout-header__brand"><img src="../../images/next-logo.png" loading="eager" alt="" class="brand-logo"></div>
-            </div>
-          </div>
-        </section>
         <div class="checkout-content">
           <div class="checkout__content">
             <div class="checkout__layout">
               <div class="checkout__column checkout__column--left">
                 <div class="checkout__form-container checkout__form-container--main">
-                  <div class="checkout-header__brand justify-center"><img src="../../images/next-logo.png" loading="eager" alt="" class="brand-logo"></div>
+                  <div class="checkout-header__brand justify-center"><img src="../../../images/next-logo.png" loading="eager" alt="" class="brand-logo"></div>
                   <div class="order-summary-mobile">
                     <div data-initial-state="closed" data-next-accordion="order-summary" data-open-text="Hide Order Summary" data-close-text="Show Order Summary" data-toggle-class="next-expanded" class="order-summary-mobile__accordion">
                       <div data-next-accordion-trigger="order-summary" class="order-summary__trigger">
@@ -76,8 +71,7 @@
                                     <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z"></path>
                                   </svg></div>
                               </div>
-                              <div data-next-hide="cart.isEmpty">
-                                <template id="cart-item-template" class="item-template os-show">
+                              <div data-next-hide="cart.isEmpty"><template id="cart-item-template" class="item-template os-show">
                                   <div data-cart-item-id="{item.id}" class="cart-item">
                                     <div class="cart-item__wrapper">
                                       <div class="cart-item__image-container">
@@ -112,7 +106,7 @@
                                 <div data-item-template-id="cart-item-template" data-next-cart-items="" class="cart-items__list"></div>
                               </div>
                             </div>
-                            <div data-next-hide="cart.isEmpty" class="coupon-section" data-next-await>
+                            <div data-next-hide="cart.isEmpty" class="coupon-section">
                               <div class="coupon-form">
                                 <div data-auto-apply="true" data-next-coupon="input" data-placeholder="Promo code (optional)" data-button-text="Apply" class="coupon-form__row">
                                   <div class="form-group">
@@ -136,7 +130,7 @@
                                 </div>
                               </div>
                             </div>
-                            <div data-next-content="" data-next-await>
+                            <div data-next-content="">
                               <div data-next-hide="cart.isEmpty" class="order-totals">
                                 <div class="order-totals__section">
                                   <div class="order-totals__line">
@@ -185,7 +179,6 @@
                                     <div class="order-totals__value-group">
                                       <div class="order-totals__label">Discount:<br></div>
                                       <div data-next-display="cart.totalSavingsAmount" class="order-totals__value">$0.00<br></div>
-                                      
                                     </div>
                                   </div>
                                 </div>
@@ -213,166 +206,139 @@
                       </div>
                     </div>
                   </div>
-                  <div data-component="prepurchase-upsell" data-variant="check02" data-next-await="" data-next-package-sync="2,3,4" data-next-bump="" data-next-package-id="6" class="next-active">
-                      <div data-next-toggle="toggle" class="bump__header next-active">
-                        <div class="bump__header-content">
-                          <div class="bump__checkbox">
-                            <div os-component="check" class="checkbox__icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--fe" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                <path fill="currentColor" fill-rule="evenodd" d="m6 10l-2 2l6 6L20 8l-2-2l-8 8z"></path>
-                              </svg></div>
-                          </div>
-                          <div class="bump__title">YES, &nbsp;I Will Take It</div>
-                          <div data-animate="right" class="bump__arrow"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--bx" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                              <path d="M5.536 21.886a1.004 1.004 0 0 0 1.033-.064l13-9a1 1 0 0 0 0-1.644l-13-9A1 1 0 0 0 5 3v18a1 1 0 0 0 .536.886z" fill="currentColor"></path>
-                            </svg></div>
-                          <div data-animate="left" class="bump__arrow bump__arrow--right"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--bx" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                              <path d="M4.431 12.822l13 9A1 1 0 0 0 19 21V3a1 1 0 0 0-1.569-.823l-13 9a1.003 1.003 0 0 0 0 1.645z" fill="currentColor"></path>
-                            </svg></div>
-                        </div>
-
-                      </div>
-                      <div class="bump__body">
-                        <div class="bump__content"><img data-next-display="package.6.image" loading="lazy" alt="" src="../../images/icon.svg" class="bump__image">
-                          <div class="bump__description">Get peace of mind with <span data-next-display="package.6.name">Shipping Guarantee</span> in the event your delivery is damaged, stolen, or lost during transit for <span data-next-display="package.price">$1.99</span></div>
-                        </div>
-                      </div>
-                  </div>
-                  <div data-next-express-checkout="container" class="exp-checkout">
-                    <div class="express-checkout__title">Express Checkout</div>
-                    <div data-next-component="express-error" class="next-toast-handler">
-                      <div class="tip1_bar is-warning">
-                        <div data-next-component="express-error-text" class="text-sm">Error message</div>
-                      </div>
-                    </div>
-                                        <!-- Buttons are injected by campaign-cart ExpressCheckoutContainerEnhancer -->
-
-                    <div data-next-express-checkout="buttons" class="express-checkout__buttons"></div>
-                    <div class="divider-section">
-                      <div class="divider-section__line-v2"></div>
-                      <div class="divider-section__text-v2">OR</div>
-                      <div class="divider-section__line-v2"></div>
-                    </div>
+                  <div class="checkout__header-steps">
+                    <div class="steps-text">Information<br></div>
+                    <div class="steps-arrow"><svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" focusable="false" aria-hidden="true" class="a8x1wuy a8x1wux _1fragem32 _1fragemq1 _1fragemly _1fragemlo _1fragemp6">
+                        <path stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" d="m4.75 2 4.646 4.646a.5.5 0 0 1 0 .708L4.75 12"></path>
+                      </svg></div>
+                    <div class="steps-text">Shipping<br></div>
+                    <div class="steps-arrow"><svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" focusable="false" aria-hidden="true" class="a8x1wuy a8x1wux _1fragem32 _1fragemq1 _1fragemly _1fragemlo _1fragemp6">
+                        <path stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" d="m4.75 2 4.646 4.646a.5.5 0 0 1 0 .708L4.75 12"></path>
+                      </svg></div>
+                    <div class="steps-text steps-text--active">Payment<br></div>
                   </div>
                   <div class="checkout-form">
                     <form data-next-checkout="form" id="combo_form" method="post">
                       <div class="form-content">
                         <div class="form-sections">
-                          <div class="form-section form-section--first">
-                            <h2 class="form-section__title">Contact</h2>
-                            <div class="form-group">
-                              <div class="form-input"><label for="email" class="label-checkout">Email</label><input autocomplete="email" os-checkout-validate="required" name="email" data-name="Email" type="email" id="email" placeholder="Email*" data-next-checkout-field="email" class="input-flds"></div>
-                            </div>
-                            <div class="checkbox-wrapper"><label for="accepts_marketing" class="checkout__checkbox"><input type="checkbox" data-next-checkout-field="accepts_marketing" name="accepts_marketing" id="accepts_marketing" class="checkbox__input" checked="">
-                                <div class="checkbox__label">Email me with news and offers</div>
-                              </label></div>
-                          </div>
-                          <div pb-checkout-section="shipping" class="form-section">
-                            <h1 class="form-section__title">Shipping</h1>
-                            <div os-checkout-component="shipping-form">
-                              <div class="form-grid">
-                                <div data-next-component="shipping-field-row" class="form-grid__row">
-                                  <div class="form-group">
-                                    <div class="form-input"><label for="shipping_country" class="label-checkout">Country</label>
-                                      <div class="select-form-wrapper"><select autocomplete="country-name" os-checkout-validate="required" data-next-checkout-field="country" class="input-flds select-field">
-                                          <option value="">Select Country</option>
-                                        </select>
-                                        <div class="caret-down">
-                                          <div class="select-arrow"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                              <polyline points="2 4.75 7 9.25 12 4.75"></polyline>
-                                            </svg></div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
+                          <div class="form-section">
+                            <div data-next-await="" data-next-enhancer="checkout-review" class="checkout__form-review">
+                              <div class="checkout__form-row">
+                                <div class="checkout__form-row-line">
+                                  <div class="checkout__form-row-text">Contact</div>
+                                  <div data-next-checkout-review="email">email</div>
                                 </div>
-                                <div data-next-component="shipping-field-row" class="form-grid__row">
-                                  <div class="form-group">
-                                    <div class="form-input"><label for="shipping_fname" class="label-checkout">First Name</label><input autocomplete="given-name" os-checkout-validate="required" placeholder="First Name*" maxlength="256" name="shipping_fname" data-name="Shipping First Name" type="text" id="shipping_fname" data-next-checkout-field="fname" class="input-flds"></div>
-                                  </div>
-                                  <div class="form-group">
-                                    <div class="form-input"><label for="shipping_lname" class="label-checkout">Last Name</label><input autocomplete="family-name" os-checkout-validate="required" placeholder="Last Name*" maxlength="256" name="shipping_lname" data-name="Shipping Lirst Name" type="text" id="shipping_lname" data-next-checkout-field="lname" class="input-flds"></div>
-                                  </div>
+                                <div class="checkout__form-row-change">
+                                  <a href="../../../templates/checkout/shop-three/information.html" class="checkout__form-review--link">
+                                    <div>Change</div>
+                                  </a>
                                 </div>
-                                <div data-next-component="shipping-field-row" class="form-grid__row">
-                                  <div class="form-group">
-                                    <div class="form-input">
-                                      <div class="form-input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" focusable="false" aria-hidden="true" class="a8x1wuy a8x1wux *1fragem32 *1fragempz *1fragemly *1fragemlo _1fragemp6">
-                                          <circle cx="6" cy="6" r="4" fill="none" stroke="currentColor" stroke-width="1"></circle>
-                                          <path fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" d="m9.25 9.25 2.5 2.5"></path>
-                                        </svg></div><label for="shipping_address1" class="label-checkout">Address</label><input autocomplete="address-line1" os-checkout-validate="required" placeholder="Address*" data-next-checkout-field="address1" class="input-flds">
-                                    </div>
-                                  </div>
+                              </div>
+                              <div class="checkout__form-row">
+                                <div class="checkout__form-row-line">
+                                  <div class="checkout__form-row-text">Ship to<br></div>
+                                  <div data-next-format="address" data-next-checkout-review="address">address</div>
                                 </div>
-                                <div data-next-component="shipping-field-row" class="form-grid__row">
-                                  <div class="form-group">
-                                    <div class="form-input"><label for="shipping_address2" class="label-checkout">Apartment, suite, etc. (optional)</label><input autocomplete="address-line2" name="shipping_address2" data-name="Shipping Address 2" type="text" id="shipping_addres2" placeholder="Apartment, suite, etc. (optional)" maxlength="256" data-next-checkout-field="address2" class="input-flds"></div>
-                                  </div>
+                                <div class="checkout__form-row-change">
+                                  <a href="../../../templates/checkout/shop-three/information.html" class="checkout__form-review--link">
+                                    <div>Change</div>
+                                  </a>
                                 </div>
-                                <div data-next-component="shipping-field-row" data-os-component="location" class="form-grid__row">
-                                  <div class="form-group">
-                                    <div class="form-input"><label for="shipping_city" class="label-checkout">City</label><input autocomplete="address-level2" os-checkout-validate="required" placeholder="City*" maxlength="256" name="shipping_city" data-name="Shipping City" type="text" id="shipping_city" pattern="^[A-Za-z\s]+$" data-next-checkout-field="city" class="input-flds"></div>
-                                  </div>
-                                  <div class="form-group">
-                                    <div class="form-input"><label for="shipping_province" class="label-checkout">State</label>
-                                      <div class="select-form-wrapper"><select autocomplete="address-level1" os-checkout-validate="required" name="shipping_province" data-name="Shipping Province" type="select" id="shipping_province" data-next-checkout-field="province" class="input-flds select-field">
-                                          <option value="">Select State</option>
-                                        </select>
-                                        <div class="caret-down">
-                                          <div class="select-arrow"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                              <polyline points="2 4.75 7 9.25 12 4.75"></polyline>
-                                            </svg></div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="form-group">
-                                    <div class="form-input"><label for="shipping_postal_code" class="label-checkout">ZIP Code</label><input autocomplete="postal-code" os-checkout-validate="required" placeholder="ZIP Code*" maxlength="10" name="shipping_postal_code" data-name="Shipping Postal Code" type="text" id="shipping_postal_code" inputmode="numeric" pattern="(^\d{5}$)|(^\d{5}-\d{4}$)" data-next-checkout-field="postal" class="input-flds"></div>
-                                  </div>
+                              </div>
+                              <div class="checkout__form-row">
+                                <div class="checkout__form-row-line">
+                                  <div class="checkout__form-row-text">Phone<br></div>
+                                  <div data-next-format="phone" data-next-checkout-review="phone" class="grid-cell">phone</div>
                                 </div>
-                                <div data-next-component="shipping-field-row" class="form-grid__row">
-                                  <div class="form-group">
-                                    <div class="form-input"><label for="phone" class="label-checkout">Phone</label><input autocomplete="tel-full" name="phone" data-name="Phone" type="tel" id="phone" placeholder="201-555-0123" data-next-checkout-field="phone" class="input-flds"></div>
-                                  </div>
+                                <div class="checkout__form-row-change">
+                                  <a href="../../../templates/checkout/shop-three/information.html" class="checkout__form-review--link">
+                                    <div>Change</div>
+                                  </a>
+                                </div>
+                              </div>
+                              <div class="checkout__form-row checkout__form-row--last">
+                                <div class="checkout__form-row-line">
+                                  <div class="checkout__form-row-text grid-cell">Shipping Method<br></div>
+                                  <div class="text-block-391 grid-cell"><span data-next-checkout-review="shippingMethod.name">shippingName</span> Shipping · <span data-next-display="cart.shipping" class="checkout__form-row-bold">Free</span></div>
+                                </div>
+                                <div class="checkout__form-row-change">
+                                  <a href="../../../templates/checkout/shop-three/shipping.html" class="checkout__form-review--link">
+                                    <div>Change</div>
+                                  </a>
                                 </div>
                               </div>
                             </div>
                           </div>
-                          <div pb-checkout-section="shipping" class="form-section hide">
-                            <h1 class="form-section__title">Shipping Method</h1>
-                            <div class="shipping_method-wrapper">
-                              <div>Enter your shipping address to view available shipping methods.</div>
-                            </div>
-                            <div class="shipping-selector" role="radiogroup" aria-labelledby="shipping-method-title">
-                              <!-- Option 1: value must match campaign shipping_methods[].ref_id -->
-                              <div class="shipping-method" data-next-shipping-id="1">
-                                <label for="shipping_method_1" class="radio-select-shipping">
-                                  <input type="radio"
-                                         name="shipping_method"
-                                         id="shipping_method_1"
-                                         value="1"
-                                         class="payment-method__input"
-                                         checked>
-                                  <div class="shipping-method-rleft">
-                                    <div data-next-display="shipping.name"></div>
-                                    <div class="shipping-option__description">Testing a default shipping description for customization.</div>
+                          <div class="next-hidden-form">
+                            <div pb-checkout-section="shipping" class="form-section">
+                              <h1 class="form-section__title">Shipping</h1>
+                              <div os-checkout-component="shipping-form">
+                                <div class="form-grid">
+                                  <div data-next-component="shipping-field-row" class="form-grid__row">
+                                    <div class="form-group">
+                                      <div class="form-input"><label for="shipping_country" class="label-checkout">Country</label>
+                                        <div class="select-form-wrapper"><select autocomplete="country-name" os-checkout-validate="required" data-next-checkout-field="country" class="input-flds select-field">
+                                            <option value="">Select Country</option>
+                                          </select>
+                                          <div class="caret-down">
+                                            <div class="select-arrow"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                                <polyline points="2 4.75 7 9.25 12 4.75"></polyline>
+                                              </svg></div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
-                                  <div class="shipping_price">
-                                    <div data-next-display="shipping.cost">$0.00</div>
+                                  <div data-next-component="shipping-field-row" class="form-grid__row">
+                                    <div class="form-group">
+                                      <div class="form-input"><label for="shipping_fname" class="label-checkout">First Name</label><input autocomplete="given-name" os-checkout-validate="required" placeholder="First Name*" maxlength="256" name="shipping_fname" data-name="Shipping First Name" type="text" id="shipping_fname" data-next-checkout-field="fname" class="input-flds"></div>
+                                    </div>
+                                    <div class="form-group">
+                                      <div class="form-input"><label for="shipping_lname" class="label-checkout">Last Name</label><input autocomplete="family-name" os-checkout-validate="required" placeholder="Last Name*" maxlength="256" name="shipping_lname" data-name="Shipping Lirst Name" type="text" id="shipping_lname" data-next-checkout-field="lname" class="input-flds"></div>
+                                    </div>
                                   </div>
-                                </label>
-                              </div>
-                              <!-- Option 2 -->
-                              <div class="shipping-method cc-last__item" data-next-shipping-id="2">
-                                <label for="shipping_method_2" class="radio-select-shipping">
-                                  <input type="radio" name="shipping_method" id="shipping_method_2" value="2" class="payment-method__input">
-                                  <div class="shipping-method-rleft">
-                                    <div data-next-display="shipping.name"></div>
-                                    <div class="shipping-option__description">Testing a default shipping description for customization.</div>
+                                  <div data-next-component="shipping-field-row" class="form-grid__row">
+                                    <div class="form-group">
+                                      <div class="form-input">
+                                        <div class="form-input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" focusable="false" aria-hidden="true" class="a8x1wuy a8x1wux *1fragem32 *1fragempz *1fragemly *1fragemlo _1fragemp6">
+                                            <circle cx="6" cy="6" r="4" fill="none" stroke="currentColor" stroke-width="1"></circle>
+                                            <path fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" d="m9.25 9.25 2.5 2.5"></path>
+                                          </svg></div><label for="shipping_address1" class="label-checkout">Address</label><input autocomplete="address-line1" os-checkout-validate="required" placeholder="Address*" data-next-checkout-field="address1" class="input-flds">
+                                      </div>
+                                    </div>
                                   </div>
-                                  <div class="shipping_price">
-                                    <div data-next-display="shipping.cost">$5.00</div>
+                                  <div data-next-component="shipping-field-row" class="form-grid__row">
+                                    <div class="form-group">
+                                      <div class="form-input"><label for="shipping_address2" class="label-checkout">Apartment, suite, etc. (optional)</label><input autocomplete="address-line2" name="shipping_address2" data-name="Shipping Address 2" type="text" id="shipping_addres2" placeholder="Apartment, suite, etc. (optional)" maxlength="256" data-next-checkout-field="address2" class="input-flds"></div>
+                                    </div>
                                   </div>
-                                </label>
+                                  <div data-next-component="shipping-field-row" data-os-component="location" class="form-grid__row">
+                                    <div class="form-group">
+                                      <div class="form-input"><label for="shipping_city" class="label-checkout">City</label><input autocomplete="address-level2" os-checkout-validate="required" placeholder="City*" maxlength="256" name="shipping_city" data-name="Shipping City" type="text" id="shipping_city" pattern="^[A-Za-z\s]+$" data-next-checkout-field="city" class="input-flds"></div>
+                                    </div>
+                                    <div class="form-group">
+                                      <div class="form-input"><label for="shipping_province" class="label-checkout">State</label>
+                                        <div class="select-form-wrapper"><select autocomplete="address-level1" os-checkout-validate="required" name="shipping_province" data-name="Shipping Province" type="select" id="shipping_province" data-next-checkout-field="province" class="input-flds select-field">
+                                            <option value="">Select State</option>
+                                          </select>
+                                          <div class="caret-down">
+                                            <div class="select-arrow"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                                <polyline points="2 4.75 7 9.25 12 4.75"></polyline>
+                                              </svg></div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="form-group">
+                                      <div class="form-input"><label for="shipping_postal_code" class="label-checkout">ZIP Code</label><input autocomplete="postal-code" os-checkout-validate="required" placeholder="ZIP Code*" maxlength="10" name="shipping_postal_code" data-name="Shipping Postal Code" type="text" id="shipping_postal_code" inputmode="numeric" pattern="(^\d{5}$)|(^\d{5}-\d{4}$)" data-next-checkout-field="postal" class="input-flds"></div>
+                                    </div>
+                                  </div>
+                                  <div data-next-component="shipping-field-row" class="form-grid__row">
+                                    <div class="form-group">
+                                      <div class="form-input"><label for="phone" class="label-checkout">Phone</label><input autocomplete="tel-full" name="phone" data-name="Phone" type="tel" id="phone" placeholder="201-555-0123" data-next-checkout-field="phone" class="input-flds"></div>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -386,7 +352,7 @@
                               <div data-next-payment-method="credit" class="payment-method next-selected">
                                 <div class="payment-method__header"><label for="combo_mode_credit" combo_mode="credit" class="payment-method__label"><input type="radio" name="payment_method" id="combo_mode_credit" data-name="Combo Mode" class="payment-method__input" checked="" value="credit">
                                     <div class="payment-method__title">Credit Card</div>
-                                    <div class="payment-method__icons"><img loading="lazy" src="../../images/cc-visa.svg" alt="" class="payment-method__icon payment-method__icon--visa"><img loading="lazy" src="../../images/cc_master.svg" alt="" class="payment-method__icon payment-method__icon--mastercard"><img loading="lazy" src="../../images/cc_amex.svg" alt="" class="payment-method__icon payment-method__icon--amex"><img loading="lazy" src="../../images/cc_discover.svg" alt="" class="payment-method__icon payment-method__icon--discover"></div>
+                                    <div class="payment-method__icons"><img loading="lazy" src="../../../images/cc-visa.svg" alt="" class="payment-method__icon payment-method__icon--visa"><img loading="lazy" src="../../../images/cc_master.svg" alt="" class="payment-method__icon payment-method__icon--mastercard"><img loading="lazy" src="../../../images/cc_amex.svg" alt="" class="payment-method__icon payment-method__icon--amex"><img loading="lazy" src="../../../images/cc_discover.svg" alt="" class="payment-method__icon payment-method__icon--discover"></div>
                                   </label></div>
                                 <div data-next-payment-form="credit" os-checkout-element="credit-form" os-shipping-method-same="true" class="payment-method__form payment-method__form--expanded">
                                   <div class="payment-method__content">
@@ -467,7 +433,7 @@
                               <div data-next-payment-method="paypal" class="payment-method">
                                 <div class="payment-method__header"><label for="combo_mode_paypal" combo_mode="paypal" class="payment-method__label"><input type="radio" name="payment_method" id="combo_mode_paypal" data-name="Combo Mode" class="payment-method__input" value="paypal">
                                     <div class="payment-method__title">PayPal</div>
-                                    <div class="payment-method__icons"><img loading="lazy" src="../../images/paypal-logo.svg" alt="" class="payment-method__icon--paypal-logo"><img loading="lazy" src="../../images/paypal-txt.svg" alt="" class="payment-method__icon--paypal-txt"></div>
+                                    <div class="payment-method__icons"><img loading="lazy" src="../../../images/paypal-logo.svg" alt="" class="payment-method__icon--paypal-logo"><img loading="lazy" src="../../../images/paypal-txt.svg" alt="" class="payment-method__icon--paypal-txt"></div>
                                   </label></div>
                                 <div data-next-payment-form="paypal" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
                                   <div class="payment-method__content">
@@ -476,7 +442,7 @@
                                         <div data-next-component="paypal-error-text" class="text-sm">Error message</div>
                                       </div>
                                     </div>
-                                    <div class="payment-method__info"><img loading="lazy" src="../../images/paypal.svg" alt="" class="payment-method__info-image">
+                                    <div class="payment-method__info"><img loading="lazy" src="../../../images/paypal.svg" alt="" class="payment-method__info-image">
                                       <h4 class="payment-method__info-title">Complete your transaction via Paypal</h4>
                                       <div class="payment-method__info-text">
                                         <p class="checkout-form-secure">PayPal will open in a new tab.<br></p>
@@ -491,7 +457,7 @@
                                     <input type="radio" name="payment_method" id="combo_mode_klarna" data-name="Combo Mode" class="payment-method__input" value="klarna">
                                     <div class="payment-method__title">Klarna - Flexible Payments</div>
                                     <div class="payment-method__icons">
-                                      <img loading="lazy" src="../../images/klarna-logo.svg" alt="" class="payment-method__icon--klarna-logo">
+                                      <img loading="lazy" src="../../../images/klarna-logo.svg" alt="" class="payment-method__icon--klarna-logo">
                                     </div>
                                   </label>
                                 </div>
@@ -521,26 +487,29 @@
                               </div>
                             </div>
                           </div>
-                          <div class="submit-section">
-                            <div class="submit-section__disclaimer">By clicking the button below, you agree with our Terms of Use and Privacy Policy.</div>
-                            <div class="submit-section__button"><button os-checkout-payment="combo" data-action="submit" type="submit" class="submit-button">
+                          <div class="submit-section cc-shop__three">
+                            <div>
+                              <a href="../../../templates/checkout/shop-three/shipping.html" class="checkout__button-prev">
+                                <div class="checkout__button-prev-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="100%" height="100%" focusable="false" aria-hidden="true">
+                                    <path stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" d="M9.25 12 4.604 7.354a.5.5 0 0 1 0-.708L9.25 2"></path>
+                                  </svg></div>
+                                <div>Return to shipping</div>
+                              </a>
+                            </div>
+                            <div class="submit-section__button"><button os-checkout-payment="combo" data-action="submit" type="submit" class="submit-button cc-shop__three">
                                 <div data-pb-element="checkout-button-spinner" class="submit-button__loader">
                                   <div class="three-quarter-spinner black"></div>
                                 </div>
                                 <div data-pb-element="checkout-button-info" class="submit-button__content">
                                   <div class="submit-button__text">
-                                    <div data-i18n="complete_purchase" class="submit-button__main-text">COMPLETE PURCHASE →</div>
+                                    <div class="submit-button__main-text cc-shop__three">Pay now</div>
                                   </div>
-                                  <div data-i18n="try_risk_free" class="submit-button__subtext">TRY IT RISK FREE! - 30 DAY MONEY BACK GUARANTEE!</div>
                                 </div>
                               </button></div>
                           </div>
                         </div>
                       </div>
                     </form>
-                  </div>
-                  <div class="guarantee-section"><img loading="lazy" src="../../images/30d.webp" alt="" class="guarantee-badge">
-                    <div class="text-xs"><strong>30 Day Money-Back Guarantee:</strong> Feel safe knowing you're protected. Try it risk-free and return it within 30 days for a full refund or replacement—no questions asked.</div>
                   </div>
                   <div class="checkout-footer-links">
                     <a href="#" class="link">
@@ -605,7 +574,7 @@
                                 <div data-item-template-id="cart-item-template" data-next-cart-items="" class="cart-items__list"></div>
                               </div>
                             </div>
-                            <div data-next-hide="cart.isEmpty" class="coupon-section" data-next-await>
+                            <div data-next-hide="cart.isEmpty" class="coupon-section">
                               <div class="coupon-form">
                                 <div data-auto-apply="true" data-next-coupon="input" data-placeholder="Promo code (optional)" data-button-text="Apply" class="coupon-form__row">
                                   <div class="form-group">
@@ -629,7 +598,7 @@
                                 </div>
                               </div>
                             </div>
-                            <div data-next-content="" data-next-await>
+                            <div data-next-content="">
                               <div data-next-hide="cart.isEmpty" class="order-totals">
                                 <div class="order-totals__section">
                                   <div class="order-totals__line">
@@ -663,7 +632,7 @@
                                   </div>
                                 </div>
                                 <div class="order-totals__section shipping-message hide">
-                                  <div>Shipping and tax will be settled upon checkout confirmation</div>
+                                  <div>Shipping and tax will be settled uponcheckout confirmation</div>
                                 </div>
                                 <div data-next-show="cart.hasSavings" class="order-totals__section">
                                   <div class="order-totals__line">
@@ -678,7 +647,6 @@
                                     <div class="order-totals__value-group">
                                       <div class="order-totals__label">Discount:<br></div>
                                       <div data-next-display="cart.totalSavingsAmount" class="order-totals__value">$0.00<br></div>
-                                      
                                     </div>
                                   </div>
                                 </div>
@@ -713,5 +681,7 @@
         </div>
       </div>
     </div>
+
+    <script defer="" src="../../../js/checkout-shop-three-billing.js"></script>
   </body>
 </html>
