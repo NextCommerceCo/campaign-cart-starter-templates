@@ -410,86 +410,17 @@ os-dropdown-menu.placement-right .dropdown-arrow {
   transform: translateY(-20px);
 }
 
-/* ========================================
-   PROGRESS COMPONENTS
-======================================== */
-.progress_circle .checkmark-svg,
-.progress_circle .icon-check {
-  opacity: 0;
-  position: absolute;
-  transition: opacity 0.3s ease;
-}
-
-.progress_circle .checkmark-svg {
-  width: 20px;
-  height: 20px;
-}
-
-.progress_circle .icon-check {
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.progress_circle .icon-check .checkmark-svg {
-  width: 16px;
-  height: 16px;
-}
-
-.progress_circle > div,
-.progress_circle > div:first-child {
-  transition: opacity 0.3s ease;
-}
-
-/* Progress States */
-.progress-item.active .progress_circle {
-  background-color: #000 !important;
-  border-color: #000 !important;
-  color: white !important;
-}
-
-.progress-item.active .progress-tex {
-  color: #000 !important;
-  font-weight: 600 !important;
-}
-
-.progress-item.completed .progress_circle {
-  background-color: #000 !important;
-  border-color: #000 !important;
-  color: white !important;
-}
-
-.progress-item.completed .progress_circle > div,
-.progress-item.completed .progress_circle > div:first-child {
-  opacity: 0;
-}
-
-.progress-item.completed .progress_circle .checkmark-svg,
-.progress-item.completed .progress_circle .icon-check {
-  opacity: 1;
-}
-
-.progress-item.completed .progress-tex {
-  color: #000 !important;
-  font-weight: 600 !important;
-}
-
-.progress-item.completed + .progress-divider {
-  background-color: #000 !important;
-}
 
 /* ========================================
    UTILITY STYLES
 ======================================== */
 /* Diagonal Strike */
-.diagonal-strike,
-.os--compare-diagonal {
+.diagonal-strike {
   position: relative;
   display: inline-block;
 }
 
-.diagonal-strike::after,
-.os--compare-diagonal::after {
+.diagonal-strike::after {
   content: '';
   position: absolute;
   left: 0;
@@ -559,235 +490,6 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 /* Inline style 3 from olympus-mv-full.html */
 .three-quarter-spinner {
   animation: spin .9s linear 0s infinite;
-}
-
-/* Inline style 4 from olympus-mv-full.html */
-:root {
-  /* Animation settings - smoother, premium feel */
-  --modal-animation-duration: 0.3s;
-  --modal-animation-easing: cubic-bezier(0.22, 1, 0.36, 1);
-  /* Premium smooth feel */
-  /* Overlay settings */
-  --modal-overlay-bg: rgba(0, 0, 0, 0.35);
-  --modal-overlay-blur: 5px;
-  /* Modal styling */
-  --modal-bg: #fff;
-  --modal-shadow: 0 10px 40px rgba(0, 0, 0, 0.12), 0 0 10px rgba(0, 0, 0, 0.08);
-  --modal-border-radius: 16px;
-  --modal-max-width: 500px;
-  --modal-side-panel-width: 400px;
-}
-
-/* Base overlay styles - refined backdrop */
-[data-pb-modal="overlay"] {
-  position: fixed;
-  inset: 0;
-  background-color: var(--modal-overlay-bg);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity var(--modal-animation-duration) var(--modal-animation-easing),
-    visibility var(--modal-animation-duration) var(--modal-animation-easing);
-  z-index: 999;
-  /* backdrop-filter: blur(var(--modal-overlay-blur)); */
-  /* -webkit-backdrop-filter: blur(var(--modal-overlay-blur)); */
-}
-
-[data-pb-modal="overlay"].cc-active {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-/* Base modal styles - refined appearance */
-[data-pb-modal="sheet"] {
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  background: var(--modal-bg);
-  width: 90%;
-  max-width: var(--modal-max-width);
-  border-radius: var(--modal-border-radius);
-  opacity: 0;
-  visibility: hidden;
-  transition: transform var(--modal-animation-duration) var(--modal-animation-easing),
-    opacity var(--modal-animation-duration) var(--modal-animation-easing),
-    visibility var(--modal-animation-duration) var(--modal-animation-easing);
-  z-index: 1000;
-  box-shadow: var(--modal-shadow);
-  will-change: transform, opacity;
-}
-
-[data-pb-modal="sheet"].cc-active {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-/* Animation variations - more elegant and premium */
-/* Fade animation (default) */
-[data-animation="fade"] [data-pb-modal="sheet"] {
-  opacity: 0;
-  transform: translate(-50%, -50%);
-}
-
-[data-animation="fade"] [data-pb-modal="sheet"].cc-active {
-  opacity: 1;
-}
-
-/* Slide-up animation - silky smooth */
-[data-animation="slide-up"] [data-pb-modal="sheet"] {
-  opacity: 0;
-  transform: translate(-50%, 20px);
-}
-
-[data-animation="slide-up"] [data-pb-modal="sheet"].cc-active {
-  transform: translate(-50%, -50%);
-  opacity: 1;
-}
-
-/* Slide-down animation - refined motion */
-[data-animation="slide-down"] [data-pb-modal="sheet"] {
-  opacity: 0;
-  transform: translate(-50%, -70%);
-}
-
-[data-animation="slide-down"] [data-pb-modal="sheet"].cc-active {
-  transform: translate(-50%, -50%);
-  opacity: 1;
-}
-
-/* Zoom animation - subtle and elegant */
-[data-animation="zoom"] [data-pb-modal="sheet"] {
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0.95);
-}
-
-[data-animation="zoom"] [data-pb-modal="sheet"].cc-active {
-  transform: translate(-50%, -50%) scale(1);
-  opacity: 1;
-}
-
-/* Side-slide animations - refined distance */
-[data-animation="slide-right"] [data-pb-modal="sheet"] {
-  opacity: 0;
-  transform: translate(-60%, -50%);
-}
-
-[data-animation="slide-right"] [data-pb-modal="sheet"].cc-active {
-  transform: translate(-50%, -50%);
-  opacity: 1;
-}
-
-[data-animation="slide-left"] [data-pb-modal="sheet"] {
-  opacity: 0;
-  transform: translate(-40%, -50%);
-}
-
-[data-animation="slide-left"] [data-pb-modal="sheet"].cc-active {
-  transform: translate(-50%, -50%);
-  opacity: 1;
-}
-
-/* Full-width bottom sheet modal - smooth rise */
-[data-variant="bottom-sheet"] [data-pb-modal="sheet"] {
-  top: auto !important;
-  bottom: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  border-radius: var(--modal-border-radius) var(--modal-border-radius) 0 0;
-  transform: translateY(100%);
-}
-
-[data-variant="bottom-sheet"] [data-pb-modal="sheet"].cc-active {
-  transform: translateY(0);
-}
-
-/* Side panel variant - elegant slide */
-[data-variant="side-panel"] [data-pb-modal="sheet"] {
-  top: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  left: auto !important;
-  width: 90%;
-  max-width: var(--modal-side-panel-width);
-  height: 100% !important;
-  border-radius: 0 !important;
-  transform: translateX(100%);
-}
-
-[data-variant="side-panel"] [data-pb-modal="sheet"].cc-active {
-  transform: translateX(0);
-}
-
-/* Left side panel variant - smooth entry */
-[data-variant="left-panel"] [data-pb-modal="sheet"] {
-  top: 0 !important;
-  left: 0 !important;
-  right: auto !important;
-  bottom: 0 !important;
-  width: 90%;
-  max-width: var(--modal-side-panel-width);
-  height: 100% !important;
-  border-radius: 0 !important;
-  transform: translateX(-100%);
-}
-
-[data-variant="left-panel"] [data-pb-modal="sheet"].cc-active {
-  transform: translateX(0);
-}
-
-/* Media queries for responsive modals */
-@media (max-width: 767px) {
-  [data-pb-modal="sheet"] {
-    width: 95%;
-    max-width: none;
-  }
-
-  [data-variant="mobile-full"] [data-pb-modal="sheet"] {
-    width: 100%;
-    height: 100%;
-    max-width: 100%;
-    border-radius: 0;
-  }
-}
-
-/* Focus styles for accessibility */
-[data-pb-modal="sheet"] :focus {
-  outline: 2px solid rgba(0, 120, 212, 0.5);
-  outline-offset: 2px;
-}
-
-/* Inline style 5 from olympus-mv-full.html */
-/* Base styling for the toggle system */
-html.wf-design-mode pageblock-modal[preview-modal="true"] [data-pb-modal="overlay"] {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-html.wf-design-mode pageblock-modal[preview-modal="true"] [data-pb-modal="sheet"] {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-/* Standard centered modal preview positioning */
-html.wf-design-mode pageblock-modal[preview-modal="true"]:not([data-variant="bottom-sheet"]):not([data-variant="side-panel"]):not([data-variant="left-panel"]) [data-pb-modal="sheet"] {
-  transform: translate(-50%, -50%) !important;
-}
-
-/* Bottom sheet positioning */
-html.wf-design-mode pageblock-modal[preview-modal="true"][data-variant="bottom-sheet"] [data-pb-modal="sheet"] {
-  transform: translateY(0) !important;
-}
-
-/* Side panel positioning */
-html.wf-design-mode pageblock-modal[preview-modal="true"][data-variant="side-panel"] [data-pb-modal="sheet"] {
-  transform: translateX(0) !important;
-}
-
-/* Left panel positioning */
-html.wf-design-mode pageblock-modal[preview-modal="true"][data-variant="left-panel"] [data-pb-modal="sheet"] {
-  transform: translateX(0) !important;
 }
 
 /* Inline style 6 from olympus-mv-full.html */
@@ -1330,6 +1032,11 @@ html.wf-design-mode pageblock-modal[preview-modal="true"][data-variant="left-pan
 /* ===========================
    Next Modal (generic)
 =========================== */
+:root {
+  --modal-animation-duration: 0.3s;
+  --modal-animation-easing: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 .next-modal {
   position: fixed;
   inset: 0;
@@ -1344,7 +1051,7 @@ html.wf-design-mode pageblock-modal[preview-modal="true"][data-variant="left-pan
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--modal-animation-duration) var(--modal-animation-easing);
 }
 .next-modal.next-modal--open .next-modal__overlay {
   opacity: 1;
@@ -1362,7 +1069,8 @@ html.wf-design-mode pageblock-modal[preview-modal="true"][data-variant="left-pan
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   opacity: 0;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity var(--modal-animation-duration) var(--modal-animation-easing),
+    transform var(--modal-animation-duration) var(--modal-animation-easing);
 }
 .next-modal.next-modal--open .next-modal__dialog {
   opacity: 1;
