@@ -1,7 +1,8 @@
-// JavaScript extracted from templates\upsells\up03.html
+// Shared utilities for upsell templates
 
 // Swiper gallery: init after DOM + Swiper are ready (Swiper script is deferred)
-function initSwiperGalleries() {
+// thumbsPerView — number of visible thumbnail slides (default 6, use 5 for portrait-ratio layouts)
+function initSwiperGalleries(thumbsPerView = 6) {
   if (typeof Swiper === 'undefined') return;
   document.querySelectorAll('[data-component="swiper"][data-variant="sw1"]').forEach((sliderComponent) => {
     const sliderMain = sliderComponent.querySelector('[swiper="slider-main"]');
@@ -10,15 +11,15 @@ function initSwiperGalleries() {
     const buttonPrevEl = sliderComponent.querySelector('[swiper="prev-button"]');
     if (!sliderMain || !sliderThumbs) return;
     const thumbsSwiper = new Swiper(sliderThumbs, {
-      slidesPerView: 6,
+      slidesPerView: thumbsPerView,
       spaceBetween: 10,
       freeMode: false,
       watchSlidesProgress: true,
       watchOverflow: true,
       centerInsufficientSlides: true,
       breakpoints: {
-        768: { slidesPerView: 6, spaceBetween: 10 },
-        480: { slidesPerView: 6, spaceBetween: 8 },
+        768: { slidesPerView: thumbsPerView, spaceBetween: 10 },
+        480: { slidesPerView: thumbsPerView, spaceBetween: 8 },
       },
     });
     new Swiper(sliderMain, {
@@ -36,9 +37,4 @@ function initSwiperGalleries() {
       });
     });
   });
-}
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initSwiperGalleries);
-} else {
-  initSwiperGalleries();
 }

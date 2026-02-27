@@ -1,28 +1,8 @@
-// JavaScript extracted from templates\checkout\limos-quantity.html
+// JavaScript extracted from templates/checkout/limos-quantity.html
 
-// Inline script 3 from limos-quantity.html
-// Wait for SDK to be fully initialized
 window.addEventListener('next:initialized', function() {
-  // console.log('SDK initialized, starting FOMO popups...');
-  // Simple usage - starts immediately with defaults
-  next.fomo();
-  // Optional: Listen to events for analytics
-  next.on('fomo:shown', (data) => {
-    // console.log('FOMO shown:', data.customer, 'purchased', data.product);
-  });
+  initFomo();
 });
-// Control functions
-function startFomo() {
-  next.fomo({
-    initialDelay: 2000, // Start after 2 seconds
-    displayDuration: 5000, // Show for 5 seconds
-    delayBetween: 10000 // 10 seconds between popups
-  });
-}
-
-function stopFomo() {
-  next.stopFomo();
-}
 
 // Inline script 4 from limos-quantity.html
 (function() {

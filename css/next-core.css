@@ -3692,6 +3692,11 @@ figcaption {
   box-shadow: 0 0 0 1px #c51a0000;
 }
 
+.next-error-label {
+  color: #c51a00;
+  margin-top: .25rem;
+  font-size: .75rem;
+}
 
 .coupon-tags {
   grid-column-gap: 1rem;

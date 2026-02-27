@@ -492,6 +492,46 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   animation: spin .9s linear 0s infinite;
 }
 
+/* Notification slide-down animation */
+@keyframes slideDown {
+  from { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+  to   { transform: translateX(-50%) translateY(0);    opacity: 1; }
+}
+
+.three-quarter-spinner.black {
+  border-color: #000;
+  border-top-color: transparent;
+}
+
+/* Step reveal animation (olympus-mv-selection) */
+[data-next-component="step-two"].step-revealed {
+  animation: fadeInUp 0.4s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.next-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.error-highlight {
+  animation: errorPulse 0.5s ease-in-out 2;
+  border: 2px solid #ff4444 !important;
+  background-color: rgba(255, 68, 68, 0.05) !important;
+}
+
+@keyframes errorPulse {
+  0%   { transform: translateX(0); }
+  25%  { transform: translateX(-5px); }
+  75%  { transform: translateX(5px); }
+  100% { transform: translateX(0); }
+}
+
 /* Inline style 6 from olympus-mv-full.html */
 /* Arrows */
 .arrow-active::after,

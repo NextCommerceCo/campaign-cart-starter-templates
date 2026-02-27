@@ -1550,37 +1550,14 @@ window.addEventListener('next:initialized', () => {
   
   // Exit intent
   if (CONFIG.exitIntent.enabled) {
-    window.next.exitIntent({
-      image: CONFIG.exitIntent.image,
-      action: async () => {
-        if (window.tierController) {
-          await window.tierController.activateExitDiscount();
-        }
+    initExitIntent(CONFIG.exitIntent.image, async () => {
+      if (window.tierController) {
+        await window.tierController.activateExitDiscount();
       }
     });
   }
 });
 
-// Add CSS for animations
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes slideDown {
-    from {
-      transform: translateX(-50%) translateY(-100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-  }
-
-  .three-quarter-spinner.black {
-    border-color: #000;
-    border-top-color: transparent;
-  }
-`;
-document.head.appendChild(style);
 
 // Progress bar
 if (document.readyState === 'loading') {
