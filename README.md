@@ -35,12 +35,12 @@
 
 ## Asset paths (CSS, JS, images)
 
-Templates live at different folder depths (e.g. `templates/checkout/shop-two.html` vs `templates/checkout/shop-three/information.html`). Assets (`config.js`, `css/`, `js/`, `images/`) are at the **project root**.
+Templates live at different folder depths (e.g. `templates/checkout/demeter.html` vs `templates/checkout/shop-three/information.html`). Assets (`config.js`, `css/`, `js/`, `images/`) are at the **project root**.
 
 - **Use relative paths** from each template to the project root:
   - One level under `templates/` (e.g. `templates/checkout/demeter.html`) → `../../` (e.g. `../../config.js`, `../../css/...`, `../../images/...`).
   - Two levels under `templates/` (e.g. `templates/checkout/shop-three/information.html`) → `../../../`.
-- This works for local preview and any deployment; avoid root-absolute paths (`/css/...`) unless the site is always served from the domain root. See `PATHS.md` for the full convention and alternatives.
+- This works for local preview and any deployment; avoid root-absolute paths (`/css/...`) unless the site is always served from the domain root.
 
 
 ## Utility classes — `css/next-core.css`
@@ -93,7 +93,7 @@ Responsive: `.max-width-full-tablet`, `.max-width-full-mobile-landscape`, `.max-
 
 ### 5. Containers
 
-Centered block with max-width and horizontal auto margins: `.container-large` (80rem), `.container-medium` (64rem), `.container-small` (48rem), `.container-xsmall`, `.container-12`.
+Centered block with max-width and horizontal auto margins: `.container-large` (80rem), `.container-medium` (64rem), `.container-small` (48rem), `.container-xsmall`.
 
 ---
 
@@ -109,7 +109,7 @@ Centered block with max-width and horizontal auto margins: `.container-large` (8
 
 ### 7. Typography — size
 
-`.text-3xs`, `.text-xs`, `.text-sm`, `.text-md`, `.text-reg`, `.text-lg`, `.text-h5`, `.text-2xl`
+`.text-3xs`, `.text-xs`, `.text-xs-2`, `.text-sm`, `.text-md`, `.text-reg`, `.text-lg`, `.text-2xl`
 
 ---
 
@@ -149,29 +149,22 @@ Uses `:root` variables: `.bg-color-primary`, `.bg-color-secondary`, `.bg-color-s
 
 ---
 
-### 14. Color — background (gradients)
-
-Positioned gradient overlays (use on a wrapper with `position: relative`): `.bg-gd-top`, `.bg-gd-bottom`, `.bg-gd-left`, `.bg-gd-right`
-
----
-
-### 15. Color — background (utility)
+### 14. Color — background (utility)
 
 `.bg-primary`
 
 ---
 
-### 16. Layout — flex
+### 15. Layout — flex
 
-`.st-flex-hori`, `.vertical-wrap`, `.horizontal-wrap`, `.vflex-left-top`, `.hflex-left-center`, `.hflex-left-stretch`, `.display-col`, `.display-row` · Gap modifiers: `.cc-tiny`, `.cc-xs`, `.cc-s`, `.cc-m`, `.cc-l`, `.cc-xl`, `.cc-2xs`; `.vertical-wrap.va-middle`
+`.vertical-wrap`, `.vflex-left-top`, `.hflex-left-center`, `.display-col`, `.display-row` · Gap modifiers: `.cc-tiny`, `.cc-xs`, `.cc-s`, `.cc-m`, `.cc-l`, `.cc-xl`, `.cc-2xs`; `.vertical-wrap.va-middle`
 
 ---
 
-### 17. Layout — grid
+### 16. Layout — grid
 
-**grid-cust:** `.grid-6`, `.cc-2-1`, `.cc-1-2`, `.cc-horizontal`, `.cc-2col`  
 **grid-{n}col-{spacing}:** `wide` / `standard` / `compact` for 2, 3, 4, 6 columns  
-**grid-custom:** `.grid-11`, `.grid-7`, `.grid-2col-upsell`, `.grid-1-2`
+**grid-custom:** `.grid-11`
 
 **Grid placement:** Use on grid children for placement/alignment.
 
@@ -189,19 +182,19 @@ Responsive: `.grid-cell--sm` — same grid-area only at `max-width: 767px`.
 
 ---
 
-### 18. Alignment & sizing
+### 17. Alignment & sizing
 
 `.align-center`, `.mt-auto`, `.width-full`, `.height-full`
 
 ---
 
-### 19. Effects
+### 18. Effects
 
 `.opacity-0`, `.opacity-50`, `.box-shadow`
 
 ---
 
-### 20. Position
+### 19. Position
 
 `.sticky` · `.sticky.feature10` sets `top: 6rem`
 
@@ -212,7 +205,7 @@ Responsive: `.grid-cell--sm` — same grid-area only at `max-width: 767px`.
 - **max-width-\*** — Width caps · **container-\*** — Centered containers
 - **display-\*** — Headline typography or flex direction
 - **text-\*** — Font size/weight · **tw-\*** — Font weight · **ts-\*** — Type scale
-- **bg-color-\*** — Brand backgrounds · **bg-gd-\*** — Gradient overlays
-- **ct-\*** — Semantic chips · **st-\*** — Structural layout
+- **bg-color-\*** — Brand backgrounds
+- **ct-\*** — Semantic chips
 **Source:** All classes are in `css/next-core.css`; responsive variants are in `@media` blocks there.
 
