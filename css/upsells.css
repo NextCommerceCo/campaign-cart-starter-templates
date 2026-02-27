@@ -604,8 +604,8 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   display: flex;
 }
 
-/* Shared upsell + landing: next-booster, booster__* */
-.next-booster {
+/* Generic reusable: promo-banner (one-time offer / urgency strip) */
+.promo-banner {
   background-color: var(--brand--color--primary-lighter);
   color: #000;
   letter-spacing: -.02em;
@@ -613,27 +613,27 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   font-size: clamp(.625rem, 3vw, .875rem);
 }
 
-.next-booster.cc-blank {
+.promo-banner--blank {
   background-color: #f7f7f700;
   border-radius: 0;
   font-size: var(--font-size--sm);
 }
 
-.next-booster.cc-success {
+.promo-banner--success {
   color: #053321;
   background-color: #ecfdf3;
 }
 
-.booster__wrapper {
+.promo-banner__inner {
   pointer-events: none;
   padding: .785rem 1rem;
 }
 
-.booster__wrapper.cc-padding-left {
+.promo-banner__inner--no-padding-left {
   padding-left: 0;
 }
 
-.booster__content {
+.promo-banner__content {
   grid-column-gap: .5rem;
   grid-row-gap: .5rem;
   pointer-events: auto;
@@ -643,7 +643,7 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   display: flex;
 }
 
-.booster__content.flex-left {
+.promo-banner__content--left {
   grid-column-gap: .5rem;
   grid-row-gap: .5rem;
   justify-content: flex-start;
@@ -651,19 +651,19 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   display: flex;
 }
 
-.booster__content.distribute {
+.promo-banner__content--distribute {
   flex-flow: row;
   justify-content: space-between;
 }
 
 @media screen and (max-width: 991px) {
-  .next-booster {
+  .promo-banner {
     max-width: 100%;
   }
 }
 
 @media screen and (max-width: 767px) {
-  .booster__content {
+  .promo-banner__content {
     grid-column-gap: .75em;
     grid-row-gap: .75em;
   }

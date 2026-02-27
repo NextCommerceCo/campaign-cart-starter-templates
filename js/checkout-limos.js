@@ -23,26 +23,6 @@ function startFomo() {
 function stopFomo() {
   next.stopFomo();
 }
-// Custom configuration example
-function customFomo() {
-  next.fomo({
-    items: [{
-      text: "Premium Bundle - Save 30%",
-      image: "https://example.com/premium-bundle.jpg"
-    }, {
-      text: "Starter Pack",
-      image: "https://example.com/starter-pack.jpg"
-    }],
-    customers: {
-      US: ["Sarah from Dallas", "Mike from Boston", "Lisa from Miami"],
-      CA: ["Jean from Montreal", "Pierre from Quebec", "Marie from Toronto"]
-    },
-    maxMobileShows: 3, // Show max 3 times on mobile
-    displayDuration: 4000,
-    delayBetween: 15000,
-    initialDelay: 0 // Start immediately
-  });
-}
 
 // Inline script 4 from limos.html
 // Wait for SDK to be fully initialized
