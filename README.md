@@ -1,27 +1,12 @@
-# campaign-cart-starter-templates
+# Campaign Cart Starter Templates
 
-1. **Get Your API Key**
-   
-   Go to Next Commerce Dashboard, open the Campaigns app, select your campaign, click on Integration, and copy your API key.
+This repo contains starter HTML templates for building sales funnel pages — checkout, post-purchase upsells, and order confirmation (receipt) — using the **Campaign Cart SDK** by NextCommerce.
 
-2. **Add SDK Script**
-   
-   Add these two lines to your HTML `<head>` section:
+These are standalone HTML files. There is no framework, no build step, and no bundler. Each template is designed to be deployed as a static page.
 
-   ```html
-   <!-- Path to Your Campaign Cart Configuration -->
-   <script src="js/config.js"></script>
-   
-   <!-- Campaign Cart SDK -->
-   <!-- Replace @v0.3.10 with the latest version from GitHub releases -->
-   <script src="https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v0.3.10/dist/loader.js" type="module"></script>
-   ```
+For SDK documentation see the [official docs](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) and the [SDK source](https://github.com/NextCommerceCo/campaign-cart).
 
-   :::tip Latest Version
-   Check the [GitHub releases](https://github.com/NextCommerceCo/campaign-cart/releases) for the latest stable version. For development, you can use `@latest`, but we recommend using a specific version (e.g., `@v0.3.10`) in production for stability.
-   :::
-
-
+---
 
 ## Features
 
