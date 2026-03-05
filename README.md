@@ -65,6 +65,17 @@ npm run config     # set Campaigns App API keys
 
 ---
 
+## AI development rules
+
+Copy the relevant rules file into your project before using an AI assistant to build or modify templates. Most AI tools load a rules file automatically from your project root — check your tool's documentation for the exact filename and location (e.g. `CLAUDE.md` for Claude Code, `.cursor/rules/` for Cursor).
+
+| Working with | Rules file |
+|---|---|
+| `campaign-kit-templates/` | [docs/campaign-cart-ai-rules.md](docs/campaign-cart-ai-rules.md) |
+| `static-templates/` | [static-templates/campaign-cart-rules.md](static-templates/campaign-cart-rules.md) |
+
+---
+
 ## SDK documentation
 
 - [Official docs](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/)

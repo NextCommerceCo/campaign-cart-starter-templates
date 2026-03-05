@@ -165,3 +165,33 @@ Upsell/receipt pages in static-templates: up01, up02, up03, up04, up01-mv, recei
 - Removed blanket `package.json` / `package-lock.json` ignores (needed for campaign-kit-templates/package.json to be tracked)
 - Added `_site/` (build output)
 - `node_modules/` remains ignored globally
+
+---
+
+## Docs Structure (decisions made)
+- `CLAUDE.md` (this file) — AI context for working ON this repo. Not for SDK usage guidance.
+- `README.md` — public-facing: two-folder structure, developer workflow, template inventory, npm scripts, SDK links, AI rules pointer
+- `static-templates/campaign-cart-rules.md` — AI rules for working with the old static HTML structure
+- `docs/campaign-cart-ai-rules.md` — AI rules for developers working with campaign-kit-templates (see below)
+- `campaign-kit-template-CONTEXT.md` — **deleted** (wrong project layout, content migrated here and to README)
+
+## SDK Customization Rules File — DONE
+`docs/campaign-cart-ai-rules.md` is the copyable AI rules file for developers working in their own campaign-kit projects. Covers:
+- Project structure, campaigns.json schema, page frontmatter
+- Liquid filters (`campaign_asset`, `campaign_link`, `campaign_include`) and common variables
+- `base.html` pattern and SDK meta tag wiring
+- Full `config.js` structure (matches real template file)
+- All SDK data attributes with real examples (checkout form, selectors, bump, upsell, display, etc.)
+- Task checklists: configuring config.js, setting up a new campaign, adding a bump, adding a upsell step, debugging
+- 10 hard rules
+
+Design decisions:
+- **Checklists over how-to recipes** — checklists are AI-useful; prose how-tos are not worth the file bloat
+- **`docs/recipes/` was created then deleted** — content absorbed into checklists in the main rules file
+- **Analytics docs not included** — main SDK docs URL is sufficient; AI fetches specific pages when needed
+- **Long-term goal**: wire into `npx campaign-init` so it's auto-delivered to developer projects
+
+README has an "AI development rules" section pointing to both rules files (kit vs static).
+
+## Commit preferences
+- No `Co-Authored-By: Claude` lines in commit messages
