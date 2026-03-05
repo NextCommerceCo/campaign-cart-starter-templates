@@ -18,10 +18,13 @@ Starter templates for building sales funnel pages — checkout, post-purchase up
 **Step 1 — Initialise your project** (if you haven't already)
 
 ```bash
+mkdir my-campaigns && cd my-campaigns
+npm init -y
+npm install next-campaign-page-kit
 npx campaign-init
 ```
 
-This creates `_data/campaigns.json` and adds the `dev`, `build`, `clone`, and `config` npm scripts to your `package.json`.
+`my-campaigns` is a local directory that houses all your campaigns — rename it to whatever makes sense for your setup. This installs the kit, creates `_data/campaigns.json`, and adds the `dev`, `build`, `clone`, and `config` npm scripts to your `package.json`.
 
 **Step 2 — Copy a template and name it after your product**
 
