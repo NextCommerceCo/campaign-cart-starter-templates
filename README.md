@@ -1,6 +1,6 @@
 # Campaign Cart Starter Templates
 
-Starter templates for building sales funnel pages — checkout, post-purchase upsells, and order confirmation — using the [Campaign Cart SDK](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) by NextCommerce.
+Starter templates for building sales funnel pages — checkout, post-purchase upsells, and order confirmation — using **[next-campaign-page-kit](https://github.com/NextCommerceCo/next-campaign-page-kit)** and the [Campaign Cart SDK](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) by NextCommerce.
 
 ---
 
@@ -8,7 +8,7 @@ Starter templates for building sales funnel pages — checkout, post-purchase up
 
 | Folder | What it is |
 |--------|------------|
-| `campaign-kit-templates/` | Campaign-kit project with all 7 templates. **Start here.** |
+| `campaign-kit-templates/` | A [next-campaign-page-kit](https://github.com/NextCommerceCo/next-campaign-page-kit) project with all 7 templates. **Start here.** |
 | `static-templates/` | Raw static HTML source files. Reference only — do not modify. |
 
 ---
