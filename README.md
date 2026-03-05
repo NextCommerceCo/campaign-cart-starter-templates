@@ -15,23 +15,63 @@ Starter templates for building sales funnel pages — checkout, post-purchase up
 
 ## Getting started
 
-### Using a template in your own project
-
-1. Run `npx campaign-init` in your project to set up `_data/campaigns.json` and npm scripts
-2. Copy `campaign-kit-templates/src/[slug]/` into your project's `src/[slug]/`
-3. Copy the matching entry from `campaign-kit-templates/_data/campaigns.json` into your `campaigns.json` — update the slug, store URLs, and API key
-4. Run `npm run dev` — an interactive picker lets you choose which campaign to preview
-5. To clone a variant: `npm run clone` → picks an existing campaign → new slug → auto-updates `campaigns.json`
-
-### Running this repo as a demo
+**Step 1 — Initialise your project** (if you haven't already)
 
 ```bash
-cd campaign-kit-templates
-npm install
+npx campaign-init
+```
+
+This creates `_data/campaigns.json` and adds the `dev`, `build`, `clone`, and `config` npm scripts to your `package.json`.
+
+**Step 2 — Copy a template and name it after your product**
+
+Pick a template from the [available templates](#available-templates) table below. Copy its folder into your project and rename it to your product — this becomes the slug used in your URLs.
+
+```bash
+cp -r campaign-cart-starter-templates/campaign-kit-templates/src/demeter your-project/src/your-campaign-name
+```
+
+Your campaign will be served at `https://your-campaign-domain/your-campaign-name/checkout`.
+
+**Step 3 — Add the campaign entry**
+
+Open `campaign-cart-starter-templates/campaign-kit-templates/_data/campaigns.json`, find the entry matching the template you chose, and paste it into your project's `_data/campaigns.json`. Then update:
+
+- `slug` — must match the folder name you used (e.g. `your-campaign-name`)
+- `name` — human-readable campaign name
+- `store_url`, `store_name`, and other store fields
+- Leave `sdk_version` as-is unless you need a specific version
+
+**Step 4 — Set your API key**
+
+```bash
+npm run config
+```
+
+This prompts you to enter your [Campaigns App API key](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) and writes it into `src/[slug]/assets/config.js`.
+
+**Step 5 — Start developing**
+
+```bash
 npm run dev
 ```
 
-All 7 templates are included and working out of the box.
+Pick your campaign from the interactive prompt. The dev server will hot-reload as you edit.
+
+> **To create a variant:** run `npm run clone` — it copies an existing campaign to a new slug and updates `campaigns.json` automatically.
+
+---
+
+### Preview all templates locally
+
+To browse all 7 templates before picking one:
+
+```bash
+git clone https://github.com/NextCommerceCo/campaign-cart-starter-templates.git
+cd campaign-cart-starter-templates/campaign-kit-templates
+npm install
+npm run dev
+```
 
 ---
 
