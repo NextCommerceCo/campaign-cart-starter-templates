@@ -2,12 +2,11 @@
 .AppleDouble
 .LSOverride
 node_modules/
+_site/
 .tmp/
 prepros.cfg
 prepros-6.config
 prepros.config
-package.json
-package-lock.json
 scss/
 **/.sass-cache
 **/.sass-cache/*
