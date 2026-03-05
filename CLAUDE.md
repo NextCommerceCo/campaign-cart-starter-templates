@@ -21,6 +21,8 @@ A **complete, working campaign-kit project** that serves two purposes:
 
 Note: `npx campaign-init` does NOT create any src/ folders — it only creates `_data/campaigns.json` and adds npm scripts to `package.json`.
 
+Note: when copying a template, the developer renames the folder to their product/campaign name (e.g. `wintergloves`), NOT the template name (e.g. `demeter`). The folder name becomes the slug and drives the URL: `campaign-domain.com/wintergloves/checkout`.
+
 ---
 
 ## campaigns.json

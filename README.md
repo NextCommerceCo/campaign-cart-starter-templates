@@ -83,7 +83,7 @@ npm run dev
 | `limos` | Single-step checkout | checkout |
 | `olympus` | Single-step checkout | checkout |
 | `olympus-mv-single-step` | Single-step with variants | checkout |
-| `olympus-mv-two-step` | Two-step with variants | selection → billing |
+| `olympus-mv-two-step` | Two-step with variants | select → checkout |
 | `shop-single-step` | Shop checkout | checkout |
 | `shop-three-step` | 3-step shop checkout | information → shipping → billing |
 
