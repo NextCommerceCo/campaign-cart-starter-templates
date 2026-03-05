@@ -173,12 +173,12 @@ Upsell/receipt pages in static-templates: up01, up02, up03, up04, up01-mv, recei
 ## Docs Structure (decisions made)
 - `CLAUDE.md` (this file) — AI context for working ON this repo. Not for SDK usage guidance.
 - `README.md` — public-facing: two-folder structure, developer workflow, template inventory, npm scripts, SDK links, AI rules pointer
-- `static-templates/campaign-cart-rules.md` — AI rules for working with the old static HTML structure
-- `docs/campaign-cart-ai-rules.md` — AI rules for developers working with campaign-kit-templates (see below)
+- `docs/static-template-context.md` — AI context for working with the static-templates folder
+- `docs/campaign-page-kit-template-context.md` — AI context for developers working with campaign-kit-templates (see below)
 - `campaign-kit-template-CONTEXT.md` — **deleted** (wrong project layout, content migrated here and to README)
 
 ## SDK Customization Rules File — DONE
-`docs/campaign-cart-ai-rules.md` is the copyable AI rules file for developers working in their own campaign-kit projects. Covers:
+`docs/campaign-page-kit-template-context.md` is the copyable AI context file for developers working in their own campaign-kit projects. Covers:
 - Project structure, campaigns.json schema, page frontmatter
 - Liquid filters (`campaign_asset`, `campaign_link`, `campaign_include`) and common variables
 - `base.html` pattern and SDK meta tag wiring

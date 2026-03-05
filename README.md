@@ -111,8 +111,8 @@ Copy the relevant rules file into your project before using an AI assistant to b
 
 | Working with | Rules file |
 |---|---|
-| `campaign-kit-templates/` | [docs/campaign-cart-ai-rules.md](docs/campaign-cart-ai-rules.md) |
-| `static-templates/` | [static-templates/campaign-cart-rules.md](static-templates/campaign-cart-rules.md) |
+| `campaign-kit-templates/` | [docs/campaign-page-kit-template-context.md](docs/campaign-page-kit-template-context.md) |
+| `static-templates/` | [docs/static-template-context.md](docs/static-template-context.md) |
 
 ---
 
