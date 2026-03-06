@@ -4205,6 +4205,13 @@ figcaption {
   display: flex;
 }
 
+.checkout-trust-bar {
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+  flex-flow: column;
+  display: flex;
+}
+
 .trust-badges {
   grid-column-gap: 2rem;
   grid-row-gap: 2rem;
@@ -8821,6 +8828,11 @@ figcaption {
   }
 
   .checkout-footer {
+    padding: 1rem 1.25rem;
+    display: flex;
+  }
+
+  .checkout-trust-bar {
     padding: 1rem 1.25rem;
     display: flex;
   }
