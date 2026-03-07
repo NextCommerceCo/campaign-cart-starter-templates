@@ -528,6 +528,100 @@ Use these when implementing or verifying a specific task. Work through each item
 
 ---
 
+## Custom analytics events
+
+The SDK fires standard ecommerce events automatically (`view_item`, `add_to_cart`, `begin_checkout`, `purchase`). For custom events beyond these, use the programmatic API.
+
+### Firing a custom event
+
+```js
+// Available after SDK initializes
+window.next.track('custom_event_name', {
+  key: 'value'
+});
+```
+
+### Analytics mode
+
+Set in `config.js`:
+
+```js
+analytics: {
+  enabled: true,
+  mode: 'auto',     // 'auto' — SDK fires all standard events automatically
+                    // 'manual' — SDK fires nothing; you call window.next.track() yourself
+                    // 'disabled' — no analytics at all
+  providers: { ... }
+}
+```
+
+Use `'manual'` if you need full control over when and what gets tracked (e.g. custom funnel steps, conditional events).
+
+### Checking analytics status (debug)
+
+```js
+window.nextDebug.analytics.getStatus()              // shows enabled providers + recent events
+window.nextDebug.analytics.track('test_event', {})  // test fire
+```
+
+---
+
+## Programmatic SDK API (`window.next`)
+
+Available after the SDK initializes. Use this for custom JS interactions — not to replicate what data attributes already handle.
+
+```js
+// Cart
+window.next.cart.getState()            // current cart state
+window.next.cart.addPackage(id, qty)   // add a package programmatically
+window.next.cart.clear()               // empty the cart
+
+// Analytics
+window.next.track('event_name', data)  // fire a custom analytics event
+
+// SDK info
+window.next.version                    // SDK version string
+window.next.ready(callback)            // run callback once SDK is initialized
+```
+
+For anything cart/checkout/upsell related, prefer data attributes over calling the API directly — they are more declarative and easier to maintain.
+
+---
+
+## Debug utilities (`window.nextDebug`)
+
+Enable debug mode via URL parameter or meta tag:
+
+```html
+<!-- in base.html or the page -->
+<meta name="next-debug" content="true">
+```
+```
+?debugger=true
+```
+
+Available utilities in browser console:
+
+```js
+// Inspect state
+window.nextDebug.stores.cart.getState()       // cart store state
+window.nextDebug.stores.campaign.getState()   // campaign data
+window.nextDebug.stores.order.getState()      // order state
+window.nextDebug.stores.checkout.getState()   // checkout form state
+
+// Analytics
+window.nextDebug.analytics.getStatus()        // provider status + event log
+window.nextDebug.analytics.track('evt', {})   // test fire an event
+
+// Other
+window.nextDebug.overlay()                    // show debug overlay panel
+window.nextDebug.reinitialize()               // re-run SDK initialization
+```
+
+If `window.nextDebug` is undefined, debug mode is not enabled — add the meta tag or URL parameter.
+
+---
+
 ## Rules
 
 1. **Use `campaign_asset` for all local asset paths.** Never write hardcoded relative paths like `../../css/checkout.css`.
