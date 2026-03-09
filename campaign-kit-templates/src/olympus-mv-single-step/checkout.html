@@ -3,7 +3,6 @@ title: "Olympus MV Single Checkout"
 page_type: checkout
 next_success_url: upsell-mv.html
 styles:
-  - css/checkout.css
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
 scripts:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js
@@ -52,24 +51,7 @@ scripts:
             </div>
           </div>
         </div>
-        <div class="checkout-progress">
-          <div class="container cc-small">
-            <div class="progress-wrapper">
-              <div class="step">
-                <div class="step-label active">Checkout</div>
-              </div>
-              <div class="line line-active arrow-active"></div>
-              <div class="step">
-                <div class="step-label">Bonus Deals</div>
-              </div>
-              <div class="line line-inactive arrow-inactive"></div>
-              <div class="step">
-                <div class="step-label">Summary</div>
-              </div>
-
-            </div>
-          </div>
-        </div>
+        {% campaign_include 'checkout-progress.html' %}
         <div class="section-checkout cc-gray">
           <div class="container">
             <div class="checkout-page-layout">
