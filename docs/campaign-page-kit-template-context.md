@@ -129,8 +129,11 @@ Generates a clean URL for inter-page navigation. Strips `.html`, adds trailing s
 ### `campaign_include`
 Includes a file from the campaign's `_includes/` directory.
 
+**Parameter syntax:** Use `=` (equals), not `:` (colon). Params are passed as `key='value'` or `key=variable`.
+
 ```liquid
 {% campaign_include 'testimonials.html' %}
+{% campaign_include 'checkout-header.html' %}
 {% campaign_include 'slider.html' images=slider_images %}
 ```
 

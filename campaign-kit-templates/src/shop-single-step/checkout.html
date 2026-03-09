@@ -6,13 +6,7 @@ next_success_url: upsell.html
 <div class="page-wrapper">
 
       <div class="main-wrapper">
-        <section class="checkout-header checkout-header--lg">
-          <div class="container">
-            <div class="checkout-header__inner checkout-header__inner--center">
-              <div class="checkout-header__brand"><img src="{{ 'images/next-logo.png' | campaign_asset }}" loading="eager" alt="{{ campaign.store_name }}" class="brand-logo"></div>
-            </div>
-          </div>
-        </section>
+        {% campaign_include 'checkout-header.html' %}
         <div class="checkout-content">
           <div class="checkout__content">
             <div class="checkout__layout">

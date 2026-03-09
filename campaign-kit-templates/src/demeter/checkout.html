@@ -8,20 +8,7 @@ scripts:
 <div class="page-wrapper">
 
       <div class="main-wrapper">
-        <section class="checkout-header">
-          <div class="container cc-medium">
-            <div class="checkout-header__inner">
-              <div class="checkout-header__brand"><img src="{{ 'images/next-logo.png' | campaign_asset }}" loading="eager" alt="{{ campaign.store_name }}" class="brand-logo"></div>
-              <div class="checkout-header__extras">
-                <div class="mg-section tablet-spacer"><img loading="lazy" src="{{ 'images/90d.webp' | campaign_asset }}" alt="" class="mg-image">
-                  <div class="mg-text hide-tablet">90 - Day 100%<br>Money Back Guarantee</div>
-                  <div class="questions-text">Questions?<br>Call: <a href="{{ campaign.store_phone_tel }}" class="link-tel">{{ campaign.store_phone }}</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        {% campaign_include 'checkout-header.html' %}
         <div class="encrypted-banner">
           <div class="container cc-small">
             <div class="scarcity-banner__content">
