@@ -36,6 +36,18 @@ Note: when copying a template, the developer renames the folder to their product
 - `npm run dev` is interactive — lets you pick ONE campaign to preview
 - `_site/` is gitignored
 
+## Dev server preview URLs (localhost:3000)
+
+| Template | Pages |
+|----------|-------|
+| demeter | /demeter/checkout/ · /demeter/upsell/ · /demeter/receipt/ |
+| limos | /limos/checkout/ · /limos/upsell/ · /limos/receipt/ |
+| olympus | /olympus/checkout/ · /olympus/upsell/ · /olympus/receipt/ |
+| olympus-mv-single-step | /olympus-mv-single-step/checkout/ · /olympus-mv-single-step/upsell-mv/ · /olympus-mv-single-step/receipt/ |
+| olympus-mv-two-step | /olympus-mv-two-step/select/ · /olympus-mv-two-step/checkout/ · /olympus-mv-two-step/upsell-mv/ · /olympus-mv-two-step/receipt/ |
+| shop-single-step | /shop-single-step/checkout/ · /shop-single-step/upsell/ · /shop-single-step/receipt/ |
+| shop-three-step | /shop-three-step/information/ · /shop-three-step/shipping/ · /shop-three-step/billing/ · /shop-three-step/upsell/ · /shop-three-step/receipt/ |
+
 ---
 
 ## campaign-kit-templates/ File Structure

@@ -547,17 +547,7 @@ scripts:
                   </div><img loading="lazy" src="{{ 'images/Group-120.svg' | campaign_asset }}" alt="" class="credit-card__flags">
                 </div>
                 <div class="hide-tablet">
-                  <div class="checkout-footer-links checkout-footer-links--compact">
-                    <a href="{{ campaign.store_returns }}" target="_blank" class="link">
-                      <div>Return policy</div>
-                    </a>
-                    <a href="{{ campaign.store_privacy }}" target="_blank" class="link">
-                      <div>Privacy policy</div>
-                    </a>
-                    <a href="{{ campaign.store_terms }}" target="_blank" class="link">
-                      <div>Terms of service</div>
-                    </a>
-                  </div>
+                  {% campaign_include 'checkout-footer-links.html' %}
                 </div>
                 <div class="order-summary--card hide-tablet-up">
                   <div data-initial-state="closed" data-next-accordion="order-summary" data-open-text="Hide Order Summary" data-close-text="Show Order Summary" data-toggle-class="next-expanded" class="order-summary__accordion">
@@ -1075,17 +1065,7 @@ scripts:
                 </div>
               </div>
               <div class="checkout-footer">
-                <div class="checkout-footer-links checkout-footer-links--compact">
-                  <a href="#" class="link">
-                    <div>Return policy</div>
-                  </a>
-                  <a href="#" class="link">
-                    <div>Privacy policy</div>
-                  </a>
-                  <a href="#" class="link">
-                    <div>Terms of service</div>
-                  </a>
-                </div>
+                {% campaign_include 'checkout-footer-links.html' %}
               </div>
             </div>
           </div>
