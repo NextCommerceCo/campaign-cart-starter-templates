@@ -129,6 +129,8 @@ Generates a clean URL for inter-page navigation. Strips `.html`, adds trailing s
 ### `campaign_include`
 Includes a file from the campaign's `_includes/` directory.
 
+**Do not use standard Liquid `{% include %}` — it looks in `src/` root and will fail with an ENOENT error. Always use `{% campaign_include %}`.**
+
 **Parameter syntax:** Use `=` (equals), not `:` (colon). Params are passed as `key='value'` or `key=variable`.
 
 ```liquid

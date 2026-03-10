@@ -524,21 +524,8 @@ swiper_thumbs:
                                 <div class="form-section__subtitle">All transactions are secure and encrypted.<br></div>
 
                               </div>
-                              <div data-next-express-checkout="container" class="exp-checkout">
-                                <div data-next-component="express-error" class="next-toast-handler">
-                                  <div class="tip1_bar is-warning">
-                                    <div data-next-component="express-error-text" class="text-sm">Error message</div>
-                                  </div>
-                                </div>
-                                                    <!-- Buttons are injected by campaign-cart ExpressCheckoutContainerEnhancer -->
-
-                                <div data-next-express-checkout="buttons" class="express-checkout__buttons cc-padding"></div>
-                                <div class="divider-section">
-                                  <div class="divider-section__line-v2"></div>
-                                  <div class="divider-section__text-v2">OR</div>
-                                  <div class="divider-section__line-v2"></div>
-                                </div>
-                              </div>
+                              {% assign express_show_title = false %}
+                              {% campaign_include 'express-checkout-inline.html' %}
                               <div class="payment-methods">
                                 <div data-next-payment-method="credit" class="payment-method next-selected">
                                   <div class="payment-method__header"><label for="combo_mode_credit" combo_mode="credit" class="payment-method__label"><input type="radio" name="payment_method" id="combo_mode_credit" data-name="Combo Mode" class="payment-method__input" checked="" value="credit">

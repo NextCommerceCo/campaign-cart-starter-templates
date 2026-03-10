@@ -177,22 +177,7 @@ next_success_url: upsell.html
                     </div>
                   </div>
                   {% campaign_include 'bump-check02.html' %}
-                  <div data-next-express-checkout="container" class="exp-checkout">
-                    <div class="express-checkout__title">Express Checkout</div>
-                    <div data-next-component="express-error" class="next-toast-handler">
-                      <div class="tip1_bar is-warning">
-                        <div data-next-component="express-error-text" class="text-sm">Error message</div>
-                      </div>
-                    </div>
-                                        <!-- Buttons are injected by campaign-cart ExpressCheckoutContainerEnhancer -->
-
-                    <div data-next-express-checkout="buttons" class="express-checkout__buttons"></div>
-                    <div class="divider-section">
-                      <div class="divider-section__line-v2"></div>
-                      <div class="divider-section__text-v2">OR</div>
-                      <div class="divider-section__line-v2"></div>
-                    </div>
-                  </div>
+                  {% campaign_include 'express-checkout.html' %}
                   <div class="checkout-form">
                     <form data-next-checkout="form" id="combo_form" method="post">
                       <div class="form-content">

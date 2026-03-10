@@ -168,19 +168,8 @@ scripts:
                   </div>
                 </div>
                 
-                <div data-next-express-checkout="container" class="exp-checkout__inline">
-                  <div class="exp-checkout__inline-header">
-                    <div class="express-checkout__title-inline">Express Checkout</div>
-                  </div>
-                  <div data-next-component="express-error" class="next-toast-handler">
-                    <div class="tip1_bar is-warning">
-                      <div data-next-component="express-error-text" class="text-sm">Error message</div>
-                    </div>
-                  </div>
-                                      <!-- Buttons are injected by campaign-cart ExpressCheckoutContainerEnhancer -->
-
-                  <div data-next-express-checkout="buttons" class="express-checkout__buttons"></div>
-                </div>
+                {% assign express_show_divider = false %}
+                {% campaign_include 'express-checkout-inline.html' %}
                 <div class="checkout-form">
                   <form data-next-checkout="form" id="combo_form" method="post" next-no-error-style="" next-show-validation-icons="">
                     <div class="form-content">
