@@ -12134,7 +12134,7 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   /* kill the bottom border */
 }
 
-/* PayPal and Klarna icons in payment-method */
+/* PayPal, Klarna, Apple Pay, and Google Pay icons in payment-method */
 .payment-method__icon--paypal-logo {
   width: 15px;
 }
@@ -12143,6 +12143,12 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 }
 .payment-method__icon--klarna-logo {
   height: 25px;
+}
+.payment-method__icon--apple-pay-logo {
+  width: 45px;
+}
+.payment-method__icon--google-pay-logo {
+  width: 45px;
 }
 .iti__flag-container {
   position: absolute;

@@ -118,6 +118,13 @@ scripts:
 - `{{ campaign.store_phone }}` / `{{ campaign.store_phone_tel }}`
 - `{{ campaign.store_terms }}` / `{{ campaign.store_privacy }}` / `{{ campaign.store_contact }}` / `{{ campaign.store_returns }}` / `{{ campaign.store_shipping }}`
 
+## campaign_include Tag
+- Always resolves relative to the **campaign's own `_includes/` folder** — never a shared/global path
+- Syntax: `{% campaign_include 'filename.html' %}` or with args: `{% campaign_include 'filename.html' arg=value %}`
+- Args become variables inside the partial (e.g. `show_paypal=true` → `{{ show_paypal }}` / `{% if show_paypal %}`)
+- Multiple args: `{% campaign_include 'payment-methods.html' show_paypal=true show_klarna=true %}`
+- Use args to make partials configurable with safe defaults (e.g. optional payment methods off by default)
+
 ---
 
 ## Key SDK Data Attributes
