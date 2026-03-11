@@ -84,7 +84,7 @@ window.nextConfig = {
   googleMaps: {
     apiKey: "your-google-maps-api-key",
     region: "US",
-    enableAutocomplete: true
+    enableAutocomplete: false
   },
   
   // Analytics providers configuration

@@ -519,6 +519,20 @@ Use these when implementing or verifying a specific task. Work through each item
 - [ ] Previous upsell page's `next_upsell_decline` routing updated intentionally
 - [ ] Progress bar / step indicator updated on affected pages (this is plain HTML, not SDK-driven)
 
+### Configuring the promo banner and timer
+
+- [ ] `promo-banner.js` and `promo-timer.js` added to `scripts:` in page frontmatter
+- [ ] `promo_sale: "default"` set in frontmatter (or a specific sale name to force a promotion year-round)
+- [ ] `<promo-banner>` placed at the top of the page inside `<div data-next-hide="param.banner=='n'" class="section_header">`
+- [ ] `<promo-timer>` placed above `<div class="checkout-form">` in the checkout left column
+- [ ] Both components wired with `{% if promo_sale %} force-sale="{{ promo_sale }}"{% endif %}`
+- [ ] To hide the banner top bar, add `promo_topbar: "false"` to frontmatter and wire with `{% if promo_topbar %} show-topbar="{{ promo_topbar }}"{% endif %}`
+- [ ] To edit sale dates or promo codes, update the `sales` array in both `promo-banner.js` and `promo-timer.js` — keep them in sync
+
+Available sale names: `newyear` · `valentinesday` · `stpatricks` · `easter` · `mothersday` · `memorialday` · `fathersday` · `4thofjuly` · `summersale` · `backtoschool` · `halloween` · `veteransday` · `blackfriday` · `cybermonday` · `xmas` · `yearend`
+
+---
+
 ### Debugging — SDK not working
 
 - [ ] Run `window.next.version` in browser console — if undefined, the SDK failed to load
