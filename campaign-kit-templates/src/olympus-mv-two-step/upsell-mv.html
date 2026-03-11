@@ -257,21 +257,13 @@ scripts:
                           <img class="upsell-ships-info__icon" src="{{ 'images/usps.png' | campaign_asset }}" alt="USPS">
                           <p class="upsell-ships-info__text">All orders ship from the USA <img class="upsell-ships-info__flag" src="{{ 'images/united-states-flag-icon.webp' | campaign_asset }}" alt=""> via USPS within 1 business day. A tracking number will be issued to your email.</p>
                         </div>
-                        <div class="payment-img-wrapper hide-tablet-up">
-                          <div class="trust-badge invert"><img loading="lazy" src="{{ 'images/icons8-lock-24_1icons8-lock-24.png' | campaign_asset }}" alt="" class="trust-badge__icon">
-                            <div class="badge-text-black">100% Encrypted &amp; Secure Checkout</div>
-                          </div><img loading="lazy" src="{{ 'images/upsell-payment-logos.svg' | campaign_asset }}" alt="" class="credit-card__flags">
-                        </div>
+                        {% campaign_include 'upsell-payment-logos.html' wrapper_class="hide-tablet-up" %}
                       </div>
                     </div>
                   </div>
                   <div data-pb-element="image-column" class="upsell-offer__image-column">
                     <img src="{{ 'images/1x1_1.svg' | campaign_asset }}" alt="" class="contain" loading="lazy" data-next-display="package.image">
-                    <div class="payment-img-wrapper hide-tablet-down">
-                      <div class="trust-badge invert"><img loading="lazy" src="{{ 'images/icons8-lock-24_1icons8-lock-24.png' | campaign_asset }}" alt="" class="trust-badge__icon">
-                        <div class="badge-text-black">100% Encrypted &amp; Secure Checkout</div>
-                      </div><img loading="lazy" src="{{ 'images/upsell-payment-logos.svg' | campaign_asset }}" alt="" class="credit-card__flags">
-                    </div>
+                    {% campaign_include 'upsell-payment-logos.html' wrapper_class="hide-tablet-down" %}
                   </div>
                 </div>
               </div>
