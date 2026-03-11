@@ -6,7 +6,7 @@
  * this after Next is ready.
  *
  * Template:
- *   <div pb-checkout-section="shipping" class="form-section">
+ *   <div data-next-component="shipping-form" class="form-section">
  *     <h1 class="form-section__title">Shipping Method</h1>
  *     <div id="next-shipping-options-container" class="shipping-selector" role="radiogroup" aria-label="Shipping method">
  *       <!-- Options injected here by script -->
@@ -55,7 +55,7 @@
     var id = 'shipping_method_' + refId + (idSuffix || '');
 
     var wrap = document.createElement('div');
-    wrap.className = 'shipping-method shipping-method--last-item';
+    wrap.className = 'shipping-method';
     wrap.setAttribute('data-next-shipping-id', String(refId));
 
     var label = document.createElement('label');

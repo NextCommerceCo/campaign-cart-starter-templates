@@ -4660,7 +4660,7 @@ figcaption {
   padding-bottom: 0;
 }
 
-.shipping-method--last-item {
+.shipping-method:last-child {
   border-bottom-style: none;
 }
 

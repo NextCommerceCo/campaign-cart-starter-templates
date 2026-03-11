@@ -185,9 +185,9 @@ scripts:
                                       <div class="checkbox__label">Email me with news and offers</div>
                                     </label></div>
                                 </div>
-                                <div pb-checkout-section="shipping" class="form-section">
+                                <div class="form-section">
                                   <h1 class="form-section__title">Shipping</h1>
-                                  <div os-checkout-component="shipping-form">
+                                  <div data-next-component="shipping-form">
                                     <div class="form-grid">
                                       <div data-next-component="shipping-field-row" class="form-grid__row">
                                         <div class="form-group">
@@ -257,45 +257,6 @@ scripts:
                                   </div>
                                 </div>
 
-                                <div pb-checkout-section="shipping" class="form-section hide">
-                                  <h1 class="form-section__title">Shipping Method</h1>
-                                  <div class="shipping_method-wrapper">
-                                    <div>Enter your shipping address to view available shipping methods.</div>
-                                  </div>
-                                  <div class="shipping-selector" role="radiogroup" aria-labelledby="shipping-method-title">
-                                    <!-- Option 1: value must match campaign shipping_methods[].ref_id -->
-                                    <div class="shipping-method" data-next-shipping-id="1">
-                                      <label for="shipping_method_1" class="radio-select-shipping">
-                                        <input type="radio"
-                                              name="shipping_method"
-                                              id="shipping_method_1"
-                                              value="1"
-                                              class="payment-method__input"
-                                              checked>
-                                        <div class="shipping-method-rleft">
-                                          <div data-next-display="shipping.name"></div>
-                                          <div class="shipping-option__description">Testing a default shipping description for customization.</div>
-                                        </div>
-                                        <div class="shipping_price">
-                                          <div data-next-display="shipping.cost">$0.00</div>
-                                        </div>
-                                      </label>
-                                    </div>
-                                    <!-- Option 2 -->
-                                    <div class="shipping-method cc-last__item" data-next-shipping-id="2">
-                                      <label for="shipping_method_2" class="radio-select-shipping">
-                                        <input type="radio" name="shipping_method" id="shipping_method_2" value="2" class="payment-method__input">
-                                        <div class="shipping-method-rleft">
-                                          <div data-next-display="shipping.name"></div>
-                                          <div class="shipping-option__description">Testing a default shipping description for customization.</div>
-                                        </div>
-                                        <div class="shipping_price">
-                                          <div data-next-display="shipping.cost">$5.00</div>
-                                        </div>
-                                      </label>
-                                    </div>
-                                  </div>
-                                </div>
                                 <div class="form-section form-section--last">
                                   <div class="form-section__header">
                                     <h1 class="form-section__title">Payment</h1>
