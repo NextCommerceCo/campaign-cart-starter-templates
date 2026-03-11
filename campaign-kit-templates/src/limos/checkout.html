@@ -3,6 +3,8 @@ title: "Limos Checkout"
 page_type: checkout
 next_success_url: upsell.html
 promo_sale: "default"
+styles:
+  - css/exit-intent-popup.css
 scripts:
   - js/promo-banner.js
   - js/promo-timer.js
@@ -28,7 +30,7 @@ scripts:
                       </svg></div>
                     <div><span class="checkout-high-demand__highlight">High Demand:</span> 62 people are looking at this offer!</div>
                   </div>
-                  <div data-next-selector-id="limos-card" data-next-cart-selector="" data-next-selection-mode="swap" class="checkout-packages">
+                  <div data-next-selector-id="limos-card" data-next-cart-selector="" data-next-selection-mode="swap" class="checkout-packages" data-next-await>
                     <div data-next-shipping-id="1" data-next-selector-card="" data-next-package-id="2" data-next-quantity="1" data-next-selected="true" class="checkout-package">
                       <div class="checkout__package-card-header">
                         <div class="checkout__package-icon"><svg viewBox="0 0 14 13" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -797,4 +799,6 @@ scripts:
           </div>
         </div>
       </div>
+
+      {% campaign_include 'exit-intent-popup.html' coupon_code="SAVE10" headline="Wait!" subheadline="Are you sure you want to leave?" offer_title="Don't Miss Out on this Exclusive Offer" offer_label="Save a further <strong>10% Off</strong>" offer_detail="This extra <strong>10% off</strong> coupon could disappear any time!" cta_label="Apply My Discount Coupon" %}
     </div>

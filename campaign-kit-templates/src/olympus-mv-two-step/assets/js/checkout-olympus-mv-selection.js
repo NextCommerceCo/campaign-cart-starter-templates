@@ -1574,6 +1574,8 @@ customElements.define('os-dropdown-item', OSDropdownItem);
 
 // Initialize
 window.addEventListener('next:initialized', () => {
+  initFomo();
+
   window.tierController = new TierController();
   
   const btn = document.querySelector('[os-checkout="verify-step"]');
@@ -1588,7 +1590,7 @@ window.addEventListener('next:initialized', () => {
   
   // Exit intent
   if (CONFIG.exitIntent.enabled) {
-    initExitIntent(CONFIG.exitIntent.image, async () => {
+    initExitIntentImage(CONFIG.exitIntent.image, async () => {
       if (window.tierController) {
         await window.tierController.activateExitDiscount();
       }

@@ -519,6 +519,27 @@ Use these when implementing or verifying a specific task. Work through each item
 - [ ] Previous upsell page's `next_upsell_decline` routing updated intentionally
 - [ ] Progress bar / step indicator updated on affected pages (this is plain HTML, not SDK-driven)
 
+### Configuring FOMO popups
+
+- [ ] `initFomo()` is called inside the `next:initialized` event handler in the checkout JS file
+- [ ] `items` array — if the default (campaign products) isn't right, supply a custom array with `{ text, image }` entries specific to this campaign's products/bundles
+- [ ] `customers` object — if the default name list isn't right, supply region-keyed arrays (e.g. `US: ['Sarah from Dallas']`) matched to the campaign's target market
+- [ ] Timing values reviewed: `initialDelay`, `displayDuration`, `delayBetween` — adjust if the defaults don't suit the page length or flow
+- [ ] `maxMobileShows` reviewed — default is 5; lower it if mobile experience feels intrusive
+
+### Configuring the exit intent popup
+
+- [ ] Decide on approach: **image-only** (`initExitIntentImage`) or **template** (`initExitIntentTemplate`) — choose one and remove the other
+- [ ] The chosen `initExitIntent*` call is inside the `next:initialized` event handler in the checkout JS file
+- [ ] **If using image-only:** replace `placehold.co` URL with the real campaign-specific image URL
+- [ ] **If using image-only:** confirm the `action` callback is correct — typically `await next.applyCoupon('CODE')`
+- [ ] **If using template:** `exit-intent-popup.html` partial exists in `_includes/` and is included in the checkout page via `{% campaign_include 'exit-intent-popup.html' %}`
+- [ ] **If using template:** `css/exit-intent-popup.css` is listed in `styles:` in the checkout page frontmatter
+- [ ] **If using template:** `popup_image` arg is set to the real campaign image URL — not the placeholder
+- [ ] **If using template:** `coupon_code` arg matches the discount code configured in `config.js` `discounts` block (or the store backend)
+- [ ] **If using template:** copy/offer text (`headline`, `subheadline`, `offer_title`, `offer_label`, `offer_detail`, `cta_label`) reviewed and updated to match campaign messaging
+- [ ] **If using profiles for dynamic pricing:** `profiles` block in `config.js` is uncommented and the profile name matches what the exit intent logic references
+
 ### Configuring the promo banner and timer
 
 - [ ] `promo-banner.js` and `promo-timer.js` added to `scripts:` in page frontmatter
