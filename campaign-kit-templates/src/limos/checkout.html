@@ -168,8 +168,7 @@ scripts:
                   </div>
                 </div>
                 
-                {% assign express_show_divider = false %}
-                {% campaign_include 'express-checkout-inline.html' %}
+                {% campaign_include 'express-checkout-inline.html' show_divider=false %}
                 <div class="checkout-form">
                   <form data-next-checkout="form" id="combo_form" method="post" next-no-error-style="" next-show-validation-icons="">
                     <div class="form-content">

@@ -131,6 +131,12 @@
 
     // Sync selection to SDK (dynamic radios may not have the checkout enhancer's listener)
     bindShippingChangeToSdk(sdk);
+
+    // Set the default (first) shipping method in the SDK so the step can advance
+    // without the user having to manually change the selection.
+    if (typeof sdk.setShippingMethod === 'function' && methods[0]) {
+      sdk.setShippingMethod(methods[0].ref_id);
+    }
   }
 
   function bindShippingChangeToSdk(sdk) {

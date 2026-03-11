@@ -1,6 +1,6 @@
 <div data-next-express-checkout="container" class="express-checkout">
   <div class="exp-checkout__inline">
-    {% if express_show_title != false %}
+    {% if show_title != false %}
     <div class="exp-checkout__inline-header">
       <div class="express-checkout__title-inline">Express Checkout</div>
     </div>
@@ -13,7 +13,7 @@
     <!-- Buttons are injected by campaign-cart ExpressCheckoutContainerEnhancer -->
     <div data-next-express-checkout="buttons" class="express-checkout__buttons"></div>
   </div>
-  {% if express_show_divider != false %}
+  {% if show_divider != false %}
   <div class="divider-section">
     <div class="divider-section__line-2"></div>
     <div class="divider-section__text-2">OR</div>

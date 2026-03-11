@@ -524,8 +524,7 @@ swiper_thumbs:
                                 <div class="form-section__subtitle">All transactions are secure and encrypted.<br></div>
 
                               </div>
-                              {% assign express_show_title = false %}
-                              {% campaign_include 'express-checkout-inline.html' %}
+                              {% campaign_include 'express-checkout-inline.html' show_title=false %}
                               {% campaign_include 'payment-methods.html' show_paypal=true show_klarna=true show_apple_pay=true show_google_pay=true %}
                             </div>
                             <div class="form-section form-section--last">
