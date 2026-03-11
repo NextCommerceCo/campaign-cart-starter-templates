@@ -2,12 +2,12 @@
 
 window.addEventListener('next:initialized', function() {
   initFomo();
-  initExitIntent('https://placehold.co/600x400', async () => {
-    const result = await next.applyCoupon('DEMO10');
-    if (result.success) {
-      // alert('Coupon applied successfully: ' + result.message);
-    } else {
-      // alert('Coupon failed: ' + result.message);
-    }
-  });
+
+  // Template approach — uses exit-intent-popup.html partial in _includes/
+  initExitIntentTemplate('exit-intent');
+
+  // Image-only alternative — swap in your own image URL and uncomment to use instead
+  // initExitIntentImage('https://placehold.co/600x400', async () => {
+  //   await next.applyCoupon('SAVE10');
+  // });
 });
