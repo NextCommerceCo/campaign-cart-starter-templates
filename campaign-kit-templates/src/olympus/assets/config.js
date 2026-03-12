@@ -45,7 +45,13 @@ window.nextConfig = {
     //   Option 3: Disabled — remove enableAutocomplete and leave googleMaps.apiKey empty
     enableAutocomplete: true,
   },
-  
+
+  // Google Maps API key — leave empty to use NextCommerce autocomplete (Option 1 above)
+  googleMaps: {
+    apiKey: "",
+    region: "US",
+  },
+
   // Discount codes configuration
   // discounts: {
     // Example discount code
@@ -84,12 +90,6 @@ window.nextConfig = {
 
   // Default profile to use (if not specified, uses "regular")
   // defaultProfile: "regular",
-  
-  // Google Maps API key — leave empty to use NextCommerce autocomplete (Option 1 above)
-  googleMaps: {
-    apiKey: "",
-    region: "US",
-  },
   
   // Analytics providers configuration
   storeName: 'store-name', // Required for purchase deduplication with NEXT Storefront Meta App
