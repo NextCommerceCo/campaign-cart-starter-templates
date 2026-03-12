@@ -39,6 +39,7 @@ window.nextConfig = {
     defaultCountry: "US", // Low-priority fallback when campaign list is empty
     showCountries: ["US", "CA", "GB"], // Deprecated – campaign API provides countries; fallback only
     dontShowStates: ["AS", "GU", "PR", "VI"], // State codes to hide from dropdowns
+    enableAutocomplete: true, // Enable NextCommerce address autocomplete (no API key needed)
   },
   
   // Discount codes configuration
@@ -80,11 +81,13 @@ window.nextConfig = {
   // Default profile to use (if not specified, uses "regular")
   // defaultProfile: "regular",
   
-  // Google Maps integration (for address autocomplete)
+  // Address autocomplete options:
+  //   Option 1 (active): NextCommerce autocomplete — addressConfig.enableAutocomplete: true above, leave apiKey empty
+  //   Option 2: Google Maps — fill in apiKey below; Google Maps takes priority when apiKey is non-empty
+  //   Option 3: Disabled — remove enableAutocomplete from addressConfig and leave apiKey empty
   googleMaps: {
-    apiKey: "your-google-maps-api-key",
+    apiKey: "", // Add Google Maps API key here to switch to Google Maps autocomplete
     region: "US",
-    enableAutocomplete: false
   },
   
   // Analytics providers configuration
