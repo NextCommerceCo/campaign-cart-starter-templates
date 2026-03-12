@@ -13,7 +13,7 @@ window.nextConfig = {
   paymentConfig: {
     expressCheckout: {
       enabled: true, // Enable/disable express checkout methods
-      requireValidation: false, // Require form validation before express checkout if radio option - not express buttons
+      requireValidation: true, // Require form validation before express checkout if radio option - not express buttons
       requiredFields: ['email', 'fname', 'lname'], // Fields required for express checkout radio option
       methodOrder: ['paypal', 'apple_pay', 'google_pay'] // Display order of express payment method buttons
     },
