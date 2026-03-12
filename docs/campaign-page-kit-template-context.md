@@ -197,7 +197,7 @@ window.nextConfig = {
   paymentConfig: {
     expressCheckout: {
       enabled: true,
-      requireValidation: false,
+      requireValidation: true,
       requiredFields: ['email', 'fname', 'lname'],
       methodOrder: ['paypal', 'apple_pay', 'google_pay']
     }
