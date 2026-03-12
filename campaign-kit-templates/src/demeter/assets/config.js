@@ -13,7 +13,7 @@ window.nextConfig = {
   paymentConfig: {
     expressCheckout: {
       enabled: true, // Enable/disable express checkout methods
-      requireValidation: false, // Require form validation before express checkout if radio option - not express buttons
+      requireValidation: true, // Require form validation before express checkout if radio option - not express buttons
       requiredFields: ['email', 'fname', 'lname'], // Fields required for express checkout radio option
       methodOrder: ['paypal', 'apple_pay', 'google_pay'] // Display order of express payment method buttons
     },
@@ -36,11 +36,22 @@ window.nextConfig = {
 
   // Address and country configuration
   addressConfig: {
-    defaultCountry: "US", // Low-priority fallback when campaign list is empty
-    showCountries: ["US", "CA", "GB"], // Deprecated – campaign API provides countries; fallback only
+    // defaultCountry: "US",              // Low-priority fallback when campaign list is empty
+    // showCountries: ["US", "CA", "GB"], // Deprecated – campaign API provides countries; fallback only
     dontShowStates: ["AS", "GU", "PR", "VI"], // State codes to hide from dropdowns
+    // AUTOCOMPLETE PROVIDER:
+    //   Option 1 (active): NextCommerce — enableAutocomplete: true, leave googleMaps.apiKey empty
+    //   Option 2: Google Maps — fill in googleMaps.apiKey below; takes priority when apiKey is non-empty
+    //   Option 3: Disabled — remove enableAutocomplete and leave googleMaps.apiKey empty
+    enableAutocomplete: true,
   },
-  
+
+  // Google Maps API key — leave empty to use NextCommerce autocomplete (Option 1 above)
+  googleMaps: {
+    apiKey: "",
+    region: "US",
+  },
+
   // Discount codes configuration
   // discounts: {
     // Example discount code
@@ -79,13 +90,6 @@ window.nextConfig = {
 
   // Default profile to use (if not specified, uses "regular")
   // defaultProfile: "regular",
-  
-  // Google Maps integration (for address autocomplete)
-  googleMaps: {
-    apiKey: "your-google-maps-api-key",
-    region: "US",
-    enableAutocomplete: true
-  },
   
   // Analytics providers configuration
   storeName: 'store-name', // Required for purchase deduplication with NEXT Storefront Meta App
