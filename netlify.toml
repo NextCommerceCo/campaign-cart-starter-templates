@@ -1,0 +1,4 @@
+[build]
+  base    = "campaign-kit-templates"
+  command = "npm install && npm run build"
+  publish = "_site"
