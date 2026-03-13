@@ -80,17 +80,15 @@ npm run dev
 
 ## Available templates
 
-| Slug | Funnel type | Pages |
-|------|-------------|-------|
-| `demeter` | Single-step checkout | checkout |
-| `limos` | Single-step checkout | checkout |
-| `olympus` | Single-step checkout | checkout |
-| `olympus-mv-single-step` | Single-step with variants | checkout |
-| `olympus-mv-two-step` | Two-step with variants | select → checkout |
-| `shop-single-step` | Shop checkout | checkout |
-| `shop-three-step` | 3-step shop checkout | information → shipping → billing |
-
-All campaigns share an upsell page (up01 or up01-mv) and a receipt page.
+| Slug | Funnel type | Preview |
+|------|-------------|---------|
+| `demeter` | Single-step checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/demeter/checkout/) · [upsell](https://nextcommerce-campaign-templates.netlify.app/demeter/upsell/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/demeter/receipt/) |
+| `limos` | Single-step checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/limos/checkout/) · [upsell](https://nextcommerce-campaign-templates.netlify.app/limos/upsell/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/limos/receipt/) |
+| `olympus` | Single-step checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus/checkout/) · [upsell](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus/receipt/) |
+| `olympus-mv-single-step` | Single-step with variants | [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/checkout/) · [upsell](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/upsell-mv/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/receipt/) |
+| `olympus-mv-two-step` | Two-step with variants | [select](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/select/) · [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/checkout/) · [upsell](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/upsell-mv/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/receipt/) |
+| `shop-single-step` | Shop checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/checkout/) · [upsell](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/receipt/) |
+| `shop-three-step` | 3-step shop checkout | [information](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/information/) · [shipping](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/shipping/) · [billing](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/billing/) · [upsell](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/receipt/) |
 
 ---
 
