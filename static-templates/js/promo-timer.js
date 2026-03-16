@@ -35,7 +35,7 @@
  *   ?sale=blackfriday          Same as force-sale attribute — useful for QA
  *   ?sale=default              Force the default promo code via URL
  *
- *   Attributes always take priority over URL params.
+ *   URL params always take priority over attributes (useful for QA overrides).
  *
  * ─── SALE NAMES (for force-sale / ?sale=) ───────────────────────────────────
  *
@@ -177,7 +177,7 @@ class PromoTimer extends HTMLElement {
 
     // Attribute takes priority, then URL param (for testing)
     const urlParams = new URLSearchParams(window.location.search);
-    const forceSale = this.getAttribute('force-sale') || urlParams.get('sale');
+    const forceSale = urlParams.get('sale') || this.getAttribute('force-sale');
 
     // ─── Sale schedule ───────────────────────────────────────────────────────
     // Keep in sync with promo-banner.js. Months are 0-indexed: 0=Jan … 11=Dec.

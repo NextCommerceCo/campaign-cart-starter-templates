@@ -48,7 +48,7 @@
  *   ?banner=n                  Hide the entire banner section (SDK-level,
  *                              set on the wrapper div, not this component)
  *
- *   Attributes always take priority over URL params.
+ *   URL params always take priority over attributes (useful for QA overrides).
  *
  * ─── SALE NAMES (for force-sale  / ?sale=) ───────────────────────────────────
  *
@@ -325,7 +325,7 @@ class PromoBanner extends HTMLElement {
 
     // Attribute takes priority, then URL param (for testing)
     const urlParams = new URLSearchParams(window.location.search);
-    const forceSale = this.getAttribute('force-sale') || urlParams.get('sale');
+    const forceSale = urlParams.get('sale') || this.getAttribute('force-sale');
 
     // showTopBar override: explicit attribute > URL param > null (let each path decide)
     const hasTopBarOverride = this.hasAttribute('show-topbar') || urlParams.get('topbar') !== null;
