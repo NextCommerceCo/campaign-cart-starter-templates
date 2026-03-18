@@ -1,0 +1,20 @@
+name: Template smoke check
+
+on:
+  pull_request:
+    paths:
+      - 'campaign-kit-templates/src/**'
+
+jobs:
+  smoke-check:
+    name: Validate templates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run smoke check
+        run: node scripts/smoke-check.js
