@@ -106,6 +106,12 @@ npm run config     # set Campaigns App API keys
 
 ---
 
+## Deploy your campaign
+
+See [docs/campaign-page-kit-template-context.md](docs/campaign-page-kit-template-context.md) for deployment instructions covering Netlify, Vercel, GitHub Pages, and generic static hosting.
+
+---
+
 ## QA your campaign
 
 Use the [Sellmore QA dashboard](https://github.com/Sellmore-Co/QA-Sellmore) to validate deployed campaigns. It provides structured checklists for checkout funnels, automated checks for tracking pixels and meta tags, PageSpeed scoring, and Jira integration for bug reporting.
