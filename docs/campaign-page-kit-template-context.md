@@ -473,6 +473,36 @@ npm run compress     # compress images in a campaign
 
 ---
 
+## Deploying your project
+
+**1. Build**
+
+```bash
+npm run build
+```
+
+Outputs all campaigns to `_site/`. Before building, make sure `config.js` in each campaign has a real API key — not the placeholder set during development.
+
+**2. Deploy `_site/`**
+
+The build output is plain static HTML, CSS, and JS — no server runtime required. Deploy the `_site/` folder to any static host. Campaigns are served at:
+
+```
+https://your-domain.com/[slug]/checkout
+https://your-domain.com/[slug]/upsell
+https://your-domain.com/[slug]/receipt
+```
+
+| Host | How |
+|------|-----|
+| **Netlify** | Copy `netlify.toml` from [campaign-cart-starter-templates](https://github.com/NextCommerceCo/campaign-cart-starter-templates) into your project root — set `base` to your project folder, `command` to `npm run build`, `publish` to `_site`. Netlify will build and deploy on push. |
+| **Vercel** | Set root directory to your project folder, build command to `npm run build`, output directory to `_site`. |
+| **Cloudflare Pages** | Connect your repo, set build command to `npm run build`, output directory to `_site`. Deploys automatically on push. |
+| **GitHub Pages** | Build locally with `npm run build`, then push the contents of `_site/` to your `gh-pages` branch. |
+| **Any other host** | Upload or sync the `_site/` folder — it's plain static files. |
+
+---
+
 ## Task checklists
 
 Use these when implementing or verifying a specific task. Work through each item — do not skip.

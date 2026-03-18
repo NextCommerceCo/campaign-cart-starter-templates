@@ -106,6 +106,20 @@ npm run config     # set Campaigns App API keys
 
 ---
 
+## Deploy your campaign
+
+See [docs/campaign-page-kit-template-context.md](docs/campaign-page-kit-template-context.md) for deployment instructions covering Netlify, Vercel, GitHub Pages, and generic static hosting.
+
+---
+
+## QA your campaign
+
+Use the [Sellmore QA dashboard](https://github.com/Sellmore-Co/QA-Sellmore) to validate deployed campaigns. It provides structured checklists for checkout funnels, automated checks for tracking pixels and meta tags, PageSpeed scoring, and Jira integration for bug reporting.
+
+See [docs/qa-guide.md](docs/qa-guide.md) for template-specific guidance — which pages to load, required URL params, and what to check per template.
+
+---
+
 ## AI development rules
 
 Copy the relevant rules file into your project before using an AI assistant to build or modify templates. Most AI tools load a rules file automatically from your project root — check your tool's documentation for the exact filename and location (e.g. `CLAUDE.md` for Claude Code, `.cursor/rules/` for Cursor).
