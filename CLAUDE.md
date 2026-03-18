@@ -1,8 +1,7 @@
 # Repo Memory — campaign-cart-starter-templates
 
 ## Repo Overview
-Two top-level folders:
-- `static-templates/` — raw static HTML templates. **READ-ONLY. Never modify. Unless specifically prompted**
+One top-level folder:
 - `campaign-kit-templates/` — campaign-kit enabled versions. **This is the active work area.**
 
 ---
@@ -167,19 +166,6 @@ Inside `<template>` elements the SDK uses single-brace tokens (not Liquid):
 | shop-single-step | upsells.js |
 | shop-three-step | checkout-shop-three-billing.js, checkout-shop-three-shipping.js, upsells.js |
 
-## Template → Source File Mapping (static-templates → campaign-kit)
-| Campaign slug | Source files in static-templates |
-|--------------|----------------------------------|
-| demeter | checkout/demeter.html |
-| limos | checkout/limos.html |
-| olympus | checkout/olympus.html |
-| olympus-mv-single-step | checkout/olympus-mv-full.html |
-| olympus-mv-two-step | checkout/olympus-mv-selection.html + olympus-mv-billing.html |
-| shop-single-step | checkout/shop.html |
-| shop-three-step | checkout/shop-three/information.html + shipping.html + billing.html |
-
-Upsell/receipt pages in static-templates: up01, up02, up03, up04, up01-mv, receipt01.
-
 ---
 
 ## .gitignore
@@ -192,7 +178,6 @@ Upsell/receipt pages in static-templates: up01, up02, up03, up04, up01-mv, recei
 ## Docs Structure (decisions made)
 - `CLAUDE.md` (this file) — AI context for working ON this repo. Not for SDK usage guidance.
 - `README.md` — public-facing: two-folder structure, developer workflow, template inventory, npm scripts, SDK links, AI rules pointer
-- `docs/static-template-context.md` — AI context for working with the static-templates folder
 - `docs/campaign-page-kit-template-context.md` — AI context for developers working with campaign-kit-templates (see below)
 - `campaign-kit-template-CONTEXT.md` — **deleted** (wrong project layout, content migrated here and to README)
 
