@@ -9,7 +9,6 @@ Starter templates for building sales funnel pages — checkout, post-purchase up
 | Folder | What it is |
 |--------|------------|
 | `campaign-kit-templates/` | A [next-campaign-page-kit](https://github.com/NextCommerceCo/next-campaign-page-kit) project with all 7 templates. **Start here.** |
-| `static-templates/` | Raw static HTML source files. Reference only — do not modify. |
 
 ---
 
@@ -124,10 +123,7 @@ See [docs/qa-guide.md](docs/qa-guide.md) for template-specific guidance — whic
 
 Copy the relevant rules file into your project before using an AI assistant to build or modify templates. Most AI tools load a rules file automatically from your project root — check your tool's documentation for the exact filename and location (e.g. `CLAUDE.md` for Claude Code, `.cursor/rules/` for Cursor).
 
-| Working with | Rules file |
-|---|---|
-| `campaign-kit-templates/` | [docs/campaign-page-kit-template-context.md](docs/campaign-page-kit-template-context.md) |
-| `static-templates/` | [docs/static-template-context.md](docs/static-template-context.md) |
+Copy [docs/campaign-page-kit-template-context.md](docs/campaign-page-kit-template-context.md) into your project root as your AI rules file.
 
 ---
 
