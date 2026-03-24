@@ -16,6 +16,19 @@ The [template reference](#template-reference) section below lists the full page 
 
 ---
 
+## Analytics (GTM / Meta Pixel)
+
+Reference `campaign-kit-templates` injects **Google Tag Manager** and **Meta Pixel** from each campaign’s `_layouts/base.html`, using `gtm_id` and `fb_pixel_id` in `_data/campaigns.json`. Tags load only when the kit’s Liquid `environment` is **not** `development` (so `npm run dev` should not fire them; `npm run build` / deployed HTML should).
+
+**Checks:**
+
+- **Dev:** Open checkout in `npm run dev` — Network tab should not request `googletagmanager.com` / Facebook pixel endpoints (unless something else on the page loads them).
+- **Production build:** Inspect `_site/[slug]/…/index.html` or the deployed page — snippets should be present and network requests should appear when IDs are real.
+
+If you also enable `analytics.providers.gtm` / `facebook` in `assets/config.js`, you may get duplicate page views; pick one approach per campaign unless you know you need both.
+
+---
+
 ## URL params
 
 The QA dashboard has a params panel — use these to test how the page behaves with features toggled. Append directly to any page URL.
@@ -125,3 +138,4 @@ Three-step shop checkout. Requires a package ID to render.
 | Timer or banner visible when suppressed | Param not being picked up — check the URL, ensure no redirect is stripping params |
 | Wrong variant shown after step navigation | Package ID not persisting across steps — check SDK config and session handling |
 | Assets 404 on deployed URL | `campaign_asset` paths not resolving — check the slug in campaigns.json matches the deployed folder name |
+| Duplicate GTM / Meta events | Layout-injected tags plus SDK `analytics.providers` both enabled — disable one source or adjust container rules |

@@ -68,13 +68,28 @@ Registers every campaign. The `campaign` object in Liquid templates comes from h
       "store_privacy": "https://acme.com/privacy",
       "store_contact": "https://acme.com/contact",
       "store_returns": "https://acme.com/returns",
-      "store_shipping": "https://acme.com/shipping"
+      "store_shipping": "https://acme.com/shipping",
+      "gtm_id": "GTM-XXXXXXX",
+      "fb_pixel_id": "123456789012345"
     }
   ]
 }
 ```
 
 Add any additional key to a campaign entry and it becomes available as `{{ campaign.key }}` on every page in that campaign.
+
+### Build environment (`environment`)
+
+[next-campaign-page-kit](https://github.com/NextCommerceCo/campaign-page-kit) exposes `environment` in Liquid: `development` for `npm run dev`, `production` for `npm run build`. Override with `CPK_ENV` (e.g. `CPK_ENV=staging npm run build`). Use this to keep third-party scripts out of local previews.
+
+### Optional GTM and Meta Pixel (`gtm_id`, `fb_pixel_id`)
+
+These starter templates inject **Google Tag Manager** and **Meta Pixel** from each campaign’s `_layouts/base.html` when:
+
+- `environment` is not `development`, and  
+- `gtm_id` and/or `fb_pixel_id` are set on that campaign in `_data/campaigns.json`.
+
+Omit those keys to skip loading entirely. This is **separate** from `analytics.providers.gtm` / `facebook` in `config.js` — the SDK can load GTM/Facebook too. Enabling **both** without a plan often duplicates events (e.g. double `PageView`).
 
 ---
 
@@ -153,6 +168,9 @@ Includes a file from the campaign's `_includes/` directory.
 | `{{ campaign.store_contact }}` | campaigns.json |
 | `{{ campaign.store_returns }}` | campaigns.json |
 | `{{ campaign.store_shipping }}` | campaigns.json |
+| `{{ campaign.gtm_id }}` | campaigns.json (optional) |
+| `{{ campaign.fb_pixel_id }}` | campaigns.json (optional) |
+| `{{ environment }}` | kit: `development` / `production` (override with `CPK_ENV`) |
 | `{{ title }}` | page frontmatter |
 | `{{ page_type }}` | page frontmatter |
 | `{{ next_success_url }}` | page frontmatter |
@@ -172,6 +190,7 @@ It always:
 - Loads `next-core.css` directly (not via frontmatter)
 - Injects per-page `styles` and `scripts` from frontmatter
 - Conditionally renders SDK meta tags only when the relevant frontmatter field is set
+- In these starter templates: may inject GTM / Meta Pixel from `campaign.gtm_id` / `campaign.fb_pixel_id` when not in `development` (see above)
 
 ```html
 {% if next_success_url %}<meta name="next-success-url" content="{{ next_success_url | campaign_link }}">{% endif %}
@@ -513,8 +532,9 @@ Use these when implementing or verifying a specific task. Work through each item
 - [ ] `storeName` set — required for Facebook purchase deduplication
 - [ ] `addressConfig.defaultCountry` set to the primary target market
 - [ ] `paymentConfig.expressCheckout.enabled` — set `true` to show PayPal/Apple Pay/Google Pay buttons, `false` to hide
-- [ ] `analytics.providers.gtm.enabled` — set `true` and add `containerId` if using Google Tag Manager
-- [ ] `analytics.providers.facebook.enabled` — set `true` and add `pixelId` if using Facebook Pixel
+- [ ] `analytics.providers.gtm.enabled` — set `true` and add `containerId` if using **SDK-driven** Google Tag Manager (see layout injection note below)
+- [ ] `analytics.providers.facebook.enabled` — set `true` and add `pixelId` if using **SDK-driven** Facebook Pixel (see layout injection note below)
+- [ ] **Layout vs SDK:** If `base.html` already injects GTM/Meta from `campaigns.json` (`gtm_id` / `fb_pixel_id`), keep these SDK providers **disabled** unless you deliberately want both loaders (risk of duplicate events)
 - [ ] Address autocomplete — choose one option: (1) NextCommerce: `addressConfig.enableAutocomplete: true`, leave `googleMaps.apiKey` empty. (2) Google Maps: set `googleMaps.apiKey`; Google Maps takes priority when non-empty. (3) Disabled: remove `enableAutocomplete` from `addressConfig` and leave `googleMaps.apiKey` empty.
 - [ ] `discounts` block — uncomment and configure if the campaign uses promo codes, otherwise leave commented out
 - [ ] `profiles` block — uncomment and configure if the campaign uses dynamic pricing (e.g. exit intent), otherwise leave commented out
@@ -522,6 +542,7 @@ Use these when implementing or verifying a specific task. Work through each item
 ### Setting up a new campaign from a template
 
 - [ ] Entry exists in `_data/campaigns.json` with `slug`, `name`, `sdk_version`, and all `store_*` fields
+- [ ] Optional: `gtm_id` / `fb_pixel_id` in campaigns.json — real container and pixel IDs for production; omit keys to disable layout-injected tags
 - [ ] API key is set in `assets/config.js` (run `npm run config` or edit directly)
 - [ ] All `data-next-package-id` values updated to real package IDs from the Campaigns App
 - [ ] Exactly one selector card per selector group has `data-next-selected="true"`
