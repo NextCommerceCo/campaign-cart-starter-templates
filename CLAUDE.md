@@ -27,7 +27,7 @@ Note: when copying a template, the developer renames the folder to their product
 ## campaigns.json
 - **Project-level, not template-specific** — accumulates all campaigns a developer adds
 - `campaign-kit-templates/_data/campaigns.json` is a reference file showing full field structure for all 7 templates
-- Fields: `name`, `slug`, `description`, `sdk_version`, `store_name`, `store_url`, `store_terms`, `store_privacy`, `store_contact`, `store_returns`, `store_shipping`, `store_phone`, `store_phone_tel`
+- Fields: `name`, `slug`, `description`, `sdk_version`, `store_name`, `store_url`, `store_terms`, `store_privacy`, `store_contact`, `store_returns`, `store_shipping`, `store_phone`, `store_phone_tel`; optional layout analytics: `gtm_id`, `fb_pixel_id` (see `docs/campaign-page-kit-template-context.md` / `docs/qa-guide.md`)
 - slug drives URL: `campaign-domain.com/[slug]/page`
 
 ## npm run build behaviour
@@ -87,6 +87,7 @@ campaign-kit-templates/
 ## base.html Pattern
 - `next-core.css` loaded **directly in base.html** — always needed, not in page frontmatter
 - Per-page CSS/JS injected via frontmatter `styles:` / `scripts:` loops using `campaign_asset`
+- Optional **GTM / Meta Pixel** in reference templates: injected from `campaign.gtm_id` / `campaign.fb_pixel_id` when Liquid `environment != "development"` (omit keys in `campaigns.json` to disable)
 - Liquid conditionals for optional metatags:
   - `{% if next_success_url %}` → checkout pages only
   - `{% if next_upsell_accept %}` / `{% if next_upsell_decline %}` → upsell pages only
@@ -116,6 +117,7 @@ scripts:
 - `{{ campaign.sdk_version }}` — from campaigns.json
 - `{{ campaign.store_phone }}` / `{{ campaign.store_phone_tel }}`
 - `{{ campaign.store_terms }}` / `{{ campaign.store_privacy }}` / `{{ campaign.store_contact }}` / `{{ campaign.store_returns }}` / `{{ campaign.store_shipping }}`
+- `{{ campaign.gtm_id }}` / `{{ campaign.fb_pixel_id }}` — optional; used by reference `base.html` for layout-injected tags
 
 ## campaign_include Tag
 - Always resolves relative to the **campaign's own `_includes/` folder** — never a shared/global path
