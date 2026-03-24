@@ -11,7 +11,9 @@
     "store_returns": "https://demo.29next.com/returns/",
     "store_shipping": "https://demo.29next.com/shipping/",
     "store_phone": "1 (888) 831-6810",
-    "store_phone_tel": "tel:+18888316810"
+    "store_phone_tel": "tel:+18888316810",
+    "gtm_id": "GTM-XXXXXXX",
+    "fb_pixel_id": "123456789012345"
   },
   "shop-single-step": {
     "name": "Shop Single Step",
@@ -25,7 +27,9 @@
     "store_returns": "https://demo.29next.com/returns/",
     "store_shipping": "https://demo.29next.com/shipping/",
     "store_phone": "1 (888) 831-6810",
-    "store_phone_tel": "tel:+18888316810"
+    "store_phone_tel": "tel:+18888316810",
+    "gtm_id": "GTM-XXXXXXX",
+    "fb_pixel_id": "123456789012345"
   },
   "demeter": {
     "name": "Demeter",
@@ -39,7 +43,9 @@
     "store_returns": "https://demo.29next.com/returns/",
     "store_shipping": "https://demo.29next.com/shipping/",
     "store_phone": "1 (888) 831-6810",
-    "store_phone_tel": "tel:+18888316810"
+    "store_phone_tel": "tel:+18888316810",
+    "gtm_id": "GTM-XXXXXXX",
+    "fb_pixel_id": "123456789012345"
   },
   "limos": {
     "name": "Limos",
@@ -53,7 +59,9 @@
     "store_returns": "https://demo.29next.com/returns/",
     "store_shipping": "https://demo.29next.com/shipping/",
     "store_phone": "1 (888) 831-6810",
-    "store_phone_tel": "tel:+18888316810"
+    "store_phone_tel": "tel:+18888316810",
+    "gtm_id": "GTM-XXXXXXX",
+    "fb_pixel_id": "123456789012345"
   },
   "olympus": {
     "name": "Olympus",
@@ -83,7 +91,9 @@
     "store_returns": "https://demo.29next.com/returns/",
     "store_shipping": "https://demo.29next.com/shipping/",
     "store_phone": "1 (888) 831-6810",
-    "store_phone_tel": "tel:+18888316810"
+    "store_phone_tel": "tel:+18888316810",
+    "gtm_id": "GTM-XXXXXXX",
+    "fb_pixel_id": "123456789012345"
   },
   "olympus-mv-single-step": {
     "name": "Olympus MV Single Step",
@@ -97,6 +107,8 @@
     "store_returns": "https://demo.29next.com/returns/",
     "store_shipping": "https://demo.29next.com/shipping/",
     "store_phone": "1 (888) 831-6810",
-    "store_phone_tel": "tel:+18888316810"
+    "store_phone_tel": "tel:+18888316810",
+    "gtm_id": "GTM-XXXXXXX",
+    "fb_pixel_id": "123456789012345"
   }
 }
