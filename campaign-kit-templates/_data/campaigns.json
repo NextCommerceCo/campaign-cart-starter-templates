@@ -2,7 +2,7 @@
   "shop-three-step": {
     "name": "Shop Three Step",
     "description": "Multi-step shop checkout (information → shipping → billing)",
-    "sdk_version": "0.3.12",
+    "sdk_version": "0.4.0",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",
@@ -16,7 +16,7 @@
   "shop-single-step": {
     "name": "Shop Single Step",
     "description": "Single-step shop checkout",
-    "sdk_version": "0.3.12",
+    "sdk_version": "0.4.0",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",
@@ -30,7 +30,7 @@
   "demeter": {
     "name": "Demeter",
     "description": "Demeter checkout funnel",
-    "sdk_version": "0.3.12",
+    "sdk_version": "0.4.0",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",
@@ -44,7 +44,7 @@
   "limos": {
     "name": "Limos",
     "description": "Limos checkout funnel",
-    "sdk_version": "0.3.12",
+    "sdk_version": "0.4.0",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",
@@ -58,7 +58,7 @@
   "olympus": {
     "name": "Olympus",
     "description": "Olympus checkout funnel",
-    "sdk_version": "0.3.12",
+    "sdk_version": "0.4.0",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",
@@ -72,7 +72,7 @@
   "olympus-mv-two-step": {
     "name": "Olympus MV Two Step",
     "description": "Olympus multi-variant two-step checkout (select → checkout)",
-    "sdk_version": "0.3.12",
+    "sdk_version": "0.4.0",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",
@@ -86,7 +86,7 @@
   "olympus-mv-single-step": {
     "name": "Olympus MV Single Step",
     "description": "Olympus multi-variant single-step checkout",
-    "sdk_version": "0.3.12",
+    "sdk_version": "0.4.0",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",
