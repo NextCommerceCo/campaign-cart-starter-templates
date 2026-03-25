@@ -31,6 +31,182 @@ Full reference: [`docs/selector-attribute-cheatsheet.md`](selector-attribute-che
 
 ---
 
+## Selector Approaches — Comparison
+
+Three patterns exist for quantity-based selectors. Choose based on pricing architecture:
+
+| Approach | Container | Card | Price slots | Coupon-aware? | Offer-aware? | Auto voucher? |
+|----------|-----------|------|-------------|:-------------:|:------------:|:-------------:|
+| Multi-package | `data-next-package-selector` | `data-next-selector-card` + `data-next-package-id` (unique per card) | `data-next-display="package.*"` | Totals only (`finalPriceTotal`) | No | No |
+| Single package + quantity | `data-next-package-selector` | `data-next-selector-card` + `data-next-package-id` (same) + `data-next-quantity` | `data-next-package-price="..."` | Yes | Yes | No |
+| Bundle selector | `data-next-bundle-selector` | `data-next-bundle-card` + `data-next-bundle-items='[...]'` | `data-next-bundle-price="..."` | Yes | Yes | Yes (`data-next-bundle-vouchers`) |
+
+### When to use each
+
+- **Multi-package** — prices are baked into each package in the backend; no offer tiers; simple setup
+- **Single package + quantity** — one product, quantity drives tiered offer discounts from backend
+- **Bundle selector** — most powerful; supports mixed-package bundles, per-tier automatic coupon codes, and backend-calculated pricing. Use when you need automatic coupon lifecycle management per tier (e.g. buy 3 = `SAVE15` auto-applied)
+
+> **Note:** Bundle selector `data-next-bundle-vouchers` manages the coupon lifecycle automatically — do NOT also manage these codes via `CouponEnhancer`.
+
+---
+
+## Bundle Selector (0.4.0)
+
+Docs: [Bundle Set Sale guide](https://developers.nextcommerce.com/docs/campaigns/guides/bundle-set-sale)
+
+### Key attributes
+
+| Attribute | Where | Purpose |
+|-----------|-------|---------|
+| `data-next-bundle-selector` | Container | Enables bundle selector |
+| `data-next-bundle-slot-template-id` | Container | Template ID for per-unit slot rendering |
+| `data-next-bundle-card` | Card | Marks a bundle option card |
+| `data-next-bundle-id` | Card | Unique ID for this bundle (e.g. `"drone-3x"`) |
+| `data-next-bundle-items` | Card | JSON array: `[{"packageId": 2, "quantity": 3}]` |
+| `data-next-bundle-vouchers` | Card | Comma-separated coupon codes for this tier |
+| `data-next-selected="true"` | Card | Pre-selects on load |
+| `data-next-bundle-price` | Display | Total price |
+| `data-next-bundle-price="compare"` | Display | Compare/retail total |
+| `data-next-bundle-price="savings"` | Display | Savings amount |
+| `data-next-bundle-price="savingsPercentage"` | Display | Savings % |
+| `data-next-bundle-slots` | Display | Renders slot rows from template |
+
+### Bundle items JSON
+
+```json
+[{"packageId": 2, "quantity": 3}]
+```
+
+Multi-product bundle:
+```json
+[{"packageId": 2, "quantity": 3}, {"packageId": 5, "quantity": 1, "noSlot": true}]
+```
+
+- `noSlot: true` — adds package silently (e.g. free gift) without rendering a slot row
+- `configurable: true` — expands quantity-2+ items into individual selectable variant slots
+
+### Slot template tokens
+
+```html
+<template id="bundle-unit-price-tpl">
+  <div class="os-card__price os--compare os-style">{item.originalUnitPrice}</div>
+  <div class="os-card__price os--current">{item.unitPrice}/ea</div>
+</template>
+```
+
+### Full example (3x / 2x / 1x, same package ID)
+
+```html
+<template id="bundle-unit-price-tpl">
+  <div class="os-card__price os--compare os-style">{item.originalUnitPrice}</div>
+  <div class="os-card__price os--current">{item.unitPrice}/ea</div>
+</template>
+
+<div
+  data-next-bundle-selector
+  data-next-selection-mode="swap"
+  data-next-bundle-slot-template-id="bundle-unit-price-tpl"
+  class="os-option"
+>
+  <div class="os-cards__vertical os--gap-xl">
+
+    <!-- 3x -->
+    <div
+      role="button"
+      data-next-bundle-card
+      data-next-bundle-id="drone-3x"
+      data-next-bundle-items='[{"packageId":2,"quantity":3}]'
+      data-next-bundle-vouchers="SAVE15"
+      data-next-selected="true"
+      class="os-card next-selected"
+    >
+      <div class="os-card__title-wrapper">
+        <div class="os-card__title">3x Package</div>
+        <div class="os-card__title-badge pb--bestseller">
+          SAVE <span data-next-bundle-price="savingsPercentage">-</span>
+        </div>
+      </div>
+      <div class="os-card__subtitle-text">
+        Save <span data-next-bundle-price="savings">$0.00</span>
+      </div>
+      <div class="os-card__price-container">
+        <div data-next-bundle-slots></div>
+      </div>
+      <div class="os-card__total-container">
+        <div class="os-card__total-compare" data-next-bundle-price="compare">-</div>
+        <div class="os-card__total-current" data-next-bundle-price>-</div>
+      </div>
+    </div>
+
+    <!-- 2x / 1x follow same pattern with different bundle-id, items, vouchers -->
+
+  </div>
+</div>
+```
+
+---
+
+## Package Selector (0.4.0) — Multi-package approach
+
+Full example (distinct package IDs per card):
+
+```html
+<div
+  data-next-selector-id="drone-packages"
+  data-next-package-selector
+  data-next-selection-mode="swap"
+  data-next-include-shipping="true"
+  class="os-option"
+>
+  <div class="os-cards__vertical os--gap-xl">
+
+    <!-- 3x — package-id="4" -->
+    <div
+      data-next-shipping-id="1"
+      role="button"
+      data-next-selector-card
+      data-next-package-id="4"
+      data-next-quantity="1"
+      data-next-selected="true"
+      data-next-await=""
+      class="os-card next-selected"
+    >
+      <div class="os-card__title-wrapper">
+        <div class="os-card__title">3x <span data-next-display="package.name">-</span></div>
+        <div data-next-show="package.hasSavings" class="os-card__title-badge pb--bestseller">
+          SAVE <span data-next-display="package.savingsPercentage">-</span>
+        </div>
+      </div>
+      <div data-next-show="package.hasSavings" class="os-card__subtitle-text">
+        Save <span data-next-display="package.savingsAmount">$0.00</span>
+        <span data-next-show="shipping.isFree"> + Free Shipping</span>
+      </div>
+      <div class="os-card__price-container">
+        <div data-next-show="package.hasRetailPrice" class="os-card__price os--compare os-style">
+          <span data-next-display="package.unitRetailPrice">-</span>
+        </div>
+        <div class="os-card__price os--current">
+          <span data-next-display="package.unitPrice">-</span>/ea
+        </div>
+      </div>
+      <div class="os-card__total-container">
+        <div data-next-show="package.hasRetailPrice" class="os-card__total-compare"
+             data-next-display="package.compareTotal">-</div>
+        <div data-next-display="package.finalPriceTotal" class="os-card__total-current">-</div>
+      </div>
+    </div>
+
+    <!-- 2x / 1x follow same pattern with package-id="3" / "2" -->
+
+  </div>
+</div>
+```
+
+**Known limitation:** `savingsAmount`/`savingsPercentage` are static (retail-vs-base only, not coupon-aware). `data-next-package-price="compare"/"savings"` slots return per-unit retail instead of package total for multi-package setups. Use bundle selector if full coupon reactivity across all price slots is required.
+
+---
+
 ## Package Selector Changes (applies to all selector-based checkouts)
 
 ### Selector container + card attributes
@@ -123,9 +299,38 @@ Full reference: [`docs/selector-attribute-cheatsheet.md`](selector-attribute-che
 
 ---
 
-## Open Issues
+## Known SDK Issues (reported to engineering, v0.4.x)
 
-- `olympus/checkout.html` — multi-package selector active; test single-package selector commented out in file for reference
-- Multi-package limitation: `savingsAmount`/`savingsPercentage` are static (retail-vs-base only); coupons reflect only in `finalPriceTotal`. No template-level fix — architectural limitation of multi-package approach.
-- `data-next-package-price="compare"` broken for multi-package: API returns per-unit retail price instead of package retail total (quantity is always 1 per package). `savings`/`savingsPercentage` slots are wrong as a result.
-- Remaining QA needed on olympus checkout before marking complete
+### 1. `package.*` display attributes not offer/coupon-aware
+`data-next-display="package.*"` values render correctly but **do not update** when a Campaigns app offer or coupon is applied. Previously these reflected active pricing. In v0.4.x, `data-next-package-price` slots are the only fields that update with backend offer pricing, but there is no full equivalent for all `package.*` display combinations (e.g. no offer-aware per-unit display).
+
+**Expected:** `package.*` display attributes should reflect active campaign offer/coupon pricing, or equivalent offer-aware fields should exist for full parity.
+
+### 2. Coupon not persisted across page refresh
+After applying a coupon, refreshing the page clears it. Previously coupons were session-persistent once applied. Unclear if intentional in v0.4.x or a regression — flagged to engineering.
+
+### 3. `data-next-shipping-id` selection not reflected in summary totals
+When using `data-next-shipping-id` per selector card in swap mode (with valid `shipping_methods[].ref_id` values), cart state updates correctly on card select (`window.nextDebug?.stores?.cart?.getState()?.shippingMethod` shows expected ID), but the summary shipping line and grand total do not consistently reflect the selected shipping method. Totals appear to recalculate using a default/fixed shipping method downstream.
+
+**Expected:** Summary shipping and total should follow the selected `data-next-shipping-id` without custom JS.
+
+### 4. `data-next-package-price="compare/savings/savingsPercentage"` wrong for multi-unit package SKUs
+In PackageSelector swap mode, `compare`, `savings`, and `savingsPercentage` slots can display incorrect values for multi-unit packages. The API calculates `compareTotal = price_retail × quantity(1)` — returning per-unit retail instead of the package total retail.
+
+**Example:** 3-pack where retail should be `$119.97` shows compare-at `$39.99`, causing downstream `savings` and `savingsPercentage` to also be wrong.
+
+**Expected:** `compare` slot should calculate using the package quantity, not always quantity 1.
+
+### 5. Bundle selector slot values are unformatted (raw numbers)
+`{item.originalUnitPrice}` and `{item.unitPrice}` in bundle slot templates output raw numeric values — not currency-formatted. Extra formatting logic or JS would be needed for production output.
+
+### 6. Bundle selector pricing workflow trade-off
+The bundle selector approach (same `packageId`, different quantities per card) works structurally, but changes the merchandising workflow in the Campaigns UI: classic package selectors allow direct tier price control per package, whereas the bundle/offer flow is driven by percent discount + rounding behavior. May still be the better long-term direction, but operators would need to adjust how they configure pricing.
+
+---
+
+## Open Issues (templates)
+
+- `olympus/checkout.html` — multi-package selector active; QA ongoing
+- Multi-package limitation: `savingsAmount`/`savingsPercentage` are static (retail-vs-base only); coupons reflect only in `finalPriceTotal`. `data-next-package-price="compare"/"savings"` slots return per-unit retail (not package total) for multi-package setups — confirmed SDK issue #4 above.
+- **Bundle selector may be the right long-term solution for olympus** — `data-next-bundle-price` slots are fully coupon+offer-aware, and per-tier voucher codes (`data-next-bundle-vouchers`) handle automatic coupon lifecycle. Blocked by SDK issue #5 (unformatted slot values) for production use. Evaluate once engineering resolves.

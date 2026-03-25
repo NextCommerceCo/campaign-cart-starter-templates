@@ -35,6 +35,14 @@ Use on selector cards when you want backend-calculated offer/voucher pricing.
 - `data-next-package-price="savings"`
 - `data-next-package-price="savingsPercentage"`
 
+### 4) Bundle selector pricing (`data-next-bundle-price`)
+Use inside `data-next-bundle-card` elements. Fully coupon + offer aware. Supports automatic per-tier voucher management via `data-next-bundle-vouchers`.
+
+- `data-next-bundle-price` (default total)
+- `data-next-bundle-price="compare"`
+- `data-next-bundle-price="savings"`
+- `data-next-bundle-price="savingsPercentage"`
+
 ## Decision Matrix
 
 | Goal | Recommended field |
@@ -43,6 +51,7 @@ Use on selector cards when you want backend-calculated offer/voucher pricing.
 | Compare-at and base savings | `package.compareTotal` + `package.savingsAmount` |
 | Coupon-adjusted final price | `package.finalPriceTotal` or `selection.finalPrice` |
 | Backend offer/voucher tier card pricing | `data-next-package-price="..."` |
+| Bundle selector pricing (fully reactive, auto voucher) | `data-next-bundle-price="..."` |
 
 ## Compare Tables
 
@@ -99,6 +108,15 @@ Use on selector cards when you want backend-calculated offer/voucher pricing.
 
 \* `selection.discountAmount` naming differs from coupon-focused fields like `appliedDiscountAmount`.
 
+### Bundle Selector Card Slots (`data-next-bundle-price`)
+
+| Attribute | Affected by coupons/vouchers | Affected by backend offers | Notes |
+|-----------|:----------------------------:|:--------------------------:|-------|
+| `data-next-bundle-price` | Yes | Yes | Default total |
+| `data-next-bundle-price="compare"` | Yes | Yes | Compare/retail total |
+| `data-next-bundle-price="savings"` | Yes | Yes | Savings amount |
+| `data-next-bundle-price="savingsPercentage"` | Yes | Yes | Savings % |
+
 ### Selector Card Backend Slots (`data-next-package-price`)
 
 | Attribute | Affected by coupons/vouchers | Affected by backend campaign offers | Notes |
@@ -149,5 +167,29 @@ Use on selector cards when you want backend-calculated offer/voucher pricing.
     <div>Savings: <span data-next-package-price="savings"></span></div>
     <div>Save %: <span data-next-package-price="savingsPercentage"></span></div>
   </div>
+</div>
+```
+
+### D) Bundle selector pricing (fully reactive — coupons + offers + auto vouchers)
+
+```html
+<div data-next-bundle-selector data-next-bundle-slot-template-id="unit-price-tpl">
+
+  <template id="unit-price-tpl">
+    <div class="os-card__price os--compare">{item.originalUnitPrice}</div>
+    <div class="os-card__price os--current">{item.unitPrice}/ea</div>
+  </template>
+
+  <div data-next-bundle-card data-next-bundle-id="buy3"
+       data-next-bundle-items='[{"packageId":2,"quantity":3}]'
+       data-next-bundle-vouchers="SAVE15"
+       data-next-selected="true">
+    <div>SAVE <span data-next-bundle-price="savingsPercentage">-</span></div>
+    <div>Save <span data-next-bundle-price="savings">$0.00</span></div>
+    <div data-next-bundle-slots></div>
+    <div>Compare: <span data-next-bundle-price="compare">-</span></div>
+    <div>Total: <span data-next-bundle-price>-</span></div>
+  </div>
+
 </div>
 ```
