@@ -429,7 +429,10 @@ swiper_thumbs:
                         {% campaign_include 'bump-check01.html' %}
                         <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;background:#fef3c7;color:#92400e;padding:2px 8px;display:inline-block;border-radius:3px;margin:8px 0 4px 0">Bump v2 — full SDK token mapping (toggle-price)</div>
                         {% campaign_include 'bump-check01-v2.html' %}
+                        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;background:#e2e8f0;color:#475569;padding:2px 8px;display:inline-block;border-radius:3px;margin:8px 0 4px 0">Switch v1 — data-next-bump / data-next-toggle (0.3.x)</div>
                         {% campaign_include 'bump-switch01.html' %}
+                        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;background:#fef3c7;color:#92400e;padding:2px 8px;display:inline-block;border-radius:3px;margin:8px 0 4px 0">Switch v2 — full SDK token mapping (toggle-price)</div>
+                        {% campaign_include 'bump-switch01-v2.html' %}
                             <div class="form-section form-section--last">
                               <div class="form-section__header">
                                 <h1 class="form-section__title">4. Payment Method</h1>
@@ -457,7 +460,7 @@ swiper_thumbs:
                                  - Lines: data-summary-lines + nested <template> using {line.*} tokens
                                    (API SummaryLine fields — avoids client-side math bugs like the
                                    old {item.lineCompare} qty-scaling issue).
-                                   {line.originalPackagePrice} = before-discount line total (strikethrough)
+                                   {line.priceRetailTotal} = before-discount line total (strikethrough)
                                    {line.total} = final line total
                                    {line.hasSavings} = class token — SDK injects "" or "hidden"
                                  - Totals: {subtotal}, {total}, {shipping}, {savings} directly in
