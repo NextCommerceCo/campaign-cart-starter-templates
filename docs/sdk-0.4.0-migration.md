@@ -327,10 +327,21 @@ In PackageSelector swap mode, `compare`, `savings`, and `savingsPercentage` slot
 ### 6. Bundle selector pricing workflow trade-off
 The bundle selector approach (same `packageId`, different quantities per card) works structurally, but changes the merchandising workflow in the Campaigns UI: classic package selectors allow direct tier price control per package, whereas the bundle/offer flow is driven by percent discount + rounding behavior. May still be the better long-term direction, but operators would need to adjust how they configure pricing.
 
+### 7. Prepurchase bump pricing regression (`data-next-toggle-price` vs `data-next-display`)
+**Confirmed regression from 0.3.x behavior.**
+
+In 0.3.x, bumps used `data-next-bump=""` + `data-next-toggle="toggle"` and rendered prices with `data-next-display="package.price_total"` / `package.price_retail_total` — stable, package-level totals that worked correctly.
+
+In the new 0.4.x pattern (`data-next-package-toggle` + `data-next-toggle-card` + `data-next-toggle-price`), pricing is computed through toggle preview logic with manual scaling, and produces inconsistent compare/sale/savings values — especially when the bump is synced to main bundle quantity via `data-next-package-sync="2,3,4"`.
+
+**Current workaround:** Templates are staying on the old 0.3.x bump pattern (`data-next-bump=""` + `data-next-toggle="toggle"` + `data-next-display="package.price_total"`) until this is resolved. This pattern still renders correctly in 0.4.x.
+
+**Expected fix:** Align `data-next-toggle-price` outputs to the same package-total basis as `price_total` / `price_retail_total`, or provide a compatibility mode for the old bump behavior.
+
 ---
 
 ## Open Issues (templates)
 
-- `olympus/checkout.html` — multi-package selector active; QA ongoing
+- `olympus/checkout.html` — multi-package selector active; QA ongoing; bumps holding on old 0.3.x pattern (SDK issue #7)
 - Multi-package limitation: `savingsAmount`/`savingsPercentage` are static (retail-vs-base only); coupons reflect only in `finalPriceTotal`. `data-next-package-price="compare"/"savings"` slots return per-unit retail (not package total) for multi-package setups — confirmed SDK issue #4 above.
-- **Bundle selector may be the right long-term solution for olympus** — `data-next-bundle-price` slots are fully coupon+offer-aware, and per-tier voucher codes (`data-next-bundle-vouchers`) handle automatic coupon lifecycle. Blocked by SDK issue #5 (unformatted slot values) for production use. Evaluate once engineering resolves.
+- **Bundle selector may be the right long-term solution for olympus** — `data-next-bundle-price` slots are fully coupon+offer-aware, and per-tier voucher codes (`data-next-bundle-vouchers`) handle automatic coupon lifecycle. Blocked by SDK issues #5 (unformatted slot values) and #7 (bump regression) for production use. Evaluate once engineering resolves.

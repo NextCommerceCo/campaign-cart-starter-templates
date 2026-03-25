@@ -426,6 +426,7 @@ swiper_thumbs:
                               </div>
                             </div>
                         {% campaign_include 'bump-check01.html' %}
+                        {% campaign_include 'bump-check01-v2.html' %}
                         {% campaign_include 'bump-switch01.html' %}
                             <div class="form-section form-section--last">
                               <div class="form-section__header">
@@ -436,6 +437,138 @@ swiper_thumbs:
                               {% campaign_include 'express-checkout.html' show_title=false %}
                               {% campaign_include 'payment-methods.html' show_paypal=true show_klarna=true show_google_pay=true show_apple_pay=true %}
                             </div>
+                            <!-- ============================================================
+                                 SUMMARY V2 — data-next-cart-summary approach (0.4.0 guide)
+                                 ============================================================
+                                 HOW THIS DIFFERS FROM THE CURRENT SUMMARY BELOW:
+
+                                 CURRENT (v1):
+                                 - data-next-cart-items + data-item-template-id + {item.*} tokens
+                                   render the line item list manually.
+                                 - Each total (subtotal, shipping, grand total) uses a separate
+                                   data-next-display="cart.*" attribute on its own element.
+                                 - Conditional visibility uses data-next-show / data-next-hide.
+                                 - Coupon tags are hardcoded HTML.
+
+                                 NEW (v2 / data-next-cart-summary):
+                                 - data-summary-lines + a single <template> renders ALL line items.
+                                   Tokens switch to {line.*} namespace.
+                                 - Totals are rendered from a single <template> inside the
+                                   data-next-cart-summary container using {subtotal}, {total},
+                                   {shipping}, {savings} tokens — no per-element display attrs.
+                                 - Conditional sections (savings, free shipping) use CSS state
+                                   classes that the SDK applies to the container:
+                                   .next-has-savings, .next-free-shipping, .next-cart-has-items etc.
+                                 - Discount lists use data-summary-voucher-discounts /
+                                   data-summary-offer-discounts with {discount.name} / {discount.amount}.
+                                 ============================================================ -->
+                            <div class="form-section form-section--last">
+                              <div class="cart-box cart-box--card">
+                                <div class="summary-wrapper" data-next-cart-summary>
+
+                                  <!-- LINE ITEMS — data-summary-lines replaces data-next-cart-items + data-item-template-id -->
+                                  <div class="order-summary">
+                                    <div class="order-summary__content">
+                                      <div class="cart-items">
+                                        <div class="cart-summary__line pb--header">
+                                          <div class="cart-summary__line-item"><div>Item</div></div>
+                                          <div class="cart-summary__line-item"><div>Amount</div></div>
+                                        </div>
+                                        <!-- data-summary-lines: SDK renders one copy of the template per cart line -->
+                                        <div data-summary-lines class="cart-items__list">
+                                          <template>
+                                            <div data-cart-item-id="{line.id}" class="cart-item">
+                                              <div class="cart-item__wrapper">
+                                                <div class="cart-item__details cc-left-0">
+                                                  <div class="cart-item__content">
+                                                    <div class="cart-item__description">
+                                                      <div class="cart-item__header">
+                                                        <!-- {line.name} replaces {item.name} -->
+                                                        <div class="cart-item__title os-bold">{line.name}</div>
+                                                      </div>
+                                                    </div>
+                                                    <div class="cart-item__pricing">
+                                                      <!-- {line.priceRetail} = retail unit price; use {line.originalPackagePrice} for retail line total -->
+                                                      <div class="cart-price diagonal-strike">{line.originalPackagePrice}</div>
+                                                      <!-- {line.total} replaces {item.lineTotal} -->
+                                                      <div class="checkout__line-item__final-price">{line.total}</div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </template>
+                                        </div>
+                                      </div>
+
+                                      <!-- TOTALS — single <template> inside data-next-cart-summary; tokens are flat {subtotal} etc. not cart.* -->
+                                      <!-- SDK applies state classes to the data-next-cart-summary container:
+                                           .next-has-savings, .next-free-shipping, .next-cart-has-items, .next-cart-empty etc.
+                                           Use CSS to show/hide sections instead of data-next-show/hide -->
+                                      <template>
+                                        <div class="order-totals">
+                                          <div class="order-totals__line">
+                                            <div class="order-totals__label">Subtotal</div>
+                                            <div class="order-totals__value">{subtotal}</div>
+                                          </div>
+                                          <!-- savings section — shown via .next-has-savings CSS class on container -->
+                                          <div class="order-totals__section order-totals__section--inset">
+                                            <div class="order-totals__line">
+                                              <div class="order-totals__label-group">
+                                                <div class="order-totals__label ts-lg tw-600">Today you saved</div>
+                                              </div>
+                                              <div class="accordion__right">
+                                                <div class="order-totals__label">Discount:</div>
+                                                <!-- {savings} = retail savings + applied discounts/coupons -->
+                                                <div class="order-totals__value ts-lg tw-600">{savings}</div>
+                                              </div>
+                                            </div>
+                                            <!-- voucher coupon tags — dynamic, SDK renders one per applied voucher -->
+                                            <div class="coupon-tags" data-summary-voucher-discounts>
+                                              <template>
+                                                <div class="coupon-tag__summary">
+                                                  <div class="coupon-tag__name">{discount.name}</div>
+                                                  <div class="coupon-tag__amount">{discount.amount}</div>
+                                                </div>
+                                              </template>
+                                            </div>
+                                          </div>
+                                          <div class="order-totals__section">
+                                            <div class="order-totals__line">
+                                              <div class="accordion__right">
+                                                <div class="order-totals__label">Shipping</div>
+                                              </div>
+                                              <div class="accordion__right">
+                                                <!-- {shipping} renders "Free" automatically when free -->
+                                                <div class="order-totals__value">{shipping}</div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div class="order-totals__section cc-total">
+                                            <div class="order-totals__line order-totals__line--total">
+                                              <div class="order-totals__label order-totals__label--total">Grand Total:</div>
+                                              <div class="order-totals__value-group">
+                                                <!-- no separate currency display — {total} includes currency formatting -->
+                                                <div class="order-totals__value order-totals__value--total">{total}</div>
+                                              </div>
+                                            </div>
+                                            <div class="order-totals__savings">
+                                              <div class="order-totals__savings-content">
+                                                <div class="order-totals__savings-icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 18 18" focusable="false" aria-hidden="true" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m10.802 15.686 5.367-5.368a.15.15 0 0 0 .046-.109V4.144m-2.998-.95h-5.67a.16.16 0 0 0-.11.046L1.779 8.897a.154.154 0 0 0 0 .219l5.594 5.593c.06.06.158.06.218 0l5.658-5.657a.15.15 0 0 0 .045-.11v-5.67a.077.077 0 0 0-.077-.077Zm-3.06 3.749a.643.643 0 1 1-1.286 0 .643.643 0 0 1 1.286 0m-.648-.005h.01v.01h-.01z"></path></svg></div>
+                                                <div class="order-totals__savings-text">TODAY YOU SAVED <span>{savings}</span></div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </template>
+
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- END SUMMARY V2 -->
+
                             <div class="form-section form-section--last">
                               <div class="cart-box cart-box--card">
                                 <div class="summary-wrapper">
@@ -465,10 +598,10 @@ swiper_thumbs:
                                                     <div class="cart-item__header">
                                                       <div class="cart-item__title os-bold">{item.name}</div>
                                                     </div>
-                                                    
+
                                                   </div>
                                                   <div class="cart-item__pricing">
-                                                    <div id="line_compare" pb-cart="line_item-compare_price" class="cart-price diagonal-strike">{item.lineCompare}</div>
+                                                    <div class="cart-price diagonal-strike">{item.comparePrice}</div>
                                                     <div class="checkout__line-item__final-price">{item.lineTotal}</div>
                                                   </div>
                                                 </div>

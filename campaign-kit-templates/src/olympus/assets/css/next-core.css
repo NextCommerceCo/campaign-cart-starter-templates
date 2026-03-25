@@ -11562,10 +11562,12 @@ figcaption {
 /* Loading skeleton: see next-core.css ([data-next-await]). */
 
 /* Option-selector checkmark (shop, limos, information) */
-[data-next-bump] [os-component="check"] {
+[data-next-bump] [os-component="check"],
+[data-next-toggle-card] [os-component="check"] {
   display: none;
 }
-[data-next-bump][class*="next-active"] [os-component="check"] {
+[data-next-bump][class*="next-active"] [os-component="check"],
+[data-next-toggle-card].next-in-cart [os-component="check"] {
   display: flex;
 }
 
@@ -12181,7 +12183,8 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   overflow: hidden;
 }
 
-[data-component="prepurchase-upsell"].next-active {
+[data-component="prepurchase-upsell"].next-active,
+[data-component="prepurchase-upsell"]:has(.next-in-cart) {
   background-color: var(--brand--color--surface);
   -webkit-user-select: none;
   user-select: none;
@@ -12205,7 +12208,9 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 }
 
 [data-component="prepurchase-upsell"][data-variant="check01"] .bump-card.next-active,
-[data-component="prepurchase-upsell"][data-variant="switch"] .bump-card.next-active {
+[data-component="prepurchase-upsell"][data-variant="switch"] .bump-card.next-active,
+[data-component="prepurchase-upsell"][data-variant="check01"] .bump-card.next-in-cart,
+[data-component="prepurchase-upsell"][data-variant="switch"] .bump-card.next-in-cart {
   background-color: var(--brand--color--surface);
   -webkit-user-select: none;
   user-select: none;
@@ -12357,7 +12362,8 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   display: flex;
 }
 
-[data-component="prepurchase-upsell"] .bump__header-left.next-active {
+[data-component="prepurchase-upsell"] .bump__header-left.next-active,
+[data-component="prepurchase-upsell"] .bump-card.next-in-cart .bump__header-left {
   background-color: var(--brand--color--primary-light);
 }
 
