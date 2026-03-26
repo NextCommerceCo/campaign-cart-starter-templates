@@ -340,6 +340,21 @@ In the new 0.4.x pattern (`data-next-package-toggle` + `data-next-toggle-card` +
 
 ---
 
+## Template Workaround: External Slot Layout (`olympus-mv-single-step2`)
+
+This template uses a single shared external “Select your color and size” block, but the SDK’s bundle selector wiring expects slot controls to live within each `[data-next-bundle-card]`. Slot/variant handlers and internal lookups are scoped to the card DOM, so rendering `data-next-bundle-slots` outside the card reliably breaks interactivity and dynamic bindings.
+
+To preserve both requirements (design layout + SDK behavior), we use a clone-stage approach:
+- Keep the real SDK `data-next-bundle-slots` inside each bundle card (hidden).
+- Render the external stage by cloning the selected card’s rendered slot nodes (so the design can be shared).
+- Bridge user interactions in the external stage back to the corresponding hidden source controls.
+- Explicitly mirror runtime state and dynamic text nodes in the clones (e.g. `data-next-bundle-price="savingsPercentage"` and `data-next-display="..."`) because cloned nodes do not receive live SDK bindings.
+- Avoid aggressive full re-renders on variant changes to prevent UI flicker/shift.
+
+This is why the template includes extra JS and why some cloned price/savings text must be manually synced after async updates.
+
+---
+
 ## Open Issues (templates)
 
 - `olympus/checkout.html` — multi-package selector active; QA ongoing; bumps holding on old 0.3.x pattern (SDK issue #7)
