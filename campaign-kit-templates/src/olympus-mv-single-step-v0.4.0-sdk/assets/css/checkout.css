@@ -96,15 +96,9 @@
   display: none;
 }
 
-[data-next-bundle-selector] .price-original {
-  font-size: 0.8125rem;
-  color: #888;
-  text-decoration: line-through;
-}
-
-[data-next-bundle-selector] .price-current {
+/* Compare line uses next-core .os-card__price.diagonal-strike */
+[data-next-bundle-selector] .card-pricing__line .os-card__price.os--current {
   font-size: 1rem;
-  font-weight: 700;
 }
 
 [data-next-bundle-selector] .price-savings {
@@ -203,22 +197,11 @@
   min-width: 4.5rem;
 }
 
-.mv-slot-price-original {
-  font-size: 0.8125rem;
-  color: #888;
-  text-decoration: line-through;
-}
-
-.mv-slot-price-original.hide,
-.mv-slot-price-original.hidden,
-.mv-slot-price-original.next-hide {
+/* Compare price uses next-core .os-card__price.diagonal-strike (not line-through CSS here) */
+.mv-slot-row__pricing .os-card__price.diagonal-strike.hide,
+.mv-slot-row__pricing .os-card__price.diagonal-strike.hidden,
+.mv-slot-row__pricing .os-card__price.diagonal-strike.next-hide {
   display: none;
-}
-
-.mv-slot-price {
-  font-size: var(--font-size--sm, 0.925rem);
-  font-weight: 700;
-  color: #000;
 }
 
 /* Variant option buttons (data-next-variant-option-template-id) */

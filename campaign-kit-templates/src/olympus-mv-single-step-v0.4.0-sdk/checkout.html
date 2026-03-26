@@ -216,8 +216,10 @@ swiper_thumbs:
                                   <div class="mv-slot-row__selectors" data-next-variant-selectors></div>
                                 </div>
                                 <div class="mv-slot-row__pricing">
-                                  <span class="mv-slot-price-original {item.hasDiscount}">{item.originalUnitPrice}/ea</span>
-                                  <span class="mv-slot-price">{item.unitPrice}/ea</span>
+                                  <div class="os-card__price-container os--stacked">
+                                    <div class="os-card__price diagonal-strike {item.hasDiscount}">{item.originalUnitPrice}</div>
+                                    <div class="os-card__price os--current">{item.unitPrice}/ea</div>
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -281,8 +283,8 @@ swiper_thumbs:
                                         :empty rules in CSS hide these elements when the SDK leaves them blank.
                                       -->
                                       <div class="card-pricing__line">
-                                        <p class="price-original" data-next-bundle-price="compare"></p>
-                                        <p class="price-current" data-next-bundle-price></p>
+                                        <p class="os-card__price diagonal-strike" data-next-bundle-price="compare"></p>
+                                        <p class="os-card__price os--current" data-next-bundle-price></p>
                                       </div>
                                       <p class="price-savings">Save <span data-next-bundle-price="savings"></span></p>
                                     </div>
@@ -338,8 +340,8 @@ swiper_thumbs:
                                         :empty rules in CSS hide these elements when the SDK leaves them blank.
                                       -->
                                       <div class="card-pricing__line">
-                                        <p class="price-original" data-next-bundle-price="compare"></p>
-                                        <p class="price-current" data-next-bundle-price></p>
+                                        <p class="os-card__price diagonal-strike" data-next-bundle-price="compare"></p>
+                                        <p class="os-card__price os--current" data-next-bundle-price></p>
                                       </div>
                                       <p class="price-savings">Save <span data-next-bundle-price="savings"></span></p>
                                     </div>
@@ -395,8 +397,8 @@ swiper_thumbs:
                                         :empty rules in CSS hide these elements when the SDK leaves them blank.
                                       -->
                                       <div class="card-pricing__line">
-                                        <p class="price-original" data-next-bundle-price="compare"></p>
-                                        <p class="price-current" data-next-bundle-price></p>
+                                        <p class="os-card__price diagonal-strike" data-next-bundle-price="compare"></p>
+                                        <p class="os-card__price os--current" data-next-bundle-price></p>
                                       </div>
                                       <p class="price-savings">Save <span data-next-bundle-price="savings"></span></p>
                                     </div>
