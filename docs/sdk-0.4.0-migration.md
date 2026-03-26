@@ -355,6 +355,16 @@ This is why the template includes extra JS and why some cloned price/savings tex
 
 ---
 
+## Cart Summary v2 Notes (`data-next-cart-summary`)
+
+When using the Summary v2 enhancer:
+- Structure: `<div data-next-cart-summary><template> ... </template></div>`
+- The SDK computes totals asynchronously and applies *state classes* to the `data-next-cart-summary` root (for example, `next-has-savings`, `next-no-savings`, `next-cart-has-items`).
+- Inside the `<template>`, prefer **static CSS hook classes** (e.g. `next-has-savings` on the savings row) rather than relying on `data-next-show="cart.hasSavings"` / `data-next-show` conditions inside the injected template. Template-scoped `data-next-show` can evaluate before totals state is ready, leaving sections hidden after render.
+- For empty-cart gating, use `data-next-hide="cart.isEmpty"` on the `data-next-cart-summary` root (or hide via CSS hooks).
+
+---
+
 ## Open Issues (templates)
 
 - `olympus/checkout.html` — multi-package selector active; QA ongoing; bumps holding on old 0.3.x pattern (SDK issue #7)
