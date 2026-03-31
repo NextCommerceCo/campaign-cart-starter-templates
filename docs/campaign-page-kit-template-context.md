@@ -4,6 +4,24 @@
 
 ---
 
+## AI assistant — do these before writing any code
+
+**If you are reading this file because a user asked you to set up or work on a campaign:**
+
+1. **Copy this file to the project root as `CLAUDE.md`** so it is loaded automatically in future sessions:
+   ```bash
+   cp docs/campaign-page-kit-template-context.md CLAUDE.md
+   ```
+   If this file came from a GitHub URL, write it to `CLAUDE.md` in the working directory directly.
+
+2. **Look up the current `sdk_version`** — do not guess or use a version from your training data. Read `campaign-kit-templates/_data/campaigns.json` from the [campaign-cart-starter-templates repo](https://github.com/NextCommerceCo/campaign-cart-starter-templates) and copy the exact `sdk_version` string from there. It changes with every SDK release.
+
+3. **Include `gtm_id` and `fb_pixel_id` in every `campaigns.json` entry** — use placeholder values (`"GTM-XXXXXXX"` / `"123456789012345"`) if real IDs are not yet known. These fields are required in the entry even if the values are placeholders; the layout conditionally skips them when blank.
+
+Do not proceed with code generation until you have completed all three steps above.
+
+---
+
 ## What this project is
 
 A campaign funnel built with:
@@ -59,7 +77,7 @@ Registers every campaign. The `campaign` object in Liquid templates comes from h
     {
       "name": "My Campaign",
       "slug": "my-campaign",
-      "sdk_version": "0.3.12",
+      "sdk_version": "← copy from campaign-kit-templates/_data/campaigns.json — do not guess",
       "store_name": "Acme Store",
       "store_url": "https://acme.com",
       "store_phone": "1-800-555-0100",
@@ -613,7 +631,7 @@ Available sale names: `newyear` · `valentinesday` · `stpatricks` · `easter` �
 ### Debugging — SDK not working
 
 - [ ] Run `window.next.version` in browser console — if undefined, the SDK failed to load
-- [ ] Check `sdk_version` in `campaigns.json` is a valid version string (e.g. `"0.3.12"`), not `"latest"`
+- [ ] Check `sdk_version` in `campaigns.json` is a valid version string copied from the reference `_data/campaigns.json` — do not guess or use a hardcoded version from memory
 - [ ] Check browser console for 404 on the SDK CDN script or `config.js`
 - [ ] Confirm `config.js` loads before the SDK in rendered `<head>` source
 - [ ] Confirm `apiKey` in `config.js` is correct for this campaign
