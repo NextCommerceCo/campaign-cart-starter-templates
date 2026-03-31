@@ -119,6 +119,24 @@ See [docs/qa-guide.md](docs/qa-guide.md) for template-specific guidance — whic
 
 ---
 
+## Claude Code skill (optional)
+
+If you use [Claude Code](https://claude.ai/claude-code), you can install a `/new-cpk-campaign` skill that scaffolds new campaigns automatically — copies the template, fetches the correct `sdk_version`, merges the `campaigns.json` entry, and installs `CLAUDE.md` in one command.
+
+**Install:**
+
+```bash
+mkdir -p ~/.claude/skills/new-cpk-campaign
+curl -sL "https://raw.githubusercontent.com/NextCommerceCo/campaign-cart-starter-templates/HEAD/docs/claude-skill-new-campaign.md" \
+  -o ~/.claude/skills/new-cpk-campaign/SKILL.md
+```
+
+Then in any Claude Code session: `/new-cpk-campaign`
+
+The skill source is at [docs/claude-skill-new-campaign.md](docs/claude-skill-new-campaign.md).
+
+---
+
 ## AI development rules
 
 Copy [docs/campaign-page-kit-template-context.md](docs/campaign-page-kit-template-context.md) into your project root as `CLAUDE.md` before using an AI assistant to build or modify templates.
