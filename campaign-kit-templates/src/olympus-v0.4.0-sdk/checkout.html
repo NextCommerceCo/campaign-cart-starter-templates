@@ -207,39 +207,99 @@ swiper_thumbs:
                           <div class="form-sections">
                             <div class="form-section grid-row-gap2 form-section--first">
                               <h2 class="form-section__title">Step 1: Pick Your Bundle Deal</h2>
-                              <div data-next-selector-id="drone-packages" data-next-package-selector data-next-selection-mode="swap" data-next-include-shipping="true" class="os-option">
+                              <!-- Bundle selector: use inline cards (not data-next-bundles auto-render) so data-next-display="package.*" is in the initial DOM — injected template nodes are not bound by ProductDisplayEnhancer. Auto-render: https://developers.nextcommerce.com/docs/campaigns/guides/bundle-set-sale#step-4-auto-render-mode -->
+                              {% comment %}
+                              Optional Step 4 auto-render: uncomment this block and remove the inline data-next-bundle-selector below. Use {bundle.*} / static img src for title+image — data-next-display="package.*" on injected nodes will not bind.
+                              <template id="drone-bundle-card-tpl">
+                                <div data-next-bundle-card data-next-bundle-id="{bundle.id}" role="button" class="os-card">
+                                  <div class="os-card__header-slot"></div>
+                                  <div class="os-card__wrapper">
+                                    <div class="os-card__content os--align-middle" data-next-package-id="1">
+                                      <div data-selected="true" class="radio-style-1">
+                                        <div class="radio-inner"></div>
+                                      </div>
+                                      <div class="os-card__image-slot hide-tablet"><img data-next-display="package.image" alt="" class="image"></div>
+                                      <div class="os-card__main-slot">
+                                        <div class="os-card__title-section">
+                                          <div class="os-card__title-wrapper">
+                                            <div data-next-display="package.name" class="os-card__title">Package Title</div>
+                                            <div data-next-bundle-display="hasSavings" class="os-card__title-badge pb--bestseller">
+                                              <div>SAVE <span data-next-bundle-display="savingsPercentage">-</span></div>
+                                            </div>
+                                          </div>
+                                          <div class="os-card__subtitle-wrapper">
+                                            <div data-next-bundle-display="hasSavings" class="os-card__subtitle-text">Save <span data-next-bundle-display="savings">-</span><span data-next-show="shipping.isFree"> + Free Shipping</span></div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="os-card__secondary-slot">
+                                        <div class="os-card__pricing">
+                                          <div class="os-card__price-container">
+                                            <div data-next-bundle-display="hasSavings" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>
+                                            <div class="os-card__price os--current"><span data-next-bundle-display="unitPrice">-</span>/ea</div>
+                                          </div>
+                                          <div class="os-card__total-container">
+                                            <div class="os-card__total-label">Total:</div>
+                                            <div data-next-bundle-display="hasSavings" class="os-card__total-compare"><span data-next-bundle-price="compare">-</span></div>
+                                            <div class="os-card__total-current {bundle.totalToneClass}"><span data-next-bundle-price="total">-</span></div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="os-card__bottom-slot hide"></div>
+                                  </div>
+                                  <div class="os-card__footer-slot"></div>
+                                  <div class="os-card__label-slot {bundle.labelSlotClass}">
+                                    <div class="os-card__label-2 os-card__label--middle-right {bundle.badgePillClass}">
+                                      <div class="card-icons"><svg width="100%" height="100%" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.49512 0.5L8.40542 4.37069L12.677 4.99139L9.58605 8.00431L10.3157 12.2586L6.49512 10.25L2.67451 12.2586L3.40418 8.00431L0.31325 4.99139L4.58482 4.37069L6.49512 0.5Z" fill="#FF9425"></path></svg></div>
+                                      <div class="os-card__label-text-2">{bundle.badgeText}</div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </template>
+                              <div
+                                data-next-bundle-selector
+                                data-next-bundle-selector-id="drone-packages"
+                                data-next-bundle-template-id="drone-bundle-card-tpl"
+                                data-next-bundles='[{"id":"drone-qty-1","labelSlotClass":"","totalToneClass":"","badgeText":"Most Popular","badgePillClass":"os-card__label--pill-primary","items":[{"packageId":1,"quantity":1}],"selected":true},{"id":"drone-qty-2","labelSlotClass":"","totalToneClass":"","badgeText":"Best Deal","badgePillClass":"os-card__label--pill-secondary","items":[{"packageId":1,"quantity":2}]},{"id":"drone-qty-3","labelSlotClass":"hide","totalToneClass":"os-dark","badgeText":"","badgePillClass":"","items":[{"packageId":1,"quantity":3}]}]'
+                                data-next-selection-mode="swap"
+                                data-next-include-shipping="true"
+                                class="os-option os-cards__vertical os--gap-xl"
+                              ></div>
+                              {% endcomment %}
+                              <div data-next-bundle-selector data-next-bundle-selector-id="drone-packages" data-next-selection-mode="swap" data-next-include-shipping="true" class="os-option">
                                 <div class="os-cards__vertical os--gap-xl">
-                                  <div data-next-shipping-id="1" role="button" data-next-selector-card data-next-package-id="4" data-next-quantity="1" data-next-selected="true" class="os-card next-selected">
+                                  <div data-next-bundle-card data-next-bundle-id="drone-qty-1" data-next-bundle-items='[{"packageId":1,"quantity":1}]' data-next-selected="true" role="button" class="os-card">
                                     <div class="os-card__header-slot"></div>
                                     <div class="os-card__wrapper">
-                                      <div class="os-card__content os--align-middle">
+                                      <div class="os-card__content os--align-middle" data-next-package-id="1">
                                         <div data-selected="true" class="radio-style-1">
                                           <div class="radio-inner"></div>
                                         </div>
-                                        <div class="os-card__image-slot hide-tablet"><img data-next-display="package.image" class="image"></div>
+                                        <div class="os-card__image-slot hide-tablet"><img data-next-display="package.image" alt="" class="image"></div>
                                         <div class="os-card__main-slot">
                                           <div class="os-card__title-section">
                                             <div class="os-card__title-wrapper">
-                                              <div data-next-display="package.name" class="os-card__title">Package Title</div>
-                                              <div data-next-show="package.hasSavings" class="os-card__title-badge pb--bestseller">
-                                                <div>SAVE <span data-next-display="package.savingsPercentage">-</span></div>
+                                              <div class="os-card__title">1x <span data-next-display="package.name">Package Title</span></div>
+                                              <div data-next-bundle-display="hasSavings" class="os-card__title-badge pb--bestseller">
+                                                <div>SAVE <span data-next-bundle-display="savingsPercentage">-</span></div>
                                               </div>
                                             </div>
                                             <div class="os-card__subtitle-wrapper">
-                                              <div data-next-show="package.hasSavings" class="os-card__subtitle-text">Save <span data-next-display="package.savingsAmount">$0.00</span><span data-next-show="shipping.isFree"> + Free Shipping</span></div>
+                                              <div data-next-bundle-display="hasSavings" class="os-card__subtitle-text">Save <span data-next-bundle-display="savings">-</span><span data-next-show="shipping.isFree"> + Free Shipping</span></div>
                                             </div>
                                           </div>
                                         </div>
                                         <div class="os-card__secondary-slot">
                                           <div class="os-card__pricing">
                                             <div class="os-card__price-container">
-                                              <div data-next-show="package.hasRetailPrice" class="os-card__price os--compare os-style"><span data-next-display="package.unitRetailPrice">-</span></div>
-                                              <div class="os-card__price os--current"><span data-next-display="package.unitPrice">-</span>/ea</div>
+                                              <div data-next-bundle-display="hasSavings" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>
+                                              <div class="os-card__price os--current"><span data-next-bundle-display="unitPrice">-</span>/ea</div>
                                             </div>
                                             <div class="os-card__total-container">
                                               <div class="os-card__total-label">Total:</div>
-                                              <div data-next-show="package.hasRetailPrice" class="os-card__total-compare" data-next-display="package.compareTotal">-</div>
-                                              <div data-next-display="package.finalPriceTotal" class="os-card__total-current">-</div>
+                                              <div data-next-bundle-display="hasSavings" class="os-card__total-compare"><span data-next-bundle-price="compare">-</span></div>
+                                              <div class="os-card__total-current"><span data-next-bundle-price="total">-</span></div>
                                             </div>
                                           </div>
                                         </div>
@@ -254,37 +314,37 @@ swiper_thumbs:
                                       </div>
                                     </div>
                                   </div>
-                                  <div data-next-shipping-id="2" role="button" data-next-selector-card data-next-package-id="3" data-next-quantity="1" class="os-card">
+                                  <div data-next-bundle-card data-next-bundle-id="drone-qty-2" data-next-bundle-items='[{"packageId":1,"quantity":2}]' role="button" class="os-card">
                                     <div class="os-card__header-slot"></div>
                                     <div class="os-card__wrapper">
-                                      <div class="os-card__content os--align-middle">
+                                      <div class="os-card__content os--align-middle" data-next-package-id="1">
                                         <div data-selected="true" class="radio-style-1">
                                           <div class="radio-inner"></div>
                                         </div>
-                                        <div class="os-card__image-slot hide-tablet"><img data-next-display="package.image" class="image"></div>
+                                        <div class="os-card__image-slot hide-tablet"><img data-next-display="package.image" alt="" class="image"></div>
                                         <div class="os-card__main-slot">
                                           <div class="os-card__title-section">
                                             <div class="os-card__title-wrapper">
-                                              <div data-next-display="package.name" class="os-card__title">Package Title</div>
-                                              <div data-next-show="package.hasSavings" class="os-card__title-badge pb--bestseller">
-                                                <div>SAVE <span data-next-display="package.savingsPercentage">-</span></div>
+                                              <div class="os-card__title">2x <span data-next-display="package.name">Package Title</span></div>
+                                              <div data-next-bundle-display="hasSavings" class="os-card__title-badge pb--bestseller">
+                                                <div>SAVE <span data-next-bundle-display="savingsPercentage">-</span></div>
                                               </div>
                                             </div>
                                             <div class="os-card__subtitle-wrapper">
-                                              <div data-next-show="package.hasSavings" class="os-card__subtitle-text">Save <span data-next-display="package.savingsAmount">$0.00</span><span data-next-show="shipping.isFree"> + Free Shipping</span></div>
+                                              <div data-next-bundle-display="hasSavings" class="os-card__subtitle-text">Save <span data-next-bundle-display="savings">-</span><span data-next-show="shipping.isFree"> + Free Shipping</span></div>
                                             </div>
                                           </div>
                                         </div>
                                         <div class="os-card__secondary-slot">
                                           <div class="os-card__pricing">
                                             <div class="os-card__price-container">
-                                              <div data-next-show="package.hasRetailPrice" class="os-card__price os--compare os-style"><span data-next-display="package.unitRetailPrice">-</span></div>
-                                              <div class="os-card__price os--current"><span data-next-display="package.unitPrice">-</span>/ea</div>
+                                              <div data-next-bundle-display="hasSavings" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>
+                                              <div class="os-card__price os--current"><span data-next-bundle-display="unitPrice">-</span>/ea</div>
                                             </div>
                                             <div class="os-card__total-container">
                                               <div class="os-card__total-label">Total:</div>
-                                              <div data-next-show="package.hasRetailPrice" class="os-card__total-compare" data-next-display="package.compareTotal">-</div>
-                                              <div data-next-display="package.finalPriceTotal" class="os-card__total-current">-</div>
+                                              <div data-next-bundle-display="hasSavings" class="os-card__total-compare"><span data-next-bundle-price="compare">-</span></div>
+                                              <div class="os-card__total-current"><span data-next-bundle-price="total">-</span></div>
                                             </div>
                                           </div>
                                         </div>
@@ -299,37 +359,37 @@ swiper_thumbs:
                                       </div>
                                     </div>
                                   </div>
-                                  <div data-next-shipping-id="2" role="button" data-next-selector-card data-next-package-id="2" data-next-quantity="1" class="os-card">
+                                  <div data-next-bundle-card data-next-bundle-id="drone-qty-3" data-next-bundle-items='[{"packageId":1,"quantity":3}]' role="button" class="os-card">
                                     <div class="os-card__header-slot"></div>
                                     <div class="os-card__wrapper">
-                                      <div class="os-card__content os--align-middle">
+                                      <div class="os-card__content os--align-middle" data-next-package-id="1">
                                         <div data-selected="true" class="radio-style-1">
                                           <div class="radio-inner"></div>
                                         </div>
-                                        <div class="os-card__image-slot hide-tablet"><img data-next-display="package.image" class="image"></div>
+                                        <div class="os-card__image-slot hide-tablet"><img data-next-display="package.image" alt="" class="image"></div>
                                         <div class="os-card__main-slot">
                                           <div class="os-card__title-section">
                                             <div class="os-card__title-wrapper">
-                                              <div data-next-display="package.name" class="os-card__title">Package Title</div>
-                                              <div data-next-show="package.hasSavings" class="os-card__title-badge pb--bestseller">
-                                                <div>SAVE <span data-next-display="package.savingsPercentage">-</span></div>
+                                              <div class="os-card__title">3x <span data-next-display="package.name">Package Title</span></div>
+                                              <div data-next-bundle-display="hasSavings" class="os-card__title-badge pb--bestseller">
+                                                <div>SAVE <span data-next-bundle-display="savingsPercentage">-</span></div>
                                               </div>
                                             </div>
                                             <div class="os-card__subtitle-wrapper">
-                                              <div data-next-show="package.hasSavings" class="os-card__subtitle-text">Save <span data-next-display="package.savingsAmount">$0.00</span><span data-next-show="shipping.isFree"> + Free Shipping</span></div>
+                                              <div data-next-bundle-display="hasSavings" class="os-card__subtitle-text">Save <span data-next-bundle-display="savings">-</span><span data-next-show="shipping.isFree"> + Free Shipping</span></div>
                                             </div>
                                           </div>
                                         </div>
                                         <div class="os-card__secondary-slot">
                                           <div class="os-card__pricing">
                                             <div class="os-card__price-container">
-                                              <div data-next-show="package.hasRetailPrice" class="os-card__price os--compare os-style"><span data-next-display="package.unitRetailPrice">-</span></div>
-                                              <div class="os-card__price os--current"><span data-next-display="package.unitPrice">-</span>/ea</div>
+                                              <div data-next-bundle-display="hasSavings" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>
+                                              <div class="os-card__price os--current"><span data-next-bundle-display="unitPrice">-</span>/ea</div>
                                             </div>
                                             <div class="os-card__total-container">
                                               <div class="os-card__total-label">Total:</div>
-                                              <div data-next-show="package.hasRetailPrice" class="os-card__total-compare" data-next-display="package.compareTotal">-</div>
-                                              <div data-next-display="package.finalPriceTotal" class="os-card__total-current os-dark">-</div>
+                                              <div data-next-bundle-display="hasSavings" class="os-card__total-compare"><span data-next-bundle-price="compare">-</span></div>
+                                              <div class="os-card__total-current os-dark"><span data-next-bundle-price="total">-</span></div>
                                             </div>
                                           </div>
                                         </div>
@@ -439,37 +499,14 @@ swiper_thumbs:
                               {% campaign_include 'payment-methods.html' show_paypal=true show_klarna=true show_google_pay=true show_apple_pay=true %}
                             </div>
                             <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;background:#fef3c7;color:#92400e;padding:2px 8px;display:inline-block;border-radius:3px;margin:8px 0 4px 0">Summary v2 — data-next-cart-summary</div>
-                            <!-- ============================================================
-                                 SUMMARY V2 — data-next-cart-summary approach (0.4.0 guide)
-                                 ============================================================
-                                 HOW THIS DIFFERS FROM THE CURRENT SUMMARY BELOW:
-
-                                 CURRENT (v1) — two separate enhancers:
-                                 - CartItemListEnhancer: data-next-cart-items + data-item-template-id
-                                   + {item.*} tokens for line items (client-side math).
-                                 - Each total uses data-next-display="cart.*" on its own element.
-                                 - Conditional visibility uses data-next-show / data-next-hide.
-
-                                 NEW (v2) — one CartSummaryEnhancer:
-                                 - One root [data-next-cart-summary] with a single direct-child
-                                   <template> wrapping the entire block (lines + totals together).
-                                 - Lines: data-summary-lines + nested <template> using {line.*} tokens
-                                   (API SummaryLine fields — avoids client-side math bugs like the
-                                   old {item.lineCompare} qty-scaling issue).
-                                   {line.priceRetailTotal} = before-discount line total (strikethrough)
-                                   {line.total} = final line total
-                                   {line.hasSavings} = class token — SDK injects "" or "hidden"
-                                 - Totals: {subtotal}, {total}, {shipping}, {savings} directly in
-                                   the outer template — no per-element display attributes.
-                                 - State: SDK applies classes to the [data-next-cart-summary] root
-                                   (next-has-savings, next-free-shipping, next-cart-has-items etc.).
-                                   Use CSS to show/hide sections instead of data-next-show/hide.
-                                   next-has-savings / next-cart-has-items on inner elements = static
-                                   CSS hooks; pair with [data-next-cart-summary]:not(.next-has-savings)
-                                   rules to hide when condition is false.
-                                 - Remove old data-next-cart-items block when switching — only one
-                                   summary root is needed or lines will duplicate.
-                                 ============================================================ -->
+                            <!-- Cart summary: https://developers.nextcommerce.com/docs/campaigns/guides/cart-summary — state classes on [data-next-cart-summary]; conditional rows via .os-cart-summary-* hooks below. -->
+                            <style>
+                              [data-next-cart-summary].next-cart-empty .os-cart-summary-totals { display: none !important; }
+                              [data-next-cart-summary] .os-cart-summary-row--discount { display: none; }
+                              [data-next-cart-summary].next-has-discounts .os-cart-summary-row--discount { display: block; }
+                              [data-next-cart-summary] .os-cart-summary-row--tax { display: none; }
+                              [data-next-cart-summary].next-has-tax .os-cart-summary-row--tax { display: flex; }
+                            </style>
                             <div class="form-section form-section--last">
                               <div class="cart-box cart-box--card">
                                 <div class="summary-wrapper" data-next-cart-summary>
@@ -485,7 +522,6 @@ swiper_thumbs:
                                             <div>Scroll for more items</div>
                                             <div class="icon__view-more">…</div>
                                           </div>
-                                          <!-- Line list: API summary lines — not CartItemListEnhancer {item.*} -->
                                           <div class="cart-items__list" data-summary-lines>
                                             <template>
                                               <div class="cart-item" data-package-id="{line.packageId}">
@@ -498,9 +534,8 @@ swiper_thumbs:
                                                         </div>
                                                       </div>
                                                       <div class="cart-item__pricing">
-                                                        <!-- {line.hasSavings} resolves to "show" or "hide" -->
                                                         <div class="cart-price diagonal-strike line-compare {line.hasSavings}">
-                                                          {line.priceRetailTotal}
+                                                          {line.originalPackagePrice}
                                                         </div>
                                                         <div class="checkout__line-item__final-price">{line.total}</div>
                                                       </div>
@@ -516,33 +551,35 @@ swiper_thumbs:
                                           <div class="shipping-note">Shipping and tax will be settled upon checkout confirmation</div>
                                         </div>
 
-                                        <!-- next-cart-has-items: static CSS hook; hide via [data-next-cart-summary]:not(.next-cart-has-items) -->
-                                        <div class="order-totals next-cart-has-items">
+                                        <div class="order-totals os-cart-summary-totals">
                                           <div class="order-totals__line">
                                             <div class="order-totals__label">Subtotal</div>
                                             <div class="order-totals__value">{subtotal}</div>
                                           </div>
 
-                                          <!-- next-has-discounts: hide via [data-next-cart-summary].next-no-discounts .next-has-discounts -->
-                                          <div class="order-totals__section order-totals__section--inset next-has-discounts">
+                                          <div class="order-totals__section order-totals__section--inset os-cart-summary-row--discount">
                                             <div class="order-totals__line">
                                               <div class="order-totals__label-group">
                                                 <div class="order-totals__label ts-lg tw-600">Today you saved</div>
                                               </div>
                                               <div class="accordion__right">
-                                                <div class="order-totals__label">Discount:</div>
-                                                <div class="order-totals__value ts-lg tw-600">{discounts}</div>
+                                                <div class="order-totals__label">Discounts</div>
+                                                <div class="order-totals__value ts-lg tw-600 cc-disc">−{discounts}</div>
                                               </div>
                                             </div>
                                             <div class="coupon-tags"></div>
+                                          </div>
+
+                                          <div class="order-totals__line os-cart-summary-row--tax">
+                                            <div class="order-totals__label">Tax</div>
+                                            <div class="order-totals__value">{tax}</div>
                                           </div>
 
                                           <div class="order-totals__section">
                                             <div class="order-totals__line">
                                               <div class="accordion__right"><div class="order-totals__label">Shipping</div></div>
                                               <div class="accordion__right">
-                                                <!-- next-has-shipping: static CSS hook for when shipping cost is present -->
-                                                <div class="order-totals__value next-has-shipping">{shipping}</div>
+                                                <div class="order-totals__value">{shipping}</div>
                                               </div>
                                             </div>
                                           </div>
