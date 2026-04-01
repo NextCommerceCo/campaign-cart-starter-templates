@@ -506,6 +506,7 @@ swiper_thumbs:
                               [data-next-cart-summary].next-has-discounts .os-cart-summary-row--discount { display: block; }
                               [data-next-cart-summary] .os-cart-summary-row--tax { display: none; }
                               [data-next-cart-summary].next-has-tax .os-cart-summary-row--tax { display: flex; }
+                              [data-next-cart-summary] .order-totals__discount-list { list-style: none; margin: 0 0 0.25rem; padding: 0; }
                             </style>
                             <div class="form-section form-section--last">
                               <div class="cart-box cart-box--card">
@@ -563,6 +564,27 @@ swiper_thumbs:
                                             <div class="order-totals__value">{subtotal}</div>
                                           </div>
 
+                                          <!-- Per-discount rows + coupon code tag — playground bundle-set: https://developers.nextcommerce.com/playground/?preset=example%2Fbundle-set -->
+                                          <div class="order-totals__section">
+                                            <ul class="order-totals__discount-list" data-summary-offer-discounts aria-label="Offer discounts">
+                                              <template>
+                                                <li class="order-totals__line">
+                                                  <div class="order-totals__label text-sm ">{discount.name}</div>
+                                                  <div class="order-totals__value text-sm">−{discount.amount}</div>
+                                                </li>
+                                              </template>
+                                            </ul>
+                                            <ul class="order-totals__discount-list" data-summary-voucher-discounts aria-label="Coupon discounts">
+                                              <template>
+                                                <li class="order-totals__line">
+                                                  <div class="order-totals__label text-sm">{discount.name}</div>
+                                                  <div class="order-totals__value text-sm cc-disc">−{discount.amount}</div>
+                                                </li>
+                                              </template>
+                                            </ul>
+                                            
+                                          </div>
+
                                           <div class="order-totals__section order-totals__section--inset os-cart-summary-row--discount">
                                             <div class="order-totals__line">
                                               <div class="order-totals__label-group">
@@ -573,9 +595,16 @@ swiper_thumbs:
                                                 <div class="order-totals__value ts-lg tw-600 cc-disc">{discounts}</div>
                                               </div>
                                             </div>
-                                            <div class="coupon-tags"></div>
-                                          </div>
+                                            <div class="coupon-tags">
 
+                                              <div data-next-show="cart.hasCoupon" class="order-totals__line items-center">
+                                                <div class="cart-subtext">Code applied</div>
+                                                <div data-next-display="cart.discountCode" class="cart-pill"></div>
+                                              </div>
+                                            </div>
+                                            
+                                          </div>
+                                          
                                           <div class="order-totals__line os-cart-summary-row--tax">
                                             <div class="order-totals__label">Tax</div>
                                             <div class="order-totals__value">{tax}</div>
