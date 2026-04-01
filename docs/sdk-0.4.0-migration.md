@@ -2,6 +2,8 @@
 
 Tracks changes needed across templates when upgrading from SDK 0.3.x to 0.4.0.
 
+**Bundle selector reference template:** `campaign-kit-templates/src/olympus-v0.4.0-sdk/` — QA [`docs/olympus-v0.4.0-sdk-qa-checklist.md`](olympus-v0.4.0-sdk-qa-checklist.md), issue log [`docs/olympus-v0.4.0-bundle-selector-bug-log.md`](olympus-v0.4.0-bundle-selector-bug-log.md).
+
 ---
 
 ## Attribute Reference
@@ -60,19 +62,23 @@ Docs: [Bundle Set Sale guide](https://developers.nextcommerce.com/docs/campaigns
 | Attribute | Where | Purpose |
 |-----------|-------|---------|
 | `data-next-bundle-selector` | Container | Enables bundle selector |
+| `data-next-selector-id` | Container | Stable id (e.g. `drone-packages`) — pairs with `[data-next-bundle-slots-for="…"]`; **`BundleSelectorEnhancer` reads this only**, not `data-next-bundle-selector-id` |
 | `data-next-bundle-slot-template-id` | Container | Template ID for per-unit slot rendering |
 | `data-next-bundle-card` | Card | Marks a bundle option card |
 | `data-next-bundle-id` | Card | Unique ID for this bundle (e.g. `"drone-3x"`) |
 | `data-next-bundle-items` | Card | JSON array: `[{"packageId": 2, "quantity": 3}]` |
 | `data-next-bundle-vouchers` | Card | Comma-separated coupon codes for this tier |
 | `data-next-selected="true"` | Card | Pre-selects on load |
-| `data-next-bundle-price` | Display | Total price |
+| `data-next-bundle-price="total"` | Display | Card total — **use explicitly** on every tier; bare `data-next-bundle-price` may not bind on all cards (bug log **BS-006**) |
+| `data-next-bundle-display="…"` | Display | Reactive slots inside cards (`hasSavings`, `unitPrice`, `originalUnitPrice`, etc.) — see [`docs/selector-attribute-cheatsheet.md`](selector-attribute-cheatsheet.md) |
 | `data-next-bundle-price="compare"` | Display | Compare/retail total |
 | `data-next-bundle-price="savings"` | Display | Savings amount |
 | `data-next-bundle-price="savingsPercentage"` | Display | Savings % |
 | `data-next-bundle-slots` | Display | Renders slot rows from template |
 
 **`data-next-shipping-id` on bundle cards:** Not part of this table and **not** documented for **`data-next-bundle-card`**. Do not rely on copying the package-selector pattern (`data-next-shipping-id` on each card) to pick a `shipping_methods[].ref_id` per quantity tier — template QA shows **no effect**. Use **`next.setShippingMethod(refId)`** when the selected bundle changes if you need imperative control, and re-check summary totals (**Known issue #3** can still affect displayed shipping/total on selector flows).
+
+**`data-next-selection-mode="swap"`** on the bundle container appears in examples here and in some templates; the public [Bundle Set Sale](https://developers.nextcommerce.com/docs/campaigns/guides/bundle-set-sale) guide describes atomic swap without documenting this attribute on the bundle root. If tier changes **stack** cart lines instead of replacing, see **Known #8** (bug log **BS-013**).
 
 ### Bundle items JSON
 
@@ -107,6 +113,7 @@ Multi-product bundle:
 
 <div
   data-next-bundle-selector
+  data-next-selector-id="drone-packages"
   data-next-selection-mode="swap"
   data-next-bundle-slot-template-id="bundle-unit-price-tpl"
   class="os-option"
@@ -137,7 +144,7 @@ Multi-product bundle:
       </div>
       <div class="os-card__total-container">
         <div class="os-card__total-compare" data-next-bundle-price="compare">-</div>
-        <div class="os-card__total-current" data-next-bundle-price>-</div>
+        <div class="os-card__total-current"><span data-next-bundle-price="total">-</span></div>
       </div>
     </div>
 
@@ -291,7 +298,8 @@ Full example (distinct package IDs per card):
 
 | Template | Selector fix | Token renames | Bug fixes | Notes |
 |----------|-------------|---------------|-----------|-------|
-| `olympus` | 🔄 in progress | 🔄 in progress | 🔄 in progress | No good solution yet — multi-package selector: `savingsAmount`/`savingsPercentage` are static; `data-next-package-price` compare/savings slots broken for multi-package; `finalPriceTotal` coupon-aware for totals only |
+| `olympus-v0.4.0-sdk` | ✅ bundle selector | ✅ 0.4.x | 🔄 QA | Reference **bundle** checkout (`data-next-bundle-selector` + Summary v2). Open: **Known #8** (swap/add lines), **#9** (summary tokens), **#3** shipping vs totals, bump **#7** — see [bundle bug log](olympus-v0.4.0-bundle-selector-bug-log.md) |
+| `olympus` | 🔄 in progress | 🔄 in progress | 🔄 in progress | Legacy **multi-package** track: `savingsAmount`/`savingsPercentage` static; `data-next-package-price` compare/savings wrong for multi-package; `finalPriceTotal` coupon-aware for totals only |
 | `olympus-mv-single-step` | ⬜ pending | ⬜ pending | — | |
 | `olympus-mv-two-step` | ⬜ pending | ⬜ pending | — | |
 | `demeter` | ⬜ pending | ⬜ pending | — | |
@@ -342,6 +350,24 @@ In the new 0.4.x pattern (`data-next-package-toggle` + `data-next-toggle-card` +
 
 **Expected fix:** Align `data-next-toggle-price` outputs to the same package-total basis as `price_total` / `price_retail_total`, or provide a compatibility mode for the old bump behavior.
 
+### 8. Bundle selector: tier changes add lines instead of atomic swap
+**Observed on reference template (bug log BS-013).** Clicking 1× → 2× → 3× can **append** separate cart lines for the same `packageId` instead of **replacing** quantity (summary line count grows). After a full reload, cart/summary may show **default 1× plus** the persisted tier.
+
+**Expected:** [Bundle Set Sale](https://developers.nextcommerce.com/docs/campaigns/guides/bundle-set-sale) documents “atomic swap — no double-add”: exactly **one** line for the bundle’s main package, qty matching the selected card.
+
+**Template check:** Ensure only **one** `data-next-bundle-selector` root (and one **`data-next-selector-id`** on that container if you use `data-next-bundle-slots-for` / external wiring) is emitted in HTML — duplicate roots are not the cause when auto-render blocks are comment-disabled. Do **not** use `data-next-bundle-selector-id`; the enhancer reads **`data-next-selector-id`** only.
+
+**Next action:** SDK / cart merge: `BundleSelectorEnhancer` (or downstream cart ops) must remove prior bundle items for the selector scope on tier change and must not re-apply the HTML default tier on top of persisted state after refresh.
+
+**Workaround (not production):** `<meta name="next-clear-cart" content="true">` forces an empty cart each page load and can **hide** the symptom in dev because nothing is left in session to merge with bundle init — at the cost of **no cart persistence** (see bug log **BS-013**).
+
+### 9. Cart summary v2: `{line.priceRetailTotal}` wrong vs line totals
+In `[data-next-cart-summary]` template tokens, **`{line.priceRetailTotal}`** may equal per-unit-style fields (`{line.priceRetail}`, `{line.originalPackagePrice}`, etc.) instead of the **full-line** retail total. Strike/compare rows in the order summary then disagree with `{line.total}` / list math.
+
+**Expected:** `priceRetailTotal` (or documented equivalent) should be **quantity × retail** for the line, consistent with how `{line.total}` represents the sale line total.
+
+**Tracking:** Bug log **BS-012**; validate against `window.nextDebug?.stores?.cart?.getState()` line items when triaging.
+
 ---
 
 ## Template Workaround: External Slot Layout (`olympus-mv-single-step2`)
@@ -366,11 +392,14 @@ When using the Summary v2 enhancer:
 - The SDK computes totals asynchronously and applies *state classes* to the `data-next-cart-summary` root (for example, `next-has-savings`, `next-no-savings`, `next-cart-has-items`).
 - Inside the `<template>`, prefer **static CSS hook classes** (e.g. `next-has-savings` on the savings row) rather than relying on `data-next-show="cart.hasSavings"` / `data-next-show` conditions inside the injected template. Template-scoped `data-next-show` can evaluate before totals state is ready, leaving sections hidden after render.
 - For empty-cart gating, use `data-next-hide="cart.isEmpty"` on the `data-next-cart-summary` root (or hide via CSS hooks).
+- **Line-level retail total token:** If `{line.priceRetailTotal}` matches unit retail fields instead of a true line retail total, treat as **Known #9** / **BS-012** — verify against cart state before “fixing” template math in Liquid.
+- **Copy-only quirks:** “Today you saved” / per-row currency formatting issues are tracked in the bundle bug log (**BS-009**, **BS-010**) when they affect the olympus v0.4.0 reference checkout.
 
 ---
 
 ## Open Issues (templates)
 
-- `olympus/checkout.html` — multi-package selector active; QA ongoing; bumps holding on old 0.3.x pattern (SDK issue #7)
-- Multi-package limitation: `savingsAmount`/`savingsPercentage` are static (retail-vs-base only); coupons reflect only in `finalPriceTotal`. `data-next-package-price="compare"/"savings"` slots return per-unit retail (not package total) for multi-package setups — confirmed SDK issue #4 above.
-- **Bundle selector may be the right long-term solution for olympus** — `data-next-bundle-price` slots are fully coupon+offer-aware, and per-tier voucher codes (`data-next-bundle-vouchers`) handle automatic coupon lifecycle. Blocked by SDK issues #5 (unformatted slot values) and #7 (bump regression) for production use. Evaluate once engineering resolves.
+- **`olympus-v0.4.0-sdk/checkout.html`** — primary **bundle selector** reference; detailed QA/issues in [`docs/olympus-v0.4.0-bundle-selector-bug-log.md`](olympus-v0.4.0-bundle-selector-bug-log.md). Watch **Known #8** (tier swap → cart lines), **#9** (summary `{line.priceRetailTotal}`), **#3** (shipping vs summary), **#7** (bumps on old pattern).
+- `olympus/checkout.html` — legacy **multi-package** selector; QA ongoing; bumps holding on old 0.3.x pattern (SDK issue #7).
+- Multi-package limitation: `savingsAmount`/`savingsPercentage` are static (retail-vs-base only); coupons reflect only in `finalPriceTotal`. `data-next-package-price="compare"/"savings"` slots return per-unit retail (not package total) for multi-package setups — **Known #4**.
+- **Bundle selector** (`olympus-v0.4.0-sdk`) is the supported direction for coupon+offer-aware tier cards (`data-next-bundle-price` / `data-next-bundle-vouchers`). Remaining SDK blockers include **#5** (raw slot template numbers), **#7** (bump regression), **#8** (swap semantics), **#9** (summary line tokens).
