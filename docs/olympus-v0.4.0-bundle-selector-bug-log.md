@@ -1,8 +1,8 @@
 # Olympus v0.4.0 Bundle Selector Bug Log
 
-Scope: `campaign-kit-templates/src/olympus-v0.4.0-sdk/`
+Scope: `campaign-kit-templates/src/olympus-v0.4.0-sdk/` only (single-variant bundle selector + bumps + cart summary on that checkout).
 
-Use this file as the running issue tracker while implementing and QA'ing the bundle selector approach.
+**Out of scope here:** `olympus-mv-*` multivariant checkouts (per-unit bundle slots, external variant UI, clone+bridge, `{item.*}` slot tokens) — track those in a separate doc when you pick that work up.
 
 ## Status legend
 
@@ -11,6 +11,22 @@ Use this file as the running issue tracker while implementing and QA'ing the bun
 - `blocked` - waiting on SDK/platform decision or external fix
 - `fixed` - code change made, needs verification
 - `verified` - confirmed fixed in QA
+
+## Crosswalk — engineering note vs repo docs
+
+Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` → Known SDK Issues #1–#7** and the items below. Use this table when sharing with eng: same issues, single numbering in migration doc.
+
+| Topic (eng note) | `sdk-0.4.0-migration.md` | This log |
+|------------------|--------------------------|----------|
+| (1) `package.*` display vs offer/coupon pricing | **§ Known #1** | **BS-005**, **BS-008** (tradeoff when using `data-next-display` workaround) |
+| (2) Coupon cleared on refresh | **§ Known #2** | *(not duplicated — platform issue)* |
+| (3) `data-next-shipping-id` vs summary totals | **§ Known #3** | *(not duplicated)* |
+| (4) `data-next-package-price` compare/savings multi-unit SKUs | **§ Known #4** | **BS-002** context (selector → bundle workaround) |
+| (5) Bundle selector operator workflow / offer-driven tier pricing | **§ Known #6** (and **#5** where it overlaps card pricing) | **BS-004**, **BS-006** |
+| Cart summary v2 line pipeline `{line.priceRetailTotal}` / `{line.total}` (or `{line.originalPackagePrice}` per variable table) | **§ Cart Summary v2 Notes** | Confirmed for this template vs legacy cart line list patterns in migration open issues |
+| Line amounts include **currency symbol** on every row (want numeric-only / single currency column) | *(not in migration §)* | **BS-009** |
+| “Today you saved” **$0** while lines show savings | *(not in migration §)* | **BS-010** |
+| Toggle bump: compare = sale; **prices refresh only after uncheck/recheck** when sync qty changes | **§ Known #7** | **BS-008** (expanded) |
 
 ---
 
@@ -133,6 +149,55 @@ Use this file as the running issue tracker while implementing and QA'ing the bun
   - Static title prefixes per card in `checkout.html` (`1x/2x/3x` before package name).
 - Why useful:
   - Keeps quantity display fully declarative and consistent with other SDK display attributes.
+
+## BS-008 - Warranty bump: `data-next-toggle-price` vs `compare`, sync + bundle, stable unit labels
+
+- Status: `open`
+- Severity: `medium`
+- Date logged: `2026-03-31`
+- Where: `olympus-v0.4.0-sdk/_includes/bump-check01-v2.html` vs `bump-check01.html`, `checkout.html` bundle + `data-next-package-sync="1"`
+- Observed:
+  - `data-next-toggle-price` and `data-next-toggle-price="compare"` can both show the **same** value when the warranty package has no separate discount/list story in the toggle preview; adding a **Campaigns offer** on the warranty can make compare vs sale diverge.
+  - With **`data-next-package-sync`** and a **bundle selector** that uses **one main `packageId`** (qty 1/2/3 on that line), [Step 7 quantity sync](https://developers.nextcommerce.com/docs/campaigns/guides/selling-addons#step-7-quantity-sync-warranty-per-unit) is still the right model (`data-next-package-sync="1"` sums cart qty for package `1`).
+  - **UI quirk:** after check/uncheck, displayed toggle prices can still **shift** as preview/sync logic runs — especially with sync (see `docs/sdk-0.4.0-migration.md` issue **#7** — toggle-price + sync regression).
+  - **Eng note (additional):** when the main selection changes and **synced quantity** updates, toggle-card prices may **not refresh until** the shopper **unchecks and rechecks** the upsell — expected: recompute preview whenever synced cart qty / main package changes.
+- Workaround — **stable unit list/sale on the card** (numbers that do not ride toggle preview scaling when the bundle tier changes):
+  - Keep **`data-next-package-toggle`** + **`data-next-toggle-card`** + **`data-next-package-sync`** for add/remove and cart quantity mirroring.
+  - For **visible** compare/sale lines, use **`data-next-display="package.price_retail"`** and **`data-next-display="package.price"`** scoped to the **bump package id** (pattern in `bump-check01.html`), **not** `data-next-toggle-price` / `compare`.
+- Tradeoff:
+  - `data-next-display="package.*"` is **not** fully aligned with backend offer/voucher pricing the way toggle-price is intended to be; list/sale usually come from **package definition** unless you accept partial parity.
+- Alternative (totals-focused, older pattern):
+  - `data-next-bump` + `data-next-toggle="toggle"` + `data-next-display` totals — migration doc calls this more stable when toggle-price misbehaves (issue #7).
+
+## BS-009 - Feature request: cart summary line amounts without currency symbol
+
+- Status: `open`
+- Severity: `low`
+- Date logged: `2026-03-31`
+- Where: `olympus-v0.4.0-sdk/checkout.html` — `[data-next-cart-summary]` nested `data-summary-lines` row template (`{line.originalPackagePrice}`, `{line.total}`)
+- Docs: [Cart Summary — line item variables](https://developers.nextcommerce.com/docs/campaigns/guides/cart-summary#line-item-variables)
+- Problem:
+  - Line placeholders render **fully formatted** money strings (symbol + amount). When the layout already shows **currency once** (e.g. grand total column with `data-next-display="cart.currency"` / ISO code), repeating the symbol on **every line** is redundant and noisy.
+- Request:
+  - Document and support **numeric-only** (or **symbol-stripped**) variants for line template fields, e.g. `{line.total}` → companion `{line.totalNumeric}` / `{line.totalRaw}`, or a documented `data-*` formatter on placeholders inside the summary line `<template>`.
+  - Same for compare/strike row: `{line.originalPackagePrice}` (and any parallel retail fields) if applicable.
+- Current state:
+  - Public guide lists `{line.total}`, `{line.originalPackagePrice}`, etc., but **does not** document unformatted alternates or per-placeholder format control for the cart summary line template.
+- Workaround (none ideal):
+  - Live with duplicate symbols, or post-process DOM (fragile / i18n-hostile), or restructure UI so currency is only in footer (still leaves symbols in `{line.*}` unless SDK changes).
+
+## BS-010 - Cart summary: “Today you saved” / discounts row vs line-level savings
+
+- Status: `open`
+- Severity: `medium`
+- Date logged: `2026-03-31`
+- Where: `[data-next-cart-summary]` totals (`{discounts}`, savings/discount rows) vs `data-summary-lines` (`{line.priceRetailTotal}` / `{line.total}`, `{line.hasSavings}`)
+- Observed (eng note):
+  - Line-level compare vs final can show obvious savings, while cart-level **“Today you saved” / discount aggregation** can still render **$0.00** or not match line-implied savings.
+- Expected:
+  - Cart-level savings/discount rows should stay consistent with line-level retail vs final (or documented rules when they differ).
+- Cross-ref:
+  - Confirms **new line pipeline** behaves for per-line strike; **cart rollup** may still be wrong or timing/CSS-gated — see migration **Cart Summary v2 Notes** (state classes, template `data-next-show` timing).
 
 ---
 

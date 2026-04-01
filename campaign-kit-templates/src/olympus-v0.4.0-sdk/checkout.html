@@ -530,7 +530,13 @@ swiper_thumbs:
                                                     <div class="cart-item__content">
                                                       <div class="cart-item__description">
                                                         <div class="cart-item__header">
-                                                          <div class="cart-item__title os-bold">{line.name}</div>
+                                                          <div class="cart-item__title os-bold">
+                                                            {line.quantity}x {line.name}
+                                                            <div>
+                                                              <div class="text-2xs text-muted text-weight-normal">{line.unitPrice}/ea</div>
+                                                            </div>
+                                                          </div>
+                                                          
                                                         </div>
                                                       </div>
                                                       <div class="cart-item__pricing">
@@ -564,7 +570,7 @@ swiper_thumbs:
                                               </div>
                                               <div class="accordion__right">
                                                 <div class="order-totals__label">Discounts</div>
-                                                <div class="order-totals__value ts-lg tw-600 cc-disc">−{discounts}</div>
+                                                <div class="order-totals__value ts-lg tw-600 cc-disc">{discounts}</div>
                                               </div>
                                             </div>
                                             <div class="coupon-tags"></div>
