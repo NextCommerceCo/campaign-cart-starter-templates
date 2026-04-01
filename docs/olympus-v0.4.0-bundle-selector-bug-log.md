@@ -20,7 +20,7 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 |------------------|--------------------------|----------|
 | (1) `package.*` display vs offer/coupon pricing | **§ Known #1** | **BS-005**, **BS-008** (tradeoff when using `data-next-display` workaround) |
 | (2) Coupon cleared on refresh | **§ Known #2** | *(not duplicated — platform issue)* |
-| (3) `data-next-shipping-id` vs summary totals | **§ Known #3** | *(not duplicated)* |
+| (3) `data-next-shipping-id` — **package swap** selector vs summary totals; **bundle** cards | **§ Known #3** (package); bundle attribute table silent | **BS-011** |
 | (4) `data-next-package-price` compare/savings multi-unit SKUs | **§ Known #4** | **BS-002** context (selector → bundle workaround) |
 | (5) Bundle selector operator workflow / offer-driven tier pricing | **§ Known #6** (and **#5** where it overlaps card pricing) | **BS-004**, **BS-006** |
 | Cart summary v2 line pipeline `{line.priceRetailTotal}` / `{line.total}` (or `{line.originalPackagePrice}` per variable table) | **§ Cart Summary v2 Notes** | Confirmed for this template vs legacy cart line list patterns in migration open issues |
@@ -198,6 +198,22 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
   - Cart-level savings/discount rows should stay consistent with line-level retail vs final (or documented rules when they differ).
 - Cross-ref:
   - Confirms **new line pipeline** behaves for per-line strike; **cart rollup** may still be wrong or timing/CSS-gated — see migration **Cart Summary v2 Notes** (state classes, template `data-next-show` timing).
+
+## BS-011 - `data-next-shipping-id`: bundle cards ineffective; package swap selector still broken vs totals
+
+- Status: `open`
+- Severity: `medium`
+- Date logged: `2026-03-31`
+- Where: `olympus-v0.4.0-sdk/checkout.html` — `[data-next-bundle-card]`; **`campaign-kit-templates/src/olympus/checkout.html`** — `data-next-package-selector` + `data-next-selection-mode="swap"` + `data-next-selector-card`
+- Observed:
+  - **Bundle selector:** **`data-next-shipping-id`** is **not** listed on **`data-next-bundle-card`** in **`docs/sdk-0.4.0-migration.md`**. Adding it per tier (1x / 2x / 3x) **does nothing** in practice — undocumented / unsupported for bundle markup.
+  - **Standard package swap selector:** the attribute **is** documented on **`data-next-selector-card`**, but it **still does not work end-to-end** for checkout UX: migration **§ Known #3** — cart state can show the expected `shippingMethod` ref_id after card select, while **summary shipping line and grand total** often **do not** follow that method (downstream totals look stuck on default/fixed shipping).
+- Expected:
+  - Declarative per-card shipping IDs should drive **both** cart state **and** displayed totals; or docs should state limitations clearly for bundle vs package selector.
+- Workaround:
+  - **`next.setShippingMethod(refId)`** when selection changes may still be needed; **re-test summary/totals** — Known **#3** can apply even after imperative updates. Backend/campaign shipping rules as a fallback where declarative markup is unreliable.
+- Cross-ref:
+  - Migration **§ Known #3**; **Bundle Selector** attribute table (no `data-next-shipping-id`); **Package Selector** example with `data-next-shipping-id` on `data-next-selector-card`.
 
 ---
 

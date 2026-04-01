@@ -72,6 +72,8 @@ Docs: [Bundle Set Sale guide](https://developers.nextcommerce.com/docs/campaigns
 | `data-next-bundle-price="savingsPercentage"` | Display | Savings % |
 | `data-next-bundle-slots` | Display | Renders slot rows from template |
 
+**`data-next-shipping-id` on bundle cards:** Not part of this table and **not** documented for **`data-next-bundle-card`**. Do not rely on copying the package-selector pattern (`data-next-shipping-id` on each card) to pick a `shipping_methods[].ref_id` per quantity tier — template QA shows **no effect**. Use **`next.setShippingMethod(refId)`** when the selected bundle changes if you need imperative control, and re-check summary totals (**Known issue #3** can still affect displayed shipping/total on selector flows).
+
 ### Bundle items JSON
 
 ```json
@@ -313,6 +315,8 @@ After applying a coupon, refreshing the page clears it. Previously coupons were 
 When using `data-next-shipping-id` per selector card in swap mode (with valid `shipping_methods[].ref_id` values), cart state updates correctly on card select (`window.nextDebug?.stores?.cart?.getState()?.shippingMethod` shows expected ID), but the summary shipping line and grand total do not consistently reflect the selected shipping method. Totals appear to recalculate using a default/fixed shipping method downstream.
 
 **Expected:** Summary shipping and total should follow the selected `data-next-shipping-id` without custom JS.
+
+**Bundle selector:** Per-tier shipping is **not** covered by declaring `data-next-shipping-id` on **`data-next-bundle-card`** (see note under **Bundle Selector → Key attributes**).
 
 ### 4. `data-next-package-price="compare/savings/savingsPercentage"` wrong for multi-unit package SKUs
 In PackageSelector swap mode, `compare`, `savings`, and `savingsPercentage` slots can display incorrect values for multi-unit packages. The API calculates `compareTotal = price_retail × quantity(1)` — returning per-unit retail instead of the package total retail.
