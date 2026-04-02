@@ -1,0 +1,139 @@
+<div class="select-quantity-wrapper">
+  <div class="upsell-offer__qty-label">
+    <div>Select Quantity</div>
+    <div class="right-bullet-icon">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        aria-hidden="true"
+        role="img"
+        class="iconify iconify--ic"
+        width="100%"
+        height="100%"
+        preserveAspectRatio="xMidYMid meet"
+        viewBox="0 0 24 24"
+      >
+        <path
+          fill="currentColor"
+          d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z"
+        ></path>
+      </svg>
+    </div>
+  </div>
+  <div
+    class="upsell-offer__quantity-row"
+    data-next-upsell-context
+    data-next-selector-id="upsellBundleMV"
+    data-next-bundle-selector
+    data-next-selection-mode="select"
+    data-next-bundle-template-id="upsell-bundle-option-template"
+    data-next-bundle-slot-template-id="upsell-bundle-slot-template"
+    data-next-bundles='[
+          {
+            "id": "upsellBundleMV-01",
+            "quantityOption": "1",
+            "items": [{"packageId":1,"quantity":1,"configurable":true}],
+            "vouchers": ["UP50"]
+          },
+          {
+            "id": "upsellBundleMV-02",
+            "quantityOption": "2",
+            "items": [{"packageId":1,"quantity":2,"configurable":true}],
+            "vouchers": ["UP50"]
+          },
+          {
+            "id": "upsellBundleMV-03",
+            "quantityOption": "3",
+            "items": [{"packageId":1,"quantity":3,"configurable":true}],
+            "vouchers": ["UP50"],
+            "selected": true
+          },
+          {
+            "id": "upsellBundleMV-04",
+            "quantityOption": "4",
+            "items": [{"packageId":1,"quantity":4,"configurable":true}],
+            "vouchers": ["UP50"]
+          },
+          {
+            "id": "upsellBundleMV-05",
+            "quantityOption": "5",
+            "items": [{"packageId":1,"quantity":5,"configurable":true}],
+            "vouchers": ["UP50"]
+          }
+      ]'
+  ></div>
+  <template id="upsell-bundle-option-template">
+    <div class="upsell-offer__qty-btn">
+      <div>{bundle.quantityOption}</div>
+    </div>
+  </template>
+  <template id="upsell-bundle-slot-template">
+    <div class="os-card__upsell-grid">
+      <div class="os-card__variant-number os-option grid-cell">
+        <div data-next-bind="slot-number">#{slot.index}</div>
+      </div>
+      <div
+        data-next-variant-selectors
+        next-render-swap="outerHTML"
+        next-render-no-label
+      ></div>
+    </div>
+  </template>
+</div>
+<div class="upsell_variants-wrapper">
+  <div class="os-card__variants-container">
+    <div class="os-card__upsell-grid">
+      <div class="os-card__variant-number">
+        <div class="os-card__variant-label-item">
+          <div class="hide">#</div>
+        </div>
+      </div>
+      <div class="os-card__variant-label-item">
+        <div>Select Size</div>
+      </div>
+      <div class="os-card__variant-label-item grid-cell">
+        <div>Select Color</div>
+      </div>
+    </div>
+    <div class="os-card__variant-label">
+      <div class="os-card__variant-label-number"></div>
+    </div>
+    <div
+      class="os-card__variant-options"
+      id="bundle-slots-stage"
+      class="os-slots"
+      data-next-bundle-slots-for="upsellBundleMV"
+    ></div>
+  </div>
+</div>
+<div class="prices-text-wrapper">
+  <div class="price-wrapper">
+    <div class="text-sm tw-600">Retail Price</div>
+    <div
+      data-next-display="bundle.upsellBundleMV.originalPrice"
+      class="upsell-offer__price diagonal-strike color-muted"
+    >
+      $00.00
+    </div>
+    <div class="text-xs font-bold"><strike>+$4.95 SHIPPING</strike></div>
+  </div>
+  <div class="upsell-offer__divider"></div>
+  <div class="price-wrapper">
+    <div class="upsell-offer__price-heading">
+      <div class="text-sm tw-600">Offer Price</div>
+      <div class="text-sm font-bold color-primary">
+        (<span data-next-display="bundle.upsellBundleMV.discountPercentage"
+          >0%</span
+        >
+        OFF)
+      </div>
+    </div>
+    <div
+      data-next-display="bundle.upsellBundleMV.price"
+      class="upsell-offer__price"
+    >
+      $00.00
+    </div>
+    <div class="text-xs font-bold color-primary">+ FREE SHIPPING</div>
+  </div>
+</div>

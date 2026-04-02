@@ -1,0 +1,112 @@
+<div class="form-section form-section--last">
+  <div class="cart-box cart-box--card">
+    <div
+      class="summary-wrapper"
+      data-next-cart-summary
+      data-next-hide="cart.isEmpty"
+    >
+      <template>
+        <div class="order-summary">
+          <div class="order-summary__content">
+            <div class="cart-items">
+              <div class="cart-summary__line pb--header">
+                <div class="cart-summary__line-item">
+                  <div>Item</div>
+                </div>
+                <div class="cart-summary__line-item">
+                  <div>Amount</div>
+                </div>
+              </div>
+
+              <!-- API summary lines -->
+              <div class="cart-items__list" data-summary-lines>
+                <template>
+                  <div class="cart-item" data-package-id="{line.packageId}">
+                    <div class="cart-item__wrapper">
+                      <div class="cart-item__details cc-left-0">
+                        <div class="cart-item__content">
+                          <div class="cart-item__description">
+                            <div class="cart-item__header">
+                              <div class="cart-item__title os-bold">
+                                {line.quantity}x {line.name}
+                              </div>
+                            </div>
+                          </div>
+                          <div class="cart-item__pricing">
+                            <div
+                              class="cart-price diagonal-strike line-compare {line.hasSavings}"
+                            >
+                              {line.totalDiscount}
+                            </div>
+                            <div class="checkout__line-item__final-price">
+                              {line.total}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
+
+            <div>
+              <div class="shipping-note">
+                Shipping and tax will be settled upon checkout confirmation
+              </div>
+            </div>
+
+            <div class="order-totals next-cart-has-items">
+              <div
+                class="order-totals__section order-totals__section--inset discount-row"
+              >
+                <div class="order-totals__line">
+                  <div class="order-totals__label-group">
+                    <div class="order-totals__label ts-lg tw-600">
+                      Today you saved<br />
+                    </div>
+                  </div>
+                  <div class="accordion__right">
+                    <div class="order-totals__label">Discount:<br /></div>
+                    <div class="order-totals__value ts-lg tw-600 cc-disc">
+                      {discounts}<br />
+                    </div>
+                  </div>
+                </div>
+                <div class="coupon-tags"></div>
+              </div>
+
+              <div class="order-totals__section">
+                <div class="order-totals__line">
+                  <div class="accordion__right">
+                    <div class="order-totals__label">Shipping<br /></div>
+                  </div>
+                  <div class="accordion__right">
+                    <div class="order-totals__value">{shipping}<br /></div>
+                  </div>
+                </div>
+                <div class="coupon-tags"></div>
+              </div>
+
+              <div class="order-totals__section cc-total">
+                <div class="order-totals__line order-totals__line--total">
+                  <div class="order-totals__label order-totals__label--total">
+                    Grand Total:
+                  </div>
+                  <div class="order-totals__value-group">
+                    <div class="summary-total__coin">
+                      {currency}<br />
+                    </div>
+                    <div class="order-totals__value order-totals__value--total">
+                      {total}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+</div>

@@ -10,7 +10,6 @@ scripts:
   - js/promo-timer.js
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js
   - js/checkout.js
-  - js/checkout-olympus-mv-full.js
 swiper_slides:
   - src: "images/1x1_1.svg"
     alt: ""
@@ -203,135 +202,78 @@ swiper_thumbs:
                       <div class="checkout-selectors">
                         <div class="form-section form-section--first">
                           <h2 class="form-section__title">Choose your package</h2>
-                          <div
-                            data-next-bundle-selector
-                            data-next-bundle-selector-id="main"
-                            data-next-bundle-slot-template-id="mv-slot-template"
-                            class="os-option"
-                          >
-                            <div class="os-cards__grid os--three">
-                              <div
-                                data-next-bundle-card
-                                data-next-bundle-id="buy1"
-                                data-next-bundle-items='[{"packageId":1,"quantity":1,"configurable":true}]'
-                                data-next-selected="true"
-                                role="button"
-                                class="os-card"
-                              >
-                                <div class="os-card__header-slot"></div>
-                                <div class="os-card__wrapper cc-sm">
-                                  <div class="os-card__content os-wrap">
-                                    <div class="os-card__radio">
-                                      <div data-selected="true" class="radio-style-1">
-                                        <div class="radio-inner"></div>
-                                      </div>
-                                    </div>
-                                    <div class="os-card__main-slot">
-                                      <div class="os-card__title-section">
-                                        <div class="os-card__title-wrapper">
-                                          <div data-next-display="package.name" class="os-card__title-2 os-bold">1x Unit</div>
-                                        </div>
-                                      </div>
+                          <template id="mv-bundle-template">
+                            <div
+                              data-next-bundle-card
+                              data-next-bundle-id="{bundle.id}"
+                              role="button"
+                              class="os-card"
+                            >
+                              <div class="os-card__header-slot"></div>
+                              <div class="os-card__wrapper cc-sm">
+                                <div class="os-card__content os-wrap">
+                                  <div class="os-card__radio">
+                                    <div data-selected="true" class="radio-style-1">
+                                      <div class="radio-inner"></div>
                                     </div>
                                   </div>
-                                  <div os-slot="bottom" class="os-card__bottom-slot cc-gap">
-                                    <div class="card-sup">Next Commerce Shirts</div>
-                                    <div class="os-card__subtitle-text-2">Save <span data-next-bundle-price="savingsPercentage">XX%</span> OFF</div>
+                                  <div class="os-card__main-slot">
+                                    <div class="os-card__title-section">
+                                      <div class="os-card__title-wrapper">
+                                        <div data-next-display="package.name" class="os-card__title-2 os-bold">{bundle.label}</div>
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
-                                <div os-slot="footer" class="os-card__footer-slot"></div>
-                                <div class="os-slots bundle-slots-source" style="display:none;">
-                                  <div data-next-bundle-slots></div>
+                                <div os-slot="bottom" class="os-card__bottom-slot cc-gap">
+                                  <div class="card-sup">Next Commerce Shirts</div>
+                                  <div class="os-card__subtitle-text-2">Save <span data-next-bundle-price="savingsPercentage">XX%</span> OFF</div>
                                 </div>
                               </div>
-                              <div
-                                data-next-bundle-card
-                                data-next-bundle-id="buy2"
-                                data-next-bundle-items='[{"packageId":1,"quantity":2,"configurable":true}]'
-                                role="button"
-                                class="os-card"
-                              >
-                                <div os-slot="header" class="os-card__header-slot"></div>
-                                <div class="os-card__wrapper cc-sm">
-                                  <div class="os-card__content os-wrap">
-                                    <div class="os-card__radio">
-                                      <div data-selected="true" class="radio-style-1">
-                                        <div class="radio-inner"></div>
-                                      </div>
-                                    </div>
-                                    <div class="os-card__main-slot">
-                                      <div class="os-card__title-section">
-                                        <div class="os-card__title-wrapper">
-                                          <div data-next-display="package.name" class="os-card__title-2 os-bold">2x Units</div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div os-slot="bottom" class="os-card__bottom-slot cc-gap">
-                                    <div class="card-sup">Next Commerce Shirts</div>
-                                    <div class="os-card__subtitle-text-2">Save <span data-next-bundle-price="savingsPercentage">XX%</span> OFF</div>
-                                  </div>
-                                </div>
-                                <div os-slot="footer" class="os-card__footer-slot"></div>
-                                <div class="os-slots bundle-slots-source" style="display:none;">
-                                  <div data-next-bundle-slots></div>
-                                </div>
-                                <div os-slot="label" class="os-card__label-slot">
-                                  <div os-label-position="top-right" class="os-card__label-2 os-card__label--middle-center os-card__label--pill-primary">
-                                    <div class="card-icons"><svg width="100%" height="100%" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M6.49512 0.5L8.40542 4.37069L12.677 4.99139L9.58605 8.00431L10.3157 12.2586L6.49512 10.25L2.67451 12.2586L3.40418 8.00431L0.31325 4.99139L4.58482 4.37069L6.49512 0.5Z" fill="#FF9425"></path>
-                                      </svg></div>
-                                    <div class="os-card__label-text-2">Most Popular</div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div
-                                data-next-bundle-card
-                                data-next-bundle-id="buy3"
-                                data-next-bundle-items='[{"packageId":1,"quantity":3,"configurable":true}]'
-                                role="button"
-                                class="os-card"
-                              >
-                                <div os-slot="header" class="os-card__header-slot"></div>
-                                <div class="os-card__wrapper cc-sm">
-                                  <div class="os-card__content os-wrap">
-                                    <div class="os-card__radio">
-                                      <div data-selected="true" class="radio-style-1">
-                                        <div class="radio-inner"></div>
-                                      </div>
-                                    </div>
-                                    <div class="os-card__main-slot">
-                                      <div class="os-card__title-section">
-                                        <div class="os-card__title-wrapper">
-                                          <div data-next-display="package.name" class="os-card__title-2 os-bold">3x Units</div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div os-slot="bottom" class="os-card__bottom-slot cc-gap">
-                                    <div class="card-sup">Next Commerce Shirts</div>
-                                    <div class="os-card__subtitle-text-2">Save <span data-next-bundle-price="savingsPercentage">XX%</span> OFF</div>
-                                  </div>
-                                </div>
-                                <div os-slot="footer" class="os-card__footer-slot"></div>
-                                <div class="os-slots bundle-slots-source" style="display:none;">
-                                  <div data-next-bundle-slots></div>
-                                </div>
-                                <div os-slot="label" class="os-card__label-slot">
-                                  <div os-label-position="top-right" class="os-card__label-2 os-card__label--middle-center os-card__label--pill-secondary">
-                                    <div class="card-icons"><svg width="100%" height="100%" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M6.49512 0.5L8.40542 4.37069L12.677 4.99139L9.58605 8.00431L10.3157 12.2586L6.49512 10.25L2.67451 12.2586L3.40418 8.00431L0.31325 4.99139L4.58482 4.37069L6.49512 0.5Z" fill="#FF9425"></path>
-                                      </svg></div>
-                                    <div class="os-card__label-text-2">Best Deal</div>
-                                  </div>
-                                </div>
+                              <div os-slot="footer" class="os-card__footer-slot"></div>
+                              <div class="os-slots bundle-slots-source" style="display:none;">
+                                <div data-next-bundle-slots></div>
                               </div>
                             </div>
+                          </template>
+                          <div
+                            class="os-cards__grid os--three"
+                            data-next-selector-id="main"
+                            data-next-bundle-selector
+                            data-next-selection-mode="swap"
+                            data-next-bundle-template-id="mv-bundle-template"
+                            data-next-bundle-slot-template-id="mv-slot-template"
+                            data-next-bundles='[
+                              {
+                                "id": "set01",
+                                "label": "1x Unit",
+                                "badge": "",
+                                "items": [{"packageId":1,"quantity":1,"configurable":true}],
+                                "vouchers": [],
+                                "selected": true
+                              },
+                              {
+                                "id": "set02",
+                                "label": "2x Unit",
+                                "badge": "Popular",
+                                "items": [{"packageId":1,"quantity":2,"configurable":true}],
+                                "vouchers": []
+                              },
+                              {
+                                "id": "set03",
+                                "label": "3x Unit",
+                                "badge": "Best Value",
+                                "items": [{"packageId":1,"quantity":3,"configurable":true}],
+                                "vouchers": []
+                              }
+                            ]'
+                            class="os-option"
+                          >
                           </div>
                         </div>
                         <div class="form-section form-section--first">
                           <h2 class="form-section__title">Select your color and size</h2>
-                          <div id="bundle-slots-stage" class="os-slots"></div>
+                          <div id="bundle-slots-stage" class="os-slots" data-next-bundle-slots-for="main"></div>
                         </div>
                         <template id="mv-slot-template">
                           <div class="next-slot">
@@ -343,9 +285,9 @@ swiper_thumbs:
                                 <div class="next-slot__image"><img loading="lazy" alt="" src="{item.image}"></div>
                                 <div class="os-card__pricing">
                                   <div class="os-card__price-container os--stacked">
-                                    <div class="os-card__price diagonal-strike">{item.originalUnitPrice}</div>
+                                    <div class="os-card__price diagonal-strike">{item.packageId} {item.originalUnitPrice}</div>
                                     <div class="os-card__price os--current">{item.unitPrice}/ea</div>
-                                    <div class="os-card__subtitle-text-2">Save <span data-next-bundle-price="savingsPercentage">XX%</span> OFF</div>
+                                    <div class="os-card__subtitle-text-2 {item.hasDiscount}">Save <span data-next-bundle-price="savingsPercentage">{item.totalDiscount}</span> OFF</div>
                                   </div>
                                 </div>
                               </div>
@@ -495,222 +437,7 @@ swiper_thumbs:
                               {% campaign_include 'express-checkout-inline.html' show_title=false %}
                               {% campaign_include 'payment-methods.html' show_paypal=true show_klarna=true show_apple_pay=true show_google_pay=true %}
                             </div>
-                            <div style="margin-top:6px; border-top:1px dashed #d1d5db; padding-top:12px;"></div>
-                            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;background:#fef3c7;color:#92400e;padding:2px 8px;display:inline-block;border-radius:3px;margin:8px 0 4px 0">Summary v2 — data-next-cart-summary</div>
-                            <!-- Summary v2 (SDK) — data-next-cart-summary -->
-                            <div class="form-section form-section--last">
-                              <div class="cart-box cart-box--card">
-                                <div class="summary-wrapper" data-next-cart-summary data-next-hide="cart.isEmpty">
-                                  <template>
-                                    <div class="order-summary">
-                                      <div class="order-summary__content">
-                                        <div data-os-cart-summary="line-wrapper" class="cart-items">
-                                          <div class="cart-summary__line pb--header">
-                                            <div class="cart-summary__line-item">
-                                              <div>Item</div>
-                                            </div>
-                                            <div class="cart-summary__line-item">
-                                              <div>Amount</div>
-                                            </div>
-                                          </div>
-                                          <div data-os-cart-summary="summary-scroll" class="cart-items__scroll-hint cart-items__scroll-hint--active hide">
-                                            <div>Scroll for more items</div>
-                                            <div class="icon__view-more"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                              <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z"></path>
-                                            </svg></div>
-                                          </div>
-
-                                          <!-- API summary lines -->
-                                          <div class="cart-items__list" data-summary-lines>
-                                            <template>
-                                              <div class="cart-item" data-package-id="{line.packageId}">
-                                                <div class="cart-item__wrapper">
-                                                  <div class="cart-item__details cc-left-0">
-                                                    <div class="cart-item__content">
-                                                      <div class="cart-item__description">
-                                                        <div class="cart-item__header">
-                                                          <div class="cart-item__title os-bold">{line.quantity}x {line.name}</div>
-                                                        </div>
-                                                        <div class="quantity-controls hide">
-                                                          <div data-flavor="original" class="cart-quantity-controls__container">
-                                                            <div data-package-id="{line.packageId}" data-next-quantity="decrease" role="button" class="quantity-controls__button quantity-controls__button--decrease">-</div>
-                                                            <div class="cart-quantity-controls__display">{line.quantity}</div>
-                                                            <div data-package-id="{line.packageId}" data-next-quantity="increase" role="button" class="quantity-controls__button quantity-controls__button--increase">+</div>
-                                                          </div>
-                                                        </div>
-                                                      </div>
-                                                      <div class="cart-item__pricing">
-                                                        <div class="cart-price diagonal-strike line-compare {line.hasSavings}">
-                                                          {line.priceRetailTotal}
-                                                        </div>
-                                                        <div class="checkout__line-item__final-price">{line.total}</div>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </template>
-                                          </div>
-                                        </div>
-
-                                        <div>
-                                          <div class="shipping-note">Shipping and tax will be settled upon checkout confirmation</div>
-                                        </div>
-
-                                        <div class="order-totals next-cart-has-items">
-                                          <div class="order-totals__line">
-                                            <div class="order-totals__label">Subtotal</div>
-                                            <div class="order-totals__value">{subtotal}</div>
-                                          </div>
-
-                                          <div class="order-totals__section order-totals__section--inset next-has-savings">
-                                            <div class="order-totals__line">
-                                              <div class="order-totals__label-group">
-                                                <div class="order-totals__label ts-lg tw-600">Today you saved<br></div>
-                                              </div>
-                                              <div class="accordion__right">
-                                                <div class="order-totals__label">Discount:<br></div>
-                                                <div class="order-totals__value ts-lg tw-600 cc-disc">{savings}<br></div>
-                                              </div>
-                                            </div>
-                                            <div class="coupon-tags"></div>
-                                          </div>
-
-                                          <div class="order-totals__section">
-                                            <div class="order-totals__line">
-                                              <div class="accordion__right">
-                                                <div class="order-totals__label">Shipping<br></div>
-                                              </div>
-                                              <div class="accordion__right">
-                                                <div class="order-totals__value">{shipping}<br></div>
-                                              </div>
-                                            </div>
-                                            <div class="coupon-tags"></div>
-                                          </div>
-
-                                          <div class="order-totals__section cc-total">
-                                            <div class="order-totals__line order-totals__line--total">
-                                              <div class="order-totals__label order-totals__label--total">Grand Total:</div>
-                                              <div class="order-totals__value-group">
-                                                <div data-next-display="cart.currency" class="summary-total__coin">USD<br></div>
-                                                <div class="order-totals__value order-totals__value--total">{total}</div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </template>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;background:#e2e8f0;color:#475569;padding:2px 8px;display:inline-block;border-radius:3px;margin:8px 0 4px 0">Summary v1 — data-next-display + data-next-cart-items</div>
-                            <!-- Summary v1 (legacy) — data-next-cart-items -->
-                            <div class="form-section form-section--last">
-                              <div class="cart-box cart-box--card">
-                                <div class="summary-wrapper">
-                                  <div class="order-summary">
-                                    <div class="order-summary__content">
-                                      <div data-os-cart-summary="line-wrapper" class="cart-items">
-                                        <div class="cart-summary__line pb--header">
-                                          <div class="cart-summary__line-item">
-                                            <div>Item</div>
-                                          </div>
-                                          <div class="cart-summary__line-item">
-                                            <div>Amount</div>
-                                          </div>
-                                        </div>
-                                        <div data-os-cart-summary="summary-scroll" class="cart-items__scroll-hint cart-items__scroll-hint--active hide">
-                                          <div>Scroll for more items</div>
-                                          <div class="icon__view-more"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                              <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z"></path>
-                                            </svg></div>
-                                        </div>
-                                        <div data-next-hide="cart.isEmpty"><template id="cart-item-template" class="item-template os-show">
-                                            <div data-cart-item-id="{item.id}" class="cart-item">
-                                              <div class="cart-item__wrapper">
-                                                <div class="cart-item__details cc-left-0">
-                                                  <div class="cart-item__content">
-                                                    <div class="cart-item__description">
-                                                      <div class="cart-item__header">
-                                                        <div pb-cart="line_item-title" class="cart-item__title">{item.quantity}x {item.variantName}</div>
-                                                      </div>
-                                                      <div class="quantity-controls hide">
-                                                        <div id="quantity_-item.packageId" data-flavor="original" class="cart-quantity-controls__container">
-                                                          <div data-package-id="{item.packageId}" data-next-quantity="decrease" role="button" class="quantity-controls__button quantity-controls__button--decrease">-</div>
-                                                          <div pb-cart="line_item-quantity" class="quantity-controls__display">{item.quantity}</div>
-                                                          <div data-package-id="{item.packageId}" data-next-quantity="increase" role="button" class="quantity-controls__button quantity-controls__button--increase">+</div>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                    <div class="cart-item__pricing">
-                                                      <div id="line_compare" pb-cart="line_item-compare_price" class="cart-price diagonal-strike">{item.lineCompare}</div>
-                                                      <div class="checkout__line-item__final-price">{item.lineTotal}</div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
-                                          </template>
-                                          <div data-group-items="" data-next-cart-items="" data-item-template-id="cart-item-template" class="cart-items__list"></div>
-                                        </div>
-                                      </div>
-                                      <div>
-                                        <div class="shipping-note">Shipping and tax will be settled upon checkout confirmation</div>
-                                      </div>
-                                      <div data-next-hide="cart.isEmpty" class="order-totals">
-                                        <div class="order-totals__line">
-                                          <div class="order-totals__label">Subtotal</div>
-                                          <div data-next-display="cart.subtotal" class="order-totals__value">$138.30<br></div>
-                                        </div>
-                                        <div data-next-show="cart.hasTotalSavings" class="order-totals__section">
-                                          <div class="order-totals__line">
-                                            <div class="order-totals__label-group">
-                                              <div class="order-totals__label ts-lg tw-600">Today you saved<br></div>
-                                            </div>
-                                            <div class="accordion__right">
-                                              <div class="order-totals__label">Discount:<br></div>
-                                              <div data-next-display="cart.totalSavingsAmount" class="order-totals__value ts-lg tw-600 cc-disc">$28.34<br></div>
-                                            </div>
-                                          </div>
-                                          <div class="coupon-tags"></div>
-                                        </div>
-                                        <div class="order-totals__section">
-                                          <div class="order-totals__line">
-                                            <div class="accordion__right">
-                                              <div class="order-totals__label">Shipping<br></div>
-                                            </div>
-                                            <div class="accordion__right">
-                                              <div data-next-display="cart.shipping" class="order-totals__value">--<br></div>
-                                            </div>
-                                          </div>
-                                          <div class="coupon-tags">
-                                            <div class="coupon-tag__summary">
-                                              <div class="coupon-tag__remove"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" focusable="false" aria-hidden="true" class="a8x1wu10 a8x1wuz _1fragem1y _1fragemof _1fragemkk _1fragemka _1fragemnm" fill="none" stroke="currentColor">
-                                                  <path stroke-linecap="round" d="M7.284 1.402h4.964a.35.35 0 0 1 .35.35v4.964a.7.7 0 0 1-.205.495L7.49 12.115a.7.7 0 0 1-.99 0L1.885 7.5a.7.7 0 0 1 0-.99L6.79 1.607a.7.7 0 0 1 .495-.205Z"></path>
-                                                  <circle cx="9.1" cy="4.9" r="0.7" fill="currentColor"></circle>
-                                                  <path stroke-linecap="round" stroke-linejoin="round" d="M9.102 4.897h-.005v.005h.005z"></path>
-                                                </svg></div>
-                                              <div>FREESHIPPING</div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div class="order-totals__section cc-total">
-                                          <div class="order-totals__line order-totals__line--total">
-                                            <div class="order-totals__label order-totals__label--total">Grand Total:</div>
-                                            <div class="order-totals__value-group">
-                                              <div data-next-display="cart.currency" class="summary-total__coin">USD<br></div>
-                                              <div data-next-display="cart.total" class="order-totals__value order-totals__value--total">$109.96</div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
+                            {% campaign_include 'cart-summary.html' %}
                             <div class="form-section form-section--last">
                               <div class="submit-section">
                                 <div class="submit-section__button"><button os-checkout-payment="combo" data-action="submit" type="submit" class="button cc-gold">
