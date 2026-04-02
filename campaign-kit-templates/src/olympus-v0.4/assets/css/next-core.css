@@ -146,10 +146,10 @@ html:not(.next-display-ready) [data-next-await]::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #efefef;
+  background-color: #f8f8f8;
   background-image: none;
   border-radius: inherit;
-  opacity: 0.85;
+  opacity: 1;
   animation: none;
   z-index: 1;
   pointer-events: none;
@@ -2263,6 +2263,17 @@ figcaption {
 /* Swiper component – variant sw1 (main + thumbs); shared by landing, upsells, checkout */
 [data-component="swiper"][data-variant="sw1"] .swiper-slide_image-wrap {
   aspect-ratio: 1 / 1;
+}
+
+/* Prevent uninitialized thumb flash — pre-style as flex row matching Swiper's layout */
+[data-component="swiper"][data-variant="sw1"] [swiper="slider-thumbs"]:not(.swiper-initialized) .swiper-wrapper {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+[data-component="swiper"][data-variant="sw1"] [swiper="slider-thumbs"]:not(.swiper-initialized) .swiper-slide {
+  min-width: 0;
+  overflow: hidden;
 }
 
 [data-component="swiper"][data-variant="sw1"] [swiper="slider-thumbs"] .swiper-slide {

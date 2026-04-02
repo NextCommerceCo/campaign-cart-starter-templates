@@ -7,6 +7,8 @@ This guide combines:
 
 All behavior below reflects current SDK behavior (`0.4.x`).
 
+**Related:** [`docs/safe-display-paths.md`](safe-display-paths.md) — full namespace allowlist covering `cart`, `package`, `selection`, `order`, `shipping`, and `bundle` display paths with format caveats.
+
 ## Quick Cheat Sheet
 
 ### 1) Base campaign prices (no coupon/offer adjustment)

@@ -181,6 +181,10 @@ Inside `<template>` elements the SDK uses single-brace tokens (not Liquid):
 - `CLAUDE.md` (this file) — AI context for working ON this repo. Not for SDK usage guidance.
 - `README.md` — public-facing: two-folder structure, developer workflow, template inventory, npm scripts, SDK links, AI rules pointer
 - `docs/campaign-page-kit-template-context.md` — AI context for developers working with campaign-kit-templates (see below)
+- `docs/safe-display-paths.md` — allowlist of safe `data-next-display` paths by namespace (cart, package, selection, order, shipping, bundle); includes `data-next-format` caveats and bundle display limitations
+- `docs/selector-attribute-cheatsheet.md` — package selector and selection.* display reference
+- `docs/bundle-display-cart-cheatsheet.md` — bundle display + cart summary tokens
+- `docs/sdk-0.4.0-migration.md` — 0.4.x migration notes, template crosswalk, upsell approaches A/B
 - `campaign-kit-template-CONTEXT.md` — **deleted** (wrong project layout, content migrated here and to README)
 
 ## SDK Customization Rules File — DONE

@@ -422,6 +422,30 @@ When using the Summary v2 enhancer:
 
 ---
 
+## Upsell Approaches (0.4.x)
+
+Two patterns exist. Choose based on whether you need voucher-aware pricing and coupon submission.
+
+| | Approach A — Package upsell | Approach B — Bundle upsell |
+|---|---|---|
+| Container | `data-next-upsell="offer"` + `data-next-package-id` | `data-next-bundle-selector` + `data-next-upsell-context` |
+| Pricing display | `data-next-display="package.*"` + `data-next-multiply-quantity` | `data-next-bundle-display="price/originalPrice/discountPercentage"` |
+| Quantity | `data-next-upsell-quantity-toggle` — scales displayed prices | `data-next-upsell-quantity-toggle` — scales displayed prices only; does **NOT** update `data-next-bundle-items` quantity |
+| Voucher on accept | ❌ Not sent — `UpsellEnhancer` only attaches vouchers on bundle path (`ctx.bundleItems?.length`) | ✅ Sent — selected card's `data-next-bundle-vouchers` included in `AddUpsellLine` payload |
+| Voucher-aware UI pricing | ❌ `calculatePackageDiscountAmount()` is a no-op; `package.*` values are catalog math only | ✅ Vouchers merged into `calculateBundlePrice` at init — bundle display reflects codes |
+| Checkout coupon re-fetch | ❌ Not triggered in upsell context | ❌ Not triggered either — bundle price only re-fetched at init in upsell context |
+| Requires SDK | Any | **≥ 0.4.7** |
+| Accept button | `data-next-upsell-action="add"` | `data-next-upsell-action="add"` + `data-next-upsell-action-for="[selectorId]"` |
+| Skip button | `data-next-upsell-action="skip"` | `data-next-upsell-action="skip"` (on outer wrapper, not inside bundle selector) |
+
+**When to use each:**
+- **Approach A** — simple add-on where the offer price is baked into the campaign package. No coupons needed. Works today.
+- **Approach B** — offer price is driven by a voucher code (e.g. `UPSELL20`). Code must exist in the campaign. Use a separate card per quantity tier for per-qty pricing; the qty toggle does not recompute bundle item totals.
+
+Reference implementation: `olympus-v0.4/upsell.html` (both approaches with status comments).
+
+---
+
 ## Open Issues (templates)
 
 - **`olympus-v0.4/checkout.html`** — primary **bundle selector** reference; detailed QA/issues in [`docs/olympus-v0.4.0-bundle-selector-bug-log.md`](olympus-v0.4.0-bundle-selector-bug-log.md). Watch **Known #8** (tier swap → cart lines), **#9** (summary `{line.priceRetailTotal}`), **#10** (`cart.discountCode` / coupon display resolver), **#3** (shipping vs summary), **#7** (bumps on old pattern).
