@@ -131,3 +131,4 @@ Copy [docs/campaign-page-kit-template-context.md](docs/campaign-page-kit-templat
 
 - [Official docs](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/)
 - [SDK source](https://github.com/NextCommerceCo/campaign-cart)
+- [Bundle display & cart summary cheat sheet](docs/bundle-display-cart-cheatsheet.md) (this repo — `data-next-bundle-display`, summary `{line.*}`, voucher lists)

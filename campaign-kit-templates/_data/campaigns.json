@@ -79,10 +79,10 @@
     "gtm_id": "GTM-XXXXXXX",
     "fb_pixel_id": "123456789012345"
   },
-  "olympus-v0.4.0-sdk": {
-    "name": "Olympus v0.4.0 SDK",
-    "description": "Olympus checkout funnel for v0.4.0 SDK migration testing",
-    "sdk_version": "0.4.6",
+  "olympus-v0.4": {
+    "name": "Olympus v0.4",
+    "description": "Olympus checkout funnel (SDK 0.4.x)",
+    "sdk_version": "0.4.8",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",
@@ -127,9 +127,9 @@
     "gtm_id": "GTM-XXXXXXX",
     "fb_pixel_id": "123456789012345"
   },
-  "olympus-mv-single-step-v0.4.0-sdk": {
-    "name": "Olympus MV Single Step v2",
-    "description": "Copy of Olympus MV Single Step",
+  "olympus-mv-single-step-v0.4-cards": {
+    "name": "Olympus MV Single Step v0.4 Cards",
+    "description": "Olympus MV single-step with card-based bundle selector (bridge JS, SDK 0.4.6)",
     "sdk_version": "0.4.6",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
@@ -143,9 +143,9 @@
     "gtm_id": "GTM-XXXXXXX",
     "fb_pixel_id": "123456789012345"
   },
-  "olympus-mv-single-step2-v0.4.0-sdk": {
-    "name": "Olympus MV Single Step v3",
-    "description": "Copy of Olympus MV Single Step v2",
+  "olympus-mv-single-step-v0.4-bridge": {
+    "name": "Olympus MV Single Step v0.4 Bridge",
+    "description": "Olympus MV single-step with bridge JS external slots (SDK 0.4.6)",
     "sdk_version": "0.4.6",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
@@ -159,10 +159,10 @@
     "gtm_id": "GTM-XXXXXXX",
     "fb_pixel_id": "123456789012345"
   },
-  "olympus-mv-single-step-0.4.6-sdk": {
-    "name": "Olympus MV Single Step V4",
-    "description": "Copy of Olympus MV Single Step v3",
-    "sdk_version": "0.4.6",
+  "olympus-mv-single-step-v0.4": {
+    "name": "Olympus MV Single Step v0.4",
+    "description": "Olympus MV single-step with native external slots (SDK 0.4.x)",
+    "sdk_version": "0.4.8",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",

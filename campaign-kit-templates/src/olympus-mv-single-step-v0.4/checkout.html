@@ -5,6 +5,7 @@ next_success_url: upsell-mv.html
 promo_sale: "default"
 styles:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
+  - css/checkout.css
 scripts:
   - js/promo-banner.js
   - js/promo-timer.js
@@ -200,12 +201,16 @@ swiper_thumbs:
                     </div>
                     <promo-timer{% if promo_sale %} force-sale="{{ promo_sale }}"{% endif %}></promo-timer>
                     <div class="checkout-form">
-                      <div class="checkout-selectors">
+                      <div class="checkout-selectors"  data-next-await="">
                         <div class="form-section form-section--first">
                           <h2 class="form-section__title">Choose your package</h2>
+                          <!--
+                            Slot variants: SDK injects <select class="next-slot-variant-select" data-next-variant-code="…"> (0.4.x). checkout-olympus-mv-full.js swaps in button + os-dropdown-menu; keeps select hidden for cart. Colors: BUNDLE_SLOT_COLOR_STYLES. display:contents on [data-next-variant-selectors] for .os-card__variant-grid.cc-horiz. Optional: data-next-variant-option-template-id (Liquid comment below).
+                          -->
                           <div
                             data-next-bundle-selector
                             data-next-selector-id="main"
+                            data-next-selection-mode="swap"
                             data-next-bundle-slot-template-id="mv-slot-template"
                             class="os-option"
                           >
@@ -229,7 +234,7 @@ swiper_thumbs:
                                     <div class="os-card__main-slot">
                                       <div class="os-card__title-section">
                                         <div class="os-card__title-wrapper">
-                                          <div data-next-display="package.name" class="os-card__title-2 os-bold">1x Unit</div>
+                                          <div class="os-card__title-2 os-bold">1x Unit</div>
                                         </div>
                                       </div>
                                     </div>
@@ -252,14 +257,14 @@ swiper_thumbs:
                                 <div class="os-card__wrapper cc-sm">
                                   <div class="os-card__content os-wrap">
                                     <div class="os-card__radio">
-                                      <div data-selected="true" class="radio-style-1">
+                                      <div class="radio-style-1">
                                         <div class="radio-inner"></div>
                                       </div>
                                     </div>
                                     <div class="os-card__main-slot">
                                       <div class="os-card__title-section">
                                         <div class="os-card__title-wrapper">
-                                          <div data-next-display="package.name" class="os-card__title-2 os-bold">2x Units</div>
+                                          <div class="os-card__title-2 os-bold">2x Units</div>
                                         </div>
                                       </div>
                                     </div>
@@ -290,14 +295,14 @@ swiper_thumbs:
                                 <div class="os-card__wrapper cc-sm">
                                   <div class="os-card__content os-wrap">
                                     <div class="os-card__radio">
-                                      <div data-selected="true" class="radio-style-1">
+                                      <div class="radio-style-1">
                                         <div class="radio-inner"></div>
                                       </div>
                                     </div>
                                     <div class="os-card__main-slot">
                                       <div class="os-card__title-section">
                                         <div class="os-card__title-wrapper">
-                                          <div data-next-display="package.name" class="os-card__title-2 os-bold">3x Units</div>
+                                          <div class="os-card__title-2 os-bold">3x Units</div>
                                         </div>
                                       </div>
                                     </div>
@@ -322,9 +327,16 @@ swiper_thumbs:
                         </div>
                         <div class="form-section form-section--first">
                           <h2 class="form-section__title">Select your color and size</h2>
-                          <div data-next-bundle-slots-for="main" class="os-slots"></div>
+                          <!-- id=bundle-slots-stage: data-next-bundle-slots-for target; variant dropdown JS + next-core slot styles -->
+                          <div data-next-bundle-slots-for="main" class="os-slots" id="bundle-slots-stage"></div>
                         </div>
-                        <template id="mv-slot-template">
+                        {% comment %}
+                          Optional (C): add data-next-variant-option-template-id="variant-option-template" on data-next-bundle-selector and uncomment .mv-variant-btn rules in assets/css/checkout.css.
+                          <template id="variant-option-template">
+                            <button type="button" class="mv-variant-btn" data-selected="{option.selected}" data-available="{option.available}" data-attr-code="{attr.code}" style="--swatch:{option.value}">{option.value}</button>
+                          </template>
+                        {% endcomment %}
+                        <template id="mv-slot-template" >
                           <div class="next-slot">
                             <div class="next-slot__step">
                               <div># {slot.unitNumber}</div>
@@ -336,13 +348,15 @@ swiper_thumbs:
                                   <div class="os-card__price-container os--stacked">
                                     <div class="os-card__price diagonal-strike">{item.originalUnitPrice}</div>
                                     <div class="os-card__price os--current">{item.unitPrice}/ea</div>
-                                    <div class="os-card__subtitle-text-2">Save <span data-next-bundle-display="discountPercentage">XX%</span> OFF</div>
+                                    <!-- Slots rendered under data-next-bundle-slots-for sit outside [data-next-bundle-card]; bundle-display slots do not bind. Use remote bundle.{selectorId} (matches data-next-selector-id="main"). -->
+                                    <div class="os-card__subtitle-text-2">Save <span data-next-display="bundle.main.discountPercentage">-</span> OFF</div>
                                   </div>
                                 </div>
                               </div>
-                              <div class="os-slot__selection cc-big">
+                              <div class="os-slot__selection cc-big" >
                                 <div class="os-card__variant-options">
                                   <div class="os-card__variant-grid cc-horiz">
+                                    <!-- SDK placeholder (native select); JS swaps to button + menu UI like olympus-mv-single-step checkout -->
                                     <div data-next-variant-selectors></div>
                                   </div>
                                 </div>
@@ -576,7 +590,7 @@ swiper_thumbs:
                                                 <div class="order-totals__value ts-lg tw-600 cc-disc">{discounts}</div>
                                               </div>
                                             </div>
-                                            <!-- BS-014 / Known #10: cart.discountCode + cart.hasCoupon not wired in CartSummaryEnhancer.display resolveValue; eng one-liner in docs/olympus-v0.4.0-bundle-selector-bug-log.md. Code + amount: data-summary-voucher-discounts above. -->
+                                            <!-- BS-014 / Known #10: cart.discountCode + cart.hasCoupon not wired in CartSummaryEnhancer.display resolveValue; eng one-liner in docs/olympus-v0.4.0-bundle-selector-bug-log.md. Code + amount: data-summary-voucher-discounts above. Intentionally keeping this block until SDK fix (re-test after Known #10). -->
                                             <div class="coupon-tags">
                                               <div data-next-show="cart.hasCoupon" class="order-totals__line items-center">
                                                 <div class="cart-subtext">Code applied</div>

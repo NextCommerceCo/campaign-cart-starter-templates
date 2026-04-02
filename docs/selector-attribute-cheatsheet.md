@@ -110,6 +110,8 @@ Use inside `data-next-bundle-card` elements. Fully coupon + offer aware. Support
 
 ### Bundle Selector Card Slots (`data-next-bundle-price`)
 
+Full **`data-next-bundle-display`** field list, **`bundle.{selectorId}.*`** remote keys, and cart summary **`{line.*}`** tokens: [`docs/bundle-display-cart-cheatsheet.md`](bundle-display-cart-cheatsheet.md).
+
 | Attribute | Affected by coupons/vouchers | Affected by backend offers | Notes |
 |-----------|:----------------------------:|:--------------------------:|-------|
 | `data-next-bundle-price` | Yes | Yes | Default total |

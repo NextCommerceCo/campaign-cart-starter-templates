@@ -119,6 +119,7 @@
 html:not(.next-display-ready) [data-next-await] {
   position: relative;
   overflow: hidden;
+  border-radius: 6px;
   border-color: transparent !important;
   box-shadow: none !important;
 }
@@ -128,31 +129,50 @@ html:not(.next-display-ready) [data-next-await] {
   transition: opacity 0.2s ease;
 }
 
-[data-next-await]::before {
+@keyframes next-await-shimmer-sweep {
+  0% {
+    left: -55%;
+  }
+
+  100% {
+    left: 100%;
+  }
+}
+
+html:not(.next-display-ready) [data-next-await]::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #e0e0e0;
-  animation: pulse-gray 1.5s ease-in-out infinite;
+  background-color: #efefef;
+  background-image: none;
+  border-radius: inherit;
+  opacity: 0.85;
+  animation: none;
   z-index: 1;
   pointer-events: none;
 }
 
-@keyframes pulse-gray {
-
-  0%,
-  100% {
-    background-color: #e0e0e0;
-    opacity: 0.6;
-  }
-
-  50% {
-    background-color: #f5f5f5;
-    opacity: 0.8;
-  }
+html:not(.next-display-ready) [data-next-await]::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 55%;
+  left: -55%;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.12) 35%,
+    rgba(255, 255, 255, 0.55) 50%,
+    rgba(255, 255, 255, 0.12) 65%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: next-await-shimmer-sweep 0.95s linear infinite;
 }
 
 html.next-display-ready [data-next-await] * {
@@ -160,6 +180,10 @@ html.next-display-ready [data-next-await] * {
 }
 
 html.next-display-ready [data-next-await]::before {
+  display: none;
+}
+
+html.next-display-ready [data-next-await]::after {
   display: none;
 }
 

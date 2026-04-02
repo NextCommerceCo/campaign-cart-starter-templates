@@ -1,6 +1,6 @@
 # Olympus v0.4.0 SDK — QA checklist
 
-**Scope:** `campaign-kit-templates/src/olympus-v0.4.0-sdk/`  
+**Scope:** `campaign-kit-templates/src/olympus-v0.4/`  
 **SDK:** Pin `sdk_version` in `_data/campaigns.json` (e.g. `0.4.6`).  
 **Bug log:** [`olympus-v0.4.0-bundle-selector-bug-log.md`](./olympus-v0.4.0-bundle-selector-bug-log.md)
 

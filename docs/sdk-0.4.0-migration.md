@@ -2,7 +2,7 @@
 
 Tracks changes needed across templates when upgrading from SDK 0.3.x to 0.4.0.
 
-**Bundle selector reference template:** `campaign-kit-templates/src/olympus-v0.4.0-sdk/` — QA [`docs/olympus-v0.4.0-sdk-qa-checklist.md`](olympus-v0.4.0-sdk-qa-checklist.md), issue log [`docs/olympus-v0.4.0-bundle-selector-bug-log.md`](olympus-v0.4.0-bundle-selector-bug-log.md).
+**Bundle selector reference template:** `campaign-kit-templates/src/olympus-v0.4/` — QA [`docs/olympus-v0.4.0-sdk-qa-checklist.md`](olympus-v0.4.0-sdk-qa-checklist.md), issue log [`docs/olympus-v0.4.0-bundle-selector-bug-log.md`](olympus-v0.4.0-bundle-selector-bug-log.md).
 
 ---
 
@@ -10,9 +10,9 @@ Tracks changes needed across templates when upgrading from SDK 0.3.x to 0.4.0.
 
 When upgrading a template to a new SDK version, **clone the existing template folder to a new versioned slug** — do not modify the original. The original stays locked to its SDK version as a stable baseline.
 
-Example: upgrading `olympus` (0.3.12) → clone to `olympus-v0.4.0-sdk`, make all changes there. `olympus/` remains untouched.
+Example: upgrading `olympus` (0.3.12) → clone to `olympus-v0.4`, make all changes there. `olympus/` remains untouched.
 
-- New folder name: `[template-name]-v[sdk-version]-sdk` (e.g. `olympus-v0.4.0-sdk`)
+- New folder name: `[template-name]-v[sdk-major.minor]` (e.g. `olympus-v0.4`)
 - Add a matching entry in `campaigns.json` with the correct `sdk_version`
 - The original template entry in `campaigns.json` keeps its original `sdk_version`
 
@@ -20,7 +20,7 @@ Example: upgrading `olympus` (0.3.12) → clone to `olympus-v0.4.0-sdk`, make al
 
 ## Attribute Reference
 
-Full reference: [`docs/selector-attribute-cheatsheet.md`](selector-attribute-cheatsheet.md)
+Full reference: [`docs/selector-attribute-cheatsheet.md`](selector-attribute-cheatsheet.md) · [`docs/bundle-display-cart-cheatsheet.md`](bundle-display-cart-cheatsheet.md)
 
 ### Quick decision matrix
 
@@ -310,7 +310,8 @@ Full example (distinct package IDs per card):
 
 | Template | Selector fix | Token renames | Bug fixes | Notes |
 |----------|-------------|---------------|-----------|-------|
-| `olympus-v0.4.0-sdk` | ✅ bundle selector | ✅ 0.4.x | 🔄 QA | Reference **bundle** checkout (`data-next-bundle-selector` + Summary v2). Open: **#8** (swap/add lines), **#9** (summary tokens), **#10** (`cart.discountCode` / coupon display), **#3** shipping vs totals, bump **#7** — [bundle bug log](olympus-v0.4.0-bundle-selector-bug-log.md) |
+| `olympus-v0.4` | ✅ bundle selector | ✅ 0.4.x → **0.4.8** | 🔄 QA | Reference **bundle** checkout (`data-next-bundle-selector` + Summary v2). Open: **#8** (swap/add lines), **#9** (summary tokens), **#10** (`cart.discountCode` / coupon display), **#3** shipping vs totals, bump **#7** — [bundle bug log](olympus-v0.4.0-bundle-selector-bug-log.md) |
+| `olympus-mv-single-step-v0.4` | ✅ native external slots | ✅ 0.4.x → **0.4.8** | 🔄 QA | Native `data-next-bundle-slots-for` + `data-next-variant-selector-template-id`. Replaces bridge JS. Pending: variant toggle initial state, swatch update. |
 | `olympus` | 🔄 in progress | 🔄 in progress | 🔄 in progress | Legacy **multi-package** track: `savingsAmount`/`savingsPercentage` static; `data-next-package-price` compare/savings wrong for multi-package; `finalPriceTotal` coupon-aware for totals only |
 | `olympus-mv-single-step` | ⬜ pending | ⬜ pending | — | |
 | `olympus-mv-two-step` | ⬜ pending | ⬜ pending | — | |
@@ -423,7 +424,7 @@ When using the Summary v2 enhancer:
 
 ## Open Issues (templates)
 
-- **`olympus-v0.4.0-sdk/checkout.html`** — primary **bundle selector** reference; detailed QA/issues in [`docs/olympus-v0.4.0-bundle-selector-bug-log.md`](olympus-v0.4.0-bundle-selector-bug-log.md). Watch **Known #8** (tier swap → cart lines), **#9** (summary `{line.priceRetailTotal}`), **#10** (`cart.discountCode` / coupon display resolver), **#3** (shipping vs summary), **#7** (bumps on old pattern).
+- **`olympus-v0.4/checkout.html`** — primary **bundle selector** reference; detailed QA/issues in [`docs/olympus-v0.4.0-bundle-selector-bug-log.md`](olympus-v0.4.0-bundle-selector-bug-log.md). Watch **Known #8** (tier swap → cart lines), **#9** (summary `{line.priceRetailTotal}`), **#10** (`cart.discountCode` / coupon display resolver), **#3** (shipping vs summary), **#7** (bumps on old pattern).
 - `olympus/checkout.html` — legacy **multi-package** selector; QA ongoing; bumps holding on old 0.3.x pattern (SDK issue #7).
 - Multi-package limitation: `savingsAmount`/`savingsPercentage` are static (retail-vs-base only); coupons reflect only in `finalPriceTotal`. `data-next-package-price="compare"/"savings"` slots return per-unit retail (not package total) for multi-package setups — **Known #4**.
-- **Bundle selector** (`olympus-v0.4.0-sdk`) is the supported direction for coupon+offer-aware tier cards (`data-next-bundle-price` / `data-next-bundle-vouchers`). Remaining SDK blockers include **#5** (raw slot template numbers), **#7** (bump regression), **#8** (swap semantics), **#9** (summary line tokens), **#10** (cart coupon display keys).
+- **Bundle selector** (`olympus-v0.4`) is the supported direction for coupon+offer-aware tier cards (`data-next-bundle-price` / `data-next-bundle-vouchers`). Remaining SDK blockers include **#5** (raw slot template numbers), **#7** (bump regression), **#8** (swap semantics), **#9** (summary line tokens), **#10** (cart coupon display keys).

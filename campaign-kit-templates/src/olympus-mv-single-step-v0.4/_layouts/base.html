@@ -5,7 +5,7 @@
     <title>{{ title }}</title>
     <meta content="{{ title }}" property="og:title">
     <meta content="{{ title }}" property="twitter:title">
-    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <link rel="dns-prefetch" href="//campaigns.apps.29next.com">
     <link rel="dns-prefetch" href="//cdn-countries.muddy-wind-c7ca.workers.dev">
@@ -59,8 +59,6 @@
 
     <link href="{{ 'images/favicon.png' | campaign_asset }}" rel="shortcut icon" type="image/x-icon">
     <link href="{{ 'images/webclip.png' | campaign_asset }}" rel="apple-touch-icon">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   </head>
   <body>
     {% unless environment == "development" %}

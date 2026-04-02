@@ -1,6 +1,6 @@
 # Olympus v0.4.0 Bundle Selector Bug Log
 
-Scope: `campaign-kit-templates/src/olympus-v0.4.0-sdk/` only (single-variant bundle selector + bumps + cart summary on that checkout).
+Scope: `campaign-kit-templates/src/olympus-v0.4/` only (single-variant bundle selector + bumps + cart summary on that checkout).
 
 **Out of scope here:** `olympus-mv-*` multivariant checkouts (per-unit bundle slots, external variant UI, clone+bridge, `{item.*}` slot tokens) — track those in a separate doc when you pick that work up.
 
@@ -38,7 +38,7 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 - Status: `blocked`
 - Severity: `high`
 - Date logged: `2026-03-31`
-- Where: `olympus-v0.4.0-sdk/checkout.html` (Step 1 bundle selector)
+- Where: `olympus-v0.4/checkout.html` (Step 1 bundle selector)
 - Repro steps:
   1. Use Step 4 auto-render (`data-next-bundles` + `data-next-bundle-template-id`).
   2. Put `data-next-display="package.name"` and `data-next-display="package.image"` inside the template card.
@@ -127,7 +127,7 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 - Status: `verified`
 - Severity: `high`
 - Date logged: `2026-03-31`
-- Where: `olympus-v0.4.0-sdk/checkout.html` Step 1 bundle cards
+- Where: `olympus-v0.4/checkout.html` Step 1 bundle cards
 - Repro steps:
   1. Use `<span data-next-bundle-price>-</span>` inside `data-next-bundle-card`.
   2. Load page and select tiers.
@@ -145,7 +145,7 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 - Status: `open`
 - Severity: `low`
 - Date logged: `2026-03-31`
-- Where: bundle card title (`.os-card__title`) in `olympus-v0.4.0-sdk/checkout.html`
+- Where: bundle card title (`.os-card__title`) in `olympus-v0.4/checkout.html`
 - Request:
   - Add a documented bundle display token/attribute for per-card quantity (for example `data-next-bundle-display="quantity"`), so templates can render `1x/2x/3x` without custom JS.
 - Current workaround:
@@ -158,7 +158,7 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 - Status: `open`
 - Severity: `medium`
 - Date logged: `2026-03-31`
-- Where: `olympus-v0.4.0-sdk/_includes/bump-check01-v2.html` vs `bump-check01.html`, `checkout.html` bundle + `data-next-package-sync="1"`
+- Where: `olympus-v0.4/_includes/bump-check01-v2.html` vs `bump-check01.html`, `checkout.html` bundle + `data-next-package-sync="1"`
 - Observed:
   - `data-next-toggle-price` and `data-next-toggle-price="compare"` can both show the **same** value when the warranty package has no separate discount/list story in the toggle preview; adding a **Campaigns offer** on the warranty can make compare vs sale diverge.
   - With **`data-next-package-sync`** and a **bundle selector** that uses **one main `packageId`** (qty 1/2/3 on that line), [Step 7 quantity sync](https://developers.nextcommerce.com/docs/campaigns/guides/selling-addons#step-7-quantity-sync-warranty-per-unit) is still the right model (`data-next-package-sync="1"` sums cart qty for package `1`).
@@ -177,7 +177,7 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 - Status: `open`
 - Severity: `low`
 - Date logged: `2026-03-31`
-- Where: `olympus-v0.4.0-sdk/checkout.html` — `[data-next-cart-summary]` nested `data-summary-lines` row template (`{line.originalPackagePrice}`, `{line.total}`)
+- Where: `olympus-v0.4/checkout.html` — `[data-next-cart-summary]` nested `data-summary-lines` row template (`{line.originalPackagePrice}`, `{line.total}`)
 - Docs: [Cart Summary — line item variables](https://developers.nextcommerce.com/docs/campaigns/guides/cart-summary#line-item-variables)
 - Problem:
   - Line placeholders render **fully formatted** money strings (symbol + amount). When the layout already shows **currency once** (e.g. grand total column with `data-next-display="cart.currency"` / ISO code), repeating the symbol on **every line** is redundant and noisy.
@@ -207,7 +207,7 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 - Status: `open`
 - Severity: `medium`
 - Date logged: `2026-03-31`
-- Where: `olympus-v0.4.0-sdk/checkout.html` — `[data-next-bundle-card]`; **`campaign-kit-templates/src/olympus/checkout.html`** — `data-next-package-selector` + `data-next-selection-mode="swap"` + `data-next-selector-card`
+- Where: `olympus-v0.4/checkout.html` — `[data-next-bundle-card]`; **`campaign-kit-templates/src/olympus/checkout.html`** — `data-next-package-selector` + `data-next-selection-mode="swap"` + `data-next-selector-card`
 - Observed:
   - **Bundle selector:** **`data-next-shipping-id`** is **not** listed on **`data-next-bundle-card`** in **`docs/sdk-0.4.0-migration.md`**. Adding it per tier (1x / 2x / 3x) **does nothing** in practice — undocumented / unsupported for bundle markup.
   - **Standard package swap selector:** the attribute **is** documented on **`data-next-selector-card`**, but it **still does not work end-to-end** for checkout UX: migration **§ Known #3** — cart state can show the expected `shippingMethod` ref_id after card select, while **summary shipping line and grand total** often **do not** follow that method (downstream totals look stuck on default/fixed shipping).
@@ -223,7 +223,7 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 - Status: `open`
 - Severity: `high`
 - Date logged: `2026-04-01`
-- Where: `olympus-v0.4.0-sdk/checkout.html` — `[data-next-cart-summary]` → `data-summary-lines` row template
+- Where: `olympus-v0.4/checkout.html` — `[data-next-cart-summary]` → `data-summary-lines` row template
 - Docs: [Cart Summary — line item variables](https://developers.nextcommerce.com/docs/campaigns/guides/cart-summary#line-item-variables) (`{line.priceRetail}` = compare unit; `{line.originalPackagePrice}` = package total before discount; `{line.priceRetailTotal}` **not** in public table — internal/summary API field expected to mean full-line compare total per `olympus/checkout.html` v2 comments)
 - Observed:
   - For bundle / multi-qty lines, **`{line.priceRetailTotal}`** resolves to the **same formatted value** as **`{line.priceRetail}`** and **`{line.originalPackagePrice}`** (or otherwise does **not** reflect **line qty × list** / full-line retail).
@@ -241,7 +241,7 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 - Status: `open`
 - Severity: `high`
 - Date logged: `2026-04-01` (updated: continuous-add primary symptom)
-- Where: `olympus-v0.4.0-sdk/checkout.html` — single active `data-next-bundle-selector` (`data-next-selector-id="drone-packages"` — SDK reads **`data-next-selector-id`**, not `data-next-bundle-selector-id`), `data-next-selection-mode="swap"`, `[data-next-cart-summary]` line list  
+- Where: `olympus-v0.4/checkout.html` — single active `data-next-bundle-selector` (`data-next-selector-id="drone-packages"` — SDK reads **`data-next-selector-id`**, not `data-next-bundle-selector-id`), `data-next-selection-mode="swap"`, `[data-next-cart-summary]` line list  
   - Verified: only **one** selector root in built HTML (auto-render block is `{% comment %}`-wrapped, not emitted).
 - Doc expectation ([Bundle Set Sale](https://developers.nextcommerce.com/docs/campaigns/guides/bundle-set-sale)): selecting a card should **replace** the previous bundle — “**atomic swap — no double-add**”. The guide’s basic markup does **not** use `data-next-selection-mode` on the bundle root (that attribute appears in migration examples; confirm with SDK whether it is valid/ignored/misread on bundle selector).
 - Repro steps:
@@ -269,7 +269,7 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 - Status: `open`
 - Severity: `medium`
 - Date logged: `2026-04-01`
-- Where: `olympus-v0.4.0-sdk/checkout.html` — `[data-next-cart-summary]` template → coupon badge (`cart.hasCoupon` + `cart.discountCode`); any page using the same cart display bindings
+- Where: `olympus-v0.4/checkout.html` — `[data-next-cart-summary]` template → coupon badge (`cart.hasCoupon` + `cart.discountCode`); any page using the same cart display bindings
 - Root cause (engineering):
   - Cart display now lives under **cart summary** (`CartSummaryEnhancer.display.ts` / `resolveValue`) with an **explicit property switch**. It handles totals-style fields (`subtotal`, `total`, `totalDiscount`, shipping, `itemCount`, etc.) only.
   - It does **not** handle **`discountCode`**, **`hasCoupon`**, **`hasCoupons`**, **`discountCodes`**, **`coupons[0].code`**, etc. Unknown keys hit the **default** branch → console **“Unknown cart display property”** → **`undefined`** → node stays empty.
