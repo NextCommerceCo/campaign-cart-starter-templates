@@ -535,7 +535,7 @@ swiper_thumbs:
                                                           <div class="cart-item__title os-bold">
                                                             {line.quantity}x {line.name}
                                                             <div>
-                                                              <div class="text-2xs text-muted text-weight-normal diagonal-strike {line.hasSavings}">{line.priceRetail}/ea</div>
+                                                              <div class="text-2xs text-muted text-weight-normal diagonal-strike {line.hasSavings}">{line.originalPackagePrice}/ea</div>
                                                               <div class="text-2xs text-muted text-weight-normal">{line.unitPrice}/ea</div>
                                                             </div>
                                                           </div>
@@ -544,9 +544,7 @@ swiper_thumbs:
                                                       </div>
                                                       <div class="cart-item__pricing">
                                                         <!-- BS-012: {line.priceRetailTotal} should = full-line list total. If it equals {line.priceRetail} or {line.originalPackagePrice}, summary API/SDK is wrong — see docs/olympus-v0.4.0-bundle-selector-bug-log.md -->
-                                                        <div class="cart-price diagonal-strike line-compare {line.hasSavings}">
-                                                          {line.priceRetailTotal}
-                                                        </div>
+                                                        <div class="cart-price diagonal-strike line-compare {line.hasSavings}">{line.originalPackagePrice}</div>
                                                         <div class="checkout__line-item__final-price">{line.total}</div>
                                                       </div>
                                                     </div>
@@ -598,6 +596,7 @@ swiper_thumbs:
                                                 <div class="order-totals__value ts-lg tw-600 cc-disc">{discounts}</div>
                                               </div>
                                             </div>
+                                            <!-- BS-014 / Known #10: cart.discountCode + cart.hasCoupon not wired in CartSummaryEnhancer.display resolveValue; eng one-liner in docs/olympus-v0.4.0-bundle-selector-bug-log.md. Code + amount: data-summary-voucher-discounts above. -->
                                             <div class="coupon-tags">
 
                                               <div data-next-show="cart.hasCoupon" class="order-totals__line items-center">

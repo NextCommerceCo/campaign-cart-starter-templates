@@ -47,7 +47,7 @@ Use a real campaign (offers, shipping methods, coupons as in production). Update
 | **Lines** | `{line.quantity}`, name, `{line.unitPrice}/ea`, strike + `{line.total}` when tier/coupon changes. | Crosswalk |
 | **Offer / voucher lists** | `data-summary-offer-discounts` / `data-summary-voucher-discounts` populate when the campaign has those discounts. | — |
 | **Rollup** | “Today you saved” + `{discounts}` vs line-level savings — no **$0** rollup when lines show savings. Watch for **`next-calculating`** flicker (SDK 0.4.5+). | BS-010 |
-| **Coupon badge** | After apply: `cart.hasCoupon` row; `cart.discountCode` in badge. | — |
+| **Coupon badge** | Applied code visible via **`data-summary-voucher-discounts`** → `{discount.name}` (and amounts). **`cart.discountCode` / `cart.hasCoupon`** are broken until SDK **Known #10** — see **BS-014**. | **BS-014** |
 | **Symbols** | Accept or log: `{line.*}` money fields may repeat the currency symbol (design / BS-009). | BS-009 |
 | **`priceRetailTotal`** | Should be **line-level** list total, not the same as `{line.priceRetail}` / `{line.originalPackagePrice}`. If all match → BS-012. | BS-012 |
 

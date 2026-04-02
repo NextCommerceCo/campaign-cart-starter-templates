@@ -324,6 +324,8 @@ The SDK is controlled entirely through HTML attributes. Do not write JavaScript 
 <span data-next-display="cart.savings"></span>
 ```
 
+**SDK 0.4.x:** `data-next-display="cart.discountCode"` and `data-next-show="cart.hasCoupon"` are **not** wired in the cart-summary display resolver (regression — see `docs/sdk-0.4.0-migration.md` Known #10, `docs/olympus-v0.4.0-bundle-selector-bug-log.md` BS-014). Inside **`[data-next-cart-summary]`** templates, show applied codes with **`data-summary-voucher-discounts`** and **`{discount.name}`** ([Cart Summary — discount breakdowns](https://developers.nextcommerce.com/docs/campaigns/guides/cart-summary#step-5-discount-breakdowns)), or custom JS.
+
 ### Conditional visibility
 
 ```html
