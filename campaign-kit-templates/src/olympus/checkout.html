@@ -207,9 +207,9 @@ swiper_thumbs:
                           <div class="form-sections">
                             <div class="form-section grid-row-gap2 form-section--first">
                               <h2 class="form-section__title">Step 1: Pick Your Bundle Deal</h2>
-                              <div data-next-selector-id="drone-packages" data-next-package-selector data-next-selection-mode="swap" data-next-include-shipping="true" class="os-option">
+                              <div data-next-selector-id="drone-packages" data-next-cart-selector="" data-next-selection-mode="swap" class="os-option">
                                 <div class="os-cards__vertical os--gap-xl">
-                                  <div data-next-shipping-id="1" role="button" data-next-selector-card data-next-package-id="4" data-next-quantity="1" data-next-selected="true" data-next-await="" class="os-card next-selected">
+                                  <div data-next-shipping-id="1" role="button" data-next-selector-card="" data-next-package-id="4" data-next-quantity="1" data-next-selected="true" data-next-await="" class="os-card next-selected">
                                     <div class="os-card__header-slot"></div>
                                     <div class="os-card__wrapper">
                                       <div class="os-card__content os--align-middle">
@@ -233,13 +233,13 @@ swiper_thumbs:
                                         <div class="os-card__secondary-slot">
                                           <div class="os-card__pricing">
                                             <div class="os-card__price-container">
-                                              <div data-next-show="package.hasRetailPrice" class="os-card__price os--compare os-style"><span data-next-display="package.unitRetailPrice">-</span></div>
-                                              <div class="os-card__price os--current"><span data-next-display="package.unitPrice">-</span>/ea</div>
+                                              <div data-next-show="package.hasRetailPrice" data-next-display="package.price_retail" class="os-card__price os--compare os-style">-</div>
+                                              <div class="os-card__price os--current"><span data-next-display="package.price">-</span>/ea</div>
                                             </div>
                                             <div class="os-card__total-container">
                                               <div class="os-card__total-label">Total:</div>
-                                              <div data-next-show="package.hasRetailPrice" class="os-card__total-compare" data-next-display="package.compareTotal">-</div>
-                                              <div data-next-display="package.finalPriceTotal" class="os-card__total-current" data-next-package-price>-</div>
+                                              <div data-next-show="package.hasRetailPrice" data-next-display="package.price_retail_total" class="os-card__total-compare">-</div>
+                                              <div data-next-display="package.price_total" class="os-card__total-current">-</div>
                                             </div>
                                           </div>
                                         </div>
@@ -248,13 +248,16 @@ swiper_thumbs:
                                     </div>
                                     <div class="os-card__footer-slot"></div>
                                     <div class="os-card__label-slot">
+                                      
                                       <div class="os-card__label-2 os-card__label--middle-right os-card__label--pill-primary">
-                                        <div class="card-icons"><svg width="100%" height="100%" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.49512 0.5L8.40542 4.37069L12.677 4.99139L9.58605 8.00431L10.3157 12.2586L6.49512 10.25L2.67451 12.2586L3.40418 8.00431L0.31325 4.99139L4.58482 4.37069L6.49512 0.5Z" fill="#FF9425"></path></svg></div>
+                                        <div class="card-icons"><svg width="100%" height="100%" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6.49512 0.5L8.40542 4.37069L12.677 4.99139L9.58605 8.00431L10.3157 12.2586L6.49512 10.25L2.67451 12.2586L3.40418 8.00431L0.31325 4.99139L4.58482 4.37069L6.49512 0.5Z" fill="#FF9425"></path>
+                                          </svg></div>
                                         <div class="os-card__label-text-2">Most Popular</div>
                                       </div>
                                     </div>
                                   </div>
-                                  <div data-next-shipping-id="2" role="button" data-next-selector-card data-next-package-id="3" data-next-quantity="1" data-next-await="" class="os-card">
+                                  <div data-next-shipping-id="2" role="button" data-next-selector-card="" data-next-package-id="3" data-next-quantity="1" data-next-await="" class="os-card">
                                     <div class="os-card__header-slot"></div>
                                     <div class="os-card__wrapper">
                                       <div class="os-card__content os--align-middle">
@@ -271,20 +274,20 @@ swiper_thumbs:
                                               </div>
                                             </div>
                                             <div class="os-card__subtitle-wrapper">
-                                              <div data-next-show="package.hasSavings" class="os-card__subtitle-text">Save <span data-next-display="package.savingsAmount">$0.00</span><span data-next-show="shipping.isFree"> + Free Shipping</span></div>
+                                              <div data-next-show="package.hasSavings" class="os-card__subtitle-text">Save <span data-next-display="package.savingsAmount">$0.00 + Free Shipping</span></div>
                                             </div>
                                           </div>
                                         </div>
                                         <div class="os-card__secondary-slot">
                                           <div class="os-card__pricing">
                                             <div class="os-card__price-container">
-                                              <div data-next-show="package.hasRetailPrice" class="os-card__price os--compare os-style"><span data-next-display="package.unitRetailPrice">-</span></div>
-                                              <div class="os-card__price os--current"><span data-next-display="package.unitPrice">-</span>/ea</div>
+                                              <div data-next-display="package.price_retail" class="os-card__price os--compare os-style">-</div>
+                                              <div class="os-card__price os--current"><span data-next-display="package.price">-</span>/ea</div>
                                             </div>
                                             <div class="os-card__total-container">
                                               <div class="os-card__total-label">Total:</div>
-                                              <div data-next-show="package.hasRetailPrice" class="os-card__total-compare" data-next-display="package.compareTotal">-</div>
-                                              <div data-next-display="package.finalPriceTotal" class="os-card__total-current" data-next-package-price>-</div>
+                                              <div data-next-show="package.hasRetailPrice" data-next-display="package.price_retail_total" class="os-card__total-compare">-</div>
+                                              <div data-next-display="package.price_total" class="os-card__total-current">-</div>
                                             </div>
                                           </div>
                                         </div>
@@ -293,13 +296,16 @@ swiper_thumbs:
                                     </div>
                                     <div class="os-card__footer-slot"></div>
                                     <div class="os-card__label-slot">
+                                      
                                       <div class="os-card__label-2 os-card__label--middle-right os-card__label--pill-secondary">
-                                        <div class="card-icons"><svg width="100%" height="100%" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.49512 0.5L8.40542 4.37069L12.677 4.99139L9.58605 8.00431L10.3157 12.2586L6.49512 10.25L2.67451 12.2586L3.40418 8.00431L0.31325 4.99139L4.58482 4.37069L6.49512 0.5Z" fill="#FF9425"></path></svg></div>
+                                        <div class="card-icons"><svg width="100%" height="100%" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6.49512 0.5L8.40542 4.37069L12.677 4.99139L9.58605 8.00431L10.3157 12.2586L6.49512 10.25L2.67451 12.2586L3.40418 8.00431L0.31325 4.99139L4.58482 4.37069L6.49512 0.5Z" fill="#FF9425"></path>
+                                          </svg></div>
                                         <div class="os-card__label-text-2">Best Deal</div>
                                       </div>
                                     </div>
                                   </div>
-                                  <div data-next-shipping-id="2" role="button" data-next-selector-card data-next-package-id="2" data-next-quantity="1" data-next-await="" class="os-card">
+                                  <div data-next-shipping-id="2" role="button" data-next-selector-card="" data-next-package-id="2" data-next-quantity="1" data-next-await="" class="os-card">
                                     <div class="os-card__header-slot"></div>
                                     <div class="os-card__wrapper">
                                       <div class="os-card__content os--align-middle">
@@ -323,13 +329,13 @@ swiper_thumbs:
                                         <div class="os-card__secondary-slot">
                                           <div class="os-card__pricing">
                                             <div class="os-card__price-container">
-                                              <div data-next-show="package.hasRetailPrice" class="os-card__price os--compare os-style"><span data-next-display="package.unitRetailPrice">-</span></div>
-                                              <div class="os-card__price os--current"><span data-next-display="package.unitPrice">-</span>/ea</div>
+                                              <div data-next-display="package.price_retail" class="os-card__price os--compare os-style">-</div>
+                                              <div class="os-card__price os--current"><span data-next-display="package.price">-</span>/ea</div>
                                             </div>
                                             <div class="os-card__total-container">
                                               <div class="os-card__total-label">Total:</div>
-                                              <div data-next-show="package.hasRetailPrice" class="os-card__total-compare" data-next-display="package.compareTotal">-</div>
-                                              <div data-next-display="package.finalPriceTotal" class="os-card__total-current os-dark" data-next-package-price>-</div>
+                                              <div data-next-show="package.hasRetailPrice" data-next-display="package.price_retail_total" class="os-card__total-compare">-</div>
+                                              <div data-next-display="package.price_total" class="os-card__total-current os-dark">-</div>
                                             </div>
                                           </div>
                                         </div>
@@ -341,8 +347,6 @@ swiper_thumbs:
                                 </div>
                               </div>
                             </div>
-
-          
                             <div data-next-component="shipping-form" class="form-sections">
                               <div class="form-section form-section--first">
                                 <h2 class="form-section__title">Step 2: Customer Information</h2>
@@ -425,14 +429,8 @@ swiper_thumbs:
                                 </div>
                               </div>
                             </div>
-                        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;background:#e2e8f0;color:#475569;padding:2px 8px;display:inline-block;border-radius:3px;margin:0 0 4px 0">Bump v1 — data-next-display prices</div>
                         {% campaign_include 'bump-check01.html' %}
-                        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;background:#fef3c7;color:#92400e;padding:2px 8px;display:inline-block;border-radius:3px;margin:8px 0 4px 0">Bump v2 — full SDK token mapping (toggle-price)</div>
-                        {% campaign_include 'bump-check01-v2.html' %}
-                        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;background:#e2e8f0;color:#475569;padding:2px 8px;display:inline-block;border-radius:3px;margin:8px 0 4px 0">Switch v1 — data-next-bump / data-next-toggle (0.3.x)</div>
                         {% campaign_include 'bump-switch01.html' %}
-                        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;background:#fef3c7;color:#92400e;padding:2px 8px;display:inline-block;border-radius:3px;margin:8px 0 4px 0">Switch v2 — full SDK token mapping (toggle-price)</div>
-                        {% campaign_include 'bump-switch01-v2.html' %}
                             <div class="form-section form-section--last">
                               <div class="form-section__header">
                                 <h1 class="form-section__title">4. Payment Method</h1>
@@ -442,134 +440,6 @@ swiper_thumbs:
                               {% campaign_include 'express-checkout.html' show_title=false %}
                               {% campaign_include 'payment-methods.html' show_paypal=true show_klarna=true show_google_pay=true show_apple_pay=true %}
                             </div>
-                            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;background:#fef3c7;color:#92400e;padding:2px 8px;display:inline-block;border-radius:3px;margin:8px 0 4px 0">Summary v2 — data-next-cart-summary</div>
-                            <!-- ============================================================
-                                 SUMMARY V2 — data-next-cart-summary approach (0.4.0 guide)
-                                 ============================================================
-                                 HOW THIS DIFFERS FROM THE CURRENT SUMMARY BELOW:
-
-                                 CURRENT (v1) — two separate enhancers:
-                                 - CartItemListEnhancer: data-next-cart-items + data-item-template-id
-                                   + {item.*} tokens for line items (client-side math).
-                                 - Each total uses data-next-display="cart.*" on its own element.
-                                 - Conditional visibility uses data-next-show / data-next-hide.
-
-                                 NEW (v2) — one CartSummaryEnhancer:
-                                 - One root [data-next-cart-summary] with a single direct-child
-                                   <template> wrapping the entire block (lines + totals together).
-                                 - Lines: data-summary-lines + nested <template> using {line.*} tokens
-                                   (API SummaryLine fields — avoids client-side math bugs like the
-                                   old {item.lineCompare} qty-scaling issue).
-                                   {line.priceRetailTotal} = before-discount line total (strikethrough)
-                                   {line.total} = final line total
-                                   {line.hasSavings} = class token — SDK injects "" or "hidden"
-                                 - Totals: {subtotal}, {total}, {shipping}, {savings} directly in
-                                   the outer template — no per-element display attributes.
-                                 - State: SDK applies classes to the [data-next-cart-summary] root
-                                   (next-has-savings, next-free-shipping, next-cart-has-items etc.).
-                                   Use CSS to show/hide sections instead of data-next-show/hide.
-                                   next-has-savings / next-cart-has-items on inner elements = static
-                                   CSS hooks; pair with [data-next-cart-summary]:not(.next-has-savings)
-                                   rules to hide when condition is false.
-                                 - Remove old data-next-cart-items block when switching — only one
-                                   summary root is needed or lines will duplicate.
-                                 ============================================================ -->
-                            <div class="form-section form-section--last">
-                              <div class="cart-box cart-box--card">
-                                <div class="summary-wrapper" data-next-cart-summary>
-                                  <template>
-                                    <div class="order-summary">
-                                      <div class="order-summary__content">
-                                        <div data-os-cart-summary="line-wrapper" class="cart-items">
-                                          <div class="cart-summary__line pb--header">
-                                            <div class="cart-summary__line-item"><div>Item</div></div>
-                                            <div class="cart-summary__line-item"><div>Amount</div></div>
-                                          </div>
-                                          <div data-os-cart-summary="summary-scroll" class="cart-items__scroll-hint cart-items__scroll-hint--active hide">
-                                            <div>Scroll for more items</div>
-                                            <div class="icon__view-more">…</div>
-                                          </div>
-                                          <!-- Line list: API summary lines — not CartItemListEnhancer {item.*} -->
-                                          <div class="cart-items__list" data-summary-lines>
-                                            <template>
-                                              <div class="cart-item" data-package-id="{line.packageId}">
-                                                <div class="cart-item__wrapper">
-                                                  <div class="cart-item__details cc-left-0">
-                                                    <div class="cart-item__content">
-                                                      <div class="cart-item__description">
-                                                        <div class="cart-item__header">
-                                                          <div class="cart-item__title os-bold">{line.name}</div>
-                                                        </div>
-                                                      </div>
-                                                      <div class="cart-item__pricing">
-                                                        <!-- {line.hasSavings} = "" when line has discount, "hidden" otherwise -->
-                                                        <div class="cart-price diagonal-strike line-compare {line.hasSavings}">
-                                                          {line.priceRetailTotal}
-                                                        </div>
-                                                        <div class="checkout__line-item__final-price">{line.total}</div>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </template>
-                                          </div>
-                                        </div>
-
-                                        <div class="hide">
-                                          <div class="shipping-note">Shipping and tax will be settled upon checkout confirmation</div>
-                                        </div>
-
-                                        <!-- next-cart-has-items: static CSS hook; hide via [data-next-cart-summary]:not(.next-cart-has-items) -->
-                                        <div class="order-totals next-cart-has-items">
-                                          <div class="order-totals__line">
-                                            <div class="order-totals__label">Subtotal</div>
-                                            <div class="order-totals__value">{subtotal}</div>
-                                          </div>
-
-                                          <!-- next-has-savings: hide via [data-next-cart-summary]:not(.next-has-savings) .next-has-savings -->
-                                          <div class="order-totals__section order-totals__section--inset next-has-savings">
-                                            <div class="order-totals__line">
-                                              <div class="order-totals__label-group">
-                                                <div class="order-totals__label ts-lg tw-600">Today you saved</div>
-                                              </div>
-                                              <div class="accordion__right">
-                                                <div class="order-totals__label">Discount:</div>
-                                                <div class="order-totals__value ts-lg tw-600">{savings}</div>
-                                              </div>
-                                            </div>
-                                            <div class="coupon-tags"></div>
-                                          </div>
-
-                                          <div class="order-totals__section">
-                                            <div class="order-totals__line">
-                                              <div class="accordion__right"><div class="order-totals__label">Shipping</div></div>
-                                              <div class="accordion__right">
-                                                <!-- next-has-shipping: static CSS hook for when shipping cost is present -->
-                                                <div class="order-totals__value next-has-shipping">{shipping}</div>
-                                              </div>
-                                            </div>
-                                          </div>
-
-                                          <div class="order-totals__section cc-total">
-                                            <div class="order-totals__line order-totals__line--total">
-                                              <div class="order-totals__label order-totals__label--total">Grand Total:</div>
-                                              <div class="order-totals__value-group">
-                                                <div data-next-display="cart.currency" class="summary-total__coin">USD<br></div>
-                                                <div class="order-totals__value order-totals__value--total">{total}</div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </template>
-                                </div>
-                              </div>
-                            </div>
-                            <!-- END SUMMARY V2 -->
-
-                            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;background:#e2e8f0;color:#475569;padding:2px 8px;display:inline-block;border-radius:3px;margin:8px 0 4px 0">Summary v1 — data-next-display + data-next-cart-items</div>
                             <div class="form-section form-section--last">
                               <div class="cart-box cart-box--card">
                                 <div class="summary-wrapper">
@@ -590,8 +460,7 @@ swiper_thumbs:
                                               <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z"></path>
                                             </svg></div>
                                         </div>
-                                        <div data-next-hide="cart.isEmpty">
-                                          <template id="cart-item-template" class="item-template os-show">
+                                        <div data-next-hide="cart.isEmpty"><template id="cart-item-template" class="item-template os-show">
                                           <div data-cart-item-id="{item.id}" class="cart-item">
                                             <div class="cart-item__wrapper">
                                               <div class="cart-item__details cc-left-0">
@@ -600,12 +469,11 @@ swiper_thumbs:
                                                     <div class="cart-item__header">
                                                       <div class="cart-item__title os-bold">{item.name}</div>
                                                     </div>
-
+                                                    
                                                   </div>
                                                   <div class="cart-item__pricing">
-                                                    <div class="cart-price diagonal-strike">{item.comparePrice}</div>
+                                                    <div id="line_compare" pb-cart="line_item-compare_price" class="cart-price diagonal-strike">{item.lineCompare}</div>
                                                     <div class="checkout__line-item__final-price">{item.lineTotal}</div>
-                                                    
                                                   </div>
                                                 </div>
                                               </div>
@@ -623,14 +491,14 @@ swiper_thumbs:
                                           <div class="order-totals__label">Subtotal</div>
                                           <div data-next-display="cart.subtotal" class="order-totals__value">$138.30<br></div>
                                         </div>
-                                        <div data-next-show="cart.hasTotalSavings" class="order-totals__section order-totals__section--inset">
+                                        <div data-next-show="cart.hasSavings" class="order-totals__section order-totals__section--inset">
                                           <div class="order-totals__line">
                                             <div class="order-totals__label-group">
                                               <div class="order-totals__label ts-lg tw-600">Today you saved<br></div>
                                             </div>
                                             <div class="accordion__right">
                                               <div class="order-totals__label">Discount:<br></div>
-                                              <div data-next-display="cart.totalSavingsAmount" class="order-totals__value ts-lg tw-600">$28.34<br></div>
+                                              <div data-next-display="cart.savingsAmount" class="order-totals__value ts-lg tw-600">$28.34<br></div>
                                             </div>
                                           </div>
                                           <div class="coupon-tags"></div>
@@ -664,12 +532,12 @@ swiper_thumbs:
                                               <div data-next-display="cart.total" class="order-totals__value order-totals__value--total">$109.96</div>
                                             </div>
                                           </div>
-                                          <div data-next-show="cart.hasTotalSavings" class="order-totals__savings">
+                                          <div data-next-show="cart.hasSavings" class="order-totals__savings">
                                             <div class="order-totals__savings-content">
                                               <div class="order-totals__savings-icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 18 18" focusable="false" aria-hidden="true" class="a8x1wu10 a8x1wuz _1fragem1y _1fragemof _1fragemkk _1fragemka _1fragemnm" fill="none" stroke="currentColor">
                                                   <path stroke-linecap="round" stroke-linejoin="round" d="m10.802 15.686 5.367-5.368a.15.15 0 0 0 .046-.109V4.144m-2.998-.95h-5.67a.16.16 0 0 0-.11.046L1.779 8.897a.154.154 0 0 0 0 .219l5.594 5.593c.06.06.158.06.218 0l5.658-5.657a.15.15 0 0 0 .045-.11v-5.67a.077.077 0 0 0-.077-.077Zm-3.06 3.749a.643.643 0 1 1-1.286 0 .643.643 0 0 1 1.286 0m-.648-.005h.01v.01h-.01z"></path>
                                                 </svg></div>
-                                              <div class="order-totals__savings-text">TODAY YOU SAVED <span data-next-display="cart.totalSavingsAmount">$28.34</span><br></div>
+                                              <div class="order-totals__savings-text">TODAY YOU SAVED <span data-next-display="cart.savingsAmount">$28.34</span><br></div>
                                             </div>
                                           </div>
                                         </div>

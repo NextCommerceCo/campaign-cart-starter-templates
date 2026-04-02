@@ -11562,12 +11562,10 @@ figcaption {
 /* Loading skeleton: see next-core.css ([data-next-await]). */
 
 /* Option-selector checkmark (shop, limos, information) */
-[data-next-bump] [os-component="check"],
-[data-next-toggle-card] [os-component="check"] {
+[data-next-bump] [os-component="check"] {
   display: none;
 }
-[data-next-bump][class*="next-active"] [os-component="check"],
-[data-next-toggle-card].next-in-cart [os-component="check"] {
+[data-next-bump][class*="next-active"] [os-component="check"] {
   display: flex;
 }
 
@@ -12183,8 +12181,7 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   overflow: hidden;
 }
 
-[data-component="prepurchase-upsell"].next-active,
-[data-component="prepurchase-upsell"]:has(.next-in-cart) {
+[data-component="prepurchase-upsell"].next-active {
   background-color: var(--brand--color--surface);
   -webkit-user-select: none;
   user-select: none;
@@ -12208,9 +12205,7 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 }
 
 [data-component="prepurchase-upsell"][data-variant="check01"] .bump-card.next-active,
-[data-component="prepurchase-upsell"][data-variant="switch"] .bump-card.next-active,
-[data-component="prepurchase-upsell"][data-variant="check01"] .bump-card.next-in-cart,
-[data-component="prepurchase-upsell"][data-variant="switch"] .bump-card.next-in-cart {
+[data-component="prepurchase-upsell"][data-variant="switch"] .bump-card.next-active {
   background-color: var(--brand--color--surface);
   -webkit-user-select: none;
   user-select: none;
@@ -12362,8 +12357,7 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   display: flex;
 }
 
-[data-component="prepurchase-upsell"] .bump__header-left.next-active,
-[data-component="prepurchase-upsell"] .bump-card.next-in-cart .bump__header-left {
+[data-component="prepurchase-upsell"] .bump__header-left.next-active {
   background-color: var(--brand--color--primary-light);
 }
 
@@ -12387,8 +12381,7 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 }
 
 [data-component="prepurchase-upsell"] .bump__head--switch.next-active,
-[data-component="prepurchase-upsell"] .bump-card.bump--switch-on .bump__head--switch,
-[data-component="prepurchase-upsell"] .bump-card.next-in-cart .bump__head--switch {
+[data-component="prepurchase-upsell"] .bump-card.bump--switch-on .bump__head--switch {
   background-color: var(--brand--color--primary-light);
 }
 
@@ -12424,8 +12417,7 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 }
 
 [data-component="prepurchase-upsell"] [data-next-bump].next-active .bump__switch::before,
-[data-component="prepurchase-upsell"] .bump-card.bump--switch-on .bump__switch::before,
-[data-component="prepurchase-upsell"] .bump-card.next-in-cart .bump__switch::before {
+[data-component="prepurchase-upsell"] .bump-card.bump--switch-on .bump__switch::before {
   opacity: 1;
 }
 
@@ -12445,8 +12437,7 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 
 [data-component="prepurchase-upsell"] [data-next-bump].next-active .bump__switch-slider,
 [data-component="prepurchase-upsell"] .bump__head--switch.next-active .bump__switch-slider,
-[data-component="prepurchase-upsell"] .bump-card.bump--switch-on .bump__switch-slider,
-[data-component="prepurchase-upsell"] .bump-card.next-in-cart .bump__switch-slider {
+[data-component="prepurchase-upsell"] .bump-card.bump--switch-on .bump__switch-slider {
   transform: translate(1.75rem, -50%);
 }
 
@@ -12458,8 +12449,7 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 
   [data-component="prepurchase-upsell"] [data-next-bump].next-active .bump__switch-slider,
   [data-component="prepurchase-upsell"] .bump__head--switch.next-active .bump__switch-slider,
-  [data-component="prepurchase-upsell"] .bump-card.bump--switch-on .bump__switch-slider,
-  [data-component="prepurchase-upsell"] .bump-card.next-in-cart .bump__switch-slider {
+  [data-component="prepurchase-upsell"] .bump-card.bump--switch-on .bump__switch-slider {
     transform: translate(1.25rem, -50%);
   }
 
