@@ -39,9 +39,10 @@ swiper_thumbs:
 <!--
   APPROACH B — Bundle upsell (data-next-bundle-selector + data-next-upsell-context)
   See upsell.html for Approach A (package upsell, no voucher).
+  See upsell-bundle-cards.html for the same mechanics with visible tier cards (no initBundleQtyToggle).
 
   STATUS (SDK 0.4.8):
-    ✅ Accept sends voucher UP50 with the order line (via AddUpsellLine bundle path)
+    ✅ Accept sends the selected tier’s voucher(s) (1× UP50, 2× UP60, 3× UP70, 4×–5× UP50) via AddUpsellLine bundle path
     ✅ Voucher-aware pricing — calculateBundlePrice merges vouchers at init + on card change
     ✅ Quantity toggle works — one hidden bundle card per qty tier, initBundleQtyToggle()
        wires data-bundle-qty-btn buttons to click the matching card
@@ -55,7 +56,7 @@ swiper_thumbs:
   ARCHITECTURE (Option 3 — per-qty cards):
     - One hidden data-next-bundle-card per qty (1x–5x) inside the selector
     - Each card has the correct quantity in data-next-bundle-items
-    - Each card carries data-next-bundle-vouchers='["UP50"]'
+    - Each card carries data-next-bundle-vouchers (1×/4×/5× UP50; 2× UP60; 3× UP70 — per-tier example)
     - Qty buttons click the matching card → SDK re-fetches price + updates remote display
     - Prices are shown via data-next-display="bundle.upsell-bundle.*" OUTSIDE the selector
 
@@ -123,17 +124,19 @@ data-next-bundle-items='[{"packageId":3,"quantity":1}]'
                  data-next-bundle-vouchers='["UP50"]'
                  data-next-selected="true"
                  class="os-card next-selected"></div>
+            <!-- 2× tier: per-tier voucher UP60 (1×/3×–5× use UP50). Configure UP60 in Campaigns. -->
             <div role="button"
                  data-next-bundle-card
                  data-next-bundle-id="upsell-bundle-2x"
 data-next-bundle-items='[{"packageId":3,"quantity":2}]'
-                 data-next-bundle-vouchers='["UP50"]'
+                 data-next-bundle-vouchers='["UP60"]'
                  class="os-card"></div>
+            <!-- 3× tier: per-tier voucher UP70 -->
             <div role="button"
                  data-next-bundle-card
                  data-next-bundle-id="upsell-bundle-3x"
 data-next-bundle-items='[{"packageId":3,"quantity":3}]'
-                 data-next-bundle-vouchers='["UP50"]'
+                 data-next-bundle-vouchers='["UP70"]'
                  class="os-card"></div>
             <div role="button"
                  data-next-bundle-card

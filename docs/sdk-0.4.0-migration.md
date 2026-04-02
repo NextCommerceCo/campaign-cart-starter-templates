@@ -440,9 +440,26 @@ Two patterns exist. Choose based on whether you need voucher-aware pricing and c
 
 **When to use each:**
 - **Approach A** — simple add-on where the offer price is baked into the campaign package. No coupons needed. Works today.
-- **Approach B** — offer price is driven by a voucher code (e.g. `UPSELL20`). Code must exist in the campaign. Use a separate card per quantity tier for per-qty pricing; the qty toggle does not recompute bundle item totals.
+- **Approach B** — offer price is driven by a voucher code (e.g. `UPSELL20`). Code must exist in the campaign. Use a separate card per quantity tier for per-qty pricing; the qty toggle does not recompute bundle item totals; pair with small glue (e.g. `initBundleQtyToggle` in `olympus-v0.4/assets/js/upsells.js`) when you need the toggle to drive which tier card is selected.
 
-Reference implementation: `olympus-v0.4/upsell.html` (both approaches with status comments).
+**Reference templates (`olympus-v0.4/`):**
+- **`upsell.html`** — Approach A: `data-next-upsell` + `data-next-package-id` + `data-next-display="package.*"` (classic direct upsell).
+- **`upsell-bundle.html`** — Approach B (hidden tier row + `initBundleQtyToggle`): `data-next-bundle-selector` + `data-next-upsell-context`, `data-next-bundle-vouchers`, `data-next-upsell-action-for`.
+- **`upsell-bundle-cards.html`** — Approach B (visible tier cards): same bundle + voucher wiring as `upsell-bundle.html`, but tier `data-next-bundle-card` elements are shown in a grid and clicked directly (UX like the public [Upsells — card selection pattern](https://developers.nextcommerce.com/docs/campaigns/upsells#card-selection-pattern); markup is still bundle cards, not `data-next-upsell-selector`).
+
+### Why coupon / voucher upsell pricing needs the bundle pattern
+
+Public [Campaign Cart](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) upsell examples describe **direct** and **selection** upsells using `data-next-upsell` + `data-next-package-id` and `data-next-display="package.*"` for pricing. That assumes **campaign package JSON** (retail vs list, static package math) is enough for the offer. It is **not** sufficient when the business needs **backend coupon / voucher codes** to drive **both** the **shown** price and the **accepted** order line.
+
+**Submit path:** `UpsellEnhancer` → `addUpsellToOrder` attaches vouchers to the payload on the **bundle** branch (`ctx.bundleItems` + bundle vouchers). The **single-package** upsell body is **lines + currency only** — there is no declarative hook to send coupon codes on the standard direct upsell path.
+
+**Preview path:** `data-next-display="package.*"` on an upsell page does **not** run the same voucher-merge + calculate flow as `BundleSelectorEnhancer` with `data-next-bundle-vouchers`. The UI will not reliably stay in sync with “price after `UP50`” (or similar) versus what you intend to POST, unless you bake artificial prices into the package record or build custom calculate + DOM updates.
+
+**Quantity:** `data-next-upsell-quantity-toggle` updates quantity for the **single-package** path but does **not** update `data-next-bundle-items` quantities used for voucher-aware `calculateBundlePrice`. Tiered quantity **plus** coupon needs **one bundle card per quantity tier** (or an equivalent), not the doc quantity-only pattern alone.
+
+**Conclusion:** For **coupon-controlled upsell pricing**, teams should not expect to “only follow” the classic direct upsell examples and get correct preview + accept. Use **Approach B** (bundle upsell): `data-next-bundle-selector` + `data-next-upsell-context`, `data-next-bundle-vouchers`, `data-next-upsell-action-for`, and tier cards as needed.
+
+**Engineering ask (optional):** Document this path in the public Upsells guide and/or extend `UpsellEnhancer` / `window.next.addUpsell` so **AddUpsellLine-style vouchers** are supported on the **single-package** path for teams that want coupons **without** full bundle markup.
 
 ---
 
