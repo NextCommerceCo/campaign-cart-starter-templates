@@ -5,7 +5,7 @@ This guide combines:
 - a quick cheat sheet,
 - and copy-paste examples.
 
-All behavior below reflects current SDK behavior (`v0.4.0`).
+All behavior below reflects current SDK behavior (`0.4.x`).
 
 ## Quick Cheat Sheet
 

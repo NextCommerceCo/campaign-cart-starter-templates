@@ -14,7 +14,7 @@ Scope: `campaign-kit-templates/src/olympus-v0.4.0-sdk/` only (single-variant bun
 
 ## Crosswalk — engineering note vs repo docs
 
-Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` → Known SDK Issues #1–#7** and the items below. Use this table when sharing with eng: same issues, single numbering in migration doc.
+Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` → Known SDK Issues #1–#9** and the items below. Use this table when sharing with eng: same issues, single numbering in migration doc.
 
 | Topic (eng note) | `sdk-0.4.0-migration.md` | This log |
 |------------------|--------------------------|----------|
@@ -23,9 +23,11 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 | (3) `data-next-shipping-id` — **package swap** selector vs summary totals; **bundle** cards | **§ Known #3** (package); bundle attribute table silent | **BS-011** |
 | (4) `data-next-package-price` compare/savings multi-unit SKUs | **§ Known #4** | **BS-002** context (selector → bundle workaround) |
 | (5) Bundle selector operator workflow / offer-driven tier pricing | **§ Known #6** (and **#5** where it overlaps card pricing) | **BS-004**, **BS-006** |
-| Cart summary v2 line pipeline `{line.priceRetailTotal}` / `{line.total}` (or `{line.originalPackagePrice}` per variable table) | **§ Cart Summary v2 Notes** | Confirmed for this template vs legacy cart line list patterns in migration open issues |
+| Cart summary v2 line pipeline `{line.priceRetailTotal}` / `{line.total}` (or `{line.originalPackagePrice}` per variable table) | **§ Known #9** + **§ Cart Summary v2 Notes** | **BS-012** |
 | Line amounts include **currency symbol** on every row (want numeric-only / single currency column) | *(not in migration §)* | **BS-009** |
 | “Today you saved” **$0** while lines show savings | *(not in migration §)* | **BS-010** |
+| Cart summary `{line.priceRetailTotal}` should be **line** retail total, not same as unit fields | *(not in migration §)* | **BS-012** |
+| Bundle tier clicks **add** lines instead of **replacing** (summary grows: 1× then 1×+2× then …); refresh can also leave **1× + persisted tier** | **§ Known #8** | **BS-013** |
 | Toggle bump: compare = sale; **prices refresh only after uncheck/recheck** when sync qty changes | **§ Known #7** | **BS-008** (expanded) |
 
 ---
@@ -69,7 +71,7 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 
 ## BS-003 - Display token scoping regression (`package.1.name` invalid)
 
-- Status: `fixed`
+- Status: `verified`
 - Severity: `medium`
 - Date logged: `2026-03-31`
 - Where: bundle card content title/image
@@ -82,7 +84,7 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 - Fix applied:
   - Use `data-next-package-id="1"` container scope + `data-next-display="package.name"` / `package.image`.
 - Verification notes:
-  - Confirm title and image populate for all three cards on load.
+  - **2026-04-01 QA (SDK 0.4.6):** Each tier card shows image + `package.name`; per-unit / compare / totals via `data-next-bundle-price` / `data-next-bundle-display` behave as expected on load.
 
 ## BS-004 - Bundle approach changes merchandising workflow
 
@@ -121,7 +123,7 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 
 ## BS-006 - `data-next-bundle-price` default slot not rendering total
 
-- Status: `fixed`
+- Status: `verified`
 - Severity: `high`
 - Date logged: `2026-03-31`
 - Where: `olympus-v0.4.0-sdk/checkout.html` Step 1 bundle cards
@@ -135,7 +137,7 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 - Fix applied:
   - Switched to explicit total slot: `data-next-bundle-price="total"` for all bundle card total nodes.
 - Verification notes:
-  - Confirm tier 1/2/3 totals all render and update on selection.
+  - **2026-04-01 QA (SDK 0.4.6):** `data-next-bundle-price="total"` (not bare) shows a numeric total on all three tiers on load; bundle display slots OK alongside BS-003.
 
 ## BS-007 - Feature request: native bundle quantity display token
 
@@ -214,6 +216,52 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
   - **`next.setShippingMethod(refId)`** when selection changes may still be needed; **re-test summary/totals** — Known **#3** can apply even after imperative updates. Backend/campaign shipping rules as a fallback where declarative markup is unreliable.
 - Cross-ref:
   - Migration **§ Known #3**; **Bundle Selector** attribute table (no `data-next-shipping-id`); **Package Selector** example with `data-next-shipping-id` on `data-next-selector-card`.
+
+## BS-012 - Cart summary: `{line.priceRetailTotal}` matches unit retail / `originalPackagePrice` (not qty-scaled line total)
+
+- Status: `open`
+- Severity: `high`
+- Date logged: `2026-04-01`
+- Where: `olympus-v0.4.0-sdk/checkout.html` — `[data-next-cart-summary]` → `data-summary-lines` row template
+- Docs: [Cart Summary — line item variables](https://developers.nextcommerce.com/docs/campaigns/guides/cart-summary#line-item-variables) (`{line.priceRetail}` = compare unit; `{line.originalPackagePrice}` = package total before discount; `{line.priceRetailTotal}` **not** in public table — internal/summary API field expected to mean full-line compare total per `olympus/checkout.html` v2 comments)
+- Observed:
+  - For bundle / multi-qty lines, **`{line.priceRetailTotal}`** resolves to the **same formatted value** as **`{line.priceRetail}`** and **`{line.originalPackagePrice}`** (or otherwise does **not** reflect **line qty × list** / full-line retail).
+- Expected:
+  - **`{line.priceRetailTotal}`** = **retail compare-at for the entire line** (consistent with `{line.quantity}` and list pricing), distinct from per-unit `{line.priceRetail}`.
+- Actual:
+  - Template cannot compute `qty ×` without a correct token; strikethrough **Amount** column misstates savings when the three placeholders collapse to one number.
+- Workaround:
+  - None in pure template — requires **CartSummary / summary API** fix or new documented line token. Optionally **hide** the right-column strike and rely only on `{line.priceRetail}/ea` + `{line.total}` until eng confirms correct field (accepts weaker UX).
+- Cross-ref:
+  - Migration **§ Known #9**; **BS-010** (rollup vs lines); re-test after SDK bump if release notes mention summary line mapping.
+
+## BS-013 - Bundle selector **adds** cart lines instead of **atomic swap** (continuous accumulation)
+
+- Status: `open`
+- Severity: `high`
+- Date logged: `2026-04-01` (updated: continuous-add primary symptom)
+- Where: `olympus-v0.4.0-sdk/checkout.html` — single active `data-next-bundle-selector` (`data-next-selector-id="drone-packages"` — SDK reads **`data-next-selector-id`**, not `data-next-bundle-selector-id`), `data-next-selection-mode="swap"`, `[data-next-cart-summary]` line list  
+  - Verified: only **one** selector root in built HTML (auto-render block is `{% comment %}`-wrapped, not emitted).
+- Doc expectation ([Bundle Set Sale](https://developers.nextcommerce.com/docs/campaigns/guides/bundle-set-sale)): selecting a card should **replace** the previous bundle — “**atomic swap — no double-add**”. The guide’s basic markup does **not** use `data-next-selection-mode` on the bundle root (that attribute appears in migration examples; confirm with SDK whether it is valid/ignored/misread on bundle selector).
+- Repro steps:
+  1. Load checkout; default **1×** selected (`data-next-selected="true"` on first `data-next-bundle-card`).
+  2. Click **2×**, then **3×**, then **1×** again; after each click inspect summary (or `window.nextDebug?.stores?.cart?.getState()` line items).
+  3. **Primary failure:** line count **grows** (e.g. separate lines for 1× and 2×) instead of **one** line whose qty updates to match the selected tier.
+  4. **Secondary:** after selecting **2×** or **3×**, **hard refresh** — summary may show **1× + persisted tier** (default init + persistence).
+- Expected:
+  - Always **exactly one** cart line for package `1` from this selector, qty matching the selected tier; tier clicks **swap**, never stack duplicate package lines.
+- Actual:
+  - **Additive** behavior: each tier interaction can **append** another line (or refresh leaves default **and** persisted line).
+- Template hygiene (2026-04-01):
+  - Removed misplaced **`data-next-show="cart.hasCoupon"`** / stray copy inside the **1×** bundle card.
+  - Removed erroneous **`data-selected="true"`** on **2× / 3×** radio shells.
+  - **Experiment:** Removing **`data-next-selected="true"`** from the default bundle card **did not** stop line accumulation — points away from “double HTML pre-add” and toward **persisted cart + init/swap merge** in the SDK.
+- Workaround (high cost):
+  - **`<meta name="next-clear-cart" content="true">`** in `<head>` (with other NEXT metatags) **clears the session cart on load** and **masks** duplicate/stacked lines in QA because there is no persisted state to merge. **Tradeoff:** cart is **not persistent** — refresh loses cart, return visitors start empty, upsell/receipt flows that expect session continuity break. **Do not use as a production fix**; use only to confirm diagnosis or isolated demos until **Known #8** is fixed upstream.
+- Next action:
+  - Eng: fix `BundleSelectorEnhancer` (or cart ops it calls) so tier changes **remove/replace** prior bundle items for the same selector scope; rehydrate must not **add** default tier on top of persisted selection. Optional spike: A/B **without** `data-next-selection-mode="swap"` on bundle root (undocumented there) to see if attribute is mis-handled.
+- Cross-ref:
+  - Migration **§ Known #8**; distinct from **Known #2** (coupon cleared on refresh); related to **BS-002** (tier sync).
 
 ---
 
