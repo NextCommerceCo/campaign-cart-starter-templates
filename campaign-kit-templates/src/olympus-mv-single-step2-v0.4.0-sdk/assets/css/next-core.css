@@ -6754,6 +6754,10 @@ figcaption {
   background-color: #e4f7ff;
 }
 
+.os-card__label-2[data-badge=""] {
+  display: none;
+}
+
 .card-sup {
   font-size: var(--font-size--base);
   font-weight: 500;
