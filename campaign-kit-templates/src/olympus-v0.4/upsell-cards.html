@@ -1,5 +1,5 @@
 ---
-title: "Olympus — Upsell (Bundle, visible tier cards)"
+title: "Olympus — Upsell (cards)"
 page_type: upsell
 next_upsell_accept: receipt.html
 next_upsell_decline: receipt.html
@@ -37,7 +37,7 @@ swiper_thumbs:
 ---
 
 <!--
-  APPROACH B (variant) — Same bundle + voucher mechanics as upsell-bundle.html, but tier
+  APPROACH B (variant) — Same bundle + voucher mechanics as upsell-quantity.html, but tier
   choice uses VISIBLE bundle cards in a 3-column grid (1×–3× tiers; click to select), similar in UX to the public
   Upsells “card selection” pattern:
   https://developers.nextcommerce.com/docs/campaigns/upsells#card-selection-pattern
@@ -47,13 +47,13 @@ swiper_thumbs:
   send data-next-bundle-vouchers on accept; we keep bundle markup so coupon-driven pricing
   and AddUpsellLine vouchers stay correct (see docs/sdk-0.4.0-migration.md).
 
-  Differences vs upsell-bundle.html:
+  Differences vs upsell-quantity.html:
     - No hidden selector + initBundleQtyToggle — user clicks the tier card directly.
     - Per-card data-next-bundle-display shows each tier’s calculated price before selection.
     - Remote bundle.upsell-bundle.* block still reflects the selected card (summary).
     - Per-tier vouchers: 1× UP50; 2× UP60; 3× UP70 (template example — create codes in Campaigns).
 
-  Same limitations / workarounds as upsell-bundle.html (data-next-format on remote bundle.*, etc.).
+  Same limitations / workarounds as upsell-quantity.html (data-next-format on remote bundle.*, etc.).
 -->
 
 <style>
@@ -192,19 +192,19 @@ swiper_thumbs:
                 <div class="upsell-offer__bullets">
                   <div class="bullet_inner-one">
                     <div class="hero_bullet-features-box-inner">
-                      <div class="bullet-features-icon-box"><div class="bullet_features-icon-svg"><svg width="100%" height="100%" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_ubc_1)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.930023C4.48 0.930023 0 5.41002 0 10.93C0 16.45 4.48 20.93 10 20.93C15.52 20.93 20 16.45 20 10.93C20 5.41002 15.52 0.930023 10 0.930023ZM9.99994 18.9302C5.58994 18.9302 1.99994 15.3402 1.99994 10.9302C1.99994 6.52025 5.58994 2.93025 9.99994 2.93025C14.4099 2.93025 17.9999 6.52025 17.9999 10.9302C17.9999 15.3402 14.4099 18.9302 9.99994 18.9302ZM8.00003 13.1002L14.59 6.51021L16 7.93021L8.00003 15.9302L4.00003 11.9302L5.41003 10.5202L8.00003 13.1002Z" fill="currentColor"></path></g><defs><clipPath id="clip0_ubc_1"><rect width="20" height="20" fill="white" transform="translate(0 0.930023)"></rect></clipPath></defs></svg></div></div>
+                      <div class="bullet-features-icon-box"><div class="bullet_features-icon-svg"><svg width="100%" height="100%" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_upsell_b1)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.930023C4.48 0.930023 0 5.41002 0 10.93C0 16.45 4.48 20.93 10 20.93C15.52 20.93 20 16.45 20 10.93C20 5.41002 15.52 0.930023 10 0.930023ZM9.99994 18.9302C5.58994 18.9302 1.99994 15.3402 1.99994 10.9302C1.99994 6.52025 5.58994 2.93025 9.99994 2.93025C14.4099 2.93025 17.9999 6.52025 17.9999 10.9302C17.9999 15.3402 14.4099 18.9302 9.99994 18.9302ZM8.00003 13.1002L14.59 6.51021L16 7.93021L8.00003 15.9302L4.00003 11.9302L5.41003 10.5202L8.00003 13.1002Z" fill="currentColor"></path></g><defs><clipPath id="clip0_upsell_b1"><rect width="20" height="20" fill="white" transform="translate(0 0.930023)"></rect></clipPath></defs></svg></div></div>
                       <div class="bullet-features-text-box"><div class="text-size-regular text-weight-bold">The standard chunk of Lorem Ipsum</div></div>
                     </div>
                     <div class="hero_bullet-features-box-inner">
-                      <div class="bullet-features-icon-box"><div class="bullet_features-icon-svg"><svg width="100%" height="100%" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_ubc_2)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.930023C4.48 0.930023 0 5.41002 0 10.93C0 16.45 4.48 20.93 10 20.93C15.52 20.93 20 16.45 20 10.93C20 5.41002 15.52 0.930023 10 0.930023ZM9.99994 18.9302C5.58994 18.9302 1.99994 15.3402 1.99994 10.9302C1.99994 6.52025 5.58994 2.93025 9.99994 2.93025C14.4099 2.93025 17.9999 6.52025 17.9999 10.9302C17.9999 15.3402 14.4099 18.9302 9.99994 18.9302ZM8.00003 13.1002L14.59 6.51021L16 7.93021L8.00003 15.9302L4.00003 11.9302L5.41003 10.5202L8.00003 13.1002Z" fill="currentColor"></path></g><defs><clipPath id="clip0_ubc_2"><rect width="20" height="20" fill="white" transform="translate(0 0.930023)"></rect></clipPath></defs></svg></div></div>
+                      <div class="bullet-features-icon-box"><div class="bullet_features-icon-svg"><svg width="100%" height="100%" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_upsell_b2)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.930023C4.48 0.930023 0 5.41002 0 10.93C0 16.45 4.48 20.93 10 20.93C15.52 20.93 20 16.45 20 10.93C20 5.41002 15.52 0.930023 10 0.930023ZM9.99994 18.9302C5.58994 18.9302 1.99994 15.3402 1.99994 10.9302C1.99994 6.52025 5.58994 2.93025 9.99994 2.93025C14.4099 2.93025 17.9999 6.52025 17.9999 10.9302C17.9999 15.3402 14.4099 18.9302 9.99994 18.9302ZM8.00003 13.1002L14.59 6.51021L16 7.93021L8.00003 15.9302L4.00003 11.9302L5.41003 10.5202L8.00003 13.1002Z" fill="currentColor"></path></g><defs><clipPath id="clip0_upsell_b2"><rect width="20" height="20" fill="white" transform="translate(0 0.930023)"></rect></clipPath></defs></svg></div></div>
                       <div class="bullet-features-text-box"><div class="text-size-regular text-weight-bold">Contrary to popular belief, Lorem Ipsum</div></div>
                     </div>
                     <div class="hero_bullet-features-box-inner">
-                      <div class="bullet-features-icon-box"><div class="bullet_features-icon-svg"><svg width="100%" height="100%" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_ubc_3)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.930023C4.48 0.930023 0 5.41002 0 10.93C0 16.45 4.48 20.93 10 20.93C15.52 20.93 20 16.45 20 10.93C20 5.41002 15.52 0.930023 10 0.930023ZM9.99994 18.9302C5.58994 18.9302 1.99994 15.3402 1.99994 10.9302C1.99994 6.52025 5.58994 2.93025 9.99994 2.93025C14.4099 2.93025 17.9999 6.52025 17.9999 10.9302C17.9999 15.3402 14.4099 18.9302 9.99994 18.9302ZM8.00003 13.1002L14.59 6.51021L16 7.93021L8.00003 15.9302L4.00003 11.9302L5.41003 10.5202L8.00003 13.1002Z" fill="currentColor"></path></g><defs><clipPath id="clip0_ubc_3"><rect width="20" height="20" fill="white" transform="translate(0 0.930023)"></rect></clipPath></defs></svg></div></div>
+                      <div class="bullet-features-icon-box"><div class="bullet_features-icon-svg"><svg width="100%" height="100%" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_upsell_b3)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.930023C4.48 0.930023 0 5.41002 0 10.93C0 16.45 4.48 20.93 10 20.93C15.52 20.93 20 16.45 20 10.93C20 5.41002 15.52 0.930023 10 0.930023ZM9.99994 18.9302C5.58994 18.9302 1.99994 15.3402 1.99994 10.9302C1.99994 6.52025 5.58994 2.93025 9.99994 2.93025C14.4099 2.93025 17.9999 6.52025 17.9999 10.9302C17.9999 15.3402 14.4099 18.9302 9.99994 18.9302ZM8.00003 13.1002L14.59 6.51021L16 7.93021L8.00003 15.9302L4.00003 11.9302L5.41003 10.5202L8.00003 13.1002Z" fill="currentColor"></path></g><defs><clipPath id="clip0_upsell_b3"><rect width="20" height="20" fill="white" transform="translate(0 0.930023)"></rect></clipPath></defs></svg></div></div>
                       <div class="bullet-features-text-box"><div class="text-size-regular text-weight-bold">Lorem Ipsum has been the industry's</div></div>
                     </div>
                     <div class="hero_bullet-features-box-inner">
-                      <div class="bullet-features-icon-box"><div class="bullet_features-icon-svg"><svg width="100%" height="100%" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_ubc_4)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.930023C4.48 0.930023 0 5.41002 0 10.93C0 16.45 4.48 20.93 10 20.93C15.52 20.93 20 16.45 20 10.93C20 5.41002 15.52 0.930023 10 0.930023ZM9.99994 18.9302C5.58994 18.9302 1.99994 15.3402 1.99994 10.9302C1.99994 6.52025 5.58994 2.93025 9.99994 2.93025C14.4099 2.93025 17.9999 6.52025 17.9999 10.9302C17.9999 15.3402 14.4099 18.9302 9.99994 18.9302ZM8.00003 13.1002L14.59 6.51021L16 7.93021L8.00003 15.9302L4.00003 11.9302L5.41003 10.5202L8.00003 13.1002Z" fill="currentColor"></path></g><defs><clipPath id="clip0_ubc_4"><rect width="20" height="20" fill="white" transform="translate(0 0.930023)"></rect></clipPath></defs></svg></div></div>
+                      <div class="bullet-features-icon-box"><div class="bullet_features-icon-svg"><svg width="100%" height="100%" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_upsell_b4)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.930023C4.48 0.930023 0 5.41002 0 10.93C0 16.45 4.48 20.93 10 20.93C15.52 20.93 20 16.45 20 10.93C20 5.41002 15.52 0.930023 10 0.930023ZM9.99994 18.9302C5.58994 18.9302 1.99994 15.3402 1.99994 10.9302C1.99994 6.52025 5.58994 2.93025 9.99994 2.93025C14.4099 2.93025 17.9999 6.52025 17.9999 10.9302C17.9999 15.3402 14.4099 18.9302 9.99994 18.9302ZM8.00003 13.1002L14.59 6.51021L16 7.93021L8.00003 15.9302L4.00003 11.9302L5.41003 10.5202L8.00003 13.1002Z" fill="currentColor"></path></g><defs><clipPath id="clip0_upsell_b4"><rect width="20" height="20" fill="white" transform="translate(0 0.930023)"></rect></clipPath></defs></svg></div></div>
                       <div class="bullet-features-text-box"><div class="text-size-regular text-weight-bold">Lorem Ipsum is simply dummy text</div></div>
                     </div>
                   </div>
@@ -215,7 +215,7 @@ swiper_thumbs:
                   <div class="select-quantity-wrapper">
                     
                     <!--
-                      Three visible tier cards (1×–3×). Same bundle/voucher pattern as upsell-bundle.html.
+                      Three visible tier cards (1×–3×). Same bundle/voucher pattern as upsell-quantity.html.
                       Click selects the card; SDK applies .next-selected and updates bundle.upsell-bundle.* below.
                     -->
                     <div
@@ -236,7 +236,7 @@ swiper_thumbs:
                           <p class="cc-upsell-bundle-tier-card__hint">1 unit</p>
                           <div class="cc-upsell-bundle-tier-card__price"><span data-next-bundle-display="price">—</span></div>
                           <div class="cc-upsell-bundle-tier-card__compare"><span data-next-bundle-display="originalPrice"></span></div>
-                          <div data-next-bundle-display="hasSavings" class="cc-upsell-bundle-tier-card__badge"><span data-next-bundle-display="discountPercentage" data-next-format="percentage"></span> off</div>
+                          <div data-next-bundle-display="hasDiscount" class="cc-upsell-bundle-tier-card__badge"><span data-next-bundle-display="discountPercentage" data-next-format="percentage"></span> off</div>
                         </div>
                       </div>
                       <!-- Per-tier voucher example: 2× uses UP60; configure UP60 in Campaigns app. -->
@@ -251,7 +251,7 @@ swiper_thumbs:
                           <p class="cc-upsell-bundle-tier-card__hint">2 units</p>
                           <div class="cc-upsell-bundle-tier-card__price"><span data-next-bundle-display="price">—</span></div>
                           <div class="cc-upsell-bundle-tier-card__compare"><span data-next-bundle-display="originalPrice"></span></div>
-                          <div data-next-bundle-display="hasSavings" class="cc-upsell-bundle-tier-card__badge"><span data-next-bundle-display="discountPercentage" data-next-format="percentage"></span> off</div>
+                          <div data-next-bundle-display="hasDiscount" class="cc-upsell-bundle-tier-card__badge"><span data-next-bundle-display="discountPercentage" data-next-format="percentage"></span> off</div>
                         </div>
                       </div>
                       <!-- 3× tier: per-tier voucher UP70 -->
@@ -266,7 +266,7 @@ swiper_thumbs:
                           <p class="cc-upsell-bundle-tier-card__hint">3 units</p>
                           <div class="cc-upsell-bundle-tier-card__price"><span data-next-bundle-display="price">—</span></div>
                           <div class="cc-upsell-bundle-tier-card__compare"><span data-next-bundle-display="originalPrice"></span></div>
-                          <div data-next-bundle-display="hasSavings" class="cc-upsell-bundle-tier-card__badge"><span data-next-bundle-display="discountPercentage" data-next-format="percentage"></span> off</div>
+                          <div data-next-bundle-display="hasDiscount" class="cc-upsell-bundle-tier-card__badge"><span data-next-bundle-display="discountPercentage" data-next-format="percentage"></span> off</div>
                         </div>
                       </div>
                     </div>

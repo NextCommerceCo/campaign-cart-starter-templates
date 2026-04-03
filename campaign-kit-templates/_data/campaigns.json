@@ -82,7 +82,7 @@
   "olympus-v0.4": {
     "name": "Olympus v0.4",
     "description": "Olympus checkout funnel (SDK 0.4.x)",
-    "sdk_version": "0.4.8",
+    "sdk_version": "0.4.9",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",
@@ -161,8 +161,8 @@
   },
   "olympus-mv-single-step-v0.4": {
     "name": "Olympus MV Single Step v0.4",
-    "description": "Olympus MV single-step with native external slots (SDK 0.4.x)",
-    "sdk_version": "0.4.8",
+    "description": "Olympus MV single-step with native external slots (SDK 0.4.9)",
+    "sdk_version": "0.4.9",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",

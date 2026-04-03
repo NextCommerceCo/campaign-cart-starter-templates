@@ -1,0 +1,26 @@
+<!-- Prepurchase upsell: toggle-switch bump (switch-v2) — full 0.4.0 SDK mapping
+     Uses data-next-package-toggle / data-next-toggle-card / data-next-toggle-price
+     vs bump-switch01.html which uses data-next-bump / data-next-toggle (0.3.x pattern)
+     No data-next-package-sync: insurance is one line item, not per main-unit (contrast warranty bump-check01-v2). -->
+<div data-component="prepurchase-upsell" data-variant="switch" data-next-await="">
+  <div data-next-package-toggle>
+    <div class="bump-card bump-card--switch" data-next-toggle-card data-next-package-id="9">
+      <div class="bump__header-left bump__head--switch">
+        <div class="bump__header-content bump__head-inner">
+          <span class="bump__title">Shipping Insurance &amp; Loss Prevention</span>
+          <span class="bump__switch" aria-hidden="true">
+            <span class="bump__switch-slider"></span>
+          </span>
+        </div>
+      </div>
+      <div class="bump__body">
+        <div class="bump__content">
+          <p class="bump__description">
+            Total shipping coverage and extended warranty. Breakage, loss, delays, porch pirates — even defects. 100% protected for just
+            <span data-next-toggle-price class="display-visible">$9.99</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

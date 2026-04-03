@@ -28,7 +28,7 @@ Use **`data-next-bundle-display="<field>"`** on elements **inside** `[data-next-
 
 **Naming:** Some docs encourage `originalPrice` / `discountAmount` / `discountPercentage` / `hasDiscount` for new markup; older examples use `compare` / `savings` / `savingsPercentage` / `hasSavings`. **Both sets are valid** where the SDK maps them as aliases.
 
-**BS-006 (`fixed` — markup rule):** Always use **`data-next-bundle-price="total"`** (explicit) for the tier total; bare **`data-next-bundle-price`** is not a supported pattern and may not bind.
+**BS-006 (`fixed` — markup rule):** Always use an explicit tier total — **`data-next-bundle-price="price"`** (0.4.9+ canonical) or **`="total"`** (alias). Bare **`data-next-bundle-price`** is not a supported pattern and may not bind.
 
 ---
 

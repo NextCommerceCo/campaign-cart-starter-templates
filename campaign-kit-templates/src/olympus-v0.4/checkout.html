@@ -2,7 +2,7 @@
 title: "Olympus Checkout"
 page_type: checkout
 promo_sale: "default"
-next_success_url: upsell.html
+next_success_url: upsell-single.html
 styles:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
 scripts:
@@ -223,25 +223,25 @@ swiper_thumbs:
                                         <div class="os-card__title-section">
                                           <div class="os-card__title-wrapper">
                                             <div data-next-display="package.name" class="os-card__title">Package Title</div>
-                                            <div data-next-bundle-display="hasSavings" class="os-card__title-badge pb--bestseller">
-                                              <div>SAVE <span data-next-bundle-display="savingsPercentage">-</span></div>
+                                            <div data-next-bundle-display="hasDiscount" class="os-card__title-badge pb--bestseller">
+                                              <div>SAVE <span data-next-bundle-display="discountPercentage">-</span></div>
                                             </div>
                                           </div>
                                           <div class="os-card__subtitle-wrapper">
-                                            <div data-next-bundle-display="hasSavings" class="os-card__subtitle-text">Save <span data-next-bundle-display="savings">-</span><span data-next-show="shipping.isFree"> + Free Shipping</span></div>
+                                            <div data-next-bundle-display="hasDiscount" class="os-card__subtitle-text">Save <span data-next-bundle-display="discountAmount">-</span><span data-next-show="shipping.isFree"> + Free Shipping</span></div>
                                           </div>
                                         </div>
                                       </div>
                                       <div class="os-card__secondary-slot">
                                         <div class="os-card__pricing">
                                           <div class="os-card__price-container">
-                                            <div data-next-bundle-display="hasSavings" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>
+                                            <div data-next-bundle-display="hasDiscount" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>
                                             <div class="os-card__price os--current"><span data-next-bundle-display="unitPrice">-</span>/ea</div>
                                           </div>
                                           <div class="os-card__total-container">
                                             <div class="os-card__total-label">Total:</div>
-                                            <div data-next-bundle-display="hasSavings" class="os-card__total-compare"><span data-next-bundle-price="compare">-</span></div>
-                                            <div class="os-card__total-current {bundle.totalToneClass}"><span data-next-bundle-price="total">-</span></div>
+                                            <div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-price="originalPrice">-</span></div>
+                                            <div class="os-card__total-current {bundle.totalToneClass}"><span data-next-bundle-price="price">-</span></div>
                                           </div>
                                         </div>
                                       </div>
@@ -281,26 +281,25 @@ swiper_thumbs:
                                           <div class="os-card__title-section">
                                             <div class="os-card__title-wrapper">
                                               <div class="os-card__title">1x <span data-next-display="package.name">Package Title</span></div>
-                                              <div data-next-bundle-display="hasSavings" class="os-card__title-badge pb--bestseller">
-                                                <div>SAVE <span data-next-bundle-display="savingsPercentage">-</span></div>
+                                              <div data-next-bundle-display="hasDiscount" class="os-card__title-badge pb--bestseller">
                                                 <div>SAVE <span data-next-bundle-display="discountPercentage">-</span></div>
                                               </div>
                                             </div>
                                             <div class="os-card__subtitle-wrapper">
-                                              <div data-next-bundle-display="hasSavings" class="os-card__subtitle-text">Save <span data-next-bundle-display="savings">-</span></div>
+                                              <div data-next-bundle-display="hasDiscount" class="os-card__subtitle-text">Save <span data-next-bundle-display="discountAmount">-</span></div>
                                             </div>
                                           </div>
                                         </div>
                                         <div class="os-card__secondary-slot">
                                           <div class="os-card__pricing">
                                             <div class="os-card__price-container">
-                                              <div data-next-bundle-display="hasSavings" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>
+                                              <div data-next-bundle-display="hasDiscount" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>
                                               <div class="os-card__price os--current"><span data-next-bundle-display="unitPrice">-</span>/ea</div>
                                             </div>
                                             <div class="os-card__total-container">
                                               <div class="os-card__total-label">Total:</div>
-                                              <div data-next-bundle-display="hasSavings" class="os-card__total-compare"><span data-next-bundle-price="compare">-</span></div>
-                                              <div class="os-card__total-current"><span data-next-bundle-price="total">-</span></div>
+                                              <div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-price="originalPrice">-</span></div>
+                                              <div class="os-card__total-current"><span data-next-bundle-price="price">-</span></div>
                                             </div>
                                           </div>
                                         </div>
@@ -327,25 +326,25 @@ swiper_thumbs:
                                           <div class="os-card__title-section">
                                             <div class="os-card__title-wrapper">
                                               <div class="os-card__title">2x <span data-next-display="package.name">Package Title</span></div>
-                                              <div data-next-bundle-display="hasSavings" class="os-card__title-badge pb--bestseller">
-                                                <div>SAVE <span data-next-bundle-display="savingsPercentage">-</span></div>
+                                              <div data-next-bundle-display="hasDiscount" class="os-card__title-badge pb--bestseller">
+                                                <div>SAVE <span data-next-bundle-display="discountPercentage">-</span></div>
                                               </div>
                                             </div>
                                             <div class="os-card__subtitle-wrapper">
-                                              <div data-next-bundle-display="hasSavings" class="os-card__subtitle-text">Save <span data-next-bundle-display="savings">-</span></div>
+                                              <div data-next-bundle-display="hasDiscount" class="os-card__subtitle-text">Save <span data-next-bundle-display="discountAmount">-</span></div>
                                             </div>
                                           </div>
                                         </div>
                                         <div class="os-card__secondary-slot">
                                           <div class="os-card__pricing">
                                             <div class="os-card__price-container">
-                                              <div data-next-bundle-display="hasSavings" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>
+                                              <div data-next-bundle-display="hasDiscount" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>
                                               <div class="os-card__price os--current"><span data-next-bundle-display="unitPrice">-</span>/ea</div>
                                             </div>
                                             <div class="os-card__total-container">
                                               <div class="os-card__total-label">Total:</div>
-                                              <div data-next-bundle-display="hasSavings" class="os-card__total-compare"><span data-next-bundle-price="compare">-</span></div>
-                                              <div class="os-card__total-current"><span data-next-bundle-price="total">-</span></div>
+                                              <div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-price="originalPrice">-</span></div>
+                                              <div class="os-card__total-current"><span data-next-bundle-price="price">-</span></div>
                                             </div>
                                           </div>
                                         </div>
@@ -372,25 +371,25 @@ swiper_thumbs:
                                           <div class="os-card__title-section">
                                             <div class="os-card__title-wrapper">
                                               <div class="os-card__title">3x <span data-next-display="package.name">Package Title</span></div>
-                                              <div data-next-bundle-display="hasSavings" class="os-card__title-badge pb--bestseller">
-                                                <div>SAVE <span data-next-bundle-display="savingsPercentage">-</span></div>
+                                              <div data-next-bundle-display="hasDiscount" class="os-card__title-badge pb--bestseller">
+                                                <div>SAVE <span data-next-bundle-display="discountPercentage">-</span></div>
                                               </div>
                                             </div>
                                             <div class="os-card__subtitle-wrapper">
-                                              <div data-next-bundle-display="hasSavings" class="os-card__subtitle-text">Save <span data-next-bundle-display="savings">-</span><span data-next-show="shipping.isFree"> + Free Shipping</span></div>
+                                              <div data-next-bundle-display="hasDiscount" class="os-card__subtitle-text">Save <span data-next-bundle-display="discountAmount">-</span><span data-next-show="shipping.isFree"> + Free Shipping</span></div>
                                             </div>
                                           </div>
                                         </div>
                                         <div class="os-card__secondary-slot">
                                           <div class="os-card__pricing">
                                             <div class="os-card__price-container">
-                                              <div data-next-bundle-display="hasSavings" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>
+                                              <div data-next-bundle-display="hasDiscount" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>
                                               <div class="os-card__price os--current"><span data-next-bundle-display="unitPrice">-</span>/ea</div>
                                             </div>
                                             <div class="os-card__total-container">
                                               <div class="os-card__total-label">Total:</div>
-                                              <div data-next-bundle-display="hasSavings" class="os-card__total-compare"><span data-next-bundle-price="compare">-</span></div>
-                                              <div class="os-card__total-current os-dark"><span data-next-bundle-price="total">-</span></div>
+                                              <div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-price="originalPrice">-</span></div>
+                                              <div class="os-card__total-current os-dark"><span data-next-bundle-price="price">-</span></div>
                                             </div>
                                           </div>
                                         </div>

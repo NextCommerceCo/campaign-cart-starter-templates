@@ -732,14 +732,16 @@ class UpsellController {
             upsellPackageId,
             package: upsellPackage ? {
               id: upsellPackage.ref_id,
-              price: upsellPackage.price,
-              priceRetail: upsellPackage.price_retail
+              price: upsellPackage.price ?? upsellPackage.unitPrice,
+              priceRetail: upsellPackage.price_retail ?? upsellPackage.unitRetailPrice
             } : 'NOT FOUND'
           });
 
           if (upsellPackage) {
-            totalSale += parseFloat(upsellPackage.price);
-            totalRetail += parseFloat(upsellPackage.price_retail);
+            const sale = upsellPackage.price ?? upsellPackage.unitPrice;
+            const retail = upsellPackage.price_retail ?? upsellPackage.unitRetailPrice;
+            totalSale += parseFloat(sale);
+            totalRetail += parseFloat(retail);
           }
         }
       }

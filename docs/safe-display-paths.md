@@ -103,7 +103,7 @@ Nested keys beyond the registry still work in many cases via `PropertyResolver`;
 
 This path is **not** the same as **bundle slot** `<template>` tokens (`{item.unitPrice}`, … inside `data-next-bundle-slots`) — those are covered under [migration Known #5](sdk-0.4.0-migration.md#5-bundle-selector-slot-values-are-unformatted-raw-numbers).
 
-**Outside `[data-next-bundle-card]`:** When you mirror the **selected tier** in normal page markup (e.g. bundle upsell **offer** column with **`data-next-display="bundle.{selectorId}.price"`** / **`originalPrice`**), you are **not** inside a card — `data-next-bundle-display` does not apply. Those remote values often render **unformatted** until you set **`data-next-format="currency"`** on the element. Reference: [`olympus-v0.4/upsell-bundle.html`](../campaign-kit-templates/src/olympus-v0.4/upsell-bundle.html) (header + `prices-text-wrapper` block).
+**Outside `[data-next-bundle-card]`:** When you mirror the **selected tier** in normal page markup (e.g. bundle upsell **offer** column with **`data-next-display="bundle.{selectorId}.price"`** / **`originalPrice`**), you are **not** inside a card — `data-next-bundle-display` does not apply. Those remote values often render **unformatted** until you set **`data-next-format="currency"`** on the element. Reference: [`olympus-v0.4/upsell-quantity.html`](../campaign-kit-templates/src/olympus-v0.4/upsell-quantity.html) (header + `prices-text-wrapper` block).
 
 | Property | Safe with notes |
 |----------|-----------------|

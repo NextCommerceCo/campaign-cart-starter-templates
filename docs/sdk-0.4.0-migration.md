@@ -4,11 +4,11 @@ Tracks changes needed across templates when upgrading from SDK 0.3.x to 0.4.0.
 
 **Bundle selector reference template:** `campaign-kit-templates/src/olympus-v0.4/` — QA [`docs/olympus-v0.4.0-sdk-qa-checklist.md`](olympus-v0.4.0-sdk-qa-checklist.md). **Template bug log (0.4.x, repo-wide):** [`docs/template-bug-log.md`](template-bug-log.md)
 
-### SDK 0.4.9 — hold until jsDelivr serves the tag
+### SDK 0.4.9 — jsDelivr + bundle slot renames
 
-**Campaigns reference:** Keep **`sdk_version`** at **`0.4.8`** for **`olympus-v0.4`** until the loader is confirmed available on jsDelivr, e.g. `https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v0.4.9/dist/loader.js` (GitHub release: [v0.4.9](https://github.com/NextCommerceCo/campaign-cart/releases/tag/v0.4.9)). A bump to **0.4.9** was attempted and reverted due to CDN/load issues.
+**Loader:** `https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v0.4.9/dist/loader.js` ([v0.4.9](https://github.com/NextCommerceCo/campaign-cart/releases/tag/v0.4.9)).
 
-**When the CDN is good:** Bump **`campaigns.json`** → **`0.4.9`**, re-apply **breaking** markup from the release (bundle **`data-next-bundle-display`** / **`data-next-bundle-price`** renames — `hasSavings`→`hasDiscount`, `savings`→`discountAmount`, `savingsPercentage`→`discountPercentage`, `compare`→`originalPrice`, `total`→`price` on bundle price slots, etc.), then QA checkout + bundle upsells.
+**Campaigns reference:** **`olympus-v0.4`** and **`olympus-mv-single-step-v0.4`** use **`sdk_version`:** **`0.4.9`**. **Breaking** bundle markup (from this release): **`data-next-bundle-display`** / **`data-next-bundle-price`** — `hasSavings`→`hasDiscount`, `savings`→`discountAmount`, `savingsPercentage`→`discountPercentage`, `compare`→`originalPrice`, `total`→`price` on bundle price slots. Aliases may still work briefly; prefer canonical names for new work. Re-QA checkout + bundle upsells after bumps.
 
 ---
 
@@ -316,8 +316,10 @@ Full example (distinct package IDs per card):
 
 | Template | Selector fix | Token renames | Bug fixes | Notes |
 |----------|-------------|---------------|-----------|-------|
-| `olympus-v0.4` | ✅ bundle selector | ✅ 0.4.x → **0.4.8** | 🔄 QA | Reference **bundle** checkout (`data-next-bundle-selector` + Summary v2). **#8** swap/add lines: **fixed** on reference (re-test on SDK bump). Open: **#9** (summary tokens), **#10** (`cart.discountCode` / coupon display), **#3** shipping vs totals, bump **#7** — [template bug log](template-bug-log.md) |
-| `olympus-mv-single-step-v0.4` | ✅ native external slots | ✅ 0.4.x → **0.4.8** | 🔄 QA | Native `data-next-bundle-slots-for` + `data-next-variant-selector-template-id`. Replaces bridge JS. Pending: variant toggle initial state, swatch update. |
+| `olympus-v0.4` | ✅ bundle selector | ✅ **0.4.9** | 🔄 QA | Reference **bundle** checkout (`data-next-bundle-selector` + Summary v2). **#8** swap/add lines: **fixed** on reference (re-test on SDK bump). Open: **#9** (summary tokens), **#10** (`cart.discountCode` / coupon display), **#3** shipping vs totals, bump **#7** — [template bug log](template-bug-log.md) |
+| `olympus-mv-single-step-v0.4` | ✅ native external slots | ✅ **0.4.9** | 🔄 QA | Native `data-next-bundle-slots-for` + `data-next-variant-selector-template-id`. Replaces bridge JS. Pending: variant toggle initial state, swatch update. |
+| `olympus-mv-single-step-v0.4-bridge` | — | 🔒 **frozen** (`0.4.6`) | — | **Not maintained.** Pre–native-slots clone/bridge workaround; superseded by `olympus-mv-single-step-v0.4` — see *bridge and cards (frozen)* below. |
+| `olympus-mv-single-step-v0.4-cards` | — | 🔒 **frozen** (`0.4.6`) | — | **Not maintained.** Alternate card UX workaround; same as bridge row. |
 | `olympus` | 🔄 in progress | 🔄 in progress | 🔄 in progress | Legacy **multi-package** track: `savingsAmount`/`savingsPercentage` static; `data-next-package-price` compare/savings wrong for multi-package; `finalPriceTotal` coupon-aware for totals only |
 | `olympus-mv-single-step` | ⬜ pending | ⬜ pending | — | |
 | `olympus-mv-two-step` | ⬜ pending | ⬜ pending | — | |
@@ -325,6 +327,14 @@ Full example (distinct package IDs per card):
 | `limos` | ⬜ pending | ⬜ pending | — | |
 | `shop-single-step` | — | — | — | No selector |
 | `shop-three-step` | — | — | — | No selector |
+
+### Olympus MV single-step — `bridge` and `cards` (frozen)
+
+**`olympus-mv-single-step-v0.4-bridge`** and **`olympus-mv-single-step-v0.4-cards`** stay in the repo as **historical references** only. They were **workarounds** for **external bundle slot layout** and alternate card UX **before** native **`data-next-bundle-slots-for`** and the current **`olympus-mv-single-step-v0.4`** template resolved that gap (see **Template Workaround: External Slot Layout** below — the clone/bridge pattern).
+
+- **No ongoing updates:** do not expect SDK bumps, 0.4.9-style token renames, or bug-fix parity on these folders moving forward.
+- **New campaigns / clones:** base work on **`olympus-mv-single-step-v0.4`** only.
+- **`campaigns.json`:** entries may remain at **`0.4.6`** for the interactive picker; changing them is optional and **not** a commitment to maintain those templates.
 
 ---
 
@@ -357,7 +367,7 @@ In PackageSelector swap mode, `compare`, `savings`, and `savingsPercentage` slot
 ### 5. Bundle selector slot values are unformatted (raw numbers)
 `{item.originalUnitPrice}` and `{item.unitPrice}` in bundle slot templates output raw numeric values — not currency-formatted. **`data-next-format="currency"`** on wrappers around those tokens **does not** reliably format them today (cloned slot pipeline) — same class of gap as **`data-summary-lines`**; see bug log **BS-015**. Use **JS** or wait for SDK.
 
-**Separate issue (remote `bundle.*` display):** **`data-next-display="bundle.{selectorId}.*"`** on nodes **outside** **`[data-next-bundle-card]`** (typical on **bundle upsells** — offer copy next to qty toggles) goes through **`BundleDisplayEnhancer`**, not the slot template pipeline. **`price`** / **`originalPrice`** there can render **unformatted** until you set **`data-next-format="currency"`** — see [safe-display-paths §6](safe-display-paths.md#6-bundleselectorid--bundledisplayenhancer-remote) and [`olympus-v0.4/upsell-bundle.html`](../campaign-kit-templates/src/olympus-v0.4/upsell-bundle.html) (`prices-text-wrapper`).
+**Separate issue (remote `bundle.*` display):** **`data-next-display="bundle.{selectorId}.*"`** on nodes **outside** **`[data-next-bundle-card]`** (typical on **bundle upsells** — offer copy next to qty toggles) goes through **`BundleDisplayEnhancer`**, not the slot template pipeline. **`price`** / **`originalPrice`** there can render **unformatted** until you set **`data-next-format="currency"`** — see [safe-display-paths §6](safe-display-paths.md#6-bundleselectorid--bundledisplayenhancer-remote) and [`olympus-v0.4/upsell-quantity.html`](../campaign-kit-templates/src/olympus-v0.4/upsell-quantity.html) (`prices-text-wrapper`).
 
 ### 6. Bundle selector pricing workflow trade-off
 The bundle selector approach (same `packageId`, different quantities per card) works structurally, but changes the merchandising workflow in the Campaigns UI: classic package selectors allow direct tier price control per package, whereas the bundle/offer flow is driven by percent discount + rounding behavior. May still be the better long-term direction, but operators would need to adjust how they configure pricing.
@@ -410,6 +420,8 @@ In `[data-next-cart-summary]` template tokens, **`{line.priceRetailTotal}`** may
 
 ## Template Workaround: External Slot Layout (`olympus-mv-single-step2`)
 
+**Current direction:** Use **`olympus-mv-single-step-v0.4`** with **`data-next-bundle-slots-for`** — no clone/bridge JS required. The **`olympus-mv-single-step-v0.4-bridge`** / **`-cards`** folders embodied older versions of this workaround and are **frozen** (see *Olympus MV single-step — bridge and cards (frozen)* above).
+
 This template uses a single shared external “Select your color and size” block, but the SDK’s bundle selector wiring expects slot controls to live within each `[data-next-bundle-card]`. Slot/variant handlers and internal lookups are scoped to the card DOM, so rendering `data-next-bundle-slots` outside the card reliably breaks interactivity and dynamic bindings.
 
 To preserve both requirements (design layout + SDK behavior), we use a clone-stage approach:
@@ -458,9 +470,9 @@ Two patterns exist. Choose based on whether you need voucher-aware pricing and c
 - **Approach B** — offer price is driven by a voucher code (e.g. `UPSELL20`). Code must exist in the campaign. Use a separate card per quantity tier for per-qty pricing; the qty toggle does not recompute bundle item totals; pair with small glue (e.g. `initBundleQtyToggle` in `olympus-v0.4/assets/js/upsells.js`) when you need the toggle to drive which tier card is selected.
 
 **Reference templates (`olympus-v0.4/`):**
-- **`upsell.html`** — Approach A: `data-next-upsell` + `data-next-package-id` + `data-next-display="package.*"` (classic direct upsell).
-- **`upsell-bundle.html`** — Approach B (hidden tier row + `initBundleQtyToggle`): `data-next-bundle-selector` + `data-next-upsell-context`, `data-next-bundle-vouchers`, `data-next-upsell-action-for`.
-- **`upsell-bundle-cards.html`** — Approach B (visible tier cards): same bundle + voucher wiring as `upsell-bundle.html`, but tier `data-next-bundle-card` elements are shown in a grid and clicked directly (UX like the public [Upsells — card selection pattern](https://developers.nextcommerce.com/docs/campaigns/upsells#card-selection-pattern); markup is still bundle cards, not `data-next-upsell-selector`).
+- **`upsell-single.html`** — Approach A: `data-next-upsell` + `data-next-package-id` + `data-next-display="package.*"` (classic direct upsell).
+- **`upsell-quantity.html`** — Approach B (hidden tier row + `initBundleQtyToggle`): `data-next-bundle-selector` + `data-next-upsell-context`, `data-next-bundle-vouchers`, `data-next-upsell-action-for`.
+- **`upsell-cards.html`** — Approach B (visible tier cards): same bundle + voucher wiring as `upsell-quantity.html`, but tier `data-next-bundle-card` elements are shown in a grid and clicked directly (UX like the public [Upsells — card selection pattern](https://developers.nextcommerce.com/docs/campaigns/upsells#card-selection-pattern); markup is still bundle cards, not `data-next-upsell-selector`).
 
 ### Why coupon / voucher upsell pricing needs the bundle pattern
 

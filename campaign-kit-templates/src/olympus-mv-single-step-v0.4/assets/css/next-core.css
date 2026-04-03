@@ -2276,6 +2276,17 @@ figcaption {
   overflow: hidden;
 }
 
+/* Hide thumb strip until Swiper runs (checkout + upsell — avoids stacked-thumb list before init) */
+[data-component="swiper"][data-variant="sw1"] [swiper="slider-thumbs"]:not(.swiper-initialized) {
+  opacity: 0;
+  pointer-events: none;
+}
+[data-component="swiper"][data-variant="sw1"] [swiper="slider-thumbs"].swiper-initialized {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.2s ease;
+}
+
 [data-component="swiper"][data-variant="sw1"] [swiper="slider-thumbs"] .swiper-slide {
   filter: grayscale(100%);
   transition: filter 0.4s ease;
