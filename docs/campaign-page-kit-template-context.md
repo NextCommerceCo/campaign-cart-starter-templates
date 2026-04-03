@@ -478,6 +478,12 @@ Upsell pages use a different set of attributes than checkout pages.
 <span data-next-display="package.savingsPercentage"></span>
 ```
 
+### Bundle upsell (SDK 0.4.x) and MV external slots
+
+- **Coupon/voucher-driven** upsell pricing uses **Approach B**: `data-next-bundle-selector` + `data-next-upsell-context`, `data-next-bundle-vouchers`, `data-next-upsell-action-for`. Full comparison table: [`docs/sdk-0.4.0-migration.md`](sdk-0.4.0-migration.md) (Approach A vs B).
+- **References:** `olympus-v0.4/upsell-single.html` (A), `upsell-quantity.html` / `upsell-cards.html` (B); **`olympus-mv-single-step-v0.4/upsell-mv.html`** (B + **`data-next-bundle-slots-for`** slot layout).
+- **Variant UI in staged bundle slots:** SDK-injected **native `<select>`** works **without** extra JS. **`setupBundleSlotVariantDropdowns()`** (custom **`os-dropdown`** UI) is **opt-in** — see file-header comments in **`checkout-olympus-mv-full.js`** and **`upsells-up01-mv.js`** on the **`olympus-mv-single-step-v0.4`** template.
+
 ---
 
 ## npm scripts
@@ -576,6 +582,13 @@ Use these when implementing or verifying a specific task. Work through each item
 - [ ] Previous upsell page's `next_upsell_accept` updated to point to the new page
 - [ ] Previous upsell page's `next_upsell_decline` routing updated intentionally
 - [ ] Progress bar / step indicator updated on affected pages (this is plain HTML, not SDK-driven)
+
+### External bundle slots + variant dropdown (MV 0.4.x)
+
+- [ ] **`data-next-bundle-slots-for`** and slot markup match the campaign’s bundle structure — see [`docs/sdk-0.4.0-migration.md`](sdk-0.4.0-migration.md) and **`olympus-mv-single-step-v0.4/checkout.html`**
+- [ ] **Barebones path:** if native **`<select>`** styling is enough, do **not** call **`setupBundleSlotVariantDropdowns()`** (no custom dropdown JS required)
+- [ ] **Custom dropdown path:** if you call **`setupBundleSlotVariantDropdowns()`** from **`checkout-olympus-mv-full.js`** / **`upsells-up01-mv.js`**, keep **`initBundleQtyToggle()`** (or equivalent) in sync on upsell when using quantity toggles + Approach B
+- [ ] **Per-tier vouchers** on bundle upsell cards exist in Campaigns and match **`data-next-bundle-vouchers`** on each **`data-next-bundle-card`**
 
 ### Configuring FOMO popups
 

@@ -317,7 +317,7 @@ Full example (distinct package IDs per card):
 | Template | Selector fix | Token renames | Bug fixes | Notes |
 |----------|-------------|---------------|-----------|-------|
 | `olympus-v0.4` | ✅ bundle selector | ✅ **0.4.9** | 🔄 QA | Reference **bundle** checkout (`data-next-bundle-selector` + Summary v2). **#8** swap/add lines: **fixed** on reference (re-test on SDK bump). Open: **#9** (summary tokens), **#10** (`cart.discountCode` / coupon display), **#3** shipping vs totals, bump **#7** — [template bug log](template-bug-log.md) |
-| `olympus-mv-single-step-v0.4` | ✅ native external slots | ✅ **0.4.9** | 🔄 QA | Native `data-next-bundle-slots-for` + `data-next-variant-selector-template-id`. Replaces bridge JS. Pending: variant toggle initial state, swatch update. |
+| `olympus-mv-single-step-v0.4` | ✅ native external slots | ✅ **0.4.9** | 🔄 QA | Native `data-next-bundle-slots-for` + `data-next-variant-selector-template-id`. Replaces bridge JS. **`upsell-mv.html`** is Approach B (bundle upsell + vouchers). **Variant UI:** SDK **native `<select>`** in staged slots works without JS; **`setupBundleSlotVariantDropdowns()`** is **opt-in** for the custom **`os-dropdown`** UI — see file-header comments in [`checkout-olympus-mv-full.js`](../campaign-kit-templates/src/olympus-mv-single-step-v0.4/assets/js/checkout-olympus-mv-full.js) and [`upsells-up01-mv.js`](../campaign-kit-templates/src/olympus-mv-single-step-v0.4/assets/js/upsells-up01-mv.js). |
 | `olympus-mv-single-step-v0.4-bridge` | — | 🔒 **frozen** (`0.4.6`) | — | **Not maintained.** Pre–native-slots clone/bridge workaround; superseded by `olympus-mv-single-step-v0.4` — see *bridge and cards (frozen)* below. |
 | `olympus-mv-single-step-v0.4-cards` | — | 🔒 **frozen** (`0.4.6`) | — | **Not maintained.** Alternate card UX workaround; same as bridge row. |
 | `olympus` | 🔄 in progress | 🔄 in progress | 🔄 in progress | Legacy **multi-package** track: `savingsAmount`/`savingsPercentage` static; `data-next-package-price` compare/savings wrong for multi-package; `finalPriceTotal` coupon-aware for totals only |
@@ -467,12 +467,15 @@ Two patterns exist. Choose based on whether you need voucher-aware pricing and c
 
 **When to use each:**
 - **Approach A** — simple add-on where the offer price is baked into the campaign package. No coupons needed. Works today.
-- **Approach B** — offer price is driven by a voucher code (e.g. `UPSELL20`). Code must exist in the campaign. Use a separate card per quantity tier for per-qty pricing; the qty toggle does not recompute bundle item totals; pair with small glue (e.g. `initBundleQtyToggle` in `olympus-v0.4/assets/js/upsells.js`) when you need the toggle to drive which tier card is selected.
+- **Approach B** — offer price is driven by a voucher code (e.g. `UPSELL20`). Code must exist in the campaign. Use a separate card per quantity tier for per-qty pricing; the qty toggle does not recompute bundle item totals; pair with small glue — **`initBundleQtyToggle`** lives in **`olympus-v0.4/assets/js/upsells.js`** (standard bundle upsell pages) and **`olympus-mv-single-step-v0.4/assets/js/upsells-up01-mv.js`** (MV upsell) when you need the toggle to drive which tier card is selected.
 
 **Reference templates (`olympus-v0.4/`):**
 - **`upsell-single.html`** — Approach A: `data-next-upsell` + `data-next-package-id` + `data-next-display="package.*"` (classic direct upsell).
 - **`upsell-quantity.html`** — Approach B (hidden tier row + `initBundleQtyToggle`): `data-next-bundle-selector` + `data-next-upsell-context`, `data-next-bundle-vouchers`, `data-next-upsell-action-for`.
 - **`upsell-cards.html`** — Approach B (visible tier cards): same bundle + voucher wiring as `upsell-quantity.html`, but tier `data-next-bundle-card` elements are shown in a grid and clicked directly (UX like the public [Upsells — card selection pattern](https://developers.nextcommerce.com/docs/campaigns/upsells#card-selection-pattern); markup is still bundle cards, not `data-next-upsell-selector`).
+
+**Reference — MV + external slots (`olympus-mv-single-step-v0.4/`):**
+- **`upsell-mv.html`** — Approach B bundle upsell with **`data-next-bundle-slots-for`** / slot markup; **`upsells-up01-mv.js`** is limited to **`setupBundleSlotVariantDropdowns()`** (optional custom variant dropdowns) + **`initBundleQtyToggle()`** — not the older monolithic upsell controller.
 
 ### Why coupon / voucher upsell pricing needs the bundle pattern
 
@@ -493,6 +496,7 @@ Public [Campaign Cart](https://developers.nextcommerce.com/docs/campaigns/campai
 ## Open Issues (templates)
 
 - **`olympus-v0.4/checkout.html`** — primary **bundle selector** reference; **BS-xxx** template bug log (applies across templates) in [`docs/template-bug-log.md`](template-bug-log.md). **Known #8** tier swap: **fixed** on reference (regression-watch on SDK bump). Watch **#9** (summary `{line.priceRetailTotal}`), **#10** (`cart.discountCode` / coupon display resolver), **#3** (shipping vs summary), **#7** (bumps on old pattern).
+- **`olympus-mv-single-step-v0.4/upsell-mv.html`** — **Approach B** MV upsell (tiers + vouchers); QA per-tier codes in Campaigns match `data-next-bundle-vouchers` on each card. Variant dropdown glue and qty toggle: **`assets/js/upsells-up01-mv.js`**.
 - `olympus/checkout.html` — legacy **multi-package** selector; QA ongoing; bumps holding on old 0.3.x pattern (SDK issue #7).
 - Multi-package limitation: `savingsAmount`/`savingsPercentage` are static (retail-vs-base only); coupons reflect only in `finalPriceTotal`. `data-next-package-price="compare"/"savings"` slots return per-unit retail (not package total) for multi-package setups — **Known #4**.
 - **Bundle selector** (`olympus-v0.4`) is the supported direction for coupon+offer-aware tier cards (`data-next-bundle-price` / `data-next-bundle-vouchers`). Remaining SDK blockers include **#5** (raw slot template numbers; **`data-next-format` ineffective** — **BS-015**), **#7** (bump regression), **#9** (summary line tokens), **#10** (cart coupon display keys). **#8** (swap semantics) is **fixed** on the reference template — re-test on upgrade.

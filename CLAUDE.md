@@ -47,6 +47,8 @@ Note: when copying a template, the developer renames the folder to their product
 | shop-single-step | /shop-single-step/checkout/ · /shop-single-step/upsell/ · /shop-single-step/receipt/ |
 | shop-three-step | /shop-three-step/information/ · /shop-three-step/shipping/ · /shop-three-step/billing/ · /shop-three-step/upsell/ · /shop-three-step/receipt/ |
 
+**0.4.x reference slugs** (same dev server; pick these campaigns in `npm run dev`): **`olympus-v0.4`** — `/olympus-v0.4/checkout/` · `/olympus-v0.4/upsell-single/` · `/olympus-v0.4/upsell-quantity/` · `/olympus-v0.4/upsell-cards/` · `/olympus-v0.4/receipt/`. **`olympus-mv-single-step-v0.4`** — `/olympus-mv-single-step-v0.4/checkout/` · `/olympus-mv-single-step-v0.4/upsell-mv/` · `/olympus-mv-single-step-v0.4/receipt/`.
+
 ---
 
 ## campaign-kit-templates/ File Structure

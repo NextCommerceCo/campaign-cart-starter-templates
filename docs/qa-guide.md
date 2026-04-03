@@ -74,6 +74,8 @@ Single-step checkout with multi-variant selection on the checkout page.
 - Selecting each variant on the checkout page updates the price and selected package correctly
 - `forcePackageId=` pre-selects a variant — verify the right option is highlighted
 
+**`olympus-mv-single-step-v0.4` (SDK 0.4.9):** Upsell at **`upsell-mv.html`** is **Approach B** (bundle selector + **`data-next-upsell-context`**). Confirm **per-tier voucher codes** in Campaigns match **`data-next-bundle-vouchers`** on each tier card; accept adds the selected tier with the right code. External slot variant UI: native **`<select>`** works without extra JS; custom **`os-dropdown`** requires **`setupBundleSlotVariantDropdowns()`** in campaign JS — see **`docs/sdk-0.4.0-migration.md`** and JS file headers.
+
 ---
 
 ### olympus-mv-two-step

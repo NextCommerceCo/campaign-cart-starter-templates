@@ -8,6 +8,8 @@ Issues for **Campaign Cart SDK 0.4.x** funnels in this repo — bundle selector,
 
 **Tracked elsewhere (not duplicated as BS items):** Deep **multivariant**-only concerns (external bundle slot layouts, clone/bridge patterns beyond formatting) — see MV template folders and [`docs/sdk-0.4.0-migration.md`](sdk-0.4.0-migration.md) “External slot layout” notes. **`{item.*}` slot token formatting** → **BS-015** (with **`data-summary-lines`**).
 
+**Variant dropdown (styling note):** Disabled rows use **`os-dropdown-item.os-card__variant-dropdown-item[disabled]`** in reference **`next-core.css`** (`olympus-v0.4`, `olympus-mv-single-step-v0.4`). **`.os-card__variant-dropdown-item { cursor: pointer }`** has higher specificity than bare **`os-dropdown-item[disabled]`**, so the combined selector is required for **not-allowed** cursor and muted treatment on disabled options.
+
 ---
 
 ## Status legend
