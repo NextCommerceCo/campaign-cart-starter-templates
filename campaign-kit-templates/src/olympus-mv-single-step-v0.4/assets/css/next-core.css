@@ -146,10 +146,10 @@ html:not(.next-display-ready) [data-next-await]::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #efefef;
+  background-color: #f8f8f8;
   background-image: none;
   border-radius: inherit;
-  opacity: 0.85;
+  opacity: 1;
   animation: none;
   z-index: 1;
   pointer-events: none;
@@ -7331,6 +7331,16 @@ figcaption {
   display: grid;
 }
 
+.os-card__upsell-grid.cc-two-col {
+  grid-template-columns: minmax(2.5rem, 2.5rem) 1fr;
+}
+
+.os-card__variant-label-items {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 1rem;
+}
+
 .os-card__variant-number {
   border-radius: .375rem;
   justify-content: center;
@@ -11787,6 +11797,27 @@ os-dropdown-item[disabled] {
   pointer-events: none;
 }
 
+/* Variant rows: .os-card__variant-dropdown-item uses cursor:pointer (0,2,0) — wins over os-dropdown-item[disabled] (0,1,1) without this block */
+os-dropdown-item.os-card__variant-dropdown-item[disabled] {
+  opacity: 0.52;
+  cursor: not-allowed;
+  pointer-events: none;
+  color: #6b7280;
+  filter: grayscale(0.65);
+}
+
+os-dropdown-item.os-card__variant-dropdown-item[disabled]:hover {
+  background-color: transparent !important;
+}
+
+os-dropdown-item.os-card__variant-dropdown-item[disabled] .os-card__variant-toggle-name {
+  color: #9ca3af;
+}
+
+os-dropdown-item.os-card__variant-dropdown-item[disabled] .os-card__option-swatch {
+  opacity: 0.45;
+}
+
 os-dropdown-item.selected,
 os-dropdown-item:hover {
   /* Add hover/selected styles here */
@@ -12979,6 +13010,27 @@ os-dropdown-item[disabled] {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
+}
+
+/* Variant rows: .os-card__variant-dropdown-item uses cursor:pointer (0,2,0) — wins over os-dropdown-item[disabled] (0,1,1) without this block */
+os-dropdown-item.os-card__variant-dropdown-item[disabled] {
+  opacity: 0.52;
+  cursor: not-allowed;
+  pointer-events: none;
+  color: #6b7280;
+  filter: grayscale(0.65);
+}
+
+os-dropdown-item.os-card__variant-dropdown-item[disabled]:hover {
+  background-color: transparent !important;
+}
+
+os-dropdown-item.os-card__variant-dropdown-item[disabled] .os-card__variant-toggle-name {
+  color: #9ca3af;
+}
+
+os-dropdown-item.os-card__variant-dropdown-item[disabled] .os-card__option-swatch {
+  opacity: 0.45;
 }
 
 os-dropdown-item.selected,

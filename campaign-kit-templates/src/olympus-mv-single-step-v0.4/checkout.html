@@ -533,7 +533,8 @@ swiper_thumbs:
                                                       <div class="cart-item__description">
                                                         <div class="cart-item__header">
                                                           <div class="cart-item__title os-bold">
-                                                            {line.quantity}x {line.name}
+                                                            <!-- Multi-variant: use {line.variantName} in the title so each option is distinguishable in the cart summary. -->
+                                                            {line.quantity}x {line.variantName}
                                                             <div>
                                                               <div class="text-2xs text-muted text-weight-normal diagonal-strike {line.hasSavings}">{line.originalPackagePrice}/ea</div>
                                                               <div class="text-2xs text-muted text-weight-normal">{line.unitPrice}/ea</div>
