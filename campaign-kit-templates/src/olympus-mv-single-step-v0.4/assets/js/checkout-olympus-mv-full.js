@@ -7,6 +7,19 @@
  *
  * Extend colors: assign window.BUNDLE_SLOT_COLOR_STYLES before next:initialized, or edit the
  * default map below (same key style as olympus-mv-single-step TierController: slug from label).
+ *
+ * VARIANT SELECTOR APPROACHES
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Barebones (no JS needed):
+ *   The SDK injects native <select> elements into [data-next-variant-selectors]
+ *   inside each slot — no JavaScript required. CSS in next-core.css scoped to
+ *   #bundle-slots-stage styles .next-slot-variant-field / .next-slot-variant-select.
+ *   To use: comment out setupBundleSlotVariantDropdowns() call below.
+ *
+ * Custom os-dropdown UI (active — setupBundleSlotVariantDropdowns):
+ *   Wraps SDK-injected native selects with the os-dropdown button UI (color swatch support).
+ *   MutationObserver re-runs on slot re-render (qty card change → new slots injected).
+ * ─────────────────────────────────────────────────────────────────────────────
  */
 var BUNDLE_SLOT_COLOR_STYLES = {
   white: '#FFFFFF',
@@ -279,7 +292,7 @@ function setupBundleSlotVariantDropdowns() {
 
 window.addEventListener('next:initialized', function () {
   initFomo();
-  setupBundleSlotVariantDropdowns();
+  setupBundleSlotVariantDropdowns(); // comment out to use barebones native <select> UI instead
 
   // Image-only exit intent — replace with your own image URL
   // Coupon must exist on the campaign (Campaigns app → discount code offer, e.g. EXIT5)

@@ -4,19 +4,25 @@
  * Replaces the legacy UpsellController / per-package-id mapping approach (SDK 0.3.x)
  * with data-next-bundle-selector + data-next-bundle-slots-for (SDK 0.4.9).
  *
- * setupBundleSlotVariantDropdowns():
- *   Same pattern as checkout-olympus-mv-full.js, targeting #bundle-slots-stage.
- *   SDK renders native <select> elements into [data-next-variant-selectors] inside each
- *   slot; this function wraps them with the os-dropdown button UI (swatch for color).
- *   MutationObserver re-runs on slot re-render (qty card change → new slots injected).
+ * VARIANT SELECTOR APPROACHES
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Barebones (no JS needed):
+ *   The SDK injects native <select> elements into [data-next-variant-selectors]
+ *   inside each slot — no JavaScript required. CSS in next-core.css scoped to
+ *   #bundle-slots-stage styles .next-slot-variant-field / .next-slot-variant-select.
+ *   To use: comment out setupBundleSlotVariantDropdowns() call below.
+ *
+ * Custom os-dropdown UI (active — setupBundleSlotVariantDropdowns):
+ *   Wraps SDK-injected native selects with the os-dropdown button UI (color swatch
+ *   support). MutationObserver re-runs on slot re-render (qty card change → new
+ *   slots injected). Extend color swatch map by setting:
+ *   window.BUNDLE_SLOT_COLOR_STYLES = { 'navy': '#001f5b', … } before next:initialized.
+ * ─────────────────────────────────────────────────────────────────────────────
  *
  * initBundleQtyToggle():
  *   Wires data-bundle-qty-btn buttons to click matching hidden data-next-bundle-card.
  *   On card click, SDK re-fetches voucher-adjusted price + re-renders remote
  *   bundle.upsell-bundle.* display values and slot count.
- *
- * Extend color swatch map: set window.BUNDLE_SLOT_COLOR_STYLES = { 'navy': '#001f5b', … }
- * before next:initialized.
  */
 
 var BUNDLE_SLOT_COLOR_STYLES = {
@@ -103,13 +109,8 @@ function setupBundleSlotVariantDropdowns() {
         if (!labelEl || !selectEl) return;
 
         var code = variantCodeFromSelect(selectEl);
-        // var labelText = (labelEl.textContent || '').trim() || 'Select ' + code + ':';
         var selectedOption = selectEl.options[selectEl.selectedIndex];
         var selectedText = selectedOption ? selectedOption.textContent : selectEl.value;
-
-        // var label = document.createElement('div');
-        // label.className = 'os-card__variant-label';
-        // label.textContent = labelText;
 
         var dropdown = document.createElement('os-dropdown');
         dropdown.className = 'os-variant-dropdown';
@@ -313,6 +314,6 @@ function initBundleQtyToggle() {
 }
 
 window.addEventListener('next:initialized', function () {
-  setupBundleSlotVariantDropdowns();
+  setupBundleSlotVariantDropdowns(); // comment out to use barebones native <select> UI instead
   initBundleQtyToggle();
 });
