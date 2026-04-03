@@ -6,7 +6,7 @@ Issues for **Campaign Cart SDK 0.4.x** funnels in this repo — bundle selector,
 
 **Related docs:** [Campaign issues overview](campaign-issues-overview.md) (shareable, non-technical table) · [`docs/sdk-0.4.0-migration.md`](sdk-0.4.0-migration.md) (Known #1–#10) · [`docs/bundle-display-cart-cheatsheet.md`](bundle-display-cart-cheatsheet.md) · [Bundle Set Sale](https://developers.nextcommerce.com/docs/campaigns/guides/bundle-set-sale) · [Cart Summary](https://developers.nextcommerce.com/docs/campaigns/guides/cart-summary).
 
-**Tracked elsewhere (not duplicated as BS items):** Deep **multivariant**-only concerns (external bundle slot layouts, `{item.*}` slot tokens, clone/bridge patterns) — see MV template folders and [`docs/sdk-0.4.0-migration.md`](sdk-0.4.0-migration.md) “External slot layout” notes.
+**Tracked elsewhere (not duplicated as BS items):** Deep **multivariant**-only concerns (external bundle slot layouts, clone/bridge patterns beyond formatting) — see MV template folders and [`docs/sdk-0.4.0-migration.md`](sdk-0.4.0-migration.md) “External slot layout” notes. **`{item.*}` slot token formatting** → **BS-015** (with **`data-summary-lines`**).
 
 ---
 
@@ -36,7 +36,9 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 | Cart summary `{line.priceRetailTotal}` should be **line** retail total, not same as unit fields | *(not in migration §)* | **BS-012** |
 | Bundle tier clicks **added** lines instead of **replacing** (historical); **fixed** on reference checkout — re-verify on SDK bumps | **§ Known #8** | **BS-013** (`fixed`) |
 | Toggle bump: compare = sale; **prices refresh only after uncheck/recheck** when sync qty changes | **§ Known #7** | **BS-008** (expanded) |
-| **`data-next-display="cart.discountCode"`** / **`cart.hasCoupon`** (and related) empty or “Unknown cart display property” — cart display resolver refactor | **§ Known #10** | **BS-014** |
+| **`data-next-display="cart.discountCode"`** / **`cart.hasCoupon`** (and related) empty or “Unknown cart display property” — cart display resolver refactor | **§ Known #10** | **BS-014** (`low` — workarounds exist) |
+| **`data-next-format="currency"`** ignored / ineffective on **`data-summary-lines`** row `<template>` and **`data-next-bundle-slots`** slot `<template>` | **§ Known #5** + [Cart Summary v2 Notes](sdk-0.4.0-migration.md#cart-summary-v2-notes-data-next-cart-summary) | **BS-015** (`medium`) |
+| Checkout **phone** field (`data-next-checkout-field="phone"`) — excessive **`padding-left`** (~52px) / intl-tel layout; older Campaign Cart CSS fix removed in newer SDK | *(migration TBD)* | **BS-016** (`medium`) |
 
 ---
 
@@ -207,14 +209,14 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 - Status: `open`
 - Severity: `medium`
 - Date logged: `2026-03-31`
+- **Release impact:** **Not a blocker** — shipping can be driven **imperatively** with JS (`next.setShippingMethod(refId)` on card select). The gap is **declarative** markup vs **summary UI** consistency.
 - **Templates / where:** **Bundle:** [`olympus-v0.4/checkout.html`](../campaign-kit-templates/src/olympus-v0.4/checkout.html) — `[data-next-bundle-card]`. **Package swap:** [`olympus/checkout.html`](../campaign-kit-templates/src/olympus/checkout.html) — `data-next-package-selector` + `data-next-selection-mode="swap"` + `data-next-selector-card`.
-- Observed:
-  - **Bundle selector:** **`data-next-shipping-id`** is **not** listed on **`data-next-bundle-card`** in **`docs/sdk-0.4.0-migration.md`**. Adding it per tier (1x / 2x / 3x) **does nothing** in practice — undocumented / unsupported for bundle markup.
-  - **Standard package swap selector:** the attribute **is** documented on **`data-next-selector-card`**, but it **still does not work end-to-end** for checkout UX: migration **§ Known #3** — cart state can show the expected `shippingMethod` ref_id after card select, while **summary shipping line and grand total** often **do not** follow that method (downstream totals look stuck on default/fixed shipping).
+- **Observed — package selector + swap:** **`data-next-shipping-id`** on **`data-next-selector-card`** is documented. On card select, **cart state** is correct: `window.nextDebug?.stores?.cart?.getState()?.shippingMethod` shows the **expected** ref id. **Summary** shipping line and **grand total** still **often** do not reflect that method (totals look tied to default/fixed shipping downstream).
+- **Observed — bundle selector:** Declarative **`data-next-shipping-id`** on **`data-next-bundle-card`** **does not work at all** in practice (not supported for bundle markup; see migration bundle attribute table). Do **not** rely on it for per-tier bundle shipping.
 - Expected:
-  - Declarative per-card shipping IDs should drive **both** cart state **and** displayed totals; or docs should state limitations clearly for bundle vs package selector.
-- Workaround:
-  - **`next.setShippingMethod(refId)`** when selection changes may still be needed; **re-test summary/totals** — Known **#3** can apply even after imperative updates. Backend/campaign shipping rules as a fallback where declarative markup is unreliable.
+  - Declarative per-card shipping IDs should drive **both** cart state **and** displayed totals; docs should state bundle limitation clearly until SDK supports it.
+- Workaround (production-viable):
+  - On selector/bundle card change, call **`next.setShippingMethod(refId)`** (or platform equivalent) in **custom JS**, then **re-test** summary lines and grand total. Known **#3** can still apply until upstream fixes declarative path — JS is the supported mitigation today.
 - Cross-ref:
   - Migration **§ Known #3**; **Bundle Selector** attribute table (no `data-next-shipping-id`); **Package Selector** example with `data-next-shipping-id` on `data-next-selector-card`.
 
@@ -263,9 +265,11 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 ## BS-014 - `data-next-display="cart.discountCode"` / `cart.hasCoupon` not resolved (cart display refactor)
 
 - Status: `open`
-- Severity: `medium`
+- Severity: `low`
 - Date logged: `2026-04-01`
+- **Priority:** **Low** — voucher lines and **JS** give acceptable UX; this tracks **declarative** parity / older markup that used to work.
 - **Templates / where:** Any page with `[data-next-cart-summary]` template using `cart.hasCoupon` + `cart.discountCode`; reference comments in [`olympus-v0.4/checkout.html`](../campaign-kit-templates/src/olympus-v0.4/checkout.html) and [`olympus-mv-single-step-v0.4/checkout.html`](../campaign-kit-templates/src/olympus-mv-single-step-v0.4/checkout.html).
+- **Regression example:** Markup such as `<span data-next-display="cart.discountCode" class="display-visible">—</span>` **used to populate** the applied code; after cart display moved under **`CartSummaryEnhancer.display` → `resolveValue`**, these keys are **unhandled** and the node stays empty (console: “Unknown cart display property”).
 - Root cause (engineering):
   - Cart display now lives under **cart summary** (`CartSummaryEnhancer.display.ts` / `resolveValue`) with an **explicit property switch**. It handles totals-style fields (`subtotal`, `total`, `totalDiscount`, shipping, `itemCount`, etc.) only.
   - It does **not** handle **`discountCode`**, **`hasCoupon`**, **`hasCoupons`**, **`discountCodes`**, **`coupons[0].code`**, etc. Unknown keys hit the **default** branch → console **“Unknown cart display property”** → **`undefined`** → node stays empty.
@@ -279,6 +283,32 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
   - **No attribute-only** replacement through the same enhancer. Use **`data-summary-voucher-discounts`** + **`{discount.name}`** (and amount) in the summary template. Or small **custom JS** listening to cart/checkout updates to set badge text. Or **patch SDK** as above.
 - Cross-ref:
   - Migration **§ Known #10**.
+
+## BS-015 - `data-next-format="currency"` does not apply to `data-summary-lines` or bundle slot `<template>` output
+
+- Status: `open`
+- Severity: `medium`
+- Date logged: `2026-03-31`
+- **Templates / where:** `[data-next-cart-summary]` → **`data-summary-lines`** row `<template>` (`{line.total}`, `{line.price}`, `{line.originalPackagePrice}`, …) — [`olympus-v0.4/checkout.html`](../campaign-kit-templates/src/olympus-v0.4/checkout.html), [`olympus-mv-single-step-v0.4/checkout.html`](../campaign-kit-templates/src/olympus-mv-single-step-v0.4/checkout.html). **`data-next-bundle-slots`** slot `<template>` (`{item.unitPrice}`, `{item.originalUnitPrice}`, …) on MV / bundle card UIs.
+- **Problem:** Adding **`data-next-format="currency"`** (or similar) on wrappers around **`{line.*}`** or **`{item.*}`** inside those **cloned** `<template>` fragments **does not** produce formatted currency in practice — unlike **`data-next-display="bundle.*"`** on regular DOM (see **safe-display-paths §6** / `upsell-bundle.html`), which **can** use `data-next-format`.
+- **Expected:** Same formatter pipeline as other money displays, or documented unsupported + alternative.
+- **Workaround:** **Custom JS** (listen to cart / bundle events, format numbers with campaign currency) until SDK wires formatters into the summary line + slot clone pipelines.
+- **Eng one-liner:** *Cart summary line template + bundle slot template clones do not honor `data-next-format` on `{line.*}` / `{item.*}` nodes.*
+- Cross-ref:
+  - [Campaign issues overview](campaign-issues-overview.md) open **#5**; migration **Known #5** (slot tokens raw) + **Cart Summary v2 Notes**.
+
+## BS-016 - Checkout phone field: excessive `padding-left` / intl-tel layout (regression vs older Campaign Cart CSS)
+
+- Status: `open`
+- Severity: `medium`
+- Date logged: `2026-03-31`
+- **Templates / where:** Any checkout with **`data-next-checkout-field="phone"`** and the SDK’s intl-tel / flag widget — reference [`olympus-v0.4/checkout.html`](../campaign-kit-templates/src/olympus-v0.4/checkout.html) (`#phone`). Theme **`next-core.css`** still carries some **`.iti--allow-dropdown`** rules (e.g. `padding-right` / `padding-left` for dial-code mode); **observed in browser** can still show a **large `padding-left: 52px`** (or similar) on the `<input>`, making the field look misaligned vs other inputs.
+- **Regression note:** Prior **Campaign Cart** / kit CSS reportedly **corrected** this; with **newer SDK** bundles that override or omit those rules, the problem **shows again**.
+- **Expected:** Phone input **visually consistent** with email/name fields (or documented, stable intl-tel spacing).
+- **Ask (engineering):** **Reinstate** the previous core checkout **phone / `.iti`** normalization.
+- **Workaround (themes):** Local CSS on **`input[data-next-checkout-field="phone"]`** / **`.iti`…** to reset padding to match your form grid (test with flag dropdown + separate dial code modes).
+- Cross-ref:
+  - [Campaign issues overview](campaign-issues-overview.md) open **#4**.
 
 ---
 

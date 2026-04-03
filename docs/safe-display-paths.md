@@ -6,7 +6,7 @@ Practical allowlist for **`data-next-display`** on marketing/checkout/upsell tem
 
 **Global tips**
 
-- Prefer **`data-next-format="currency"`** or **`percentage`** when remote **`bundle.{selectorId}.*`** money or % fields look like raw numbers (known `BundleDisplayEnhancer` init quirk until fixed in core).
+- Prefer **`data-next-format="currency"`** or **`percentage`** when remote **`bundle.{selectorId}.*`** money or % fields look like raw numbers (known `BundleDisplayEnhancer` init quirk until fixed in core). **Does not apply** to **`data-summary-lines`** `{line.*}` or **`data-next-bundle-slots`** `{item.*}` inside `<template>` clones — see [template bug log](template-bug-log.md) **BS-015**.
 - **`data-next-show` / `data-next-hide`** do **not** understand **`bundle.*`** paths; use bundle card **`data-next-bundle-display`** visibility fields or other namespaces for conditionals.
 - Elements with **`display: none`** skip updates in the display core (performance); keep bound price copy in visible DOM when possible.
 
@@ -100,6 +100,10 @@ Nested keys beyond the registry still work in many cases via `PropertyResolver`;
 ## 6. `bundle.{selectorId}.*` — `BundleDisplayEnhancer` (remote)
 
 **Requires** **`[data-next-bundle-selector]`** with **`data-next-selector-id="{selectorId}"`**.
+
+This path is **not** the same as **bundle slot** `<template>` tokens (`{item.unitPrice}`, … inside `data-next-bundle-slots`) — those are covered under [migration Known #5](sdk-0.4.0-migration.md#5-bundle-selector-slot-values-are-unformatted-raw-numbers).
+
+**Outside `[data-next-bundle-card]`:** When you mirror the **selected tier** in normal page markup (e.g. bundle upsell **offer** column with **`data-next-display="bundle.{selectorId}.price"`** / **`originalPrice`**), you are **not** inside a card — `data-next-bundle-display` does not apply. Those remote values often render **unformatted** until you set **`data-next-format="currency"`** on the element. Reference: [`olympus-v0.4/upsell-bundle.html`](../campaign-kit-templates/src/olympus-v0.4/upsell-bundle.html) (header + `prices-text-wrapper` block).
 
 | Property | Safe with notes |
 |----------|-----------------|

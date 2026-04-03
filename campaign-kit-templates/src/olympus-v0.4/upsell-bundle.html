@@ -210,6 +210,12 @@ data-next-bundle-items='[{"packageId":3,"quantity":5}]'
                       <div data-bundle-qty-btn="5" class="upsell-offer__qty-btn"><div>5</div></div>
                     </div>
                   </div>
+                  <!--
+                    Selected-tier money via data-next-display="bundle.upsell-bundle.*" OUTSIDE any
+                    [data-next-bundle-card] (same pattern as the header 1× price). Remote bundle
+                    display often yields unformatted numbers — keep data-next-format="currency" on
+                    originalPrice / price (see KNOWN LIMITATIONS in the file comment above).
+                  -->
                   <div class="prices-text-wrapper">
                     <div class="price-wrapper">
                       <div class="text-sm tw-600">Retail Price</div>
