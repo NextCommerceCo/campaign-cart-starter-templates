@@ -48,10 +48,11 @@ swiper_thumbs:
        wires data-bundle-qty-btn buttons to click the matching card
     ✅ Remote bundle display updates when qty card changes
        (bundle.upsell-bundle.price / originalPrice / discountPercentage)
-    ✅ data-next-upsell-action-for links the accept button to this selector (SDK ≥ 0.4.7)
-    ✅ data-next-upsell="offer" on .upsell-container — UpsellEnhancer host that scopes
+    ✅ data-next-upsell="offer" on .upsell-wrapper — UpsellEnhancer host that scopes
        both data-next-upsell-action="add" and data-next-upsell-action="skip"
-    ✅ Header price + % locked to 1x via upsell-bundle-1x display-only selector
+    ✅ Header price + % locked to 1x via upsell-bundle-1x display-only selector (must be
+       outside the offer — first in-offer [data-next-bundle-selector] drives submit, not
+       data-next-upsell-action-for)
 
   ARCHITECTURE (Option 3 — per-qty cards):
     - One hidden data-next-bundle-card per qty (1x–5x) inside the selector
@@ -92,22 +93,22 @@ swiper_thumbs:
     </section>
     <section class="section upsell-box">
       <div class="container">
-        <div class="upsell-wrapper" data-next-upsell="offer" data-next-await="">
-
-          <!--
-            Display-only selector — no data-next-upsell-context, single 1x card always selected.
-            Used only to surface bundle.upsell-bundle-1x.price in the header so it stays fixed
-            at the 1x offer price regardless of the qty selection in the main selector below.
-          -->
-          <div data-next-bundle-selector data-next-selector-id="upsell-bundle-1x" style="display:none">
-            <div role="button"
-                 data-next-bundle-card
-                 data-next-bundle-id="upsell-bundle-1x-card"
+        <!--
+          Display-only — outside [data-next-upsell="offer"]: UpsellEnhancer picks the first
+          in-offer [data-next-bundle-selector] for AddUpsellLine; if this lived inside offer,
+          submit would always use 1× upsell-bundle-1x and ignore qty selection.
+        -->
+        <div data-next-bundle-selector data-next-selector-id="upsell-bundle-1x" style="display:none">
+          <div role="button"
+               data-next-bundle-card
+               data-next-bundle-id="upsell-bundle-1x-card"
 data-next-bundle-items='[{"packageId":3,"quantity":1}]'
-                 data-next-bundle-vouchers='["UP50"]'
-                 data-next-selected="true"
-                 class="os-card next-selected"></div>
-          </div>
+               data-next-bundle-vouchers='["UP50"]'
+               data-next-selected="true"
+               class="os-card next-selected"></div>
+        </div>
+
+        <div class="upsell-wrapper" data-next-upsell="offer" data-next-await="">
 
           <!--
             Hidden bundle selector — acts as a state machine only.
@@ -234,12 +235,10 @@ data-next-bundle-items='[{"packageId":3,"quantity":5}]'
                     </div>
                   </div>
                   <!--
-                    data-next-upsell-action-for links this accept button to the bundle selector
-                    by matching data-next-selector-id="upsell-bundle". Requires SDK ≥ 0.4.7.
-                    On click, UpsellEnhancer reads ctx.bundleItems from the selected card and
-                    sends vouchers from data-next-bundle-vouchers with the order line.
+                    UpsellEnhancer does not use data-next-upsell-action-for (AcceptUpsellEnhancer).
+                    Bundle for add comes from the first [data-next-bundle-selector] in this offer (upsell-bundle).
                   -->
-                  <a data-next-upsell-action="add" data-next-upsell-action-for="upsell-bundle" href="#" class="button" pb-animate="pulse-upsell">
+                  <a data-next-upsell-action="add" href="#" class="button" pb-animate="pulse-upsell">
                     <div data-button="content" class="button_content"><div>Yes, Add to My Order</div></div>
                   </a>
                   <div class="upsell-ships-info">

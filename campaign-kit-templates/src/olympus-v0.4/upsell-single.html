@@ -41,6 +41,8 @@ swiper_thumbs:
   Same mechanics as upsell-quantity.html, without quantity toggles — vouchers ride AddUpsellLine.
   Align packageId in data-next-bundle-items with data-next-display="package.<id>.name" and Campaigns.
   Remote pricing: bundle.upsell-bundle.* — use data-next-format="currency" / "percentage" on those nodes.
+  Only one [data-next-bundle-selector] here (inside offer) — no upsell-bundle-1x sibling-order bug.
+  data-next-upsell-action-for is not read by UpsellEnhancer (AcceptUpsellEnhancer only).
 -->
 <div class="page-wrapper">
   <div class="main-wrapper">
@@ -163,7 +165,6 @@ swiper_thumbs:
 
                     <a
                       data-next-upsell-action="add"
-                      data-next-upsell-action-for="upsell-bundle"
                       href="#"
                       class="button"
                       pb-animate="pulse-upsell"

@@ -17,14 +17,17 @@ scripts:
 
   ARCHITECTURE (Option 3 — per-qty hidden cards):
     - Display-only selector (upsell-bundle-1x): always 1×; used only to lock header price/%.
-    - Hidden state-machine selector (upsell-bundle): 1×–5× cards, each with configurable:true items
-      and per-tier vouchers. data-next-bundle-slot-template-id renders configurable slots.
+      MUST sit outside [data-next-upsell="offer"]: UpsellEnhancer resolves bundleSelectorId from the
+      first [data-next-bundle-selector] inside the offer only (not data-next-upsell-action-for).
+    - Hidden state-machine selector (upsell-bundle): 1×–5× cards, first selector inside the offer,
+      each with configurable:true items and per-tier vouchers. data-next-bundle-slot-template-id
+      renders configurable slots.
     - data-next-bundle-slots-for="upsell-bundle" targets #bundle-slots-stage (reuses
       next-core.css #bundle-slots-stage styles — same ID, different page, no conflict).
     - Qty buttons use data-bundle-qty-btn / data-bundle-qty-for; initBundleQtyToggle()
       clicks the matching hidden card → SDK updates slots + remote bundle.upsell-bundle.* display.
-    - Accept: data-next-upsell-action-for="upsell-bundle" → SDK AddUpsellLine bundle path
-      with configured variant selections + voucher for selected tier.
+    - Accept: UpsellEnhancer submits _getSelectedBundleItems() from that first-in-offer selector
+      (upsell-bundle), i.e. the same state as qty + slot UI.
 
   KNOWN LIMITATIONS (same as olympus-v0.4/upsell-quantity.html):
     - Remote bundle.* currency fields may render unformatted; keep data-next-format="currency".
@@ -53,25 +56,26 @@ scripts:
         </section>
         <section class="section upsell-box">
           <div class="container">
+            <!--
+              Display-only selector — outside [data-next-upsell="offer"] on purpose.
+              UpsellEnhancer picks the first [data-next-bundle-selector] inside the offer for submit;
+              if this block lived inside the offer, add would always use 1× upsell-bundle-1x and
+              ignore qty + #bundle-slots-stage (upsell-bundle).
+            -->
+            <div data-next-bundle-selector data-next-selector-id="upsell-bundle-1x" style="display:none">
+              <div role="button"
+                   data-next-bundle-card
+                   data-next-bundle-id="upsell-bundle-1x-card"
+                   data-next-bundle-items='[{"packageId":1,"quantity":1,"configurable":true}]'
+                   data-next-bundle-vouchers='["UP80TSHIRT"]'
+                   data-next-selected="true"
+                   class="os-card next-selected"></div>
+            </div>
+
             <div class="upsell-wrapper" data-next-upsell="offer" data-next-await="">
 
               <!--
-                Display-only selector — no data-next-upsell-context, single 1× card always selected.
-                Used only to surface bundle.upsell-bundle-1x.price / discountPercentage in the
-                header so it stays fixed at the 1× offer price regardless of qty selection below.
-              -->
-              <div data-next-bundle-selector data-next-selector-id="upsell-bundle-1x" style="display:none">
-                <div role="button"
-                     data-next-bundle-card
-                     data-next-bundle-id="upsell-bundle-1x-card"
-                     data-next-bundle-items='[{"packageId":1,"quantity":1,"configurable":true}]'
-                     data-next-bundle-vouchers='["UP80TSHIRT"]'
-                     data-next-selected="true"
-                     class="os-card next-selected"></div>
-              </div>
-
-              <!--
-                Hidden state-machine selector.
+                Hidden state-machine selector (first [data-next-bundle-selector] in offer — drives accept).
                 data-next-upsell-context: UpsellEnhancer reads selected card bundle items + vouchers on accept.
                 data-next-bundle-slot-template-id: SDK renders one slot per configurable item into #bundle-slots-stage.
                 Prices via remote data-next-display="bundle.upsell-bundle.*" outside this selector.
@@ -310,11 +314,10 @@ scripts:
                           </div>
                         </div>
                         <!--
-                          data-next-upsell-action-for links this button to the bundle selector by matching
-                          data-next-selector-id="upsell-bundle". Requires SDK ≥ 0.4.7.
-                          SDK reads selected card's bundle items + vouchers from data-next-bundle-vouchers on accept.
+                          UpsellEnhancer does not use data-next-upsell-action-for (that’s AcceptUpsellEnhancer).
+                          Bundle for add comes from the first [data-next-bundle-selector] inside this offer (upsell-bundle).
                         -->
-                        <a data-next-upsell-action="add" data-next-upsell-action-for="upsell-bundle" href="#" class="button" pb-animate="pulse-upsell">
+                        <a data-next-upsell-action="add" href="#" class="button" pb-animate="pulse-upsell">
                           <div data-button="content" class="button_content">
                             <div>Yes, Add to My Order</div>
                           </div>

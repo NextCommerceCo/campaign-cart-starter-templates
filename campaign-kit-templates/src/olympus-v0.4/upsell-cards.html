@@ -53,6 +53,11 @@ swiper_thumbs:
     - Remote bundle.upsell-bundle.* block still reflects the selected card (summary).
     - Per-tier vouchers: 1× UP50; 2× UP60; 3× UP70 (template example — create codes in Campaigns).
 
+  UpsellEnhancer resolves bundle submit from the first [data-next-bundle-selector] inside
+  [data-next-upsell="offer"] only — not data-next-upsell-action-for. The display-only
+  upsell-bundle-1x block (header / max-discount %) must sit outside the offer wrapper so the
+  first in-offer selector is upsell-bundle (visible tier grid).
+
   Same limitations / workarounds as upsell-quantity.html (data-next-format on remote bundle.*, etc.).
 -->
 
@@ -159,17 +164,18 @@ swiper_thumbs:
     </section>
     <section class="section upsell-box">
       <div class="container">
-        <div class="upsell-wrapper" data-next-upsell="offer" data-next-await="">
+        <!-- Outside offer: UpsellEnhancer uses first in-offer [data-next-bundle-selector] for add — must be upsell-bundle. -->
+        <div data-next-bundle-selector data-next-selector-id="upsell-bundle-1x" style="display:none">
+          <div role="button"
+               data-next-bundle-card
+               data-next-bundle-id="upsell-bundle-1x-card"
+               data-next-bundle-items='[{"packageId":3,"quantity":1}]'
+               data-next-bundle-vouchers='["UP50"]'
+               data-next-selected="true"
+               class="os-card next-selected"></div>
+        </div>
 
-          <div data-next-bundle-selector data-next-selector-id="upsell-bundle-1x" style="display:none">
-            <div role="button"
-                 data-next-bundle-card
-                 data-next-bundle-id="upsell-bundle-1x-card"
-                 data-next-bundle-items='[{"packageId":3,"quantity":1}]'
-                 data-next-bundle-vouchers='["UP50"]'
-                 data-next-selected="true"
-                 class="os-card next-selected"></div>
-          </div>
+        <div class="upsell-wrapper" data-next-upsell="offer" data-next-await="">
 
           <div class="upsell-container">
           <div class="grid-full flex-col flex-horizontal-lg-up">
@@ -274,7 +280,7 @@ swiper_thumbs:
                   <div class="prices-text-wrapper">
                     <div class="price-wrapper">
                       <div class="text-sm tw-600">Retail Price</div>
-                      <div class="upsell-offer__price diagonal-strike color-muted" data-next-display="bundle.upsell-bundle.originalPrice">$49.99</div>
+                      <div class="upsell-offer__price diagonal-strike color-muted" data-next-display="bundle.upsell-bundle.originalPrice" data-next-format="currency">$49.99</div>
                       <div class="text-xs font-bold"><strike>+$4.95 SHIPPING</strike></div>
                     </div>
                     <div class="upsell-offer__divider"></div>
@@ -287,7 +293,7 @@ swiper_thumbs:
                       <div class="text-xs font-bold color-primary">+ FREE SHIPPING</div>
                     </div>
                   </div>
-                  <a data-next-upsell-action="add" data-next-upsell-action-for="upsell-bundle" href="#" class="button" pb-animate="pulse-upsell">
+                  <a data-next-upsell-action="add" href="#" class="button" pb-animate="pulse-upsell">
                     <div data-button="content" class="button_content"><div>Yes, Add to My Order</div></div>
                   </a>
                   <div class="upsell-ships-info">
