@@ -23,17 +23,23 @@ Shareable list of **known issues and limitations** across **whole campaigns** (c
 
 ## Templates updated (0.4.x / offers branch)
 
-Roll-up of **`campaign-kit-templates/src/{slug}/`** that have received changes on **`v0.4.0-offers-template-update`** (recent commits). Local uncommitted edits may extend this list — refresh the table when you cut a release or merge.
+Reference pages on **`v0.4.0-offers-template-update`** — what to open when you need **bundle selector + offers** patterns. Paths are under **`campaign-kit-templates/src/`**.
 
-| Slug | What changed (summary) |
-| ---- | ---------------------- |
-| **olympus-v0.4** | Reference **0.4** checkout (`checkout.html` — cart-summary / bug-log pointers); **bundle upsells** (`upsell-bundle.html`, `upsell-bundle-cards.html`); `upsell.html`; `assets/js/upsells.js`; `assets/css/next-core.css`. |
-| **olympus-mv-single-step-v0.4** | MV checkout (`checkout.html`) kept in step with v0.4 patterns. |
-| **olympus-mv-single-step-v0.4-bridge** | Full **bridge** kit: layouts, `_includes` (bumps, header, express checkout, …), `assets/config.js`, CSS, images. |
-| **olympus-mv-single-step-v0.4-cards** | `upsell-mv.html` + `next-core.css`. |
-| **olympus-mv-single-step**, **olympus-mv-two-step** | `upsell-mv.html` + `next-core.css` (upsell / core CSS refresh). |
-| **demeter**, **limos**, **olympus**, **shop-single-step**, **shop-three-step** | `upsell.html` + `next-core.css` (same refresh pass). |
-| **olympus-v0.4.0-sdk**, **olympus-mv-single-step-0.4.6-sdk**, **olympus-mv-single-step-v0.4.0-sdk**, **olympus-mv-single-step2-v0.4.0-sdk** | SDK-pinned / snapshot variants under each slug (select paths — see git history per folder). |
+### Olympus — `olympus-v0.4/`
+
+| File | Role |
+| ---- | ---- |
+| [`olympus-v0.4/checkout.html`](../campaign-kit-templates/src/olympus-v0.4/checkout.html) | Standard **checkout** with the **bundle picker** and **offers**, using the **new bundle selector** (`data-next-bundle-selector`, tier cards, cart summary). |
+| [`olympus-v0.4/upsell-bundle.html`](../campaign-kit-templates/src/olympus-v0.4/upsell-bundle.html) | Standard **post-purchase upsell** using the **new bundle selector** + **coupons** / vouchers (`data-next-upsell-context`, tier cards, accept wired to the selector). |
+| [`olympus-v0.4/upsell-bundle-cards.html`](../campaign-kit-templates/src/olympus-v0.4/upsell-bundle-cards.html) | **Upsell example** with the **new bundle selector** and **multiple coupons per tier** (visible tier cards + per-card vouchers). |
+
+### Olympus MV Single Step — `olympus-mv-single-step-v0.4/`
+
+| File | Role |
+| ---- | ---- |
+| [`olympus-mv-single-step-v0.4/checkout.html`](../campaign-kit-templates/src/olympus-mv-single-step-v0.4/checkout.html) | **MV single-step checkout** aligned with 0.4.x (bundle selector, slots, cart summary). |
+
+**Note — older MV variants:** [`olympus-mv-single-step-v0.4-bridge/checkout.html`](../campaign-kit-templates/src/olympus-mv-single-step-v0.4-bridge/checkout.html) and [`olympus-mv-single-step-v0.4-cards/checkout.html`](../campaign-kit-templates/src/olympus-mv-single-step-v0.4-cards/checkout.html) are **previous MV shapes** from **before** the **external slot selector** layout update; use **`olympus-mv-single-step-v0.4`** as the current reference unless you are maintaining a legacy funnel.
 
 ---
 

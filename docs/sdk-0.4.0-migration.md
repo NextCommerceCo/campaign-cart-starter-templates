@@ -4,6 +4,12 @@ Tracks changes needed across templates when upgrading from SDK 0.3.x to 0.4.0.
 
 **Bundle selector reference template:** `campaign-kit-templates/src/olympus-v0.4/` — QA [`docs/olympus-v0.4.0-sdk-qa-checklist.md`](olympus-v0.4.0-sdk-qa-checklist.md). **Template bug log (0.4.x, repo-wide):** [`docs/template-bug-log.md`](template-bug-log.md)
 
+### SDK 0.4.9 — hold until jsDelivr serves the tag
+
+**Campaigns reference:** Keep **`sdk_version`** at **`0.4.8`** for **`olympus-v0.4`** until the loader is confirmed available on jsDelivr, e.g. `https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v0.4.9/dist/loader.js` (GitHub release: [v0.4.9](https://github.com/NextCommerceCo/campaign-cart/releases/tag/v0.4.9)). A bump to **0.4.9** was attempted and reverted due to CDN/load issues.
+
+**When the CDN is good:** Bump **`campaigns.json`** → **`0.4.9`**, re-apply **breaking** markup from the release (bundle **`data-next-bundle-display`** / **`data-next-bundle-price`** renames — `hasSavings`→`hasDiscount`, `savings`→`discountAmount`, `savingsPercentage`→`discountPercentage`, `compare`→`originalPrice`, `total`→`price` on bundle price slots, etc.), then QA checkout + bundle upsells.
+
 ---
 
 ## Template versioning practice
