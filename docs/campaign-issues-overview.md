@@ -23,23 +23,26 @@ Shareable list of **known issues and limitations** across **whole campaigns** (c
 
 ## Templates updated (0.4.x / offers branch)
 
-Reference pages on **`v0.4.0-offers-template-update`** — what to open when you need **bundle selector + offers** patterns. Paths are under **`campaign-kit-templates/src/`**.
+Reference pages on **`v0.4.0-offers-template-update`** — what to open when you need **bundle selector + offers** patterns. Source paths are under **`campaign-kit-templates/src/`**.
+
+**Netlify preview** (branch deploy; the `deploy-preview-N` segment follows the PR — update the base if you open a different preview):  
+`https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/`
 
 ### Olympus — `olympus-v0.4/`
 
-| File | Role |
-| ---- | ---- |
-| [`olympus-v0.4/checkout.html`](../campaign-kit-templates/src/olympus-v0.4/checkout.html) | Standard **checkout** with the **bundle picker** and **offers**, using the **new bundle selector** (`data-next-bundle-selector`, tier cards, cart summary). |
-| [`olympus-v0.4/upsell-bundle.html`](../campaign-kit-templates/src/olympus-v0.4/upsell-bundle.html) | Standard **post-purchase upsell** using the **new bundle selector** + **coupons** / vouchers (`data-next-upsell-context`, tier cards, accept wired to the selector). |
-| [`olympus-v0.4/upsell-bundle-cards.html`](../campaign-kit-templates/src/olympus-v0.4/upsell-bundle-cards.html) | **Upsell example** with the **new bundle selector** and **multiple coupons per tier** (visible tier cards + per-card vouchers). |
+| File | Preview | Role |
+| ---- | ------- | ---- |
+| [`olympus-v0.4/checkout.html`](../campaign-kit-templates/src/olympus-v0.4/checkout.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/olympus-v0.4/checkout/) | Standard **checkout** with the **bundle picker** and **offers**, using the **new bundle selector** (`data-next-bundle-selector`, tier cards, cart summary). |
+| [`olympus-v0.4/upsell-bundle.html`](../campaign-kit-templates/src/olympus-v0.4/upsell-bundle.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/olympus-v0.4/upsell-bundle/) | Standard **post-purchase upsell** using the **new bundle selector** + **coupons** / vouchers (`data-next-upsell-context`, tier cards, accept wired to the selector). |
+| [`olympus-v0.4/upsell-bundle-cards.html`](../campaign-kit-templates/src/olympus-v0.4/upsell-bundle-cards.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/olympus-v0.4/upsell-bundle-cards/) | **Upsell example** with the **new bundle selector** and **multiple coupons per tier** (visible tier cards + per-card vouchers). |
 
 ### Olympus MV Single Step — `olympus-mv-single-step-v0.4/`
 
-| File | Role |
-| ---- | ---- |
-| [`olympus-mv-single-step-v0.4/checkout.html`](../campaign-kit-templates/src/olympus-mv-single-step-v0.4/checkout.html) | **MV single-step checkout** aligned with 0.4.x (bundle selector, slots, cart summary). |
+| File | Preview | Role |
+| ---- | ------- | ---- |
+| [`olympus-mv-single-step-v0.4/checkout.html`](../campaign-kit-templates/src/olympus-mv-single-step-v0.4/checkout.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step-v0.4/checkout/) | **MV single-step checkout** aligned with 0.4.x (bundle selector, slots, cart summary). |
 
-**Note — older MV variants:** [`olympus-mv-single-step-v0.4-bridge/checkout.html`](../campaign-kit-templates/src/olympus-mv-single-step-v0.4-bridge/checkout.html) and [`olympus-mv-single-step-v0.4-cards/checkout.html`](../campaign-kit-templates/src/olympus-mv-single-step-v0.4-cards/checkout.html) are **previous MV shapes** from **before** the **external slot selector** layout update; use **`olympus-mv-single-step-v0.4`** as the current reference unless you are maintaining a legacy funnel.
+**Note — older MV variants:** [`olympus-mv-single-step-v0.4-bridge/checkout.html`](../campaign-kit-templates/src/olympus-mv-single-step-v0.4-bridge/checkout.html) ([preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step-v0.4-bridge/checkout/)) and [`olympus-mv-single-step-v0.4-cards/checkout.html`](../campaign-kit-templates/src/olympus-mv-single-step-v0.4-cards/checkout.html) ([preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step-v0.4-cards/checkout/)) are **previous MV shapes** from **before** the **external slot selector** layout update; use **`olympus-mv-single-step-v0.4`** as the current reference unless you are maintaining a legacy funnel.
 
 ---
 
