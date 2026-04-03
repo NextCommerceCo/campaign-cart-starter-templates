@@ -2,7 +2,7 @@
 
 Reference for **`data-next-bundle-display`**, remote **`data-next-display="bundle.{selectorId}.*"`**, and **`[data-next-cart-summary]`** template tokens. Bundle events use **`selectorId`** (from `data-next-selector-id`) as of **campaign-cart v0.4.8** — not a per-card `bundleId` in event `detail`.
 
-**Related in this repo:** [`docs/sdk-0.4.0-migration.md`](sdk-0.4.0-migration.md) · [`docs/selector-attribute-cheatsheet.md`](selector-attribute-cheatsheet.md) (package / `selection.*` / `data-next-package-price`) · [`docs/olympus-v0.4.0-bundle-selector-bug-log.md`](olympus-v0.4.0-bundle-selector-bug-log.md) (BS-012, BS-014).
+**Related in this repo:** [`docs/sdk-0.4.0-migration.md`](sdk-0.4.0-migration.md) · [`docs/selector-attribute-cheatsheet.md`](selector-attribute-cheatsheet.md) (package / `selection.*` / `data-next-package-price`) · [`docs/template-bug-log.md`](template-bug-log.md) (0.4.x template bug log — BS-012, BS-014, etc.).
 
 **Official:** [Cart Summary guide](https://developers.nextcommerce.com/docs/campaigns/guides/cart-summary) · [Bundle Set Sale](https://developers.nextcommerce.com/docs/campaigns/guides/bundle-set-sale).
 
@@ -28,7 +28,7 @@ Use **`data-next-bundle-display="<field>"`** on elements **inside** `[data-next-
 
 **Naming:** Some docs encourage `originalPrice` / `discountAmount` / `discountPercentage` / `hasDiscount` for new markup; older examples use `compare` / `savings` / `savingsPercentage` / `hasSavings`. **Both sets are valid** where the SDK maps them as aliases.
 
-**BS-006 / template hygiene:** Prefer **`data-next-bundle-price="total"`** (explicit) over a bare **`data-next-bundle-price`** on totals if a tier fails to bind.
+**BS-006 (`fixed` — markup rule):** Always use **`data-next-bundle-price="total"`** (explicit) for the tier total; bare **`data-next-bundle-price`** is not a supported pattern and may not bind.
 
 ---
 

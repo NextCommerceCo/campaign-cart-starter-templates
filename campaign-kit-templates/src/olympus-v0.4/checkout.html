@@ -543,7 +543,7 @@ swiper_thumbs:
                                                         </div>
                                                       </div>
                                                       <div class="cart-item__pricing">
-                                                        <!-- BS-012: {line.priceRetailTotal} should = full-line list total. If it equals {line.priceRetail} or {line.originalPackagePrice}, summary API/SDK is wrong — see docs/olympus-v0.4.0-bundle-selector-bug-log.md -->
+                                                        <!-- BS-012: {line.priceRetailTotal} should = full-line list total. If it equals {line.priceRetail} or {line.originalPackagePrice}, summary API/SDK is wrong — see docs/template-bug-log.md -->
                                                         <div class="cart-price diagonal-strike line-compare {line.hasSavings}">{line.originalPackagePrice}</div>
                                                         <div class="checkout__line-item__final-price">{line.total}</div>
                                                       </div>
@@ -596,7 +596,7 @@ swiper_thumbs:
                                                 <div class="order-totals__value ts-lg tw-600 cc-disc">{discounts}</div>
                                               </div>
                                             </div>
-                                            <!-- BS-014 / Known #10: cart.discountCode + cart.hasCoupon not wired in CartSummaryEnhancer.display resolveValue; eng one-liner in docs/olympus-v0.4.0-bundle-selector-bug-log.md. Code + amount: data-summary-voucher-discounts above. -->
+                                            <!-- BS-014 / Known #10: cart.discountCode + cart.hasCoupon not wired in CartSummaryEnhancer.display resolveValue; eng one-liner in docs/template-bug-log.md. Code + amount: data-summary-voucher-discounts above. -->
                                             <div class="coupon-tags">
 
                                               <div data-next-show="cart.hasCoupon" class="order-totals__line items-center">
