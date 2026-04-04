@@ -319,6 +319,25 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 Copy/paste this block for each new issue:
 
 ```md
+## BS-017 - Cart summary tax row: `{tax}` token, `.next-has-tax`, and `cart.tax` display all unimplemented
+
+- Status: `open`
+- Severity: `low`
+- Date logged: `2026-04-03`
+- **Templates / where:** All bundle checkouts using `[data-next-cart-summary]` — primary: `olympus-v0.4/checkout.html`, `olympus-mv-single-step-v0.4/checkout.html`
+- **Root cause (three separate gaps):**
+  1. `{tax}` — not included in the vars `CartSummaryEnhancer` passes into the custom `<template>`, so the literal `{tax}` renders or the row appears blank
+  2. `.next-has-tax` — never added to `[data-next-cart-summary]`; only discount/shipping/calculating-style state flags are toggled in `updateStateClasses`. CSS keyed off `.next-has-tax` therefore never fires.
+  3. `data-next-display="cart.tax"` — not implemented on `cart.*`; `cart.*` display resolves subtotal/total/shipping only, not tax.
+- **Expected:** Tax row shows live tax amount from `calculateBundlePrice` response; `.next-has-tax` toggles conditional visibility; `{tax}` / `cart.tax` resolve as formatted currency.
+- **Actual:** `{tax}` renders literally or blank; tax CSS hook never applies; no first-class SDK path for checkout cart summary tax exists today.
+- **Workaround (today):**
+  - Custom script: `window.next.on('cart:updated', (state) => { /* read tax field from state.summary, format, inject manually, toggle next-has-tax on summary root */ })` — field name must match what the API actually returns.
+  - Note: `order.tax` works on the receipt page where order context exists; that is not the same as live cart tax.
+- **Next action:** Confirm field name on `state.summary` from network response. Raise with SDK team to wire tax from `calculate` response into `buildVars`, toggle `next-has-tax`/`next-no-tax`, and extend display types. Or correct the public cart summary guide to reflect current scope.
+
+---
+
 ## BS-XXX - Short title
 
 - Status: `open`
