@@ -4,11 +4,27 @@ Tracks changes needed across templates when upgrading from SDK 0.3.x to 0.4.0.
 
 **Bundle selector reference template:** `campaign-kit-templates/src/olympus-v0.4/` — QA [`docs/olympus-v0.4.0-sdk-qa-checklist.md`](olympus-v0.4.0-sdk-qa-checklist.md). **Template bug log (0.4.x, repo-wide):** [`docs/template-bug-log.md`](template-bug-log.md)
 
-### SDK 0.4.9 — jsDelivr + bundle slot renames
+### SDK 0.4.10 — reference campaigns + template alignment
 
-**Loader:** `https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v0.4.9/dist/loader.js` ([v0.4.9](https://github.com/NextCommerceCo/campaign-cart/releases/tag/v0.4.9)).
+**Loader:** `https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v0.4.10/dist/loader.js` ([v0.4.10](https://github.com/NextCommerceCo/campaign-cart/releases/tag/v0.4.10)).
 
-**Campaigns reference:** **`olympus-v0.4`** and **`olympus-mv-single-step-v0.4`** use **`sdk_version`:** **`0.4.9`**. **Breaking** bundle markup (from this release): **`data-next-bundle-display`** / **`data-next-bundle-price`** — `hasSavings`→`hasDiscount`, `savings`→`discountAmount`, `savingsPercentage`→`discountPercentage`, `compare`→`originalPrice`, `total`→`price` on bundle price slots. Aliases may still work briefly; prefer canonical names for new work. Re-QA checkout + bundle upsells after bumps.
+**Campaigns reference:** **`olympus-v0.4`** and **`olympus-mv-single-step-v0.4`** use **`sdk_version`:** **`0.4.10`** in [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json).
+
+**Breaking / prefer for new work (reference templates in this repo):**
+
+- **Prepurchase bumps (`-v2` partials):** **`data-next-toggle-display`** with **`originalPrice`** / **`price`** (replaces **`data-next-toggle-price`** and `compare` slot; SDK may keep legacy attrs for compatibility).
+- **`data-next-display="toggle.{packageId}.*"`** — renames such as `isInCart`→`isSelected`, `hasSavings`→`hasDiscount`, `compare`→`originalPrice`, `savings`→`discountAmount`, `savingsPercentage`→`discountPercentage` (see SDK release notes).
+- **Bundle slot `<template>` tokens:** **`{item.originalPrice}`**, **`{item.price}`** (replaces **`originalUnitPrice`** / **`unitPrice`**).
+- **Cart summary line `<template>`:** **`{line.hasDiscount}`** (replaces **`{line.hasSavings}`** for class toggles).
+- **Receipt mobile summary:** **`cart.hasDiscounts`** (plural — `CartDisplayEnhancer`; not **`cart.hasDiscount`**, which is **`package.*` / bundle naming**), **`cart.originalPrice`** (or legacy **`cart.compareTotal`** if your SDK still aliases it) for crossed pricing (replaces **`cart.hasSavings`** / **`cart.compareTotal`** in older markup).
+
+**Still applies from 0.4.9:** bundle card **`data-next-bundle-display`** / remote **`bundle.*`** / **`data-next-bundle-price`** canonical names (`hasDiscount`, `originalPrice`, `price`, `discountAmount`, `discountPercentage`, …).
+
+### SDK 0.4.9 — jsDelivr + bundle display renames
+
+**Loader (historical):** `https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v0.4.9/dist/loader.js` ([v0.4.9](https://github.com/NextCommerceCo/campaign-cart/releases/tag/v0.4.9)).
+
+**Breaking** bundle markup introduced in **0.4.9**: **`data-next-bundle-display`** / **`data-next-bundle-price`** — `hasSavings`→`hasDiscount`, `savings`→`discountAmount`, `savingsPercentage`→`discountPercentage`, `compare`→`originalPrice`, `total`→`price` on bundle price slots. Aliases may still work briefly; prefer canonical names for new work.
 
 ---
 
@@ -88,7 +104,7 @@ Docs: [Bundle Set Sale guide](https://developers.nextcommerce.com/docs/campaigns
 | `data-next-bundle-vouchers` | Card | Comma-separated coupon codes for this tier |
 | `data-next-selected="true"` | Card | Pre-selects on load |
 | `data-next-bundle-price="total"` | Display | Card total — **required explicit** `="total"` on every tier; bare `data-next-bundle-price` is unsupported for totals (bug log **BS-006** — **fixed** as markup rule) |
-| `data-next-bundle-display="…"` | Display | Reactive slots inside cards (`hasSavings`, `unitPrice`, `originalUnitPrice`, etc.) — see [`docs/selector-attribute-cheatsheet.md`](selector-attribute-cheatsheet.md) |
+| `data-next-bundle-display="…"` | Display | Reactive slots inside cards — prefer **`hasDiscount`**, **`originalPrice`**, **`price`**, **`unitPrice`** (see 0.4.9 renames; legacy `hasSavings` / `originalUnitPrice` aliases may still exist) — [`docs/selector-attribute-cheatsheet.md`](selector-attribute-cheatsheet.md) |
 | `data-next-bundle-price="compare"` | Display | Compare/retail total |
 | `data-next-bundle-price="savings"` | Display | Savings amount |
 | `data-next-bundle-price="savingsPercentage"` | Display | Savings % |
@@ -114,10 +130,12 @@ Multi-product bundle:
 
 ### Slot template tokens
 
+**0.4.9+ canonical** (replaces `originalUnitPrice` / `unitPrice`):
+
 ```html
 <template id="bundle-unit-price-tpl">
-  <div class="os-card__price os--compare os-style">{item.originalUnitPrice}</div>
-  <div class="os-card__price os--current">{item.unitPrice}/ea</div>
+  <div class="os-card__price os--compare os-style">{item.originalPrice}</div>
+  <div class="os-card__price os--current">{item.price}/ea</div>
 </template>
 ```
 
@@ -125,8 +143,8 @@ Multi-product bundle:
 
 ```html
 <template id="bundle-unit-price-tpl">
-  <div class="os-card__price os--compare os-style">{item.originalUnitPrice}</div>
-  <div class="os-card__price os--current">{item.unitPrice}/ea</div>
+  <div class="os-card__price os--compare os-style">{item.originalPrice}</div>
+  <div class="os-card__price os--current">{item.price}/ea</div>
 </template>
 
 <div
@@ -316,8 +334,8 @@ Full example (distinct package IDs per card):
 
 | Template | Selector fix | Token renames | Bug fixes | Notes |
 |----------|-------------|---------------|-----------|-------|
-| `olympus-v0.4` | ✅ bundle selector | ✅ **0.4.9** | 🔄 QA | Reference **bundle** checkout (`data-next-bundle-selector` + Summary v2). **#8** swap/add lines: **fixed** on reference (re-test on SDK bump). Open: **#9** (summary tokens), **#10** (`cart.discountCode` / coupon display), **#3** shipping vs totals, bump **#7** — [template bug log](template-bug-log.md) |
-| `olympus-mv-single-step-v0.4` | ✅ native external slots | ✅ **0.4.9** | 🔄 QA | Native `data-next-bundle-slots-for` + `data-next-variant-selector-template-id`. Replaces bridge JS. **`upsell-mv.html`** is Approach B (bundle upsell + vouchers). **Variant UI:** SDK **native `<select>`** in staged slots works without JS; **`setupBundleSlotVariantDropdowns()`** is **opt-in** for the custom **`os-dropdown`** UI — see file-header comments in [`checkout-olympus-mv-full.js`](../campaign-kit-templates/src/olympus-mv-single-step-v0.4/assets/js/checkout-olympus-mv-full.js) and [`upsells-up01-mv.js`](../campaign-kit-templates/src/olympus-mv-single-step-v0.4/assets/js/upsells-up01-mv.js). |
+| `olympus-v0.4` | ✅ bundle selector | ✅ **0.4.10** | 🔄 QA | Reference **bundle** checkout (`data-next-bundle-selector` + Summary v2). **#8** swap/add lines: **fixed** on reference (re-test on SDK bump). Open: **#9** (summary tokens), **#10** (`cart.discountCode` / coupon display), **#3** shipping vs totals, bump **#7** — [template bug log](template-bug-log.md) |
+| `olympus-mv-single-step-v0.4` | ✅ native external slots | ✅ **0.4.10** | 🔄 QA | Native `data-next-bundle-slots-for` + `data-next-variant-selector-template-id`. Replaces bridge JS. **`upsell-mv.html`** is Approach B (bundle upsell + vouchers). **Variant UI:** SDK **native `<select>`** in staged slots works without JS; **`setupBundleSlotVariantDropdowns()`** is **opt-in** for the custom **`os-dropdown`** UI — see file-header comments in [`checkout-olympus-mv-full.js`](../campaign-kit-templates/src/olympus-mv-single-step-v0.4/assets/js/checkout-olympus-mv-full.js) and [`upsells-up01-mv.js`](../campaign-kit-templates/src/olympus-mv-single-step-v0.4/assets/js/upsells-up01-mv.js). |
 | `olympus-mv-single-step-v0.4-bridge` | — | 🔒 **frozen** (`0.4.6`) | — | **Not maintained.** Pre–native-slots clone/bridge workaround; superseded by `olympus-mv-single-step-v0.4` — see *bridge and cards (frozen)* below. |
 | `olympus-mv-single-step-v0.4-cards` | — | 🔒 **frozen** (`0.4.6`) | — | **Not maintained.** Alternate card UX workaround; same as bridge row. |
 | `olympus` | 🔄 in progress | 🔄 in progress | 🔄 in progress | Legacy **multi-package** track: `savingsAmount`/`savingsPercentage` static; `data-next-package-price` compare/savings wrong for multi-package; `finalPriceTotal` coupon-aware for totals only |
@@ -332,7 +350,7 @@ Full example (distinct package IDs per card):
 
 **`olympus-mv-single-step-v0.4-bridge`** and **`olympus-mv-single-step-v0.4-cards`** stay in the repo as **historical references** only. They were **workarounds** for **external bundle slot layout** and alternate card UX **before** native **`data-next-bundle-slots-for`** and the current **`olympus-mv-single-step-v0.4`** template resolved that gap (see **Template Workaround: External Slot Layout** below — the clone/bridge pattern).
 
-- **No ongoing updates:** do not expect SDK bumps, 0.4.9-style token renames, or bug-fix parity on these folders moving forward.
+- **No ongoing updates:** do not expect SDK bumps, 0.4.10-style token renames, or bug-fix parity on these folders moving forward.
 - **New campaigns / clones:** base work on **`olympus-mv-single-step-v0.4`** only.
 - **`campaigns.json`:** entries may remain at **`0.4.6`** for the interactive picker; changing them is optional and **not** a commitment to maintain those templates.
 
@@ -365,7 +383,7 @@ In PackageSelector swap mode, `compare`, `savings`, and `savingsPercentage` slot
 **Expected:** `compare` slot should calculate using the package quantity, not always quantity 1.
 
 ### 5. Bundle selector slot values are unformatted (raw numbers)
-`{item.originalUnitPrice}` and `{item.unitPrice}` in bundle slot templates output raw numeric values — not currency-formatted. **`data-next-format="currency"`** on wrappers around those tokens **does not** reliably format them today (cloned slot pipeline) — same class of gap as **`data-summary-lines`**; see bug log **BS-015**. Use **JS** or wait for SDK.
+`{item.originalPrice}` and `{item.price}` in bundle slot templates (**0.4.9+** canonical; replaces `originalUnitPrice` / `unitPrice`) output raw numeric values — not currency-formatted. **`data-next-format="currency"`** on wrappers around those tokens **does not** reliably format them today (cloned slot pipeline) — same class of gap as **`data-summary-lines`**; see bug log **BS-015**. Use **JS** or wait for SDK.
 
 **Separate issue (remote `bundle.*` display):** **`data-next-display="bundle.{selectorId}.*"`** on nodes **outside** **`[data-next-bundle-card]`** (typical on **bundle upsells** — offer copy next to qty toggles) goes through **`BundleDisplayEnhancer`**, not the slot template pipeline. **`price`** / **`originalPrice`** there can render **unformatted** until you set **`data-next-format="currency"`** — see [safe-display-paths §6](safe-display-paths.md#6-bundleselectorid--bundledisplayenhancer-remote) and [`olympus-v0.4/upsell-quantity.html`](../campaign-kit-templates/src/olympus-v0.4/upsell-quantity.html) (`prices-text-wrapper`).
 
@@ -440,7 +458,7 @@ This is why the template includes extra JS and why some cloned price/savings tex
 When using the Summary v2 enhancer:
 - Structure: `<div data-next-cart-summary><template> ... </template></div>`
 - The SDK computes totals asynchronously and applies *state classes* to the `data-next-cart-summary` root (for example, `next-has-savings`, `next-no-savings`, `next-cart-has-items`).
-- Inside the `<template>`, prefer **static CSS hook classes** (e.g. `next-has-savings` on the savings row) rather than relying on `data-next-show="cart.hasSavings"` / `data-next-show` conditions inside the injected template. Template-scoped `data-next-show` can evaluate before totals state is ready, leaving sections hidden after render.
+- Inside the `<template>`, prefer **static CSS hook classes** (e.g. `next-has-discounts` / `next-has-savings` on the savings row) rather than relying on `data-next-show="cart.hasDiscounts"` / `cart.hasSavings` / other `data-next-show` conditions inside the injected template. Template-scoped `data-next-show` can evaluate before totals state is ready, leaving sections hidden after render.
 - For empty-cart gating, use `data-next-hide="cart.isEmpty"` on the `data-next-cart-summary` root (or hide via CSS hooks).
 - **Line-level retail total token:** If `{line.priceRetailTotal}` matches unit retail fields instead of a true line retail total, treat as **Known #9** / **BS-012** — verify against cart state before “fixing” template math in Liquid.
 - **`data-next-format` on line rows:** **`data-next-format="currency"`** on elements inside the **`data-summary-lines`** `<template>` **does not** fix raw `{line.*}` output today — **BS-015** (`medium`). Use **JS** or an SDK fix; do not assume the attribute works there.

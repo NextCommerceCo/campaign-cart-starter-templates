@@ -1,5 +1,6 @@
-<!-- Prepurchase upsell: checkbox bump (check01-v2) — full 0.4.0 SDK mapping
-     Uses data-next-toggle-price / compare / data-next-toggle-image
+<!-- Prepurchase upsell: checkbox bump (check01-v2) — SDK 0.4.10+
+     Uses data-next-toggle-display (originalPrice / price) + data-next-toggle-image
+     (data-next-toggle-price kept for compat in SDK but prefer toggle-display here)
      vs bump-check01.html which uses data-next-display for price stability
      Testing: compare pricing output when synced via data-next-package-sync -->
 <div data-component="prepurchase-upsell" data-variant="check01" data-next-await="">
@@ -19,8 +20,9 @@
         <div class="bump__content">
           <div class="bump__content-wrap">
             <div class="bump__price">
-              <div data-next-toggle-price="compare" class="bump__price-reg">$29.99</div>
-              <div data-next-toggle-price class="bump__price-sale">$9.99</div>
+              <div data-next-toggle-display="originalPrice" class="bump__price-reg">$29.99</div>
+              <div data-next-toggle-display="price" class="bump__price-sale">$9.99</div>
+              
             </div>
             <div class="list-container cc-2xs">
               <ul role="list" class="list w-list-unstyled">

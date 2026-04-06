@@ -534,7 +534,7 @@ swiper_thumbs:
                                                           <div class="cart-item__title os-bold">
                                                             {line.quantity}x {line.name}
                                                             <div>
-                                                              <div class="text-2xs text-muted text-weight-normal diagonal-strike {line.hasSavings}">{line.originalPackagePrice}/ea</div>
+                                                              <div class="text-2xs text-muted text-weight-normal diagonal-strike {line.hasDiscount}">{line.originalPackagePrice}/ea</div>
                                                               <div class="text-2xs text-muted text-weight-normal">{line.unitPrice}/ea</div>
                                                             </div>
                                                           </div>
@@ -543,7 +543,7 @@ swiper_thumbs:
                                                       </div>
                                                       <div class="cart-item__pricing">
                                                         <!-- BS-012: {line.priceRetailTotal} should = full-line list total. If it equals {line.priceRetail} or {line.originalPackagePrice}, summary API/SDK is wrong — see docs/template-bug-log.md -->
-                                                        <div class="cart-price diagonal-strike line-compare {line.hasSavings}">{line.originalPackagePrice}</div>
+                                                        <div class="cart-price diagonal-strike line-compare {line.hasDiscount}">{line.originalPackagePrice}</div>
                                                         <div class="checkout__line-item__final-price">{line.total}</div>
                                                       </div>
                                                     </div>

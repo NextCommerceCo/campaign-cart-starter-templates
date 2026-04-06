@@ -1,4 +1,4 @@
-<!-- Prepurchase upsell: check02-v2 — flat check02 layout; 0.4.x package-toggle, toggle-card, toggle-price, toggle-image.
+<!-- Prepurchase upsell: check02-v2 — flat check02 layout; SDK 0.4.10+ package-toggle, toggle-card, toggle-display, toggle-image.
      Contrast: bump-check02.html uses data-next-bump + data-next-toggle + data-next-display for price/image.
      Do not put Liquid tags inside HTML comments — Liquid still executes them. -->
 <div data-component="prepurchase-upsell" data-variant="check02" data-next-await="">
@@ -17,7 +17,7 @@
       <div class="bump__body">
         <div class="bump__content">
           <img data-next-toggle-image loading="lazy" alt="" src="{{ 'images/icon.svg' | campaign_asset }}" class="bump__image">
-          <div class="bump__description">Get peace of mind with <span data-next-display="package.9.name">Shipping Guarantee</span> in the event your delivery is damaged, stolen, or lost during transit for <span data-next-toggle-price class="display-visible">$1.99</span></div>
+          <div class="bump__description">Get peace of mind with <span data-next-display="package.9.name">Shipping Guarantee</span> in the event your delivery is damaged, stolen, or lost during transit for <span data-next-toggle-display="price" class="display-visible">$1.99</span></div>
         </div>
       </div>
     </div>

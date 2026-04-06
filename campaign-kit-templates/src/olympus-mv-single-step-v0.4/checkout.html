@@ -205,7 +205,7 @@ swiper_thumbs:
                         <div class="form-section form-section--first">
                           <h2 class="form-section__title">Choose your package</h2>
                           <!--
-                            Slot variants: SDK injects <select class="next-slot-variant-select" data-next-variant-code="…"> (0.4.9). checkout-olympus-mv-full.js swaps in button + os-dropdown-menu; keeps select hidden for cart. Colors: BUNDLE_SLOT_COLOR_STYLES. display:contents on [data-next-variant-selectors] for .os-card__variant-grid.cc-horiz. Optional: data-next-variant-option-template-id (Liquid comment below).
+                            Slot variants: SDK injects <select class="next-slot-variant-select" data-next-variant-code="…"> (0.4.10). checkout-olympus-mv-full.js swaps in button + os-dropdown-menu; keeps select hidden for cart. Colors: BUNDLE_SLOT_COLOR_STYLES. display:contents on [data-next-variant-selectors] for .os-card__variant-grid.cc-horiz. Optional: data-next-variant-option-template-id (Liquid comment below).
                           -->
                           <div
                             data-next-bundle-selector
@@ -336,6 +336,7 @@ swiper_thumbs:
                             <button type="button" class="mv-variant-btn" data-selected="{option.selected}" data-available="{option.available}" data-attr-code="{attr.code}" style="--swatch:{option.value}">{option.value}</button>
                           </template>
                         {% endcomment %}
+                        <!-- SDK 0.4.10 bundle slot tokens: originalPrice / price (replaces originalUnitPrice / unitPrice). Optional: discountAmount, etc. -->
                         <template id="mv-slot-template" >
                           <div class="next-slot">
                             <div class="next-slot__step">
@@ -346,8 +347,8 @@ swiper_thumbs:
                                 <div class="next-slot__image"><img loading="lazy" alt="" src="{item.image}"></div>
                                 <div class="os-card__pricing">
                                   <div class="os-card__price-container os--stacked">
-                                    <div class="os-card__price diagonal-strike">{item.originalUnitPrice}</div>
-                                    <div class="os-card__price os--current">{item.unitPrice}/ea</div>
+                                    <div class="os-card__price diagonal-strike">{item.originalPrice}</div>
+                                    <div class="os-card__price os--current">{item.price}/ea</div>
                                     <!-- Slots rendered under data-next-bundle-slots-for sit outside [data-next-bundle-card]; bundle-display slots do not bind. Use remote bundle.{selectorId} (matches data-next-selector-id="main"). -->
                                     <div class="os-card__subtitle-text-2">Save <span data-next-display="bundle.main.discountPercentage">-</span> OFF</div>
                                   </div>
@@ -536,7 +537,7 @@ swiper_thumbs:
                                                             <!-- Multi-variant: use {line.variantName} in the title so each option is distinguishable in the cart summary. -->
                                                             {line.quantity}x {line.variantName}
                                                             <div>
-                                                              <div class="text-2xs text-muted text-weight-normal diagonal-strike {line.hasSavings}">{line.originalPackagePrice}/ea</div>
+                                                              <div class="text-2xs text-muted text-weight-normal diagonal-strike {line.hasDiscount}">{line.originalPackagePrice}/ea</div>
                                                               <div class="text-2xs text-muted text-weight-normal">{line.unitPrice}/ea</div>
                                                             </div>
                                                           </div>
@@ -544,7 +545,7 @@ swiper_thumbs:
                                                       </div>
                                                       <div class="cart-item__pricing">
                                                         <!-- BS-012: {line.priceRetailTotal} should = full-line list total. If it equals {line.priceRetail} or {line.originalPackagePrice}, summary API/SDK is wrong — see docs/template-bug-log.md -->
-                                                        <div class="cart-price diagonal-strike line-compare {line.hasSavings}">{line.originalPackagePrice}</div>
+                                                        <div class="cart-price diagonal-strike line-compare {line.hasDiscount}">{line.originalPackagePrice}</div>
                                                         <div class="checkout__line-item__final-price">{line.total}</div>
                                                       </div>
                                                     </div>

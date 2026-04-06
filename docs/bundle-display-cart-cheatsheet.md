@@ -99,8 +99,8 @@ One row per cart line. Placeholders use the `{line.*}` prefix.
 | `{line.subtotal}` | Line subtotal (API) |
 | `{line.totalDiscount}` | Discount on line (API) |
 | `{line.total}` | Final line total (API) |
-| `{line.hasDiscount}` | `"show"` \| `"hide"` (class toggles) |
-| `{line.hasSavings}` | `"show"` \| `"hide"` (retail or discount savings) |
+| `{line.hasDiscount}` | `"show"` \| `"hide"` (class toggles) — **prefer for new work** (**0.4.10** reference templates) |
+| `{line.hasSavings}` | `"show"` \| `"hide"` (retail or discount savings) — alias; align naming with **`hasDiscount`** where the SDK exposes both |
 
 ---
 
