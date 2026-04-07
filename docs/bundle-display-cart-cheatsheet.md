@@ -10,9 +10,9 @@ Reference for **`data-next-bundle-display`**, remote **`data-next-display="bundl
 
 ## 1. Bundle card: `data-next-bundle-display` / `data-next-bundle-price`
 
-Use **`data-next-bundle-display="<field>"`** on elements **inside** `[data-next-bundle-card]` (common in newer templates).
+Use **`data-next-bundle-display=”<field>”`** on elements **inside** `[data-next-bundle-card]` — preferred in all new templates.
 
-**`data-next-bundle-price="<field>"`** accepts the **same** field names — many starter templates still use it; treat the two attributes as **equivalent slots**, not “old vs new.”
+**`data-next-bundle-price=”<field>”`** accepts the **same** field names and still works, but is **legacy/deprecated** — use **`data-next-bundle-display`** in new markup.
 
 | Field value | Alias (same behavior) | What you get |
 | ----------- | --------------------- | ------------ |
@@ -28,7 +28,7 @@ Use **`data-next-bundle-display="<field>"`** on elements **inside** `[data-next-
 
 **Naming:** Some docs encourage `originalPrice` / `discountAmount` / `discountPercentage` / `hasDiscount` for new markup; older examples use `compare` / `savings` / `savingsPercentage` / `hasSavings`. **Both sets are valid** where the SDK maps them as aliases.
 
-**BS-006 (`fixed` — markup rule):** Always use an explicit tier total — **`data-next-bundle-price="price"`** (0.4.9+ canonical) or **`="total"`** (alias). Bare **`data-next-bundle-price`** is not a supported pattern and may not bind.
+**BS-006 (`fixed`):** In earlier SDK builds, bare **`data-next-bundle-price`** (no attribute value) did not reliably bind the tier total. Current renderer falls back to total for both bare **`data-next-bundle-display`** and bare **`data-next-bundle-price`** — explicit values (`="price"` / `="total"`) are still recommended for clarity.
 
 ---
 
@@ -45,7 +45,7 @@ Use **`data-next-bundle-display="<field>"`** on elements **inside** `[data-next-
 | `savings` / `discountAmount` | Discount **amount** |
 | `savingsPercentage` / `discountPercentage` | Discount **%** |
 | `hasSavings` / `hasDiscount` | Any discount on current selection |
-| `unitPrice` / `originalUnitPrice` | **Not implemented** for remote bundle display yet — use **`data-next-bundle-display`** on the card for unit prices |
+| `unitPrice` / `originalUnitPrice` | Per-unit after/before discount — add **`data-next-format="currency"`** on the element (same as other remote money fields; see `safe-display-paths §6`) |
 
 **Events** (`bundle:selected`, `bundle:selection-changed`, `bundle:price-updated`): **`detail.selectorId`** matches **`data-next-selector-id`** (v0.4.8+). Do **not** rely on **`detail.bundleId`** in new code.
 
@@ -61,7 +61,7 @@ Used in the **root** `<template>` inside `data-next-cart-summary` (not inside `d
 | `{total}` | Grand total |
 | `{shipping}` | Shipping (formatted, or `"Free"` if zero) |
 | `{shippingOriginal}` | Shipping before shipping discount (empty if none) |
-| `{tax}` | Tax |
+| `{tax}` | Tax ⚠️ **not wired** — `CartSummaryEnhancer` does not pass this into the `<template>` vars; renders literally or blank (see **BS-017**) |
 | `{discounts}` | Total discount amount (offers + vouchers) |
 | `{savings}` | Total savings (retail + applied discounts) |
 | `{compareTotal}` | Compare-at style total |
@@ -125,13 +125,13 @@ Each needs a child **`<template>`**; same **`{discount.name}`**, **`{discount.am
 
 ---
 
-## 6. `data-next-display="cart.*"` inside the cart summary (Known #10 / BS-014)
+## 6. `data-next-display=”cart.*”` coupon fields — historical note (Known #10 / BS-014)
 
-The cart-summary display resolver (**`CartSummaryEnhancer.display`**) only implements a **fixed** set of cart UI keys. As of common 0.4.5+ builds, these are **not** wired and log “Unknown cart display property” / stay empty:
+**Partial fix (verified 2026-04-07):**
+- **`cart.hasCoupon`** / **`cart.hasCoupons`** — ✅ work for **`data-next-show`** / **`data-next-hide`** visibility.
+- **`cart.discountCode`** and code-string fields — ❌ still not wired for **`data-next-display`**; node stays empty despite voucher present in cart state.
 
-- `cart.discountCode`, `cart.hasCoupon`, `cart.hasCoupons`, `cart.discountCodes`, etc.
-
-**Workaround:** use **`[data-summary-voucher-discounts]`** + **`{discount.name}`** (and amounts), or custom JS. See migration **Known #10** and bug log **BS-014**.
+**Workaround for code display:** use **`[data-summary-voucher-discounts]`** + **`{discount.name}`** (and amounts), or custom JS. See migration **Known #10** and bug log **BS-014**.
 
 Outside **`[data-next-cart-summary]`**, other cart display paths may still differ — test per page.
 

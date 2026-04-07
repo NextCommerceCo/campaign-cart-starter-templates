@@ -22,8 +22,9 @@ Safe when a cart session exists (checkout / cart drawer).
 | `cart.quantity`, `cart.itemCount` | Counts |
 | `cart.subtotal`, `cart.total`, `cart.shipping`, `cart.shippingOriginal`, `cart.shippingDiscountAmount`, `cart.shippingDiscountPercentage` | Money / % |
 | `cart.totalDiscount`, `cart.discounts`, `cart.totalDiscountPercentage` | Discounts |
-| `cart.hasCoupons`, `cart.hasCoupon`, `cart.couponCount` | ⚠️ Currently broken — cart display refactor dropped these from `resolveValue`; nodes stay empty (see [BS-014](template-bug-log.md#bs-014)) |
-| `cart.discountCode`, `cart.discountCodes`, `cart.coupons[0].code`, `cart.coupons[1].code` | ⚠️ Currently broken — same issue; use `data-summary-voucher-discounts` or custom JS instead |
+| `cart.hasCoupon`, `cart.hasCoupons` | ✅ Works for **`data-next-show`** / **`data-next-hide`** visibility (verified 2026-04-07) |
+| `cart.couponCount` | Untested — verify against your SDK build |
+| `cart.discountCode`, `cart.discountCodes`, `cart.coupons[0].code`, `cart.coupons[1].code` | ⚠️ Still broken for **`data-next-display`** — node stays empty despite voucher in cart state; use `data-summary-voucher-discounts` or custom JS (see [BS-014](template-bug-log.md#bs-014)) |
 
 Use **`cart-summary`** the same way where your theme expects that alias (scanner treats it like cart).
 
