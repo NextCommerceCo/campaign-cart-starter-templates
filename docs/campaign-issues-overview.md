@@ -105,4 +105,6 @@ The cart summary **line row** template uses tokens such as `{line.priceRetail}` 
 
 ---
 
+**Debug tool quirks:** Cases where `window.nextDebug` output looks wrong but the page and order are correct — see [`docs/debug-tool-notes.md`](debug-tool-notes.md).
+
 *Last aligned with the template bug log: BS-001–BS-018 and operator/platform notes. Update the open/blocked + fixed tables, the bundle migration note, and the **Templates updated** roll-up when slugs or scope change.*

@@ -4,7 +4,7 @@ Issues for **Campaign Cart SDK 0.4.x** funnels in this repo — bundle selector,
 
 **Primary reference implementation:** [`campaign-kit-templates/src/olympus/checkout.html`](../campaign-kit-templates/src/olympus/checkout.html) — first place many of these were reproduced; comments in that file point back here by **BS-xxx** id.
 
-**Related docs:** [Campaign issues overview](campaign-issues-overview.md) (shareable, non-technical table) · [`docs/sdk-0.4.0-migration.md`](sdk-0.4.0-migration.md) (Known #1–#10) · [`docs/bundle-display-cart-cheatsheet.md`](bundle-display-cart-cheatsheet.md) · [Bundle Set Sale](https://developers.nextcommerce.com/docs/campaigns/guides/bundle-set-sale) · [Cart Summary](https://developers.nextcommerce.com/docs/campaigns/guides/cart-summary).
+**Related docs:** [Campaign issues overview](campaign-issues-overview.md) (shareable, non-technical table) · [`docs/sdk-0.4.0-migration.md`](sdk-0.4.0-migration.md) (Known #1–#10) · [`docs/bundle-display-cart-cheatsheet.md`](bundle-display-cart-cheatsheet.md) · [`docs/debug-tool-notes.md`](debug-tool-notes.md) (known misleading `window.nextDebug` states) · [Bundle Set Sale](https://developers.nextcommerce.com/docs/campaigns/guides/bundle-set-sale) · [Cart Summary](https://developers.nextcommerce.com/docs/campaigns/guides/cart-summary).
 
 **Tracked elsewhere (not duplicated as BS items):** Deep **multivariant**-only concerns (external bundle slot layouts, clone/bridge patterns beyond formatting) — see MV template folders and [`docs/sdk-0.4.0-migration.md`](sdk-0.4.0-migration.md) “External slot layout” notes. **`{item.*}` slot token formatting** → **BS-015** (with **`data-summary-lines`**).
 
