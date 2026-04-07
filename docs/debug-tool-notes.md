@@ -22,7 +22,28 @@ Known cases where **`window.nextDebug`** output does **not** reflect what the pa
 
 **In short:** the debug cart's `offers` array on a upsell page is stale checkout data. It will almost always look wrong. Trust what is rendered on screen and what the receipt/Campaigns backend confirm.
 
-**Related issues:** [BS-018](template-bug-log.md#bs-018---mv-upsell-exitcheckout-coupon-bleeds-into-upsell-bundle-display-pricing-when-same-packageid-is-reused) (exit coupon bleed into `calculateBundlePrice` display — that is a *real* display problem, separate from this debug state quirk).
+**Related issues:** [BS-018](template-bug-log.md#bs-018---mv-upsell-exitcheckout-coupon-bleeds-into-upsell-bundle-display-pricing-when-same-packageid-is-reused) (exit coupon bleed + variant resolver jumping package families — those are real problems, separate from this debug state quirk).
+
+---
+
+## 2. `data-next-bundle-items` DOM does not update after variant change — `slot.activePackageId` is the truth
+
+**Scope:** MV upsell pages using `configurable:true` bundle items after a variant is changed.
+
+**What you see:** The `data-next-bundle-items` attribute in the DOM still shows the original `packageId` (e.g. 66) even after the shopper picks a different variant.
+
+**Why:** The SDK resolves variant changes internally and updates `slot.activePackageId` on the enhancer — it does not rewrite the DOM attribute. The DOM is write-once at initialisation.
+
+**What to inspect instead:**
+
+```js
+// After a variant change, read the resolved id from the enhancer state
+const root = document.querySelector('[data-next-bundle-selector][data-next-selector-id="upsell-bundle"]');
+console.log('resolved activePackageId:', root?._activePackageId ?? root?._state?.activePackageId);
+// Or check getSelectedBundleItems if exposed
+```
+
+**Why this matters:** If the resolved id is from the checkout package family (e.g. 2) rather than the upsell family (e.g. 67), the upsell voucher may be ineligible and the wrong price is both displayed and charged. See [issue #8 in campaign-issues-overview](campaign-issues-overview.md) for the full root cause.
 
 ---
 
