@@ -1,15 +1,18 @@
 # Repo Memory — campaign-cart-starter-templates
 
 ## Repo Overview
-One top-level folder:
-- `campaign-kit-templates/` — campaign-kit enabled versions. **This is the active work area.**
+Two top-level folders:
+- `campaign-kit-templates/` — **active work area.** 0.4.x templates, growing over time.
+- `campaign-kit-templates-v3/` — 0.3.x archive. Reference only — do not add new work here.
 
 ---
 
 ## campaign-kit-templates/ Purpose
 A **complete, working campaign-kit project** that serves two purposes:
-1. Full demo — clone it, `npm install` + `npm run dev`, all 7 templates work
+1. Full demo — clone it, `npm install` + `npm run dev`, all current templates work
 2. Template library — developers copy individual `src/[slug]/` folders into their own kit projects
+
+Templates are being ported from `campaign-kit-templates-v3/` one by one, updated to SDK 0.4.x patterns as they go.
 
 ## Developer Workflow (end users of this repo)
 1. `npx campaign-init` in their own project → creates empty `_data/campaigns.json` + npm scripts
@@ -20,13 +23,13 @@ A **complete, working campaign-kit project** that serves two purposes:
 
 Note: `npx campaign-init` does NOT create any src/ folders — it only creates `_data/campaigns.json` and adds npm scripts to `package.json`.
 
-Note: when copying a template, the developer renames the folder to their product/campaign name (e.g. `wintergloves`), NOT the template name (e.g. `demeter`). The folder name becomes the slug and drives the URL: `campaign-domain.com/wintergloves/checkout`.
+Note: when copying a template, the developer renames the folder to their product/campaign name (e.g. `wintergloves`), NOT the template name (e.g. `olympus`). The folder name becomes the slug and drives the URL: `campaign-domain.com/wintergloves/checkout`.
 
 ---
 
 ## campaigns.json
 - **Project-level, not template-specific** — accumulates all campaigns a developer adds
-- `campaign-kit-templates/_data/campaigns.json` is a reference file showing full field structure for all 7 templates
+- `campaign-kit-templates/_data/campaigns.json` is a reference file showing full field structure for all current templates
 - Fields: `name`, `slug`, `description`, `sdk_version`, `store_name`, `store_url`, `store_terms`, `store_privacy`, `store_contact`, `store_returns`, `store_shipping`, `store_phone`, `store_phone_tel`; optional layout analytics: `gtm_id`, `fb_pixel_id` (see `docs/campaign-page-kit-template-context.md` / `docs/qa-guide.md`)
 - slug drives URL: `campaign-domain.com/[slug]/page`
 
@@ -36,6 +39,15 @@ Note: when copying a template, the developer renames the folder to their product
 - `_site/` is gitignored
 
 ## Dev server preview URLs (localhost:3000)
+
+### campaign-kit-templates/ (0.4.x)
+
+| Template | Pages |
+|----------|-------|
+| olympus | /olympus/checkout/ · /olympus/upsell-single/ · /olympus/upsell-quantity/ · /olympus/upsell-cards/ · /olympus/receipt/ |
+| olympus-mv-single-step | /olympus-mv-single-step/checkout/ · /olympus-mv-single-step/upsell-mv/ · /olympus-mv-single-step/receipt/ |
+
+### campaign-kit-templates-v3/ (0.3.x archive)
 
 | Template | Pages |
 |----------|-------|
@@ -47,23 +59,16 @@ Note: when copying a template, the developer renames the folder to their product
 | shop-single-step | /shop-single-step/checkout/ · /shop-single-step/upsell/ · /shop-single-step/receipt/ |
 | shop-three-step | /shop-three-step/information/ · /shop-three-step/shipping/ · /shop-three-step/billing/ · /shop-three-step/upsell/ · /shop-three-step/receipt/ |
 
-**0.4.x reference slugs** (same dev server; pick these campaigns in `npm run dev`): **`olympus-v0.4`** — `/olympus-v0.4/checkout/` · `/olympus-v0.4/upsell-single/` · `/olympus-v0.4/upsell-quantity/` · `/olympus-v0.4/upsell-cards/` · `/olympus-v0.4/receipt/`. **`olympus-mv-single-step-v0.4`** — `/olympus-mv-single-step-v0.4/checkout/` · `/olympus-mv-single-step-v0.4/upsell-mv/` · `/olympus-mv-single-step-v0.4/receipt/`.
-
 ---
 
 ## campaign-kit-templates/ File Structure
 ```
 campaign-kit-templates/
 ├── _data/
-│   └── campaigns.json          ← reference: all 7 templates with full field structure
+│   └── campaigns.json          ← reference: all current 0.4.x templates with full field structure
 ├── src/
-│   ├── demeter/
-│   ├── limos/
 │   ├── olympus/
-│   ├── olympus-mv-single-step/
-│   ├── olympus-mv-two-step/
-│   ├── shop-single-step/
-│   └── shop-three-step/
+│   └── olympus-mv-single-step/
 └── package.json                ← kit scripts + next-campaign-page-kit dependency
 ```
 
@@ -160,6 +165,16 @@ Inside `<template>` elements the SDK uses single-brace tokens (not Liquid):
 ---
 
 ## JS Files Per Template
+
+### campaign-kit-templates/ (0.4.x)
+
+| Template | JS Files |
+|----------|----------|
+| olympus | checkout.js, checkout-olympus.js, upsells.js, promo-banner.js, promo-timer.js |
+| olympus-mv-single-step | checkout.js, checkout-olympus-mv-full.js, upsells-up01-mv.js, promo-banner.js, promo-timer.js |
+
+### campaign-kit-templates-v3/ (0.3.x archive)
+
 | Template | JS Files |
 |----------|----------|
 | demeter | checkout.js, upsells.js |
@@ -173,9 +188,10 @@ Inside `<template>` elements the SDK uses single-brace tokens (not Liquid):
 ---
 
 ## .gitignore
-- Removed blanket `package.json` / `package-lock.json` ignores (needed for campaign-kit-templates/package.json to be tracked)
+- Removed blanket `package.json` / `package-lock.json` ignores (needed for both folder package.json files to be tracked)
 - Added `_site/` (build output)
 - `node_modules/` remains ignored globally
+- Experimental scratch folders excluded via `.git/info/exclude` (local-only, not committed)
 
 ---
 
