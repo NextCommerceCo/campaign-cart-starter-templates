@@ -22,8 +22,8 @@ Safe when a cart session exists (checkout / cart drawer).
 | `cart.quantity`, `cart.itemCount` | Counts |
 | `cart.subtotal`, `cart.total`, `cart.shipping`, `cart.shippingOriginal`, `cart.shippingDiscountAmount`, `cart.shippingDiscountPercentage` | Money / % |
 | `cart.totalDiscount`, `cart.discounts`, `cart.totalDiscountPercentage` | Discounts |
-| `cart.hasCoupons`, `cart.hasCoupon`, `cart.couponCount` | Coupons |
-| `cart.discountCode`, `cart.discountCodes`, `cart.coupons[0].code`, `cart.coupons[1].code` | Codes |
+| `cart.hasCoupons`, `cart.hasCoupon`, `cart.couponCount` | ⚠️ Currently broken — cart display refactor dropped these from `resolveValue`; nodes stay empty (see [BS-014](template-bug-log.md#bs-014)) |
+| `cart.discountCode`, `cart.discountCodes`, `cart.coupons[0].code`, `cart.coupons[1].code` | ⚠️ Currently broken — same issue; use `data-summary-voucher-discounts` or custom JS instead |
 
 Use **`cart-summary`** the same way where your theme expects that alias (scanner treats it like cart).
 
@@ -63,8 +63,10 @@ Safe properties (after the selector id):
 | Selection | `hasSelection`, `packageId`, `quantity`, `name` |
 | Pricing | `price`, `total`, `price_total`, `compareTotal`, `unitPrice`, `pricePerUnit` |
 | Savings | `savingsAmount`, `savings`, `savingsPercentage`, `hasSavings` |
-| Coupon-side | `discountedPrice`, `finalPrice`, `appliedDiscountAmount`, `discountPercentage`, `hasDiscount`, `appliedDiscounts` |
+| Coupon-side ⚠️ (limited) | `discountedPrice`, `finalPrice`, `appliedDiscountAmount`, `discountPercentage`, `hasDiscount`, `appliedDiscounts` |
 | Bundle helpers | `isBundle`, `totalUnits`, `isMultiPack`, `isSingleUnit`, `monthlyPrice`, `yearlyPrice`, … |
+
+> ⚠️ **Coupon-side fields are partially implemented.** `selection.finalPrice` and `selection.discountedPrice` currently resolve to the base selection price — not coupon-adjusted. `selection.appliedDiscountAmount`, `selection.discountPercentage`, and `selection.appliedDiscounts` return placeholder values (0/empty) in the current `SelectionDisplayEnhancer`. For truly coupon+offer+voucher-resolved pricing use `data-next-package-price` slots on the selector card instead.
 
 Example: `data-next-display="selection.main.finalPrice"`.
 
@@ -103,7 +105,7 @@ Nested keys beyond the registry still work in many cases via `PropertyResolver`;
 
 This path is **not** the same as **bundle slot** `<template>` tokens (`{item.unitPrice}`, … inside `data-next-bundle-slots`) — those are covered under [migration Known #5](sdk-0.4.0-migration.md#5-bundle-selector-slot-values-are-unformatted-raw-numbers).
 
-**Outside `[data-next-bundle-card]`:** When you mirror the **selected tier** in normal page markup (e.g. bundle upsell **offer** column with **`data-next-display="bundle.{selectorId}.price"`** / **`originalPrice`**), you are **not** inside a card — `data-next-bundle-display` does not apply. Those remote values often render **unformatted** until you set **`data-next-format="currency"`** on the element. Reference: [`olympus-v0.4/upsell-quantity.html`](../campaign-kit-templates/src/olympus-v0.4/upsell-quantity.html) (header + `prices-text-wrapper` block).
+**Outside `[data-next-bundle-card]`:** When you mirror the **selected tier** in normal page markup (e.g. bundle upsell **offer** column with **`data-next-display="bundle.{selectorId}.price"`** / **`originalPrice`**), you are **not** inside a card — `data-next-bundle-display` does not apply. Those remote values often render **unformatted** until you set **`data-next-format="currency"`** on the element. Reference: [`olympus/upsell-quantity.html`](../campaign-kit-templates/src/olympus/upsell-quantity.html) (header + `prices-text-wrapper` block).
 
 | Property | Safe with notes |
 |----------|-----------------|
@@ -112,7 +114,7 @@ This path is **not** the same as **bundle slot** `<template>` tokens (`{item.uni
 | `discountAmount`, `savings` | Currency + explicit format recommended. |
 | `hasDiscount`, `hasSavings`, `isSelected` | Booleans (ok for logic elsewhere; not for `data-next-show` — see above). |
 | `name` | Only if each **`data-next-bundle-card`** sets **`data-next-bundle-name="..."`**. Not auto-filled from package. Use **`package.{ref_id}.name`** if you want the campaign package title without setting card names. |
-| `unitPrice`, `originalUnitPrice` | **Not implemented** for remote bundle display — use **`data-next-bundle-display`** on the card. |
+| `unitPrice`, `originalUnitPrice` | Implemented in `BundleDisplayEnhancer` — add **`data-next-format="currency"`** as with other money fields. |
 
 Events to rely on: **`bundle:selection-changed`**, **`bundle:price-updated`** (`detail.selectorId` = selector id).
 
@@ -128,7 +130,7 @@ Used for **`PackageSelectorDisplayEnhancer`** / **`PackageToggleDisplayEnhancer`
 
 | Need | Mechanism |
 |------|-----------|
-| Bundle card interior pricing | **`data-next-bundle-display="price"`** (and siblings) **inside** the card — formats like the bundle renderer. |
+| Bundle card interior pricing | **`data-next-bundle-display="price"`** (and siblings) **inside** the card — preferred. **`data-next-bundle-price`** still works but is legacy/deprecated. |
 | Selector card calculated totals | **`data-next-package-price`** slots on **`data-next-selector-card`**. |
 | Cart chrome templates | **`data-next-cart-summary`** / **`data-summary-lines`** tokens (see **`docs/bundle-display-cart-cheatsheet.md`**). |
 
