@@ -8,7 +8,8 @@ Starter templates for building sales funnel pages — checkout, post-purchase up
 
 | Folder | What it is |
 |--------|------------|
-| `campaign-kit-templates/` | A [next-campaign-page-kit](https://github.com/NextCommerceCo/next-campaign-page-kit) project with all 7 templates. **Start here.** |
+| `campaign-kit-templates/` | 0.4.x templates — [next-campaign-page-kit](https://github.com/NextCommerceCo/next-campaign-page-kit) project. **Start here.** |
+| `campaign-kit-templates-v3/` | 0.3.x archive — reference for the older SDK version. |
 
 ---
 
@@ -30,7 +31,7 @@ npx campaign-init
 Pick a template from the [available templates](#available-templates) table below. Copy its folder into your project and rename it to your product — this becomes the slug used in your URLs.
 
 ```bash
-cp -r campaign-cart-starter-templates/campaign-kit-templates/src/demeter your-project/src/your-campaign-name
+cp -r campaign-cart-starter-templates/campaign-kit-templates/src/olympus your-project/src/your-campaign-name
 ```
 
 Your campaign will be served at `https://your-campaign-domain/your-campaign-name/checkout`.
@@ -64,9 +65,7 @@ Pick your campaign from the interactive prompt. The dev server will hot-reload a
 
 ---
 
-### Preview all templates locally
-
-To browse all 7 templates before picking one:
+### Preview templates locally
 
 ```bash
 git clone https://github.com/NextCommerceCo/campaign-cart-starter-templates.git
@@ -75,25 +74,46 @@ npm install
 npm run dev
 ```
 
+To browse the 0.3.x archive instead:
+
+```bash
+cd campaign-cart-starter-templates/campaign-kit-templates-v3
+npm install
+npm run dev
+```
+
 ---
 
 ## Available templates
 
+### Current — SDK 0.4.x (`campaign-kit-templates/`)
+
 | Slug | Funnel type | Preview |
 |------|-------------|---------|
-| `demeter` | Single-step checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/demeter/checkout/) · [upsell](https://nextcommerce-campaign-templates.netlify.app/demeter/upsell/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/demeter/receipt/) |
-| `limos` | Single-step checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/limos/checkout/) · [upsell](https://nextcommerce-campaign-templates.netlify.app/limos/upsell/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/limos/receipt/) |
-| `olympus` | Single-step checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus/checkout/) · [upsell](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus/receipt/) |
+| `olympus` | Single-step checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus/checkout/) · [upsell-single](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-single/) · [upsell-quantity](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-quantity/) · [upsell-cards](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus/receipt/) |
 | `olympus-mv-single-step` | Single-step with variants | [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/checkout/) · [upsell](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/upsell-mv/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/receipt/) |
-| `olympus-mv-two-step` | Two-step with variants | [select](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/select/) · [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/checkout/) · [upsell](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/upsell-mv/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/receipt/) |
-| `shop-single-step` | Shop checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/checkout/?forcePackageId=2:1) · [upsell](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell/?forcePackageId=2:1) · [receipt](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/receipt/?forcePackageId=2:1) |
-| `shop-three-step` | 3-step shop checkout | [information](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/information/?forcePackageId=2:1) · [shipping](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/shipping/?forcePackageId=2:1) · [billing](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/billing/?forcePackageId=2:1) · [upsell](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell/?forcePackageId=2:1) · [receipt](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/receipt/?forcePackageId=2:1) |
+
+More templates being ported from 0.3.x — check back soon.
+
+### Legacy — SDK 0.3.x (`campaign-kit-templates-v3/`)
+
+Preview locally by running `npm run dev` inside `campaign-kit-templates-v3/`.
+
+| Slug | Funnel type |
+|------|-------------|
+| `demeter` | Single-step checkout |
+| `limos` | Single-step checkout |
+| `olympus` | Single-step checkout |
+| `olympus-mv-single-step` | Single-step with variants |
+| `olympus-mv-two-step` | Two-step with variants |
+| `shop-single-step` | Shop checkout |
+| `shop-three-step` | 3-step shop checkout |
 
 ---
 
 ## npm scripts
 
-Run these inside `campaign-kit-templates/`:
+Run these inside `campaign-kit-templates/` (or `campaign-kit-templates-v3/` for the 0.3.x archive):
 
 ```bash
 npm run dev        # interactive campaign picker + dev server
