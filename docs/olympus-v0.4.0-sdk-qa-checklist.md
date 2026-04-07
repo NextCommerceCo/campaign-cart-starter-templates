@@ -1,8 +1,8 @@
 # Olympus v0.4.0 SDK — QA checklist
 
-**Scope:** `campaign-kit-templates/src/olympus-v0.4/`  
-**SDK:** Pin `sdk_version` in `_data/campaigns.json` (e.g. `0.4.6`).  
-**Template bug log (0.4.x, repo-wide — `olympus-v0.4` is primary reference):** [`template-bug-log.md`](./template-bug-log.md)
+**Scope:** `campaign-kit-templates/src/olympus/`  
+**SDK:** Pin `sdk_version` in `_data/campaigns.json` (e.g. `0.4.10`).  
+**Template bug log (0.4.x, repo-wide — `olympus` is primary reference):** [`template-bug-log.md`](./template-bug-log.md)
 
 Use a real campaign (offers, shipping methods, coupons as in production). Update the bug log with `verified` / notes after each pass.
 
@@ -12,7 +12,7 @@ Use a real campaign (offers, shipping methods, coupons as in production). Update
 
 | Check | What to verify | Bug log |
 |--------|----------------|---------|
-| **Load** | Each card: image + `package.name`; per-unit / compare / totals via `data-next-bundle-price` / `data-next-bundle-display`; **`data-next-bundle-price="total"`** (required — not bare) shows a number on every tier. | BS-003, BS-006 (`fixed` — explicit total slot) |
+| **Load** | Each card: image + `package.name`; per-unit / compare / totals via `data-next-bundle-display` (preferred; `data-next-bundle-price` is legacy/deprecated). **`data-next-bundle-display="total"`** (or bare `data-next-bundle-display`) shows a number on every tier. | BS-003, BS-006 (`fixed` — explicit total slot) |
 | **Switch tiers** | Click 1x → 2x → 3x repeatedly; selection state, cart line **qty**, and card totals stay in sync (no stuck tier). **Line count must stay 1** for the main package — not one line per click (**BS-013**). | BS-002, **BS-013** |
 | **Refresh after tier** | Select 2x or 3x, then **full page reload** — summary must show **one** line for the main package, not **1x + previous tier**. | **BS-013** |
 | **Savings %** | “SAVE …%” / `data-next-bundle-display="savingsPercentage"` reads as a normal percentage, not a raw decimal. | BS-006 / Known #5 |
