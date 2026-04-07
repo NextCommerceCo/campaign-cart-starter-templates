@@ -1,7 +1,7 @@
 {
   "name": "campaign-kit-templates",
   "version": "1.0.0",
-  "description": "Starter templates for next-campaign-page-kit (SDK 0.4.x)",
+  "description": "Starter templates for next-campaign-page-kit",
   "scripts": {
     "setup": "npx campaign-init",
     "start": "npx campaign-start",
