@@ -210,19 +210,13 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 
 ## BS-011 - `data-next-shipping-id`: bundle cards ineffective; package swap selector still broken vs totals
 
-- Status: `open`
+- Status: `fixed` (SDK 0.4.12 — bundle card case; package swap selector partial, see notes)
 - Severity: `medium`
 - Date logged: `2026-03-31`
-- **Release impact:** **Not a blocker** — shipping can be driven **imperatively** with JS (`next.setShippingMethod(refId)` on card select). The gap is **declarative** markup vs **summary UI** consistency.
-- **Templates / where:** **Bundle:** [`olympus/checkout.html`](../campaign-kit-templates/src/olympus/checkout.html) — `[data-next-bundle-card]`. **Package swap:** [`olympus/checkout.html`](../campaign-kit-templates-v3/src/olympus/checkout.html) — `data-next-package-selector` + `data-next-selection-mode="swap"` + `data-next-selector-card`.
-- **Observed — package selector + swap:** **`data-next-shipping-id`** on **`data-next-selector-card`** is documented. On card select, **cart state** is correct: `window.nextDebug?.stores?.cart?.getState()?.shippingMethod` shows the **expected** ref id. **Summary** shipping line and **grand total** still **often** do not reflect that method (totals look tied to default/fixed shipping downstream).
-- **Observed — bundle selector:** Declarative **`data-next-shipping-id`** on **`data-next-bundle-card`** **does not work at all** in practice (not supported for bundle markup; see migration bundle attribute table). Do **not** rely on it for per-tier bundle shipping.
-- Expected:
-  - Declarative per-card shipping IDs should drive **both** cart state **and** displayed totals; docs should state bundle limitation clearly until SDK supports it.
-- Workaround (production-viable):
-  - On selector/bundle card change, call **`next.setShippingMethod(refId)`** (or platform equivalent) in **custom JS**, then **re-test** summary lines and grand total. Known **#3** can still apply until upstream fixes declarative path — JS is the supported mitigation today.
+- **Fix (0.4.12):** `data-next-shipping-id` on `data-next-bundle-card` now works — SDK sets the shipping method when the tier is selected. `calculateTotals` was previously hardcoded to shipping method 1; now uses the selected method, so summary shipping line and grand total update correctly on tier change. `campaigns.json` bumped to `0.4.12` for both `olympus` and `olympus-mv-single-step`; no HTML changes needed (`data-next-shipping-id` was already present on all three bundle cards in `olympus/checkout.html`).
+- **Package swap selector:** Still unreliable declaratively — cart state updates but summary totals may lag. JS mitigation (`next.setShippingMethod(refId)`) remains the production-viable workaround for that path.
 - Cross-ref:
-  - Migration **§ Known #3**; **Bundle Selector** attribute table (no `data-next-shipping-id`); **Package Selector** example with `data-next-shipping-id` on `data-next-selector-card`.
+  - Migration **§ Known #3**; **Bundle Selector** attribute table; **Package Selector** example with `data-next-shipping-id` on `data-next-selector-card`.
 
 ## BS-012 - Cart summary: Amount strikethrough showed per-unit retail instead of full-line total
 

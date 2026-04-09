@@ -1,7 +1,7 @@
 # Olympus v0.4.0 SDK — QA checklist
 
 **Scope:** `campaign-kit-templates/src/olympus/`  
-**SDK:** Pin `sdk_version` in `_data/campaigns.json` (e.g. `0.4.11`).  
+**SDK:** Pin `sdk_version` in `_data/campaigns.json` (e.g. `0.4.12`).  
 **Template bug log (0.4.x, repo-wide — `olympus` is primary reference):** [`template-bug-log.md`](./template-bug-log.md)
 
 Use a real campaign (offers, shipping methods, coupons as in production). Update the bug log with `verified` / notes after each pass.
@@ -26,7 +26,7 @@ Use a real campaign (offers, shipping methods, coupons as in production). Update
 
 | Check | What to verify | Bug log |
 |--------|----------------|---------|
-| **Per-tier IDs** | After changing tier: cart `shippingMethod` vs summary **shipping** line and **grand total** — all should match intent. If cart ID updates but total does not → BS-011 / Known #3. | BS-011 |
+| **Per-tier IDs** | After changing tier: cart `shippingMethod` vs summary **shipping** line and **grand total** — all should match intent. `data-next-shipping-id` on bundle cards now works in SDK 0.4.12 (`calculateTotals` no longer hardcoded to method 1). | BS-011 (`fixed` — 0.4.12) |
 
 ---
 
