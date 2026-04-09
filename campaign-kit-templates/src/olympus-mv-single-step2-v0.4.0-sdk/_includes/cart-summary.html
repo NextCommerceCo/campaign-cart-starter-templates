@@ -1,10 +1,6 @@
 <div class="form-section form-section--last">
   <div class="cart-box cart-box--card">
-    <div
-      class="summary-wrapper"
-      data-next-cart-summary
-      data-next-hide="cart.isEmpty"
-    >
+    <div class="summary-wrapper" data-next-cart-summary>
       <template>
         <div class="order-summary">
           <div class="order-summary__content">
@@ -21,25 +17,39 @@
               <!-- API summary lines -->
               <div class="cart-items__list" data-summary-lines>
                 <template>
-                  <div class="cart-item" data-package-id="{line.packageId}">
+                  <div class="cart-item" data-package-id="{item.packageId}">
                     <div class="cart-item__wrapper">
                       <div class="cart-item__details cc-left-0">
                         <div class="cart-item__content">
                           <div class="cart-item__description">
                             <div class="cart-item__header">
                               <div class="cart-item__title os-bold">
-                                {line.quantity}x {line.name}
+                                {item.quantity}x {item.name}
+                                <div>
+                                  <div
+                                    class="text-2xs text-muted text-weight-normal diagonal-strike"
+                                    data-next-show="item.hasDiscount"
+                                  >
+                                    {item.originalUnitPrice}/ea
+                                  </div>
+                                  <div
+                                    class="text-2xs text-muted text-weight-normal"
+                                  >
+                                    {item.unitPrice}/ea
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
                           <div class="cart-item__pricing">
                             <div
-                              class="cart-price diagonal-strike line-compare {line.hasSavings}"
+                              class="cart-price price--original diagonal-strike"
+                              data-next-show="item.hasDiscount"
                             >
-                              {line.totalDiscount}
+                              {item.originalPrice}
                             </div>
-                            <div class="checkout__line-item__final-price">
-                              {line.total}
+                            <div class="cart-price price--final">
+                              {item.price}
                             </div>
                           </div>
                         </div>
@@ -55,21 +65,32 @@
                 Shipping and tax will be settled upon checkout confirmation
               </div>
             </div>
-
-            <div class="order-totals next-cart-has-items">
+            <div class="order-totals">
               <div
                 class="order-totals__section order-totals__section--inset discount-row"
+                data-next-show="cart.hasDiscounts"
               >
                 <div class="order-totals__line">
                   <div class="order-totals__label-group">
                     <div class="order-totals__label ts-lg tw-600">
                       Today you saved<br />
                     </div>
+                    <div class="badge badge--small">
+                      <div class="label__wrapper cc-sm">
+                        <div class="badge__text">
+                          <span class="display-visible"
+                            >{totalDiscountPercentage}</span
+                          >OFF
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div class="accordion__right">
-                    <div class="order-totals__label">Discount:<br /></div>
+                    <div class="order-totals__label">
+                      Discount:<br />
+                    </div>
                     <div class="order-totals__value ts-lg tw-600 cc-disc">
-                      {discounts}<br />
+                      {totalDiscount}<br />
                     </div>
                   </div>
                 </div>
@@ -79,13 +100,23 @@
               <div class="order-totals__section">
                 <div class="order-totals__line">
                   <div class="accordion__right">
-                    <div class="order-totals__label">Shipping<br /></div>
+                    <div class="order-totals__label">Shipping</div>
                   </div>
                   <div class="accordion__right">
-                    <div class="order-totals__value">{shipping}<br /></div>
+                    <div
+                      class="order-totals__value order-totals__value--free"
+                      data-next-show="cart.isFreeShipping"
+                    >
+                      Free
+                    </div>
+                    <div
+                      class="order-totals__value"
+                      data-next-hide="cart.isFreeShipping"
+                    >
+                      {shipping}
+                    </div>
                   </div>
                 </div>
-                <div class="coupon-tags"></div>
               </div>
 
               <div class="order-totals__section cc-total">
@@ -94,9 +125,6 @@
                     Grand Total:
                   </div>
                   <div class="order-totals__value-group">
-                    <div class="summary-total__coin">
-                      <span data-next-display="cart.currency"></span><br />
-                    </div>
                     <div class="order-totals__value order-totals__value--total">
                       {total}
                     </div>
