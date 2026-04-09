@@ -272,16 +272,13 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 
 ## BS-015 - `data-next-format="currency"` does not apply to `data-summary-lines` or bundle slot `<template>` output
 
-- Status: `open`
+- Status: `verified` (SDK 0.4.11 — 2026-04-09)
 - Severity: `medium`
 - Date logged: `2026-03-31`
-- **Templates / where:** `[data-next-cart-summary]` → **`data-summary-lines`** row `<template>` (`{line.total}`, `{line.price}`, `{line.originalPackagePrice}`, …) — [`olympus/checkout.html`](../campaign-kit-templates/src/olympus/checkout.html), [`olympus-mv-single-step/checkout.html`](../campaign-kit-templates/src/olympus-mv-single-step/checkout.html). **`data-next-bundle-slots`** slot `<template>` (`{item.unitPrice}`, `{item.originalUnitPrice}`, …) on MV / bundle card UIs.
-- **Problem:** Adding **`data-next-format="currency"`** (or similar) on wrappers around **`{line.*}`** or **`{item.*}`** inside those **cloned** `<template>` fragments **does not** produce formatted currency in practice — unlike **`data-next-display="bundle.*"`** on regular DOM (see **safe-display-paths §6** / `upsell-quantity.html`), which **can** use `data-next-format`.
-- **Expected:** Same formatter pipeline as other money displays, or documented unsupported + alternative.
-- **Workaround:** **Custom JS** (listen to cart / bundle events, format numbers with campaign currency) until SDK wires formatters into the summary line + slot clone pipelines.
-- **Eng one-liner:** *Cart summary line template + bundle slot template clones do not honor `data-next-format` on `{line.*}` / `{item.*}` nodes.*
+- **Fix:** SDK 0.4.11 improved `buildVars` to produce currency-aware formatting for `{item.*}` tokens in cloned `<template>` fragments. The `data-next-format="currency"` attribute is still ignored, but it is no longer needed — `{item.unitPrice}`, `{item.originalUnitPrice}`, `{item.price}`, `{item.originalPrice}` all render with currency symbol and correct decimal formatting without it.
+- **Verified on:** `data-summary-lines` row template (`olympus/checkout.html`) and `data-next-bundle-slots-for` slot template (`olympus-mv-single-step/checkout.html`) — both confirmed rendering `$` symbol.
 - Cross-ref:
-  - [Campaign issues overview](campaign-issues-overview.md) open **#5**; migration **Known #5** (slot tokens raw) + **Cart Summary v2 Notes**.
+  - [Campaign issues overview](campaign-issues-overview.md) fixed **#5**; migration **Known #5** + **Cart Summary v2 Notes**.
 
 ## BS-016 - Checkout phone field: excessive `padding-left` / intl-tel layout (regression vs older Campaign Cart CSS)
 
