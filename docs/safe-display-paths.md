@@ -6,7 +6,7 @@ Practical allowlist for **`data-next-display`** on marketing/checkout/upsell tem
 
 **Global tips**
 
-- Prefer **`data-next-format="currency"`** or **`percentage`** when remote **`bundle.{selectorId}.*`** money or % fields look like raw numbers (known `BundleDisplayEnhancer` init quirk until fixed in core). **Does not apply** to **`data-summary-lines`** `{line.*}` or **`data-next-bundle-slots`** `{item.*}` inside `<template>` clones — see [template bug log](template-bug-log.md) **BS-015**.
+- Prefer **`data-next-format="currency"`** or **`percentage`** when remote **`bundle.{selectorId}.*`** money or % fields look like raw numbers (known `BundleDisplayEnhancer` init quirk until fixed in core). **Does not apply** to **`data-summary-lines`** `{item.*}` or **`data-next-bundle-slots`** `{item.*}` inside `<template>` clones — see [template bug log](template-bug-log.md) **BS-015**.
 - **`data-next-show` / `data-next-hide`** do **not** understand **`bundle.*`** paths; use bundle card **`data-next-bundle-display`** visibility fields or other namespaces for conditionals.
 - Elements with **`display: none`** skip updates in the display core (performance); keep bound price copy in visible DOM when possible.
 

@@ -73,34 +73,34 @@ Used in the **root** `<template>` inside `data-next-cart-summary` (not inside `d
 
 ## 4. Cart summary lines: `data-summary-lines` row `<template>`
 
-One row per cart line. Placeholders use the `{line.*}` prefix.
+One row per cart line. Placeholders use the **`{item.*}` prefix** (SDK 0.4.11+).
+
+> **`{line.*}` is deprecated** — tokens render blank with no console error. Always use `{item.*}`.
 
 | Token | Meaning |
 | ----- | ------- |
-| `{line.packageId}` | Package `ref_id` |
-| `{line.quantity}` | Quantity (string) |
-| `{line.qty}` | Alias for quantity |
-| `{line.name}` | Package display name |
-| `{line.image}` | Product image URL |
-| `{line.productName}` | Product name |
-| `{line.variantName}` | Variant name |
-| `{line.sku}` | SKU |
-| `{line.price}` | Unit price from campaign (formatted) |
-| `{line.priceTotal}` | Line total from campaign (formatted) |
-| `{line.priceRetail}` | Retail / compare-at **unit** (campaign) |
-| `{line.priceRetailTotal}` | Intended: retail / compare-at **line** total — **verify in QA** (may mirror unit fields; **Known #9** / **BS-012**) |
-| `{line.priceRecurring}` | Recurring unit price (subscriptions) |
-| `{line.priceRecurringTotal}` | Recurring line total |
-| `{line.isRecurring}` | `"true"` \| `"false"` |
-| `{line.unitPrice}` | Unit after discounts (API) |
-| `{line.originalUnitPrice}` | Unit before discounts (API) |
-| `{line.packagePrice}` | Package price after discounts (API) |
-| `{line.originalPackagePrice}` | Package price before discounts (API) |
-| `{line.subtotal}` | Line subtotal (API) |
-| `{line.totalDiscount}` | Discount on line (API) |
-| `{line.total}` | Final line total (API) |
-| `{line.hasDiscount}` | `"show"` \| `"hide"` (class toggles) — **prefer for new work** (**0.4.10** reference templates) |
-| `{line.hasSavings}` | `"show"` \| `"hide"` (retail or discount savings) — alias; align naming with **`hasDiscount`** where the SDK exposes both |
+| `{item.packageId}` | Package `ref_id` |
+| `{item.quantity}` | Quantity |
+| `{item.name}` | Package display name |
+| `{item.image}` | Product image URL |
+| `{item.productName}` | Product name |
+| `{item.variantName}` | Variant name |
+| `{item.sku}` | SKU |
+| `{item.unitPrice}` | Unit price after discounts |
+| `{item.originalUnitPrice}` | Unit price before discounts — use for `/ea` strikethrough |
+| `{item.price}` | **Line total** after discounts (qty × unit price) — use for Amount column |
+| `{item.originalPrice}` | **Line total** before discounts — use for Amount strikethrough (fixed BS-012 in 0.4.11) |
+| `{item.discountAmount}` | Total discount on this line |
+| `{item.discountPercentage}` | Discount as percentage string (e.g. `"25%"`) |
+| `{item.hasDiscount}` | `"show"` \| `"hide"` — use as CSS class on strikethrough elements |
+| `{item.isRecurring}` | `"true"` \| `"false"` |
+| `{item.interval}` | Billing interval (e.g. `"month"`) |
+| `{item.intervalCount}` | Number of intervals per cycle |
+| `{item.frequency}` | Human-readable frequency (e.g. `"Monthly"`) |
+| `{item.recurringPrice}` | Recurring unit price |
+| `{item.currency}` | Currency code for this line |
+
+> **0.4.11 breaking change:** `{item.price}` and `{item.originalPrice}` are **line totals** (qty × price), not per-unit. Use `{item.unitPrice}` / `{item.originalUnitPrice}` where you need per-unit values (e.g. `/ea` labels).
 
 ---
 

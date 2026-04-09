@@ -336,7 +336,7 @@ swiper_thumbs:
                             <button type="button" class="mv-variant-btn" data-selected="{option.selected}" data-available="{option.available}" data-attr-code="{attr.code}" style="--swatch:{option.value}">{option.value}</button>
                           </template>
                         {% endcomment %}
-                        <!-- SDK 0.4.10 bundle slot tokens: originalPrice / price (replaces originalUnitPrice / unitPrice). Optional: discountAmount, etc. -->
+                        <!-- SDK 0.4.11+ bundle slot tokens: originalUnitPrice / unitPrice (per-unit). {item.price} / {item.originalPrice} are line totals in 0.4.11+. -->
                         <template id="mv-slot-template" >
                           <div class="next-slot">
                             <div class="next-slot__step">
@@ -347,8 +347,8 @@ swiper_thumbs:
                                 <div class="next-slot__image"><img loading="lazy" alt="" src="{item.image}"></div>
                                 <div class="os-card__pricing">
                                   <div class="os-card__price-container os--stacked">
-                                    <div class="os-card__price diagonal-strike">{item.originalPrice}</div>
-                                    <div class="os-card__price os--current">{item.price}/ea</div>
+                                    <div class="os-card__price diagonal-strike">{item.originalUnitPrice}</div>
+                                    <div class="os-card__price os--current">{item.unitPrice}/ea</div>
                                     <!-- Slots rendered under data-next-bundle-slots-for sit outside [data-next-bundle-card]; bundle-display slots do not bind. Use remote bundle.{selectorId} (matches data-next-selector-id="main"). -->
                                     <div class="os-card__subtitle-text-2">Save <span data-next-display="bundle.main.discountPercentage">-</span> OFF</div>
                                   </div>
@@ -527,26 +527,25 @@ swiper_thumbs:
                                           </div>
                                           <div class="cart-items__list" data-summary-lines>
                                             <template>
-                                              <div class="cart-item" data-package-id="{line.packageId}">
+                                              <div class="cart-item" data-package-id="{item.packageId}">
                                                 <div class="cart-item__wrapper">
                                                   <div class="cart-item__details cc-left-0">
                                                     <div class="cart-item__content">
                                                       <div class="cart-item__description">
                                                         <div class="cart-item__header">
                                                           <div class="cart-item__title os-bold">
-                                                            <!-- Multi-variant: use {line.variantName} in the title so each option is distinguishable in the cart summary. -->
-                                                            {line.quantity}x {line.variantName}
+                                                            <!-- Multi-variant: use {item.variantName} in the title so each option is distinguishable in the cart summary. -->
+                                                            {item.quantity}x {item.variantName}
                                                             <div>
-                                                              <div class="text-2xs text-muted text-weight-normal diagonal-strike {line.hasDiscount}">{line.originalPackagePrice}/ea</div>
-                                                              <div class="text-2xs text-muted text-weight-normal">{line.unitPrice}/ea</div>
+                                                              <div class="text-2xs text-muted text-weight-normal diagonal-strike {item.hasDiscount}">{item.originalUnitPrice}/ea</div>
+                                                              <div class="text-2xs text-muted text-weight-normal">{item.unitPrice}/ea</div>
                                                             </div>
                                                           </div>
                                                         </div>
                                                       </div>
                                                       <div class="cart-item__pricing">
-                                                        <!-- BS-012: {line.priceRetailTotal} should = full-line list total. If it equals {line.priceRetail} or {line.originalPackagePrice}, summary API/SDK is wrong — see docs/template-bug-log.md -->
-                                                        <div class="cart-price diagonal-strike line-compare {line.hasDiscount}">{line.originalPackagePrice}</div>
-                                                        <div class="checkout__line-item__final-price">{line.total}</div>
+                                                        <div class="cart-price diagonal-strike line-compare {item.hasDiscount}">{item.originalPrice}</div>
+                                                        <div class="checkout__line-item__final-price">{item.price}</div>
                                                       </div>
                                                     </div>
                                                   </div>
