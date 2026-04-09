@@ -75,7 +75,7 @@ Used in the **root** `<template>` inside `data-next-cart-summary` (not inside `d
 
 One row per cart line. Placeholders use the **`{item.*}` prefix** (SDK 0.4.11+).
 
-> **`{line.*}` is deprecated** — tokens render blank with no console error. Always use `{item.*}`.
+> **Legacy `{line.*}` names removed (SDK 0.4.11)** — e.g. `{line.qty}`, `{line.priceRetailTotal}`, `{line.packagePrice}` render blank with no console error. Supported `{line.*}` aliases that mirror `{item.*}` still work, but prefer `{item.*}` for clarity.
 
 | Token | Meaning |
 | ----- | ------- |

@@ -223,9 +223,9 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 - Status: `fixed` (SDK 0.4.11 + template update 2026-04-09)
 - Severity: `high`
 - Date logged: `2026-04-01`
-- **Plain language:** The Amount column strikethrough in `data-summary-lines` row templates showed per-unit retail instead of full-line retail (qty × unit list). Fixed by two changes: (1) SDK 0.4.11 made `{item.originalPrice}` the line total before discounts; (2) templates migrated from deprecated `{line.*}` namespace (silently blank) to `{item.*}`.
+- **Plain language:** The Amount column strikethrough in `data-summary-lines` row templates showed per-unit retail instead of full-line retail (qty × unit list). Fixed by two changes: (1) SDK 0.4.11 made `{item.originalPrice}` the line total before discounts; (2) templates migrated from legacy `{line.*}` names (silently blank) to `{item.*}`.
 - **Fix:** `data-summary-lines` template now uses `{item.originalPrice}` for the Amount strikethrough and `{item.originalUnitPrice}/ea` for the per-unit subtitle. Reference templates updated: [`olympus/checkout.html`](../campaign-kit-templates/src/olympus/checkout.html) and [`olympus-mv-single-step/checkout.html`](../campaign-kit-templates/src/olympus-mv-single-step/checkout.html).
-- **Root cause:** `{line.*}` namespace deprecated in 0.4.11 — all tokens render blank with no console warning. Correct namespace is `{item.*}`. Additionally, in 0.4.11 `{item.price}` / `{item.originalPrice}` became line totals (qty × price), not per-unit — use `{item.unitPrice}` / `{item.originalUnitPrice}` for per-unit values.
+- **Root cause:** Legacy `{line.*}` token names removed in 0.4.11 — they render blank with no console warning (e.g. `{line.qty}`, `{line.priceRetailTotal}`, `{line.packagePrice}`). Supported `{line.*}` aliases that mirror `{item.*}` still work; prefer `{item.*}` to be safe. Additionally, in 0.4.11 `{item.price}` / `{item.originalPrice}` became line totals (qty × price), not per-unit — use `{item.unitPrice}` / `{item.originalUnitPrice}` for per-unit values.
 - Cross-ref:
   - Migration **§ Known #9** (updated); **BS-010** (`verified`); **bundle-display-cart-cheatsheet.md** section 4.
 
