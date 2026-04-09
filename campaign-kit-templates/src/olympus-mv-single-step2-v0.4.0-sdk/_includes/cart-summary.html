@@ -3,6 +3,7 @@
     <div class="summary-wrapper" data-next-cart-summary>
       <template>
         <div class="order-summary">
+          <h4 class="order-summary__title">Order Summary</h4>
           <div class="order-summary__content">
             <div class="cart-items">
               <div class="cart-summary__line pb--header">
@@ -19,23 +20,31 @@
                 <template>
                   <div class="cart-item" data-package-id="{item.packageId}">
                     <div class="cart-item__wrapper">
-                      <div class="cart-item__details cc-left-0">
+                      <div class="cart-item__image-container">
+                        <div class="cart-item__quantity-badge">
+                          <div class="cart-item__quantity">{item.quantity}</div>
+                        </div>
+                        <img src="{item.image}" class="cart-item__image" />
+                      </div>
+                      <div class="cart-item__details">
                         <div class="cart-item__content">
                           <div class="cart-item__description">
                             <div class="cart-item__header">
                               <div class="cart-item__title os-bold">
-                                {item.quantity}x {item.name}
+                                {item.productName}
                                 <div>
                                   <div
-                                    class="text-2xs text-muted text-weight-normal diagonal-strike"
+                                    class="text-2xs text-muted text-weight-normal"
                                     data-next-show="item.hasDiscount"
                                   >
-                                    {item.originalUnitPrice}/ea
+                                    {item.variantName}
                                   </div>
                                   <div
                                     class="text-2xs text-muted text-weight-normal"
+                                    data-next-show="item.isRecurring"
                                   >
-                                    {item.unitPrice}/ea
+                                    Then {item.recurringPrice}/ea
+                                    {item.frequency}
                                   </div>
                                 </div>
                               </div>
@@ -43,13 +52,19 @@
                           </div>
                           <div class="cart-item__pricing">
                             <div
-                              class="cart-price price--original diagonal-strike"
+                              class="cart-price price--original text-2xs diagonal-strike"
                               data-next-show="item.hasDiscount"
                             >
                               {item.originalPrice}
                             </div>
                             <div class="cart-price price--final">
                               {item.price}
+                            </div>
+                            <div
+                              class="cart-price price--each text-muted text-2xs"
+                              data-next-show="item.quantity > 1"
+                            >
+                              {item.unitPrice}/ea
                             </div>
                           </div>
                         </div>
@@ -62,7 +77,7 @@
 
             <div>
               <div class="shipping-note">
-                Shipping and tax will be settled upon checkout confirmation
+                Tax will be settled upon checkout confirmation
               </div>
             </div>
             <div class="order-totals">
@@ -86,9 +101,7 @@
                     </div>
                   </div>
                   <div class="accordion__right">
-                    <div class="order-totals__label">
-                      Discount:<br />
-                    </div>
+                    <div class="order-totals__label">Discount:<br /></div>
                     <div class="order-totals__value ts-lg tw-600 cc-disc">
                       {totalDiscount}<br />
                     </div>
