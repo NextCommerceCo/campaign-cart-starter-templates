@@ -403,11 +403,11 @@ After applying a coupon, refreshing the page clears it. Previously coupons were 
 ### 3. `data-next-shipping-id` selection not reflected in summary totals
 When using **`data-next-shipping-id`** per **`data-next-selector-card`** in **swap** mode (with valid `shipping_methods[].ref_id` values), **cart state** updates correctly on card select — `window.nextDebug?.stores?.cart?.getState()?.shippingMethod` shows the **expected** ref id — but the **summary** shipping line and **grand total** do not consistently reflect that method. Totals often look as if a default/fixed shipping method is still used downstream.
 
-**Bundle selector:** Declarative **`data-next-shipping-id`** on **`data-next-bundle-card`** **does not work**; use **JS** to set shipping when tiers need different methods (see **BS-011**).
+**Bundle selector — fixed in SDK 0.4.12:** Declarative **`data-next-shipping-id`** on **`data-next-bundle-card`** now works. `calculateTotals` was previously hardcoded to shipping method 1; it now uses the selected method. Reference templates `olympus` and `olympus-mv-single-step` both have `data-next-shipping-id` wired on all tier cards. Bug log **BS-011**.
 
-**Expected (SDK):** Summary shipping and total should follow the selected `data-next-shipping-id` without custom JS.
+**Package swap selector:** Still unreliable declaratively — cart state updates but summary totals may lag. JS mitigation remains the workaround for that path.
 
-**Workaround (not a release blocker):** Call **`next.setShippingMethod(refId)`** from JS when the shopper selects a card (package swap or bundle tier), then confirm summary/totals. Bug log **BS-011**.
+**Workaround for package swap (not a release blocker):** Call **`next.setShippingMethod(refId)`** from JS when the shopper selects a card, then confirm summary/totals.
 
 ### 4. `data-next-package-price="compare/savings/savingsPercentage"` wrong for multi-unit package SKUs
 In PackageSelector swap mode, `compare`, `savings`, and `savingsPercentage` slots can display incorrect values for multi-unit packages. The API calculates `compareTotal = price_retail × quantity(1)` — returning per-unit retail instead of the package total retail.
