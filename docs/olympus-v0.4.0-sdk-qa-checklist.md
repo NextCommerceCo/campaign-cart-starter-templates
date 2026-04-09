@@ -1,7 +1,7 @@
 # Olympus v0.4.0 SDK — QA checklist
 
 **Scope:** `campaign-kit-templates/src/olympus/`  
-**SDK:** Pin `sdk_version` in `_data/campaigns.json` (e.g. `0.4.10`).  
+**SDK:** Pin `sdk_version` in `_data/campaigns.json` (e.g. `0.4.11`).  
 **Template bug log (0.4.x, repo-wide — `olympus` is primary reference):** [`template-bug-log.md`](./template-bug-log.md)
 
 Use a real campaign (offers, shipping methods, coupons as in production). Update the bug log with `verified` / notes after each pass.
@@ -44,12 +44,11 @@ Use a real campaign (offers, shipping methods, coupons as in production). Update
 
 | Check | What to verify | Bug log |
 |--------|----------------|---------|
-| **Lines** | `{line.quantity}`, name, `{line.unitPrice}/ea`, strike + `{line.total}` when tier/coupon changes. | Crosswalk |
+| **Lines** | `{item.quantity}`, name, `{item.unitPrice}/ea`, `{item.originalUnitPrice}/ea` strike, Amount column `{item.price}` + `{item.originalPrice}` strike — verify all populate and update on tier/coupon changes. **Use `{item.*}` — `{line.*}` renders silently blank.** | BS-012 (fixed) |
 | **Offer / voucher lists** | `data-summary-offer-discounts` / `data-summary-voucher-discounts` populate when the campaign has those discounts. | — |
 | **Rollup** | “Today you saved” + `{discounts}` vs line-level savings — should **match** on bundle-structured campaigns (**BS-010** `verified`). Watch **`next-calculating`** flicker (SDK 0.4.5+). | BS-010 |
 | **Coupon badge** | Applied code visible via **`data-summary-voucher-discounts`** → `{discount.name}` (and amounts). **`cart.discountCode` / `cart.hasCoupon`** are broken until SDK **Known #10** — see **BS-014**. | **BS-014** |
-| **Symbols** | Accept or log: `{line.*}` money fields may repeat the currency symbol (design / BS-009). | BS-009 |
-| **`priceRetailTotal`** | Should be **line-level** list total, not the same as `{line.priceRetail}` / `{line.originalPackagePrice}`. If all match → BS-012. | BS-012 |
+| **Symbols** | Accept or log: `{item.*}` money fields may repeat the currency symbol (design / BS-009). | BS-009 |
 
 ---
 

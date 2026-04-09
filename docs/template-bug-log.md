@@ -224,25 +224,16 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 - Cross-ref:
   - Migration **§ Known #3**; **Bundle Selector** attribute table (no `data-next-shipping-id`); **Package Selector** example with `data-next-shipping-id` on `data-next-selector-card`.
 
-## BS-012 - Cart summary: `{line.priceRetailTotal}` should be full-line list total, not per-unit (multi-qty / bundle lines)
+## BS-012 - Cart summary: Amount strikethrough showed per-unit retail instead of full-line total
 
-- Status: `open`
+- Status: `fixed` (SDK 0.4.11 + template update 2026-04-09)
 - Severity: `high`
 - Date logged: `2026-04-01`
-- **Plain language:** On **`[data-next-cart-summary]`** line rows, the token **`{line.priceRetailTotal}`** is the usual hook for the **right-column strikethrough** (“list” / compare-at for the **whole line**). For **quantity > 1** (or bundle lines), it should equal **unit list × `{line.quantity}`**. It often comes back as the **same number as a single unit’s** list price, so the strike shows **one unit** while **Subtotal** elsewhere can still correctly show **qty × list**.
-- **Screenshot (shareable):** [Campaign issues overview — example](campaign-issues-overview.md#bs012-cart-summary-example) · [`cart-summary-line-retail-total-bs012.png`](assets/cart-summary-line-retail-total-bs012.png)
-- **Templates / where:** Any `[data-next-cart-summary]` → `data-summary-lines` row template; comments in [`olympus/checkout.html`](../campaign-kit-templates/src/olympus/checkout.html) and [`olympus-mv-single-step/checkout.html`](../campaign-kit-templates/src/olympus-mv-single-step/checkout.html).
-- Docs: [Cart Summary — line item variables](https://developers.nextcommerce.com/docs/campaigns/guides/cart-summary#line-item-variables) (`{line.priceRetail}` = compare **per unit**; `{line.originalPackagePrice}` = package total before discount; **`{line.priceRetailTotal}`** not in public table — treated internally as **full-line** compare total per `olympus/checkout.html` v2 comments)
-- Observed:
-  - For bundle / multi-qty lines, **`{line.priceRetailTotal}`** resolves to the **same formatted value** as **`{line.priceRetail}`** / **`{line.originalPackagePrice}`** (or otherwise does **not** scale with **line qty × list**).
-- Expected:
-  - **`{line.priceRetailTotal}`** = **retail compare-at for the entire line** (consistent with `{line.quantity}`), **not** the same as per-unit `{line.priceRetail}`.
-- Actual:
-  - Strikethrough **Amount** column understates “was” price; savings on that row look inflated vs reality. **Subtotal** line can still match **qty × list** — the bug is the **line template token**, not all totals.
-- Workaround:
-  - None in pure template — requires **CartSummary / summary API** fix or new documented line token. Optionally **hide** the right-column strike and rely only on `{line.priceRetail}/ea` + `{line.total}` until eng confirms correct field (accepts weaker UX).
+- **Plain language:** The Amount column strikethrough in `data-summary-lines` row templates showed per-unit retail instead of full-line retail (qty × unit list). Fixed by two changes: (1) SDK 0.4.11 made `{item.originalPrice}` the line total before discounts; (2) templates migrated from deprecated `{line.*}` namespace (silently blank) to `{item.*}`.
+- **Fix:** `data-summary-lines` template now uses `{item.originalPrice}` for the Amount strikethrough and `{item.originalUnitPrice}/ea` for the per-unit subtitle. Reference templates updated: [`olympus/checkout.html`](../campaign-kit-templates/src/olympus/checkout.html) and [`olympus-mv-single-step/checkout.html`](../campaign-kit-templates/src/olympus-mv-single-step/checkout.html).
+- **Root cause:** `{line.*}` namespace deprecated in 0.4.11 — all tokens render blank with no console warning. Correct namespace is `{item.*}`. Additionally, in 0.4.11 `{item.price}` / `{item.originalPrice}` became line totals (qty × price), not per-unit — use `{item.unitPrice}` / `{item.originalUnitPrice}` for per-unit values.
 - Cross-ref:
-  - Migration **§ Known #9**; **BS-010** (rollup vs lines — `verified` for bundle + aligned Campaigns); re-test after SDK bump if release notes mention summary line mapping.
+  - Migration **§ Known #9** (updated); **BS-010** (`verified`); **bundle-display-cart-cheatsheet.md** section 4.
 
 ## BS-013 - Bundle selector **adds** cart lines instead of **atomic swap** (continuous accumulation)
 

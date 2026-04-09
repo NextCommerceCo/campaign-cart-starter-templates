@@ -4,18 +4,38 @@ Tracks changes needed across templates when upgrading from SDK 0.3.x to 0.4.0.
 
 **Bundle selector reference template:** `campaign-kit-templates/src/olympus/` — QA [`docs/olympus-v0.4.0-sdk-qa-checklist.md`](olympus-v0.4.0-sdk-qa-checklist.md). **Template bug log (0.4.x, repo-wide):** [`docs/template-bug-log.md`](template-bug-log.md)
 
-### SDK 0.4.10 — reference campaigns + template alignment
+### SDK 0.4.11 — `{line.*}` deprecated, `{item.*}` namespace, line total semantics
+
+**Loader:** `https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v0.4.11/dist/loader.js` ([v0.4.11](https://github.com/NextCommerceCo/campaign-cart/releases/tag/v0.4.11)).
+
+**Campaigns reference:** **`olympus`** and **`olympus-mv-single-step`** use **`sdk_version`:** **`0.4.11`** in [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json).
+
+**Breaking changes:**
+
+- **`data-summary-lines` namespace change:** **`{line.*}`** is **deprecated** — all tokens render **silently blank** (no console warning). Use **`{item.*}`** for all `data-summary-lines` row template tokens.
+- **`{item.price}` / `{item.originalPrice}` are now line totals:** In 0.4.11 these became qty × unit price (line totals), **not** per-unit. Use **`{item.unitPrice}`** / **`{item.originalUnitPrice}`** where per-unit values are needed (e.g. `/ea` labels, bundle slot pricing).
+- **Bundle slot `<template>` tokens:** Use **`{item.originalUnitPrice}`** / **`{item.unitPrice}`** for per-unit slot display (replaces pre-0.4.11 `{item.originalPrice}` / `{item.price}` which were per-unit before 0.4.11 changed their semantics).
+
+**Key token mapping for `data-summary-lines`:**
+
+| Use | Token |
+|-----|-------|
+| Amount column (line total, discounted) | `{item.price}` |
+| Amount strikethrough (line total, original) | `{item.originalPrice}` |
+| Per-unit current price (`/ea`) | `{item.unitPrice}` |
+| Per-unit original price (`/ea` strike) | `{item.originalUnitPrice}` |
+| Conditional strikethrough class | `{item.hasDiscount}` |
+
+### SDK 0.4.10 — reference campaigns + template alignment (historical)
 
 **Loader:** `https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v0.4.10/dist/loader.js` ([v0.4.10](https://github.com/NextCommerceCo/campaign-cart/releases/tag/v0.4.10)).
-
-**Campaigns reference:** **`olympus`** and **`olympus-mv-single-step`** use **`sdk_version`:** **`0.4.10`** in [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json).
 
 **Breaking / prefer for new work (reference templates in this repo):**
 
 - **Prepurchase bumps (`-v2` partials):** **`data-next-toggle-display`** with **`originalPrice`** / **`price`** (replaces **`data-next-toggle-price`** and `compare` slot; SDK may keep legacy attrs for compatibility).
 - **`data-next-display="toggle.{packageId}.*"`** — renames such as `isInCart`→`isSelected`, `hasSavings`→`hasDiscount`, `compare`→`originalPrice`, `savings`→`discountAmount`, `savingsPercentage`→`discountPercentage` (see SDK release notes).
-- **Bundle slot `<template>` tokens:** **`{item.originalPrice}`**, **`{item.price}`** (replaces **`originalUnitPrice`** / **`unitPrice`**).
-- **Cart summary line `<template>`:** **`{line.hasDiscount}`** (replaces **`{line.hasSavings}`** for class toggles).
+- **Bundle slot `<template>` tokens (0.4.10, superseded in 0.4.11):** `{item.originalPrice}` / `{item.price}` were per-unit in 0.4.10 — **in 0.4.11 these became line totals**; use `{item.originalUnitPrice}` / `{item.unitPrice}` for per-unit slot display going forward.
+- **Cart summary line `<template>`:** `{line.hasDiscount}` (replaces `{line.hasSavings}`) — **deprecated in 0.4.11**; use `{item.hasDiscount}`.
 - **Receipt mobile summary:** **`cart.hasDiscounts`** (plural — `CartDisplayEnhancer`; not **`cart.hasDiscount`**, which is **`package.*` / bundle naming**), **`cart.originalPrice`** (or legacy **`cart.compareTotal`** if your SDK still aliases it) for crossed pricing (replaces **`cart.hasSavings`** / **`cart.compareTotal`** in older markup).
 
 **Still applies from 0.4.9:** bundle card **`data-next-bundle-display`** / remote **`bundle.*`** / **`data-next-bundle-price`** canonical names (`hasDiscount`, `originalPrice`, `price`, `discountAmount`, `discountPercentage`, …).
@@ -131,21 +151,23 @@ Multi-product bundle:
 
 ### Slot template tokens
 
-**0.4.9+ canonical** (replaces `originalUnitPrice` / `unitPrice`):
+**0.4.11+ canonical** (per-unit slot pricing):
 
 ```html
 <template id="bundle-unit-price-tpl">
-  <div class="os-card__price os--compare os-style">{item.originalPrice}</div>
-  <div class="os-card__price os--current">{item.price}/ea</div>
+  <div class="os-card__price os--compare os-style">{item.originalUnitPrice}</div>
+  <div class="os-card__price os--current">{item.unitPrice}/ea</div>
 </template>
 ```
+
+> **0.4.11 breaking change:** `{item.originalPrice}` / `{item.price}` became **line totals** in 0.4.11. For per-unit display in slot templates use `{item.originalUnitPrice}` / `{item.unitPrice}`.
 
 ### Full example (3x / 2x / 1x, same package ID)
 
 ```html
 <template id="bundle-unit-price-tpl">
-  <div class="os-card__price os--compare os-style">{item.originalPrice}</div>
-  <div class="os-card__price os--current">{item.price}/ea</div>
+  <div class="os-card__price os--compare os-style">{item.originalUnitPrice}</div>
+  <div class="os-card__price os--current">{item.unitPrice}/ea</div>
 </template>
 
 <div
@@ -426,12 +448,11 @@ In the new 0.4.x pattern (`data-next-package-toggle` + `data-next-toggle-card` +
 
 **Diagnostic (not production):** `<meta name="next-clear-cart" content="true">` forces an empty cart each page load — only for isolating persistence issues (see bug log **BS-013**).
 
-### 9. Cart summary v2: `{line.priceRetailTotal}` wrong vs line totals
-In `[data-next-cart-summary]` template tokens, **`{line.priceRetailTotal}`** may equal per-unit-style fields (`{line.priceRetail}`, `{line.originalPackagePrice}`, etc.) instead of the **full-line** retail total. Strike/compare rows in the order summary then disagree with `{line.total}` / list math.
+### 9. Cart summary v2: Amount strikethrough — fixed in SDK 0.4.11
 
-**Expected:** `priceRetailTotal` (or documented equivalent) should be **quantity × retail** for the line, consistent with how `{line.total}` represents the sale line total.
+**Fixed (2026-04-09):** The `{line.*}` namespace is deprecated in 0.4.11 — tokens render silently blank. Templates updated to `{item.*}`. The correct token for the Amount column strikethrough (full-line original) is **`{item.originalPrice}`** (line total before discounts in 0.4.11+). Use **`{item.originalUnitPrice}/ea`** for the per-unit subtitle.
 
-**Tracking:** Bug log **BS-012**; validate against `window.nextDebug?.stores?.cart?.getState()` line items when triaging.
+**Tracking:** Bug log **BS-012** (`fixed`).
 
 ### 10. Cart display: `cart.discountCode`, `cart.hasCoupon`, etc. not resolved (summary enhancer)
 **Priority: low** — use **`data-summary-voucher-discounts`** / **`{discount.name}`** or **JS** for coupon UI; see **BS-014**.
@@ -472,8 +493,9 @@ When using the Summary v2 enhancer:
 - The SDK computes totals asynchronously and applies *state classes* to the `data-next-cart-summary` root (for example, `next-has-savings`, `next-no-savings`, `next-cart-has-items`).
 - Inside the `<template>`, prefer **static CSS hook classes** (e.g. `next-has-discounts` / `next-has-savings` on the savings row) rather than relying on `data-next-show="cart.hasDiscounts"` / `cart.hasSavings` / other `data-next-show` conditions inside the injected template. Template-scoped `data-next-show` can evaluate before totals state is ready, leaving sections hidden after render.
 - For empty-cart gating, use `data-next-hide="cart.isEmpty"` on the `data-next-cart-summary` root (or hide via CSS hooks).
-- **Line-level retail total token:** If `{line.priceRetailTotal}` matches unit retail fields instead of a true line retail total, treat as **Known #9** / **BS-012** — verify against cart state before “fixing” template math in Liquid.
-- **`data-next-format` on line rows:** **`data-next-format="currency"`** on elements inside the **`data-summary-lines`** `<template>` **does not** fix raw `{line.*}` output today — **BS-015** (`medium`). Use **JS** or an SDK fix; do not assume the attribute works there.
+- **`{line.*}` is deprecated — use `{item.*}`:** All `{line.*}` tokens inside `data-summary-lines` `<template>` render **silently blank** in SDK 0.4.11+. See **bundle-display-cart-cheatsheet.md** section 4 for the full `{item.*}` token reference.
+- **`{item.price}` / `{item.originalPrice}` are line totals (0.4.11+):** Use `{item.unitPrice}` / `{item.originalUnitPrice}` for per-unit display.
+- **`data-next-format` on line rows:** **`data-next-format=”currency”`** on elements inside the **`data-summary-lines`** `<template>` **does not** fix raw `{item.*}` output — **BS-015** (`medium`). Use **JS** or an SDK fix; do not assume the attribute works there.
 - **Copy-only quirks:** Per-row **currency symbol** repetition — [template bug log](template-bug-log.md) **BS-009**. **“Today you saved” vs line savings** — **BS-010** **`verified`** for **bundle-tier** funnels with aligned Campaigns structure (`olympus` reference); legacy layouts may still need QA.
 - **Coupon code badge:** Do not rely on **`data-next-display="cart.discountCode"`** or **`data-next-show="cart.hasCoupon"`** inside the summary template until **Known #10** / **BS-014** is fixed — use **`data-summary-voucher-discounts`** + **`{discount.name}`** (see [Cart Summary — Step 5](https://developers.nextcommerce.com/docs/campaigns/guides/cart-summary#step-5-discount-breakdowns)) or custom JS.
 
