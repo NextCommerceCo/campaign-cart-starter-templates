@@ -1,6 +1,7 @@
 <!-- Prepurchase upsell: checkbox bump (check01) — SDK 0.4.x
      Uses data-next-package-toggle / data-next-toggle-card / data-next-toggle-display
-     originalPrice (compare) + unitPrice /ea (stable per-unit) + price (synced total) -->
+     Option A (per-unit, stable): originalUnitPrice/ea + unitPrice/ea — does not scale with synced qty
+     Option B (line total, scales): originalPrice + price — multiplies with data-next-package-sync qty -->
 <div data-component="prepurchase-upsell" data-variant="check01" data-next-await="">
   <div data-next-package-toggle>
     <div class="bump-card" data-next-toggle-card data-next-is-upsell="true" data-next-package-sync="1" data-next-package-id="7">
@@ -18,8 +19,16 @@
         <div class="bump__content">
           <div class="bump__content-wrap">
             <div class="bump__price">
-              <div data-next-toggle-display="originalPrice" class="bump__price-reg">$29.99</div>
-              <div data-next-toggle-display="price" class="bump__price-sale">$9.99</div>
+              <!-- Option A: per-unit pricing — stable across tier changes (SDK 0.4.14+) -->
+              <div class="bump__price-row">
+                <div class="bump__price-unit"><span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span></div>
+                <div class="bump__price-unit"><span data-next-toggle-display="unitPrice" class="bump__price-sale">--</span><span class="text-xl">/ea</span></div>
+              </div>
+              <!-- Option B: line total pricing — scales with synced qty -->
+              <div class="bump__price-row">
+                <div data-next-toggle-display="originalPrice" class="bump__price-reg">--</div>
+                <div data-next-toggle-display="price" class="bump__price-total">--</div>
+              </div>
             </div>
             <div class="list-container cc-2xs">
               <ul role="list" class="list w-list-unstyled">

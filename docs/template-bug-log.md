@@ -161,7 +161,7 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 - Status: `open`
 - Severity: `medium`
 - Date logged: `2026-03-31`
-- **Templates / where:** Bump includes on bundle checkouts — reference [`olympus`](../campaign-kit-templates/src/olympus/) (`bump-check01-v2.html` vs `bump-check01.html`, `checkout.html` + `data-next-package-sync`).
+- **Templates / where:** Bump includes on bundle checkouts — reference [`olympus`](../campaign-kit-templates/src/olympus/) (`bump-check01.html`, `checkout.html` + `data-next-package-sync`).
 - **Layering:** Behavior below is tied to **`data-next-package-sync`** (bump qty / pricing follows main line) together with **`data-next-toggle-price`** / toggle-card preview — not “sync alone” or “toggle alone” in isolation.
 - **Observed flow (toggle-price + sync):**
   1. Shopper **turns bump on** → card **compare/sale** update to match the **currently selected bundle tier** (expected on first check).

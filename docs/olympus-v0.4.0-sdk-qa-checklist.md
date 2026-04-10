@@ -35,8 +35,8 @@ Use a real campaign (offers, shipping methods, coupons as in production). Update
 | Check | What to verify | Bug log |
 |--------|----------------|---------|
 | **Warranty + bundle** | Warranty checked: changing bundle tier updates synced warranty qty (`data-next-package-sync="1"`). | BS-008 |
-| **Toggle prices** | Compare vs sale on v2 card look sane; after tier change, prices update **without** needing uncheck/recheck (Known #7 quirk). | BS-008 |
-| **Old vs new pattern** | `bump-check01.html` / old pattern vs `*-v2.html` — note where regressions appear. | BS-005, BS-008 |
+| **Toggle prices** | Compare vs sale look sane; `unitPrice` + `/ea` stays stable when synced qty changes; `price` (line total) updates with qty as expected. | BS-008 |
+| **unitPrice stable** | Select 1× → 2× → 3× with bump checked — `unitPrice /ea` must not change; only `price` (synced total) should scale. | BS-008 |
 
 ---
 

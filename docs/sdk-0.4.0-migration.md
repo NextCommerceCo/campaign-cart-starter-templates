@@ -32,7 +32,7 @@ Tracks changes needed across templates when upgrading from SDK 0.3.x to 0.4.0.
 
 **Breaking / prefer for new work (reference templates in this repo):**
 
-- **Prepurchase bumps (`-v2` partials):** **`data-next-toggle-display`** with **`originalPrice`** / **`price`** (replaces **`data-next-toggle-price`** and `compare` slot; SDK may keep legacy attrs for compatibility).
+- **Prepurchase bumps:** **`data-next-toggle-display`** with **`originalPrice`** / **`price`** / **`unitPrice`** (replaces **`data-next-toggle-price`** and `compare` slot; SDK may keep legacy attrs for compatibility). Reference templates use `bump-check01.html` / `bump-switch01.html` (canonical 0.4.x names — `-v2` suffix retired).
 - **`data-next-display="toggle.{packageId}.*"`** — renames such as `isInCart`→`isSelected`, `hasSavings`→`hasDiscount`, `compare`→`originalPrice`, `savings`→`discountAmount`, `savingsPercentage`→`discountPercentage` (see SDK release notes).
 - **Bundle slot `<template>` tokens (0.4.10, superseded in 0.4.11):** `{item.originalPrice}` / `{item.price}` were per-unit in 0.4.10 — **in 0.4.11 these became line totals**; use `{item.originalUnitPrice}` / `{item.unitPrice}` for per-unit slot display going forward.
 - **Cart summary line `<template>`:** `{line.hasDiscount}` (replaces `{line.hasSavings}`) — **deprecated in 0.4.11**; use `{item.hasDiscount}`.
@@ -433,7 +433,7 @@ In the new 0.4.x pattern (`data-next-package-toggle` + `data-next-toggle-card` +
 
 **Observed with sync:** First check updates bump card prices to the current bundle tier; **changing bundle tier** updates **cart/summary totals** but often **not** the bump’s **on-card** toggle prices until **uncheck + recheck**. See bug log **BS-008**.
 
-**Current workaround:** Old 0.3.x bump pattern (`data-next-bump=""` + `data-next-toggle="toggle"` + `data-next-display="package.price_total"`) until resolved — still reliable in 0.4.x. **Hybrid:** keep toggle + sync for add/remove, but show **unit** list/sale with `data-next-display="package.price_retail"` / `package.price` on the bump package instead of `data-next-toggle-price` (tradeoff vs offer-aware toggle math — **BS-008**).
+**Current workaround (SDK 0.4.14+):** Use **`data-next-toggle-display="unitPrice"`** for a stable per-unit price that does not multiply up when synced qty changes — pair with `/ea` copy. Show the synced line total separately via **`data-next-toggle-display="price"`** if needed. See `bump-check01.html` in reference templates. **Hybrid (pre-0.4.14):** keep toggle + sync for add/remove, but show stable unit list/sale with `data-next-display="package.price_retail"` / `package.price` on the bump package instead of `data-next-toggle-price` (tradeoff vs offer-aware toggle math — **BS-008**).
 
 **Expected fix:** Align `data-next-toggle-price` outputs to the same package-total basis as `price_total` / `price_retail_total`, or provide a compatibility mode for the old bump behavior. **Also:** refresh toggle preview when **main bundle tier** or **synced line qty** changes (not only on bump check/uncheck).
 
