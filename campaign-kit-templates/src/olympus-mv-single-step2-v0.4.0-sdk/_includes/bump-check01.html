@@ -4,6 +4,7 @@
     class="bump-card"
     data-next-package-toggle
     data-next-package-id="4"
+    data-next-package-sync="1"
     data-next-is-upsell="true"
   >
     <div class="bump-header">
@@ -22,20 +23,14 @@
           />
         </svg>
       </div>
-      <span class="bump-title">Get Extended Warranty</span>
+      <span class="bump-title">Get <span data-next-toggle-display="name"></span></span>
     </div>
     <div class="bump-body">
       <div class="bump-content">
         <div class="bump-details">
           <div class="bump-price">
-            <del
-              data-next-toggle-display="originalPrice"
-              class="bump-price-original"
-              >$29.99</del
-            >
-            <span data-next-toggle-display="price" class="bump-price-current"
-              >$9.99</span
-            >
+            <del data-next-toggle-display="originalUnitPrice" class="bump-price-original"></del>
+            <span data-next-toggle-display="unitPrice" class="bump-price-current"></span>
           </div>
           <ul class="bump-features">
             <li>1 year with our replacement and protection</li>
@@ -46,6 +41,7 @@
         </div>
         <img
           loading="lazy"
+          data-next-toggle-display="image"
           alt=""
           src="{{ 'images/1x1_1.svg' | campaign_asset }}"
           class="bump-image"
