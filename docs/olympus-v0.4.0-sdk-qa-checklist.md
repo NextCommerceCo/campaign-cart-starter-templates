@@ -45,9 +45,9 @@ Use a real campaign (offers, shipping methods, coupons as in production). Update
 | Check | What to verify | Bug log |
 |--------|----------------|---------|
 | **Lines** | `{item.quantity}`, name, `{item.unitPrice}/ea`, `{item.originalUnitPrice}/ea` strike, Amount column `{item.price}` + `{item.originalPrice}` strike — verify all populate and update on tier/coupon changes. **Use `{item.*}` — `{line.*}` renders silently blank.** | BS-012 (fixed) |
-| **Offer / voucher lists** | `data-summary-offer-discounts` / `data-summary-voucher-discounts` populate when the campaign has those discounts. | — |
+| **Offer / voucher lists** | `data-next-discounts="offer"` / `data-next-discounts="voucher"` populate when the campaign has those discounts (SDK 0.4.13+). | — |
 | **Rollup** | “Today you saved” + `{discounts}` vs line-level savings — should **match** on bundle-structured campaigns (**BS-010** `verified`). Watch **`next-calculating`** flicker (SDK 0.4.5+). | BS-010 |
-| **Coupon badge** | Applied code visible via **`data-summary-voucher-discounts`** → `{discount.name}` (and amounts). **`cart.discountCode` / `cart.hasCoupon`** are broken until SDK **Known #10** — see **BS-014**. | **BS-014** |
+| **Coupon badge** | Applied code visible via **`data-next-discounts="voucher"`** → `{discount.description}` (code string) / `{discount.name}` (label) / `{discount.amount}`. **`cart.discountCode`** display still unwired — see **BS-014**. | **BS-014** |
 | **Symbols** | Accept or log: `{item.*}` money fields may repeat the currency symbol (design / BS-009). | BS-009 |
 
 ---

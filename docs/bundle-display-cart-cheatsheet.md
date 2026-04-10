@@ -112,16 +112,21 @@ Container: **`[data-line-discounts]`** with a child **`<template>`** for each di
 
 | Token | Meaning |
 | ----- | ------- |
-| `{discount.name}` | Discount name |
-| `{discount.amount}` | Formatted amount |
-| `{discount.description}` | Description |
+| `{discount.name}` | Display label (e.g. “Exit Pop 10%”) |
+| `{discount.amount}` | Formatted savings amount (e.g. “$10.45”) |
+| `{discount.description}` | The voucher code string (e.g. “EXIT10YO”) |
 
-### Offer / voucher lists
+### Offer / voucher lists (SDK 0.4.13+)
 
-- **`[data-summary-offer-discounts]`** — offer rows  
-- **`[data-summary-voucher-discounts]`** — coupon / voucher rows (shows **code** in `{discount.name}` when applicable)
+Use **`data-next-discounts`** (replaces the older `data-summary-offer-discounts` / `data-summary-voucher-discounts` attributes — old attributes may still work but prefer the new ones):
 
-Each needs a child **`<template>`**; same **`{discount.name}`**, **`{discount.amount}`**, **`{discount.description}`** tokens.
+- **`[data-next-discounts=”offer”]`** — offer discount rows
+- **`[data-next-discounts=”voucher”]`** — coupon / voucher rows
+- **`[data-next-discounts]`** (no value) — all discounts
+
+Each needs a child **`<template>`**; same `{discount.name}`, `{discount.amount}`, `{discount.description}` tokens. CSS classes `next-discounts-empty` / `next-discounts-has-items` applied automatically.
+
+**To show the applied code string** (e.g. in a badge), use **`{discount.description}`** — not `{discount.name}`. `{discount.name}` is the human-readable label.
 
 ---
 
@@ -131,7 +136,7 @@ Each needs a child **`<template>`**; same **`{discount.name}`**, **`{discount.am
 - **`cart.hasCoupon`** / **`cart.hasCoupons`** — ✅ work for **`data-next-show`** / **`data-next-hide`** visibility.
 - **`cart.discountCode`** and code-string fields — ❌ still not wired for **`data-next-display`**; node stays empty despite voucher present in cart state.
 
-**Workaround for code display:** use **`[data-summary-voucher-discounts]`** + **`{discount.name}`** (and amounts), or custom JS. See migration **Known #10** and bug log **BS-014**.
+**Workaround for code display:** use **`data-next-discounts=”voucher”`** + **`{discount.description}`** (the code string) inside a `<template>`. See migration **Known #10** and bug log **BS-014**.
 
 Outside **`[data-next-cart-summary]`**, other cart display paths may still differ — test per page.
 

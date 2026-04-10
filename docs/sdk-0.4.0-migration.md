@@ -455,7 +455,7 @@ In the new 0.4.x pattern (`data-next-package-toggle` + `data-next-toggle-card` +
 **Tracking:** Bug log **BS-012** (`fixed`).
 
 ### 10. Cart display: `cart.discountCode`, `cart.hasCoupon`, etc. not resolved (summary enhancer)
-**Priority: low** — use **`data-summary-voucher-discounts`** / **`{discount.name}`** or **JS** for coupon UI; see **BS-014**.
+**Priority: low** — use **`data-next-discounts="voucher"`** / **`{discount.description}`** (code string) or **JS** for coupon UI; see **BS-014**.
 
 **Regression from cart display moving under cart summary** (`CartSummaryEnhancer.display.ts` → `resolveValue`). Only a fixed set of cart UI properties is implemented (subtotal, total, totalDiscount, shipping fields, itemCount, …). **`discountCode`**, **`hasCoupon`**, **`hasCoupons`**, **`discountCodes`**, **`coupons[0].code`**, and similar are **omitted** → default branch logs **“Unknown cart display property”** and returns **`undefined`**, so **`data-next-display` / `data-next-show`** nodes stay empty. Example that **used to work:** `<span data-next-display="cart.discountCode" …>—</span>` no longer binds.
 
@@ -463,7 +463,7 @@ In the new 0.4.x pattern (`data-next-package-toggle` + `data-next-toggle-card` +
 
 **Data still exists:** Vouchers can be on cart state after totals; **checkout** store holds codes — the **display** layer does not bind them for these keys until engineering extends `resolveValue` / subscriptions.
 
-**Workaround:** Use **[Cart Summary voucher lists](https://developers.nextcommerce.com/docs/campaigns/guides/cart-summary#step-5-discount-breakdowns)** (`data-summary-voucher-discounts`, `{discount.name}`), or custom JS. See bug log **BS-014**.
+**Workaround:** Use **`data-next-discounts="voucher"`** (SDK 0.4.13+) with `{discount.description}` for the code string and `{discount.name}` for the label, or custom JS. See bug log **BS-014**.
 
 **Eng one-liner:** *Cart display refactor dropped `discountCode` / coupon fields from `resolveValue`; `PROPERTY_MAPPINGS` still lists them but they’re unreachable.*
 
@@ -497,7 +497,7 @@ When using the Summary v2 enhancer:
 - **`{item.price}` / `{item.originalPrice}` are line totals (0.4.11+):** Use `{item.unitPrice}` / `{item.originalUnitPrice}` for per-unit display.
 - **`data-next-format` on line rows:** **`data-next-format=”currency”`** on elements inside the **`data-summary-lines`** `<template>` **does not** fix raw `{item.*}` output — **BS-015** (`medium`). Use **JS** or an SDK fix; do not assume the attribute works there.
 - **Copy-only quirks:** Per-row **currency symbol** repetition — [template bug log](template-bug-log.md) **BS-009**. **“Today you saved” vs line savings** — **BS-010** **`verified`** for **bundle-tier** funnels with aligned Campaigns structure (`olympus` reference); legacy layouts may still need QA.
-- **Coupon code badge:** Do not rely on **`data-next-display="cart.discountCode"`** or **`data-next-show="cart.hasCoupon"`** inside the summary template until **Known #10** / **BS-014** is fixed — use **`data-summary-voucher-discounts`** + **`{discount.name}`** (see [Cart Summary — Step 5](https://developers.nextcommerce.com/docs/campaigns/guides/cart-summary#step-5-discount-breakdowns)) or custom JS.
+- **Coupon code badge:** Do not rely on **`data-next-display="cart.discountCode"`** inside the summary template until **Known #10** / **BS-014** is fixed — use **`data-next-discounts="voucher"`** (SDK 0.4.13+) with **`{discount.description}`** for the code string and **`{discount.name}`** for the display label (see [Cart Summary — Step 5](https://developers.nextcommerce.com/docs/campaigns/guides/cart-summary#step-5-discount-breakdowns)) or custom JS. **`data-next-show="cart.hasCoupon"`** is safe for conditional visibility.
 
 ---
 

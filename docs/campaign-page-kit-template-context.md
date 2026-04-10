@@ -337,7 +337,7 @@ The SDK is controlled entirely through HTML attributes. Do not write JavaScript 
 <span data-next-display="cart.savings"></span>
 ```
 
-**SDK 0.4.x:** `data-next-display="cart.discountCode"` and `data-next-show="cart.hasCoupon"` are **not** wired in the cart-summary display resolver (Known #10 / BS-014). Use `data-summary-voucher-discounts` + `{discount.name}` instead, or custom JS. Full token table: `docs/bundle-display-cart-cheatsheet.md`.
+**SDK 0.4.x:** `data-next-display="cart.discountCode"` is **not** wired in the cart-summary display resolver (Known #10 / BS-014). Use `data-next-discounts="voucher"` + `{discount.description}` to show the code string, `{discount.name}` for the display label. Full token table: `docs/bundle-display-cart-cheatsheet.md`.
 
 ### Bundle tier display (`data-next-bundle-display`)
 
@@ -399,11 +399,11 @@ Live summary panel — updates on tier change, coupon apply, and bump toggle. Us
       </div>
     </template>
   </div>
-  <div data-summary-offer-discounts>
+  <div data-next-discounts="offer">
     <template><div>{discount.name}: −{discount.amount}</div></template>
   </div>
-  <div data-summary-voucher-discounts>
-    <template><div>{discount.name}: −{discount.amount}</div></template>
+  <div data-next-discounts="voucher">
+    <template><div>{discount.description}: −{discount.amount}</div></template>
   </div>
   <span data-next-display="cart.total"></span>
 </div>

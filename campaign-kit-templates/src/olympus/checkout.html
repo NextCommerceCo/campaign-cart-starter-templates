@@ -565,15 +565,16 @@ swiper_thumbs:
 
                                           <!-- Per-discount rows + coupon code tag — playground bundle-set: https://developers.nextcommerce.com/playground/?preset=example%2Fbundle-set -->
                                           <div class="order-totals__section">
-                                            <ul class="order-totals__discount-list" data-summary-offer-discounts aria-label="Offer discounts">
+                                            <!-- SDK 0.4.13+: data-next-discounts replaces data-summary-offer-discounts / data-summary-voucher-discounts -->
+                                            <ul class="order-totals__discount-list" data-next-discounts="offer" aria-label="Offer discounts">
                                               <template>
                                                 <li class="order-totals__line">
-                                                  <div class="order-totals__label text-sm text-muted">{discount.name}</div>
-                                                  <div class="order-totals__value text-sm">−{discount.amount}</div>
+                                                  <div class="order-totals__label text-sm text-muted" >{discount.name}</div>
+                                                  <div class="order-totals__value text-sm" >−{discount.amount}</div>
                                                 </li>
                                               </template>
                                             </ul>
-                                            <ul class="order-totals__discount-list" data-summary-voucher-discounts aria-label="Coupon discounts">
+                                            <ul class="order-totals__discount-list" data-next-discounts="voucher" aria-label="Coupon discounts">
                                               <template>
                                                 <li class="order-totals__line">
                                                   <div class="order-totals__label text-sm">{discount.name}</div>
@@ -594,17 +595,19 @@ swiper_thumbs:
                                                 <div class="order-totals__value ts-lg tw-600 cc-disc">{discounts}</div>
                                               </div>
                                             </div>
-                                            <!-- BS-014 / Known #10: cart.discountCode + cart.hasCoupon not wired in CartSummaryEnhancer.display resolveValue; eng one-liner in docs/template-bug-log.md. Code + amount: data-summary-voucher-discounts above. -->
+                                            <!-- BS-014 / Known #10: cart.discountCode not wired in CartSummaryEnhancer.display resolveValue; eng one-liner in docs/template-bug-log.md. Code + amount: data-next-discounts="voucher" above. -->
                                             <div class="coupon-tags">
 
                                               <div data-next-show="cart.hasCoupon" class="order-totals__line items-center">
                                                 <div class="cart-subtext">Code applied</div>
-                                                <div class="badge badge--small">
-                                                  <div class="label__wrapper cc-sm">
-                                                    <div class="badge__text">
-                                                      <span data-next-display="cart.discountCode" class="display-visible">—</span>
+                                                <div data-next-discounts="voucher">
+                                                  <template>
+                                                    <div class="badge badge--small">
+                                                      <div class="label__wrapper cc-sm">
+                                                        <div class="badge__text">{discount.description}</div>
+                                                      </div>
                                                     </div>
-                                                  </div>
+                                                  </template>
                                                 </div>
                                               </div>
                                             </div>
