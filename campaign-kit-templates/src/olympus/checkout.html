@@ -499,15 +499,6 @@ swiper_thumbs:
                               {% campaign_include 'payment-methods.html' show_paypal=true show_klarna=true show_google_pay=true show_apple_pay=true %}
                             </div>
                             <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;background:#fef3c7;color:#92400e;padding:2px 8px;display:inline-block;border-radius:3px;margin:8px 0 4px 0">Summary v2 — data-next-cart-summary</div>
-                            <!-- Cart summary: https://developers.nextcommerce.com/docs/campaigns/guides/cart-summary — state classes on [data-next-cart-summary]; conditional rows via .os-cart-summary-* hooks below. -->
-                            <style>
-                              [data-next-cart-summary].next-cart-empty .os-cart-summary-totals { display: none !important; }
-                              [data-next-cart-summary] .os-cart-summary-row--discount { display: none; }
-                              [data-next-cart-summary].next-has-discounts .os-cart-summary-row--discount { display: block; }
-                              [data-next-cart-summary] .os-cart-summary-row--tax { display: none; }
-                              [data-next-cart-summary].next-has-tax .os-cart-summary-row--tax { display: flex; }
-                              [data-next-cart-summary] .order-totals__discount-list { list-style: none; margin: 0 0 0.25rem; padding: 0; }
-                            </style>
                             <div class="form-section form-section--last">
                               <div class="cart-box cart-box--card">
                                 <div class="summary-wrapper" data-next-cart-summary>
@@ -569,16 +560,16 @@ swiper_thumbs:
                                             <ul class="order-totals__discount-list" data-next-discounts="offer" aria-label="Offer discounts">
                                               <template>
                                                 <li class="order-totals__line">
-                                                  <div class="order-totals__label text-sm text-muted" >{discount.name}</div>
-                                                  <div class="order-totals__value text-sm" >−{discount.amount}</div>
+                                                  <div class="order-totals__label text-sm text-muted">{discount.name}</div>
+                                                  <div class="order-totals__value text-sm text-muted">−{discount.amount}</div>
                                                 </li>
                                               </template>
                                             </ul>
                                             <ul class="order-totals__discount-list" data-next-discounts="voucher" aria-label="Coupon discounts">
                                               <template>
                                                 <li class="order-totals__line">
-                                                  <div class="order-totals__label text-sm">{discount.name}</div>
-                                                  <div class="order-totals__value text-sm cc-disc">−{discount.amount}</div>
+                                                  <div class="order-totals__label text-sm text-muted">{discount.name}</div>
+                                                  <div class="order-totals__value text-sm text-muted">−{discount.amount}</div>
                                                 </li>
                                               </template>
                                             </ul>

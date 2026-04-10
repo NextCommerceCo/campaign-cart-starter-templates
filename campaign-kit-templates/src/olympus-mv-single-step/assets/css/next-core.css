@@ -3813,6 +3813,33 @@ figcaption {
   padding: .5rem 1.5rem;
 }
 
+.order-totals__discount-list {
+  list-style: none;
+  margin: 0 0 .25rem;
+  padding: 0;
+}
+
+.order-totals__discount-list li {
+  padding-left: 0;
+}
+
+.coupon-tags .order-totals__line {
+  gap: .375rem;
+}
+
+.coupon-tags [data-next-discounts] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem;
+  align-items: center;
+}
+
+[data-next-cart-summary].next-cart-empty .os-cart-summary-totals { display: none !important; }
+[data-next-cart-summary] .os-cart-summary-row--discount { display: none; }
+[data-next-cart-summary].next-has-discounts .os-cart-summary-row--discount { display: block; }
+[data-next-cart-summary] .os-cart-summary-row--tax { display: none; }
+[data-next-cart-summary].next-has-tax .os-cart-summary-row--tax { display: flex; }
+
 .order-totals__line {
   color: #000;
   justify-content: space-between;
