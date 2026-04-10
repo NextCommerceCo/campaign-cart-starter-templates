@@ -1,20 +1,24 @@
-<!-- Prepurchase upsell: toggle-switch bump (switch) — nested structure for limos/olympus layouts -->
+<!-- Prepurchase upsell: toggle-switch bump (switch01) — SDK 0.4.x
+     Uses data-next-package-toggle / data-next-toggle-card / data-next-toggle-display
+     No data-next-package-sync: one line item, not per main-unit (contrast bump-check01). -->
 <div data-component="prepurchase-upsell" data-variant="switch" data-next-await="">
-  <div class="bump-card bump-card--switch" data-next-bump="" data-next-is-upsell="true" data-next-package-id="12">
-    <div data-next-toggle="toggle" class="bump__header-left bump__head--switch next-active">
-      <div class="bump__header-content bump__head-inner">
-        <span class="bump__title">Shipping Insurance &amp; Loss Prevention</span>
-        <span class="bump__switch" aria-hidden="true">
-          <span class="bump__switch-slider"></span>
-        </span>
+  <div data-next-package-toggle>
+    <div class="bump-card bump-card--switch" data-next-toggle-card data-next-is-upsell="true" data-next-package-id="9">
+      <div class="bump__header-left bump__head--switch">
+        <div class="bump__header-content bump__head-inner">
+          <span class="bump__title">Shipping Insurance &amp; Loss Prevention</span>
+          <span class="bump__switch" aria-hidden="true">
+            <span class="bump__switch-slider"></span>
+          </span>
+        </div>
       </div>
-    </div>
-    <div class="bump__body">
-      <div class="bump__content">
-        <p class="bump__description">
-          Total shipping coverage and extended warranty. Breakage, loss, delays, porch pirates — even defects. 100% protected for just
-          <span data-next-display="package.12.unitPrice" class="display-visible">$9.99</span>
-        </p>
+      <div class="bump__body">
+        <div class="bump__content">
+          <p class="bump__description">
+            Total shipping coverage and extended warranty. Breakage, loss, delays, porch pirates — even defects. 100% protected for just
+            <span data-next-toggle-display="price" class="display-visible">$9.99</span>
+          </p>
+        </div>
       </div>
     </div>
   </div>
