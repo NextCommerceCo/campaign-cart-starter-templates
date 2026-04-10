@@ -1,0 +1,32 @@
+<!-- Prepurchase upsell: toggle-switch bump (auto-render) -->
+<div class="bump" data-next-await data-next-package-toggle data-next-packages='[
+      {
+        "id": "shipping_insurance",
+        "packageId": 2,
+        "description": "Total shipping coverage and extended warranty. 100% protected."
+      },
+      {
+        "id": "extended_warranty",
+        "packageId": 3,
+        "description": "1 year replacement and accidental damage protection. Peace of mind guaranteed."
+      }
+    ]' data-next-toggle-template-id="bump-switch-tpl">
+</div>
+
+<template id="bump-switch-tpl">
+  <div class="bump-card" data-next-is-upsell="true">
+    <div class="bump-header">
+      <span class="bump-title">{toggle.name}</span>
+      <span class="bump-switch" aria-hidden="true">
+        <span class="bump-switch-knob"></span>
+      </span>
+    </div>
+    <div class="bump-body">
+      <p class="bump-description">
+        {toggle.description} For just
+        <span data-next-toggle-display="originalPrice" data-next-show="hasDiscount" class="diagonal-strike"></span>
+        <span data-next-toggle-display="price"></span>
+      </p>
+    </div>
+  </div>
+</template>

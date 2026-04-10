@@ -5,6 +5,7 @@ next_success_url: upsell-mv.html
 promo_sale: "default"
 styles:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
+  - css/bump-card.css
 scripts:
   - js/promo-banner.js
   - js/promo-timer.js
@@ -302,6 +303,10 @@ swiper_thumbs:
                               {% campaign_include 'payment-methods.html' show_paypal=true show_klarna=true show_apple_pay=true show_google_pay=true %}
                             </div>
                             {% campaign_include 'cart-summary.html' %}
+                            {% campaign_include 'bump-switch01.html' %}
+                            {% campaign_include 'bump-switch01-auto.html' %}
+                            {% campaign_include 'bump-check01.html' %}
+                            {% campaign_include 'bump-check02.html' %}
                             <div class="form-section form-section--last">
                               <div class="submit-section">
                                 <div class="submit-section__button"><button os-checkout-payment="combo" data-action="submit" type="submit" class="button cc-gold">

@@ -33,16 +33,10 @@
                               <div class="cart-item__title os-bold">
                                 {item.productName}
                                 <div>
-                                  <div
-                                    class="text-2xs text-muted text-weight-normal"
-                                    data-next-show="item.hasDiscount"
-                                  >
+                                  <div class="text-2xs text-muted text-weight-normal" data-next-show="item.hasDiscount">
                                     {item.variantName}
                                   </div>
-                                  <div
-                                    class="text-2xs text-muted text-weight-normal"
-                                    data-next-show="item.isRecurring"
-                                  >
+                                  <div class="text-2xs text-muted text-weight-normal" data-next-show="item.isRecurring">
                                     Then {item.recurringPrice}/ea
                                     {item.frequency}
                                   </div>
@@ -51,21 +45,25 @@
                             </div>
                           </div>
                           <div class="cart-item__pricing">
-                            <div
-                              class="cart-price price--original text-2xs diagonal-strike"
-                              data-next-show="item.hasDiscount"
-                            >
+                            <div class="cart-price price--original text-2xs diagonal-strike"
+                              data-next-show="item.hasDiscount">
                               {item.originalPrice}
                             </div>
                             <div class="cart-price price--final">
                               {item.price}
                             </div>
-                            <div
-                              class="cart-price price--each text-muted text-2xs"
-                              data-next-show="item.quantity > 1"
-                            >
+                            <div class="cart-price price--each text-muted text-2xs" data-next-show="item.quantity > 1">
                               {item.unitPrice}/ea
                             </div>
+                          </div>
+                          <!-- Line-level discounts -->
+                          <div class="cart-item__discounts" data-next-discounts>
+                            <template>
+                              <div class="cart-item__discount text-2xs text-muted">
+                                <span class="discount-name">{discount.name}</span>
+                                <span class="discount-amount">-{discount.amount}</span>
+                              </div>
+                            </template>
                           </div>
                         </div>
                       </div>
@@ -81,10 +79,8 @@
               </div>
             </div>
             <div class="order-totals">
-              <div
-                class="order-totals__section order-totals__section--inset discount-row"
-                data-next-show="cart.hasDiscounts"
-              >
+              <div class="order-totals__section order-totals__section--inset discount-row"
+                data-next-show="cart.hasDiscounts">
                 <div class="order-totals__line">
                   <div class="order-totals__label-group">
                     <div class="order-totals__label ts-lg tw-600">
@@ -93,9 +89,7 @@
                     <div class="badge badge--small">
                       <div class="label__wrapper cc-sm">
                         <div class="badge__text">
-                          <span class="display-visible"
-                            >{totalDiscountPercentage}</span
-                          >OFF
+                          <span class="display-visible">{totalDiscountPercentage}</span> OFF
                         </div>
                       </div>
                     </div>
@@ -107,7 +101,26 @@
                     </div>
                   </div>
                 </div>
-                <div class="coupon-tags"></div>
+                <div class="coupon-tags">
+                  <div data-next-discounts>
+                    <template>
+                      <div class="coupon-tag__summary">
+                        <div class="coupon-tag__remove"><svg xmlns="http://www.w3.org/2000/svg" width="100%"
+                            height="100%" viewBox="0 0 14 14" focusable="false" aria-hidden="true"
+                            class="a8x1wu10 a8x1wuz _1fragem1y _1fragemof _1fragemkk _1fragemka _1fragemnm" fill="none"
+                            stroke="currentColor">
+                            <path stroke-linecap="round"
+                              d="M7.284 1.402h4.964a.35.35 0 0 1 .35.35v4.964a.7.7 0 0 1-.205.495L7.49 12.115a.7.7 0 0 1-.99 0L1.885 7.5a.7.7 0 0 1 0-.99L6.79 1.607a.7.7 0 0 1 .495-.205Z">
+                            </path>
+                            <circle cx="9.1" cy="4.9" r="0.7" fill="currentColor"></circle>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.102 4.897h-.005v.005h.005z">
+                            </path>
+                          </svg></div>
+                        <div>{discount.name}</div>
+                      </div>
+                    </template>
+                  </div>
+                </div>
               </div>
 
               <div class="order-totals__section">
@@ -116,16 +129,10 @@
                     <div class="order-totals__label">Shipping</div>
                   </div>
                   <div class="accordion__right">
-                    <div
-                      class="order-totals__value order-totals__value--free"
-                      data-next-show="cart.isFreeShipping"
-                    >
+                    <div class="order-totals__value order-totals__value--free" data-next-show="cart.isFreeShipping">
                       Free
                     </div>
-                    <div
-                      class="order-totals__value"
-                      data-next-hide="cart.isFreeShipping"
-                    >
+                    <div class="order-totals__value" data-next-hide="cart.isFreeShipping">
                       {shipping}
                     </div>
                   </div>

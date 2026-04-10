@@ -1,45 +1,55 @@
-<!-- Prepurchase upsell: checkbox bump (check01) — nested structure for limos/olympus layouts -->
-<div data-component="prepurchase-upsell" data-variant="check01" data-next-await="">
-  <div class="bump-card" data-next-package-sync="2,3,4" data-next-bump="" data-next-package-id="6">
-    <!-- Bump header (toggle) -->
-    <div data-next-toggle="toggle" class="bump__header-left next-active">
-      <div class="bump__header-content">
-        <div class="bump__checkbox">
-          <div os-component="check" class="checkbox__icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--fe" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m6 10l-2 2l6 6L20 8l-2-2l-8 8z"></path></svg></div>
-        </div>
-        <div class="bump__title">Get Extended Warranty</div>
+<!-- Prepurchase upsell: checkbox bump with image + feature list -->
+<div class="bump" data-next-await="">
+  <div
+    class="bump-card"
+    data-next-package-toggle
+    data-next-package-id="4"
+    data-next-is-upsell="true"
+  >
+    <div class="bump-header">
+      <div class="bump-checkbox">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+          width="100%"
+          height="100%"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="currentColor"
+            fill-rule="evenodd"
+            d="m6 10l-2 2l6 6L20 8l-2-2l-8 8z"
+          />
+        </svg>
       </div>
+      <span class="bump-title">Get Extended Warranty</span>
     </div>
-    <!-- Bump body: price, list, image -->
-    <div class="bump__body">
-      <div class="bump__content">
-        <div class="bump__content-wrap">
-          <div class="bump__price">
-            <div data-next-display="package.price_retail_total" class="bump__price-reg">$29.99</div>
-            <div data-next-display="package.price_total" class="bump__price-sale">$9.99</div>
+    <div class="bump-body">
+      <div class="bump-content">
+        <div class="bump-details">
+          <div class="bump-price">
+            <del
+              data-next-toggle-display="originalPrice"
+              class="bump-price-original"
+              >$29.99</del
+            >
+            <span data-next-toggle-display="price" class="bump-price-current"
+              >$9.99</span
+            >
           </div>
-          <div class="list-container cc-2xs">
-            <ul role="list" class="list w-list-unstyled">
-              <li class="list__item">
-                <div class="list_icon"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
-                <div>1 year with our replacement and protection</div>
-              </li>
-              <li class="list__item">
-                <div class="list_icon"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
-                <div>Accidental Damage Protection</div>
-              </li>
-              <li class="list__item">
-                <div class="list_icon"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
-                <div>Express Replacement Service</div>
-              </li>
-              <li class="list__item">
-                <div class="list_icon"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
-                <div>24/7 Priority Customer Support</div>
-              </li>
-            </ul>
-          </div>
+          <ul class="bump-features">
+            <li>1 year with our replacement and protection</li>
+            <li>Accidental Damage Protection</li>
+            <li>Express Replacement Service</li>
+            <li>24/7 Priority Customer Support</li>
+          </ul>
         </div>
-        <img data-next-display="package.6.image" loading="lazy" alt="" src="{{ 'images/1x1_1.svg' | campaign_asset }}" class="bump__image">
+        <img
+          loading="lazy"
+          alt=""
+          src="{{ 'images/1x1_1.svg' | campaign_asset }}"
+          class="bump-image"
+        />
       </div>
     </div>
   </div>

@@ -1,14 +1,9 @@
 <div class="checkout-selectors">
   <div class="form-section form-section--first">
     <h2 class="form-section__title">Choose your package</h2>
-    <div
-      class="os-cards__grid os--three"
-      data-next-selector-id="main"
-      data-next-bundle-selector
-      data-next-selection-mode="swap"
-      data-next-bundle-template-id="mv-bundle-template"
-      data-next-bundle-slot-template-id="mv-slot-template"
-      data-next-bundles='[
+    <div class="os-cards__grid os--three" data-next-selector-id="main" data-next-bundle-selector
+      data-next-selection-mode="swap" data-next-bundle-template-id="mv-bundle-template"
+      data-next-bundle-slot-template-id="mv-slot-template" data-next-bundles='[
         {
           "id": "basic-set",
           "shippingId": "2",
@@ -38,21 +33,18 @@
           "items": [{"packageId":1,"quantity":3,"configurable":true}],
           "vouchers": []
         }
-      ]'
-      class="os-option"
-    ></div>
+      ]' class="os-option"></div>
     <template id="mv-bundle-template">
-      <div
-        data-next-bundle-card
-        data-next-bundle-id="{bundle.id}"
-        role="button"
-        class="os-card"
-      >
+      <div data-next-bundle-card data-next-bundle-id="{bundle.id}" role="button" class="os-card">
         <div class="os-card__header-slot">
-          <div os-label-position="top-right" data-badge="{bundle.badge}" class="os-card__label-2 os-card__label--middle-center {bundle.badgeClass}">
-            <div class="card-icons"><svg width="100%" height="100%" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6.49512 0.5L8.40542 4.37069L12.677 4.99139L9.58605 8.00431L10.3157 12.2586L6.49512 10.25L2.67451 12.2586L3.40418 8.00431L0.31325 4.99139L4.58482 4.37069L6.49512 0.5Z" fill="#FF9425"></path>
-            </svg></div>
+          <div os-label-position="top-right" data-badge="{bundle.badge}"
+            class="os-card__label-2 os-card__label--middle-center {bundle.badgeClass}">
+            <div class="card-icons"><svg width="100%" height="100%" viewBox="0 0 13 13" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M6.49512 0.5L8.40542 4.37069L12.677 4.99139L9.58605 8.00431L10.3157 12.2586L6.49512 10.25L2.67451 12.2586L3.40418 8.00431L0.31325 4.99139L4.58482 4.37069L6.49512 0.5Z"
+                  fill="#FF9425"></path>
+              </svg></div>
             <div class="os-card__label-text-2">{bundle.badge}</div>
           </div>
         </div>
@@ -66,10 +58,7 @@
             <div class="os-card__main-slot">
               <div class="os-card__title-section">
                 <div class="os-card__title-wrapper">
-                  <div
-                    data-next-display="package.name"
-                    class="os-card__title-2 os-bold"
-                  >
+                  <div data-next-display="package.name" class="os-card__title-2 os-bold">
                     {bundle.title}
                   </div>
                 </div>
@@ -78,9 +67,12 @@
           </div>
           <div os-slot="bottom" class="os-card__bottom-slot cc-gap">
             <div class="card-sup">{bundle.subtitle}</div>
-            <div class="os-card__subtitle-text-2">
-              Save
-              <span data-next-bundle-price="savingsPercentage">XX%</span> OFF
+            <!-- Separate lists for offers and vouchers -->
+            <div data-next-discounts="offer">
+              <template><span>{discount.name}: -{discount.amount}</span></template>
+            </div>
+            <div data-next-discounts="voucher">
+              <template><span>Coupon: {discount.name}</span></template>
             </div>
           </div>
         </div>
@@ -111,6 +103,14 @@
                 <div class="os-card__subtitle-text-2 {item.hasDiscount}">
                   Save <span>{item.discountPercentage}</span> OFF
                 </div>
+
+                <!-- Separate lists for offers and vouchers -->
+                <div data-next-discounts="offer">
+                  <template><span>{discount.name}: -{discount.amount}</span></template>
+                </div>
+                <div data-next-discounts="voucher">
+                  <template><span>Coupon: {discount.name}</span></template>
+                </div>
               </div>
             </div>
           </div>
@@ -127,103 +127,33 @@
   </div>
   <div class="form-section form-section--first">
     <h2 class="form-section__title">Select your color and size</h2>
-    <div
-      id="bundle-slots-stage"
-      class="os-slots"
-      data-next-bundle-slots-for="main"
-    ></div>
+    <div id="bundle-slots-stage" class="os-slots" data-next-bundle-slots-for="main"></div>
   </div>
   <div class="form-section form-section--first">
     <div class="_2step__size-guide">
       <div class="size_chart-wrapper">
         <div>Not sure on size? Check the chart &gt;</div>
-        <div
-          class="size_chart-right next-modal__trigger"
-          role="button"
-          tabindex="0"
-          data-modal-target="#next-size-modal"
-        >
+        <div class="size_chart-right next-modal__trigger" role="button" tabindex="0"
+          data-modal-target="#next-size-modal">
           <div class="size_chart-icon">
-            <svg
-              width="39"
-              height="14"
-              viewBox="0 0 39 14"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+            <svg width="39" height="14" viewBox="0 0 39 14" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clip-path="url(#clip0_205_1498)">
-                <mask
-                  id="mask0_205_1498"
-                  style="mask-type: luminance"
-                  maskUnits="userSpaceOnUse"
-                  x="0"
-                  y="0"
-                  width="39"
-                  height="14"
-                >
+                <mask id="mask0_205_1498" style="mask-type: luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="39"
+                  height="14">
                   <path d="M39 0H0V14H39V0Z" fill="white"></path>
                 </mask>
                 <g mask="url(#mask0_205_1498)">
-                  <path
-                    d="M38.3409 13.3377H0.659302V0.662231H5.15525H38.3409V13.3377Z"
-                    stroke="#00237E"
-                    stroke-width="2"
-                    stroke-miterlimit="10"
-                  ></path>
-                  <path
-                    d="M4.99707 8.3576V0.662231"
-                    stroke="#00237E"
-                    stroke-width="2"
-                    stroke-miterlimit="10"
-                  ></path>
-                  <path
-                    d="M19.5 8.3576V0.662231"
-                    stroke="#00237E"
-                    stroke-width="2"
-                    stroke-miterlimit="10"
-                  ></path>
-                  <path
-                    d="M34.0031 8.3576V0.662231"
-                    stroke="#00237E"
-                    stroke-width="2"
-                    stroke-miterlimit="10"
-                  ></path>
-                  <path
-                    d="M8.6228 5.74832V0.662231"
-                    stroke="#00237E"
-                    stroke-width="2"
-                    stroke-miterlimit="10"
-                  ></path>
-                  <path
-                    d="M15.8743 5.74832V0.662231"
-                    stroke="#00237E"
-                    stroke-width="2"
-                    stroke-miterlimit="10"
-                  ></path>
-                  <path
-                    d="M23.1259 5.74832V0.662231"
-                    stroke="#00237E"
-                    stroke-width="2"
-                    stroke-miterlimit="10"
-                  ></path>
-                  <path
-                    d="M30.3773 5.74832V0.662231"
-                    stroke="#00237E"
-                    stroke-width="2"
-                    stroke-miterlimit="10"
-                  ></path>
-                  <path
-                    d="M12.2485 5.74832V0.662231"
-                    stroke="#00237E"
-                    stroke-width="2"
-                    stroke-miterlimit="10"
-                  ></path>
-                  <path
-                    d="M26.7516 5.74832V0.662231"
-                    stroke="#00237E"
-                    stroke-width="2"
-                    stroke-miterlimit="10"
-                  ></path>
+                  <path d="M38.3409 13.3377H0.659302V0.662231H5.15525H38.3409V13.3377Z" stroke="#00237E"
+                    stroke-width="2" stroke-miterlimit="10"></path>
+                  <path d="M4.99707 8.3576V0.662231" stroke="#00237E" stroke-width="2" stroke-miterlimit="10"></path>
+                  <path d="M19.5 8.3576V0.662231" stroke="#00237E" stroke-width="2" stroke-miterlimit="10"></path>
+                  <path d="M34.0031 8.3576V0.662231" stroke="#00237E" stroke-width="2" stroke-miterlimit="10"></path>
+                  <path d="M8.6228 5.74832V0.662231" stroke="#00237E" stroke-width="2" stroke-miterlimit="10"></path>
+                  <path d="M15.8743 5.74832V0.662231" stroke="#00237E" stroke-width="2" stroke-miterlimit="10"></path>
+                  <path d="M23.1259 5.74832V0.662231" stroke="#00237E" stroke-width="2" stroke-miterlimit="10"></path>
+                  <path d="M30.3773 5.74832V0.662231" stroke="#00237E" stroke-width="2" stroke-miterlimit="10"></path>
+                  <path d="M12.2485 5.74832V0.662231" stroke="#00237E" stroke-width="2" stroke-miterlimit="10"></path>
+                  <path d="M26.7516 5.74832V0.662231" stroke="#00237E" stroke-width="2" stroke-miterlimit="10"></path>
                 </g>
               </g>
               <defs>
