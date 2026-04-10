@@ -374,7 +374,7 @@ swiper_thumbs:
                           <div class="_2step__size-guide">
                             <div class="size_chart-wrapper">
                               <div>Not sure on size? Check the chart &gt;</div>
-                              <div class="size_chart-right next-modal__trigger" role="button" tabindex="0" data-modal-target="#next-size-modal">
+                              <div class="size_chart-right next-page-modal__trigger" role="button" tabindex="0" data-modal-target="#next-size-modal">
                                 <div class="size_chart-icon"><svg width="39" height="14" viewBox="0 0 39 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <g clip-path="url(#clip0_205_1498)">
                                       <mask id="mask0_205_1498" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="39" height="14">
@@ -711,20 +711,20 @@ swiper_thumbs:
         </div>
         {% campaign_include 'footer.html' %}
         <!-- Next size chart modal (standalone component) -->
-        <div id="next-size-modal" class="next-modal" aria-hidden="true">
-          <div class="next-modal__overlay" data-next-modal-close=""></div>
-          <div class="next-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="next-size-modal-title">
-            <div class="next-modal__header">
-              <h2 id="next-size-modal-title" class="next-modal__title">Size chart</h2>
-              <button type="button" class="next-modal__close" aria-label="Close" data-next-modal-close="">
+        <div id="next-size-modal" class="next-page-modal" aria-hidden="true">
+          <div class="next-page-modal__overlay" data-next-modal-close=""></div>
+          <div class="next-page-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="next-size-modal-title">
+            <div class="next-page-modal__header">
+              <h2 id="next-size-modal-title" class="next-page-modal__title">Size chart</h2>
+              <button type="button" class="next-page-modal__close" aria-label="Close" data-next-modal-close="">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M0.317912 13.9531C-0.10513 14.3763 -0.105064 15.0622 0.318042 15.4852C0.741149 15.9082 1.42707 15.9082 1.8501 15.4851L7.90078 9.43337L13.952 15.4845C14.375 15.9076 15.061 15.9076 15.484 15.4845C15.907 15.0615 15.907 14.3755 15.484 13.9525L9.43272 7.90121L15.4836 1.8493C15.9065 1.42619 15.9065 0.740272 15.4834 0.317241C15.0603 -0.105801 14.3743 -0.105736 13.9513 0.31737L7.90056 6.36916L1.84937 0.317891C1.4263 -0.105173 0.740369 -0.105173 0.317306 0.317891C-0.105769 0.740965 -0.105769 1.42689 0.317306 1.84996L6.36873 7.90132L0.317912 13.9531Z" fill="currentColor"></path>
                 </svg>
               </button>
             </div>
-            <div class="next-modal__content">
-              <h3 class="next-modal__subtitle">SIZE CHART</h3>
-              <table class="next-modal__table">
+            <div class="next-page-modal__content">
+              <h3 class="next-page-modal__subtitle">SIZE CHART</h3>
+              <table class="next-page-modal__table">
                 <thead>
                   <tr>
                     <th>SIZE</th>
@@ -778,7 +778,7 @@ swiper_thumbs:
                   </tr>
                 </tbody>
               </table>
-              <div class="next-modal__visual" aria-label="Sizing guidance image">
+              <div class="next-page-modal__visual" aria-label="Sizing guidance image">
                 <img src="{{ 'images/4x3.svg' | campaign_asset }}" alt="Visual sizing guidance" loading="lazy">
               </div>
             </div>

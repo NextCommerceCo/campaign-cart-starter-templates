@@ -120,7 +120,7 @@ function initExitIntentTemplate(templateName, action) {
 }
 
 // ─── Next modal (generic component) ────────────────────────────────────────
-// Auto-initialises on .next-modal__trigger / [data-next-modal-close] elements
+// Auto-initialises on .next-page-modal__trigger / [data-next-modal-close] elements
 (function () {
   function onReady(fn) {
     if (document.readyState === 'loading') {
@@ -150,13 +150,13 @@ function initExitIntentTemplate(templateName, action) {
 
     function openModal(modal) {
       if (!modal) return;
-      modal.classList.add('next-modal--open');
+      modal.classList.add('next-page-modal--open');
       modal.setAttribute('aria-hidden', 'false');
-      body.classList.add('next-modal-open');
+      body.classList.add('next-page-modal-open');
 
       const focusables = getFocusable(modal);
       const focusTarget =
-        modal.querySelector('.next-modal__close') || focusables[0];
+        modal.querySelector('.next-page-modal__close') || focusables[0];
       if (focusTarget) focusTarget.focus();
 
       function onKey(e) {
@@ -183,9 +183,9 @@ function initExitIntentTemplate(templateName, action) {
 
     function closeModal(modal) {
       if (!modal) return;
-      modal.classList.remove('next-modal--open');
+      modal.classList.remove('next-page-modal--open');
       modal.setAttribute('aria-hidden', 'true');
-      body.classList.remove('next-modal-open');
+      body.classList.remove('next-page-modal-open');
       if (modal._nextModalKeyHandler) {
         document.removeEventListener('keydown', modal._nextModalKeyHandler);
         delete modal._nextModalKeyHandler;
@@ -193,7 +193,7 @@ function initExitIntentTemplate(templateName, action) {
     }
 
     // Trigger buttons
-    document.querySelectorAll('.next-modal__trigger').forEach((btn) => {
+    document.querySelectorAll('.next-page-modal__trigger').forEach((btn) => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         const targetSel = getTargetFromTrigger(btn);
@@ -213,12 +213,12 @@ function initExitIntentTemplate(templateName, action) {
     // Overlay and close buttons
     document.addEventListener('click', (e) => {
       const overlayClicked = e.target.matches(
-        '.next-modal__overlay[data-next-modal-close]'
+        '.next-page-modal__overlay[data-next-modal-close]'
       );
       const closeBtn = e.target.closest('[data-next-modal-close]');
       if (!overlayClicked && !closeBtn) return;
       const modal =
-        e.target.closest('.next-modal') ||
+        e.target.closest('.next-page-modal') ||
         document.querySelector(defaultTarget);
       closeModal(modal);
     });
