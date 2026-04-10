@@ -131,7 +131,7 @@ Docs: [Bundle Set Sale guide](https://developers.nextcommerce.com/docs/campaigns
 | `data-next-bundle-price="savingsPercentage"` | Display | Savings % |
 | `data-next-bundle-slots` | Display | Renders slot rows from template |
 
-**`data-next-shipping-id` on bundle cards:** Not part of this table and **not** documented for **`data-next-bundle-card`**. Do not rely on copying the package-selector pattern (`data-next-shipping-id` on each card) to pick a `shipping_methods[].ref_id` per quantity tier — template QA shows **no effect**. Use **`next.setShippingMethod(refId)`** when the selected bundle changes if you need imperative control, and re-check summary totals (**Known issue #3** can still affect displayed shipping/total on selector flows).
+**`data-next-shipping-id` on bundle cards:** **Fixed in SDK 0.4.12** — `data-next-shipping-id` on `data-next-bundle-card` now works; `calculateTotals` no longer hardcodes method 1. Add `data-next-shipping-id="{ref_id}"` to each tier card to pick a shipping method per tier. Reference templates (`olympus`, `olympus-mv-single-step`) have this wired on all bundle cards. Bug log **BS-011**. **Note:** package swap selector path (`data-next-selector-card` + swap mode) still unreliable declaratively — use **`next.setShippingMethod(refId)`** for that path.
 
 **`data-next-selection-mode="swap"`** on the bundle container appears in examples here and in some templates; the public [Bundle Set Sale](https://developers.nextcommerce.com/docs/campaigns/guides/bundle-set-sale) guide describes atomic swap without documenting this attribute on the bundle root. **Known #8** was a period where tier changes **stacked** lines instead of swapping — **fixed** on reference `olympus` (bug log **BS-013**); re-verify after SDK bumps if behavior regresses.
 
@@ -359,7 +359,7 @@ Full example (distinct package IDs per card):
 
 | Template | Selector fix | Token renames | Bug fixes | Notes |
 |----------|-------------|---------------|-----------|-------|
-| `olympus` | ✅ bundle selector | ✅ **0.4.10** | 🔄 QA | Reference **bundle** checkout (`data-next-bundle-selector` + Summary v2). **#8** swap/add lines: **fixed** on reference (re-test on SDK bump). Open: **#9** (summary tokens), **#10** (`cart.discountCode` / coupon display), **#3** shipping vs totals, bump **#7** — [template bug log](template-bug-log.md) |
+| `olympus` | ✅ bundle selector | ✅ **0.4.10** | ✅ QA | Reference **bundle** checkout (`data-next-bundle-selector` + Summary v2). **#8** swap: **fixed**. **#3** bundle shipping: **fixed 0.4.12**. **#7** bumps: **fixed 0.4.14**. **#9** summary tokens: **fixed 0.4.11**. **#10** coupon display: **fixed via workaround 0.4.13**. Open: **#4** multi-package price slots (affects non-bundle selector path only). — [template bug log](template-bug-log.md) |
 | `olympus-mv-single-step` | ✅ native external slots | ✅ **0.4.10** | 🔄 QA | Native `data-next-bundle-slots-for` + `data-next-variant-selector-template-id`. Replaces bridge JS. **`upsell-mv.html`** is Approach B (bundle upsell + vouchers). **Variant UI:** SDK **native `<select>`** in staged slots works without JS; **`setupBundleSlotVariantDropdowns()`** is **opt-in** for the custom **`os-dropdown`** UI — see file-header comments in [`checkout-olympus-mv-full.js`](../campaign-kit-templates/src/olympus-mv-single-step/assets/js/checkout-olympus-mv-full.js) and [`upsells-up01-mv.js`](../campaign-kit-templates/src/olympus-mv-single-step/assets/js/upsells-up01-mv.js). |
 
 ### Pending migration — `campaign-kit-templates-v3/` (SDK 0.3.x)
@@ -397,17 +397,14 @@ Full example (distinct package IDs per card):
 
 **Expected:** `package.*` display attributes should reflect active campaign offer/coupon pricing, or equivalent offer-aware fields should exist for full parity.
 
-### 2. Coupon not persisted across page refresh
-After applying a coupon, refreshing the page clears it. Previously coupons were session-persistent once applied. Unclear if intentional in v0.4.x or a regression — flagged to engineering.
+### 2. Coupon not persisted across page refresh *(fixed — current SDK)*
+**Fixed.** Coupons now survive a full page refresh — session/hydration aligned with persisted cart state. Re-verify after major cart/checkout changes.
 
 ### 3. `data-next-shipping-id` selection not reflected in summary totals
-When using **`data-next-shipping-id`** per **`data-next-selector-card`** in **swap** mode (with valid `shipping_methods[].ref_id` values), **cart state** updates correctly on card select — `window.nextDebug?.stores?.cart?.getState()?.shippingMethod` shows the **expected** ref id — but the **summary** shipping line and **grand total** do not consistently reflect that method. Totals often look as if a default/fixed shipping method is still used downstream.
 
-**Bundle selector — fixed in SDK 0.4.12:** Declarative **`data-next-shipping-id`** on **`data-next-bundle-card`** now works. `calculateTotals` was previously hardcoded to shipping method 1; it now uses the selected method. Reference templates `olympus` and `olympus-mv-single-step` both have `data-next-shipping-id` wired on all tier cards. Bug log **BS-011**.
+**Bundle selector — fixed in SDK 0.4.12:** Declarative **`data-next-shipping-id`** on **`data-next-bundle-card`** now works. `calculateTotals` was previously hardcoded to shipping method 1; it now uses the selected method. Reference templates `olympus` and `olympus-mv-single-step` both have `data-next-shipping-id` wired on all tier cards. Bug log **BS-011 (`fixed`)**.
 
-**Package swap selector:** Still unreliable declaratively — cart state updates but summary totals may lag. JS mitigation remains the workaround for that path.
-
-**Workaround for package swap (not a release blocker):** Call **`next.setShippingMethod(refId)`** from JS when the shopper selects a card, then confirm summary/totals.
+**Package swap selector — still open:** When using **`data-next-shipping-id`** per **`data-next-selector-card`** in swap mode, cart state updates correctly but summary shipping line and grand total may not consistently reflect the selected method. **Workaround:** Call **`next.setShippingMethod(refId)`** from JS when the shopper selects a card.
 
 ### 4. `data-next-package-price="compare/savings/savingsPercentage"` wrong for multi-unit package SKUs
 In PackageSelector swap mode, `compare`, `savings`, and `savingsPercentage` slots can display incorrect values for multi-unit packages. The API calculates `compareTotal = price_retail × quantity(1)` — returning per-unit retail instead of the package total retail.
@@ -416,26 +413,19 @@ In PackageSelector swap mode, `compare`, `savings`, and `savingsPercentage` slot
 
 **Expected:** `compare` slot should calculate using the package quantity, not always quantity 1.
 
-### 5. Bundle selector slot values are unformatted (raw numbers)
-`{item.originalPrice}` and `{item.price}` in bundle slot templates (**0.4.9+** canonical; replaces `originalUnitPrice` / `unitPrice`) output raw numeric values — not currency-formatted. **`data-next-format="currency"`** on wrappers around those tokens **does not** reliably format them today (cloned slot pipeline) — same class of gap as **`data-summary-lines`**; see bug log **BS-015**. Use **JS** or wait for SDK.
+### 5. Bundle selector slot values are unformatted (raw numbers) *(fixed — SDK 0.4.11)*
+**Fixed (SDK 0.4.11):** `{item.*}` tokens in `data-summary-lines` and `data-next-bundle-slots` `<template>` output now produce currency-aware formatting automatically — **`data-next-format="currency"`** is not needed and still does not work on these template outputs (BS-015). Use `{item.unitPrice}` / `{item.originalUnitPrice}` for per-unit slot display (these are the per-unit fields post-0.4.11; `{item.price}` / `{item.originalPrice}` are line totals).
 
-**Separate issue (remote `bundle.*` display):** **`data-next-display="bundle.{selectorId}.*"`** on nodes **outside** **`[data-next-bundle-card]`** (typical on **bundle upsells** — offer copy next to qty toggles) goes through **`BundleDisplayEnhancer`**, not the slot template pipeline. **`price`** / **`originalPrice`** there can render **unformatted** until you set **`data-next-format="currency"`** — see [safe-display-paths §6](safe-display-paths.md#6-bundleselectorid--bundledisplayenhancer-remote) and [`olympus/upsell-quantity.html`](../campaign-kit-templates/src/olympus/upsell-quantity.html) (`prices-text-wrapper`).
+**Still applies — remote `bundle.*` display:** **`data-next-display="bundle.{selectorId}.*"`** on nodes **outside** **`[data-next-bundle-card]`** (e.g. bundle upsell offer columns) goes through **`BundleDisplayEnhancer`**, not the slot template pipeline. **`price`** / **`originalPrice`** there can still render unformatted — add **`data-next-format="currency"`** on those elements. See [safe-display-paths §6](safe-display-paths.md#6-bundleselectorid--bundledisplayenhancer-remote) and [`olympus/upsell-quantity.html`](../campaign-kit-templates/src/olympus/upsell-quantity.html).
 
 ### 6. Bundle selector pricing workflow trade-off
 The bundle selector approach (same `packageId`, different quantities per card) works structurally, but changes the merchandising workflow in the Campaigns UI: classic package selectors allow direct tier price control per package, whereas the bundle/offer flow is driven by percent discount + rounding behavior. May still be the better long-term direction, but operators would need to adjust how they configure pricing.
 
-### 7. Prepurchase bump pricing regression (`data-next-toggle-price` vs `data-next-display`)
-**Confirmed regression from 0.3.x behavior.**
+### 7. Prepurchase bump pricing regression (`data-next-toggle-price` vs `data-next-display`) *(fixed — SDK 0.4.14)*
 
-In 0.3.x, bumps used `data-next-bump=""` + `data-next-toggle="toggle"` and rendered prices with `data-next-display="package.price_total"` / `package.price_retail_total` — stable, package-level totals that worked correctly.
+**Fixed (SDK 0.4.14):** Use **`data-next-toggle-display="unitPrice"`** and **`data-next-toggle-display="originalUnitPrice"`** for stable per-unit prices that do not multiply with synced qty — pair with `/ea` copy. These values are always correct regardless of which bundle tier is selected. Show the synced line total via **`data-next-toggle-display="price"`** / **`data-next-toggle-display="originalPrice"`** if needed. See `bump-check01.html` in reference templates for Option A (per-unit stable) and Option B (line total, scales) side by side. Bug log **BS-008 (`fixed`)**.
 
-In the new 0.4.x pattern (`data-next-package-toggle` + `data-next-toggle-card` + `data-next-toggle-price`), pricing is computed through toggle preview logic with manual scaling, and produces inconsistent compare/sale/savings values — especially when the bump is synced to main bundle quantity via `data-next-package-sync` (e.g. `"1"` or `"2,3,4"`).
-
-**Observed with sync:** First check updates bump card prices to the current bundle tier; **changing bundle tier** updates **cart/summary totals** but often **not** the bump’s **on-card** toggle prices until **uncheck + recheck**. See bug log **BS-008**.
-
-**Current workaround (SDK 0.4.14+):** Use **`data-next-toggle-display="unitPrice"`** for a stable per-unit price that does not multiply up when synced qty changes — pair with `/ea` copy. Show the synced line total separately via **`data-next-toggle-display="price"`** if needed. See `bump-check01.html` in reference templates. **Hybrid (pre-0.4.14):** keep toggle + sync for add/remove, but show stable unit list/sale with `data-next-display="package.price_retail"` / `package.price` on the bump package instead of `data-next-toggle-price` (tradeoff vs offer-aware toggle math — **BS-008**).
-
-**Expected fix:** Align `data-next-toggle-price` outputs to the same package-total basis as `price_total` / `price_retail_total`, or provide a compatibility mode for the old bump behavior. **Also:** refresh toggle preview when **main bundle tier** or **synced line qty** changes (not only on bump check/uncheck).
+**Eng ask (still open):** Refresh toggle preview when main bundle tier or synced line qty changes — not only on bump check/uncheck. The `unitPrice`/`originalUnitPrice` approach is the template-side fix; the underlying SDK refresh gap remains.
 
 ### 8. Bundle selector: tier changes add lines instead of atomic swap *(historical — fixed on reference template)*
 **Previously observed (bug log BS-013):** Clicking 1× → 2× → 3× could **append** separate cart lines for the same `packageId` instead of **replacing** quantity; after a full reload, cart/summary could show **default 1× plus** the persisted tier.
@@ -454,18 +444,9 @@ In the new 0.4.x pattern (`data-next-package-toggle` + `data-next-toggle-card` +
 
 **Tracking:** Bug log **BS-012** (`fixed`).
 
-### 10. Cart display: `cart.discountCode`, `cart.hasCoupon`, etc. not resolved (summary enhancer)
-**Priority: low** — use **`data-next-discounts="voucher"`** / **`{discount.description}`** (code string) or **JS** for coupon UI; see **BS-014**.
+### 10. Cart display: `cart.discountCode` not resolved in summary *(fixed via workaround — SDK 0.4.13)*
 
-**Regression from cart display moving under cart summary** (`CartSummaryEnhancer.display.ts` → `resolveValue`). Only a fixed set of cart UI properties is implemented (subtotal, total, totalDiscount, shipping fields, itemCount, …). **`discountCode`**, **`hasCoupon`**, **`hasCoupons`**, **`discountCodes`**, **`coupons[0].code`**, and similar are **omitted** → default branch logs **“Unknown cart display property”** and returns **`undefined`**, so **`data-next-display` / `data-next-show`** nodes stay empty. Example that **used to work:** `<span data-next-display="cart.discountCode" …>—</span>` no longer binds.
-
-**Docs drift:** `DisplayEnhancerTypes.ts` may still list **`cart.discountCode` → vouchers**, but that path is **not** connected to the new resolver.
-
-**Data still exists:** Vouchers can be on cart state after totals; **checkout** store holds codes — the **display** layer does not bind them for these keys until engineering extends `resolveValue` / subscriptions.
-
-**Workaround:** Use **`data-next-discounts="voucher"`** (SDK 0.4.13+) with `{discount.description}` for the code string and `{discount.name}` for the label, or custom JS. See bug log **BS-014**.
-
-**Eng one-liner:** *Cart display refactor dropped `discountCode` / coupon fields from `resolveValue`; `PROPERTY_MAPPINGS` still lists them but they’re unreachable.*
+**`data-next-display=”cart.discountCode”`** inside `[data-next-cart-summary]` still stays empty — `resolveValue` does not implement that key. **Fixed via workaround (SDK 0.4.13+):** use **`data-next-discounts=”voucher”`** with a `<template>` child; `{discount.description}` gives the code string (e.g. “EXIT10YO”), `{discount.name}` gives the display label, `{discount.amount}` the formatted savings. **`data-next-show=”cart.hasCoupon”`** / **`cart.hasCoupons`** work for conditional visibility. See bug log **BS-014** and reference `olympus/checkout.html` + `olympus-mv-single-step/checkout.html`.
 
 ---
 
@@ -497,7 +478,7 @@ When using the Summary v2 enhancer:
 - **`{item.price}` / `{item.originalPrice}` are line totals (0.4.11+):** Use `{item.unitPrice}` / `{item.originalUnitPrice}` for per-unit display.
 - **`data-next-format` on line rows:** **`data-next-format=”currency”`** on elements inside the **`data-summary-lines`** `<template>` **does not** fix raw `{item.*}` output — **BS-015** (`medium`). Use **JS** or an SDK fix; do not assume the attribute works there.
 - **Copy-only quirks:** Per-row **currency symbol** repetition — [template bug log](template-bug-log.md) **BS-009**. **“Today you saved” vs line savings** — **BS-010** **`verified`** for **bundle-tier** funnels with aligned Campaigns structure (`olympus` reference); legacy layouts may still need QA.
-- **Coupon code badge:** Do not rely on **`data-next-display="cart.discountCode"`** inside the summary template until **Known #10** / **BS-014** is fixed — use **`data-next-discounts="voucher"`** (SDK 0.4.13+) with **`{discount.description}`** for the code string and **`{discount.name}`** for the display label (see [Cart Summary — Step 5](https://developers.nextcommerce.com/docs/campaigns/guides/cart-summary#step-5-discount-breakdowns)) or custom JS. **`data-next-show="cart.hasCoupon"`** is safe for conditional visibility.
+- **Coupon code badge:** Do not use **`data-next-display="cart.discountCode"`** — it stays empty (see **Known #10** / **BS-014**). Use **`data-next-discounts="voucher"`** (SDK 0.4.13+) with a `<template>` child: **`{discount.description}`** for the code string, **`{discount.name}`** for the display label (see [Cart Summary — Step 5](https://developers.nextcommerce.com/docs/campaigns/guides/cart-summary#step-5-discount-breakdowns)). **`data-next-show="cart.hasCoupon"`** is safe for conditional visibility.
 
 ---
 
@@ -547,8 +528,5 @@ Public [Campaign Cart](https://developers.nextcommerce.com/docs/campaigns/campai
 
 ## Open Issues (templates)
 
-- **`olympus/checkout.html`** — primary **bundle selector** reference; **BS-xxx** template bug log (applies across templates) in [`docs/template-bug-log.md`](template-bug-log.md). **Known #8** tier swap: **fixed** on reference (regression-watch on SDK bump). Watch **#9** (summary `{line.priceRetailTotal}`), **#10** (`cart.discountCode` / coupon display resolver), **#3** (shipping vs summary), **#7** (bumps on old pattern).
-- **`olympus-mv-single-step/upsell-mv.html`** — **Approach B** MV upsell (tiers + vouchers); QA per-tier codes in Campaigns match `data-next-bundle-vouchers` on each card. Variant dropdown glue and qty toggle: **`assets/js/upsells-up01-mv.js`**.
-- `olympus/checkout.html` — legacy **multi-package** selector; QA ongoing; bumps holding on old 0.3.x pattern (SDK issue #7).
-- Multi-package limitation: `savingsAmount`/`savingsPercentage` are static (retail-vs-base only); coupons reflect only in `finalPriceTotal`. `data-next-package-price="compare"/"savings"` slots return per-unit retail (not package total) for multi-package setups — **Known #4**.
-- **Bundle selector** (`olympus`) is the supported direction for coupon+offer-aware tier cards (`data-next-bundle-price` / `data-next-bundle-vouchers`). Remaining SDK blockers include **#5** (raw slot template numbers; **`data-next-format` ineffective** — **BS-015**), **#7** (bump regression), **#9** (summary line tokens), **#10** (cart coupon display keys). **#8** (swap semantics) is **fixed** on the reference template — re-test on upgrade.
+- **`olympus/checkout.html`** — primary **bundle selector** reference; full BS-xxx log in [`docs/template-bug-log.md`](template-bug-log.md). Previously-open items now resolved: **#8** swap/add lines (`fixed`), **#9** summary tokens (`fixed 0.4.11`), **#10** coupon display (`fixed via workaround 0.4.13`), **#3** bundle card shipping (`fixed 0.4.12`), **#7** bump regression (`fixed 0.4.14`), **#5** slot formatting (`fixed 0.4.11`). **Still open: #4** — `data-next-package-price="compare/savings"` slots return per-unit retail (not package total) for multi-package setups; `savingsAmount`/`savingsPercentage` are static (retail-vs-base only). Affects multi-package selector path only; bundle selector is the recommended direction.
+- **`olympus-mv-single-step/upsell-mv.html`** — **Approach B** MV upsell (tiers + vouchers); QA per-tier codes in Campaigns match `data-next-bundle-vouchers` on each card. Variant dropdown glue and qty toggle: **`assets/js/upsells-up01-mv.js`**. **Still open:** BS-018 (exit coupon bleed into upsell `calculateBundlePrice`) and issue #8 (variant resolver can jump to checkout package family on variant change) — see [`docs/campaign-issues-overview.md`](campaign-issues-overview.md).
