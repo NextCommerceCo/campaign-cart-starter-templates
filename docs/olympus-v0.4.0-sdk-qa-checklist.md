@@ -30,13 +30,13 @@ Use a real campaign (offers, shipping methods, coupons as in production). Update
 
 ---
 
-## 3. Bumps (warranty v2 + switch v2)
+## 3. Bumps (check01 + switch01)
 
 | Check | What to verify | Bug log |
 |--------|----------------|---------|
-| **Warranty + bundle** | Warranty checked: changing bundle tier updates synced warranty qty (`data-next-package-sync="1"`). | BS-008 |
-| **Toggle prices** | Compare vs sale look sane; `unitPrice` + `/ea` stays stable when synced qty changes; `price` (line total) updates with qty as expected. | BS-008 |
-| **unitPrice stable** | Select 1× → 2× → 3× with bump checked — `unitPrice /ea` must not change; only `price` (synced total) should scale. | BS-008 |
+| **Warranty + bundle** | Warranty checked: changing bundle tier updates synced warranty qty (`data-next-package-sync="1"`). | BS-008 (`fixed` — 0.4.14) |
+| **Toggle prices** | Compare vs sale look sane; `unitPrice` + `/ea` stays stable when synced qty changes; `price` (line total) updates with qty as expected. | BS-008 (`fixed` — 0.4.14) |
+| **Per-unit stable** | Select 1× → 2× → 3× with bump checked — `unitPrice` and `originalUnitPrice` (`/ea`) must not change; only `price` / `originalPrice` (synced line totals) should scale. | BS-008 (`fixed` — 0.4.14) |
 
 ---
 
@@ -47,7 +47,7 @@ Use a real campaign (offers, shipping methods, coupons as in production). Update
 | **Lines** | `{item.quantity}`, name, `{item.unitPrice}/ea`, `{item.originalUnitPrice}/ea` strike, Amount column `{item.price}` + `{item.originalPrice}` strike — verify all populate and update on tier/coupon changes. **Use `{item.*}` — `{line.*}` renders silently blank.** | BS-012 (fixed) |
 | **Offer / voucher lists** | `data-next-discounts="offer"` / `data-next-discounts="voucher"` populate when the campaign has those discounts (SDK 0.4.13+). | — |
 | **Rollup** | “Today you saved” + `{discounts}` vs line-level savings — should **match** on bundle-structured campaigns (**BS-010** `verified`). Watch **`next-calculating`** flicker (SDK 0.4.5+). | BS-010 |
-| **Coupon badge** | Applied code visible via **`data-next-discounts="voucher"`** → `{discount.description}` (code string) / `{discount.name}` (label) / `{discount.amount}`. **`cart.discountCode`** display still unwired — see **BS-014**. | **BS-014** |
+| **Coupon badge** | Applied code visible via **`data-next-discounts="voucher"`** → `{discount.description}` (code string) / `{discount.name}` (label) / `{discount.amount}`. | BS-014 (`fixed` — 0.4.13) |
 | **Symbols** | Accept or log: `{item.*}` money fields may repeat the currency symbol (design / BS-009). | BS-009 |
 
 ---

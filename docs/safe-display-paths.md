@@ -24,7 +24,7 @@ Safe when a cart session exists (checkout / cart drawer).
 | `cart.totalDiscount`, `cart.discounts`, `cart.totalDiscountPercentage` | Discounts |
 | `cart.hasCoupon`, `cart.hasCoupons` | ✅ Works for **`data-next-show`** / **`data-next-hide`** visibility (verified 2026-04-07) |
 | `cart.couponCount` | Untested — verify against your SDK build |
-| `cart.discountCode`, `cart.discountCodes`, `cart.coupons[0].code`, `cart.coupons[1].code` | ⚠️ Still broken for **`data-next-display`** — node stays empty despite voucher in cart state; use `data-summary-voucher-discounts` or custom JS (see [BS-014](template-bug-log.md#bs-014)) |
+| `cart.discountCode`, `cart.discountCodes`, `cart.coupons[0].code`, `cart.coupons[1].code` | ⚠️ Still broken for **`data-next-display`** — node stays empty despite voucher in cart state; use **`data-next-discounts="voucher"`** + `{discount.description}` in a `<template>` instead (see [BS-014](template-bug-log.md)) |
 
 Use **`cart-summary`** the same way where your theme expects that alias (scanner treats it like cart).
 
@@ -124,6 +124,17 @@ Events to rely on: **`bundle:selection-changed`**, **`bundle:price-updated`** (`
 ## 7. `selector.*` / `toggle.*` — selector card displays
 
 Used for **`PackageSelectorDisplayEnhancer`** / **`PackageToggleDisplayEnhancer`** (card-level mirrors of calculated state). Follow the Package Selector / Package Toggle guides in `src/enhancers/cart/*/guide/` for token names.
+
+**`data-next-toggle-display`** — bump / toggle card price slots (SDK 0.4.14+). Used on elements **inside** `[data-next-toggle-card]`:
+
+| Value | What you get | Scales with `data-next-package-sync` qty? |
+|-------|-------------|:-----------------------------------------:|
+| `unitPrice` | Sale price per unit | No — stable |
+| `originalUnitPrice` | Compare/before-discount per unit | No — stable |
+| `price` | Line total after discount | Yes |
+| `originalPrice` | Line total before discount | Yes |
+
+> **Note:** `data-next-show="hasDiscount"` only works inside **template-rendered** toggle cards — not on inline `data-next-toggle-card` markup. Omit it on static bump partials.
 
 ---
 

@@ -158,25 +158,13 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 
 ## BS-008 - Warranty bump: `data-next-toggle-price` vs `compare`, sync + bundle, stable unit labels
 
-- Status: `open`
+- Status: `fixed` (SDK 0.4.14 — stable per-unit pricing via `unitPrice` / `originalUnitPrice`)
 - Severity: `medium`
 - Date logged: `2026-03-31`
 - **Templates / where:** Bump includes on bundle checkouts — reference [`olympus`](../campaign-kit-templates/src/olympus/) (`bump-check01.html`, `checkout.html` + `data-next-package-sync`).
-- **Layering:** Behavior below is tied to **`data-next-package-sync`** (bump qty / pricing follows main line) together with **`data-next-toggle-price`** / toggle-card preview — not “sync alone” or “toggle alone” in isolation.
-- **Observed flow (toggle-price + sync):**
-  1. Shopper **turns bump on** → card **compare/sale** update to match the **currently selected bundle tier** (expected on first check).
-  2. Shopper **changes bundle tier** (1× / 2× / 3×) → **cart and summary totals** update; **visible bump compare/sale on the card often do not** until the shopper **unchecks and checks** the bump again (stale toggle preview).
-  3. Separately: `data-next-toggle-price` and `data-next-toggle-price="compare"` can both show the **same** value when the add-on package has no separate discount/list story in the preview; a **Campaigns offer** on the add-on can make compare vs sale diverge.
-  4. With **`data-next-package-sync`** and a **bundle selector** on **one main `packageId`**, [Step 7 quantity sync](https://developers.nextcommerce.com/docs/campaigns/guides/selling-addons#step-7-quantity-sync-warranty-per-unit) remains the right model (e.g. `data-next-package-sync="1"`).
-  5. After check/uncheck, numbers can still **shift** as preview/sync runs (see migration **Known #7**).
-- **Eng ask:** Recompute toggle preview whenever **synced cart qty** or **main bundle selection** changes, not only on bump check/uncheck.
-- **Template / product preference:** Teams often want the **option** to show **unit list + unit sale** like the **older pattern** — stable on-card copy that does not depend on toggle preview rescaling:
-  - Keep **`data-next-package-toggle`** + **`data-next-toggle-card`** + **`data-next-package-sync`** for add/remove and qty mirroring.
-  - For **visible** list/sale lines, use **`data-next-display="package.price_retail"`** and **`data-next-display="package.price"`** scoped to the **bump package id**, **not** `data-next-toggle-price` / `compare`.
-- Tradeoff:
-  - `data-next-display="package.*"` is **not** fully aligned with backend offer/voucher pricing the way toggle-price is intended to be; list/sale usually come from **package definition** unless you accept partial parity.
-- Alternative (totals-focused, older pattern):
-  - `data-next-bump` + `data-next-toggle="toggle"` + `data-next-display` totals — migration doc calls this more stable when toggle-price misbehaves (issue #7).
+- **Root cause:** Toggle preview did not recompute when main bundle tier changed while the bump was unchecked. `data-next-toggle-display=”originalPrice”` / `”price”` are **line totals** that scale with synced qty — showing stale or scaled values when tier changed.
+- **Fix (SDK 0.4.14):** `data-next-toggle-display=”unitPrice”` and `data-next-toggle-display=”originalUnitPrice”` return stable **per-unit** values that do not multiply with synced qty. Use `unitPrice` + `/ea` for the sale price and `originalUnitPrice` for the compare/strikethrough — both are always correct regardless of tier. Reference `bump-check01.html` shows **Option A** (per-unit stable) alongside **Option B** (line total, scales) for developer choice.
+- **Eng ask (still open):** Recompute toggle preview whenever synced cart qty or main bundle selection changes — even when bump is unchecked. `unitPrice`/`originalUnitPrice` is the template-side fix; the underlying SDK refresh gap remains.
 
 ## BS-009 - Feature request: cart summary line amounts without currency symbol
 
