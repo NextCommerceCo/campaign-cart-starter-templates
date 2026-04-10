@@ -62,20 +62,6 @@ Within each table, issues are listed **high → medium → low** by severity. `#
 | 10  | Auto-rendered bundle cards (injected from a template) do not bind product name/image the same way as inline cards; placeholders can stay blank. **Low priority:** reference templates use **inline** bundle cards instead, so this SDK path is optional—note for engineering to fix when convenient. | **All** campaigns that opt into Step 4 auto-render (`data-next-bundles` + template id); not used in default olympus-v0.4.              | Low      | Open    |
 | 12  | **Cart summary tax row (BS-017):** Three separate gaps mean tax cannot display in the checkout cart summary today: `{tax}` is not passed into the `<template>` vars; `.next-has-tax` is never toggled on `[data-next-cart-summary]`; `data-next-display="cart.tax"` is not implemented. **Workaround:** small custom JS — listen on `cart:updated`, read the tax field from `state.summary`, inject manually, and toggle `.next-has-tax` yourself. Note: `order.tax` works on the receipt page but is not the same as live cart tax. | **All** campaigns using a tax row in `[data-next-cart-summary]`. | Low | Open |
 
-<a id="issue-2-fixed-marketing-prices-on-sync-bumps-product--ux-ask"></a>
-
-### Issue #2 — two pricing modes on sync bumps (product / UX ask)
-
-For **`data-next-package-sync`** prepurchase bumps, the **ideal** is that **both** behaviors are supported as **explicit options** (operator or markup chooses per funnel):
-
-| Mode | Bump card prices | Cart / sync behavior |
-| ---- | ---------------- | -------------------- |
-| **Dynamic (current)** | **Change with** main **bundle tier / selection** — **`data-next-toggle-display`** path, offer-aware with tier. | Sync updates **line qty**, **totals**, **summary** with main bundle. |
-| **Fixed marketing copy** | **List + sale stay stable** on the card (headline UX many clients want); not tied to every tier change. | Same — sync still drives **add-on line qty**, **cart**, **summary**; only the **displayed** bump dollars stay fixed. |
-
-Today you effectively get **dynamic** via toggle; **fixed** usually means **`package.*`** or **hardcoded** copy — and **`package.*`** often **doesn’t** match **toggle / voucher** math, so teams hardcode and **drift** when **prices change in Campaigns**.
-
-**Desired (platform):** first-class **fixed-display** bindings (campaign-sourced list + discounted, **independent of** tier churn) **alongside** the existing **dynamic** toggle path, on the **same** sync bump. Until then, issue #2 stays **Blocked** for “pick dynamic vs fixed without hacks.”
 
 ## Fixed and verified
 
