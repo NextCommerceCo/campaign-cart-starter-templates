@@ -14,7 +14,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const SRC_DIR = path.join(__dirname, '../campaign-kit-templates/src');
+const REPO_ROOT = path.join(__dirname, '..');
 
 let errors = 0;
 let warnings = 0;
@@ -79,18 +79,84 @@ function stripFrontmatter(content) {
   return content.replace(/^---\n[\s\S]*?\n---\n/, '');
 }
 
+function safeReadDir(dir) {
+  try {
+    return fs.readdirSync(dir);
+  } catch {
+    return [];
+  }
+}
+
+function isDirectorySafe(targetPath) {
+  try {
+    return fs.statSync(targetPath).isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+function hasHtmlPages(dir) {
+  return safeReadDir(dir).some(name => name.endsWith('.html'));
+}
+
+function looksLikeCampaignDir(dir) {
+  const hasIncludes = isDirectorySafe(path.join(dir, '_includes'));
+  const hasAssets = isDirectorySafe(path.join(dir, 'assets'));
+  return (hasIncludes || hasAssets) && hasHtmlPages(dir);
+}
+
+function discoverCampaigns() {
+  const campaigns = [];
+  const skip = new Set(['.git', '.github', 'node_modules', 'scripts', '_site']);
+
+  const topLevel = safeReadDir(REPO_ROOT).filter(name => {
+    if (skip.has(name) || name.startsWith('.')) return false;
+    return isDirectorySafe(path.join(REPO_ROOT, name));
+  });
+
+  // Primary layout: repo/<campaign-name>/src/<slug>/
+  for (const folder of topLevel) {
+    const srcDir = path.join(REPO_ROOT, folder, 'src');
+    if (!isDirectorySafe(srcDir)) continue;
+
+    const slugs = safeReadDir(srcDir).filter(name => isDirectorySafe(path.join(srcDir, name)));
+    for (const slug of slugs) {
+      const dir = path.join(srcDir, slug);
+      if (looksLikeCampaignDir(dir)) {
+        campaigns.push({ label: `${folder}/src/${slug}`, dir });
+      }
+    }
+  }
+
+  // Backward compatibility: repo/src/<slug>/
+  const rootSrcDir = path.join(REPO_ROOT, 'src');
+  if (isDirectorySafe(rootSrcDir)) {
+    const slugs = safeReadDir(rootSrcDir).filter(name => isDirectorySafe(path.join(rootSrcDir, name)));
+    for (const slug of slugs) {
+      const dir = path.join(rootSrcDir, slug);
+      if (looksLikeCampaignDir(dir)) {
+        campaigns.push({ label: `src/${slug}`, dir });
+      }
+    }
+  }
+
+  return campaigns;
+}
+
 // ── Main ────────────────────────────────────────────────────────────────────
 
-const campaigns = fs.readdirSync(SRC_DIR).filter(f =>
-  fs.statSync(path.join(SRC_DIR, f)).isDirectory()
-);
+const campaigns = discoverCampaigns();
 
-console.log(`\nChecking ${campaigns.length} campaigns in campaign-kit-templates/src/\n`);
+if (campaigns.length === 0) {
+  console.error('\x1b[31mNo campaigns found. Expected {folder}/src/{slug}/ or src/{slug}/ directories under repo root.\x1b[0m\n');
+  process.exit(1);
+}
 
-for (const slug of campaigns) {
-  console.log(`[${slug}]`);
+console.log(`\nChecking ${campaigns.length} campaign(s):\n`);
 
-  const campaignDir = path.join(SRC_DIR, slug);
+for (const { label, dir: campaignDir } of campaigns) {
+  console.log(`[${label}]`);
+
   const includesDir = path.join(campaignDir, '_includes');
   const assetsDir   = path.join(campaignDir, 'assets');
 
@@ -109,7 +175,7 @@ for (const slug of campaigns) {
   const htmlFiles = fs.readdirSync(campaignDir).filter(f => f.endsWith('.html'));
 
   if (htmlFiles.length === 0) {
-    warn(slug, 'no HTML page files found');
+    warn(label, 'no HTML page files found');
   }
 
   for (const htmlFile of htmlFiles) {
