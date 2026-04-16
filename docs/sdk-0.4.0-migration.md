@@ -4,11 +4,22 @@ Tracks changes needed across templates when upgrading from SDK 0.3.x to 0.4.0.
 
 **Bundle selector reference template:** `campaign-kit-templates/src/olympus/` — QA [`docs/olympus-v0.4.0-sdk-qa-checklist.md`](olympus-v0.4.0-sdk-qa-checklist.md). **Template bug log (0.4.x, repo-wide):** [`docs/template-bug-log.md`](template-bug-log.md)
 
+### SDK 0.4.16 — exit-popup voucher refresh; bundle voucher ordering
+
+**Loader:** `https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v0.4.16/dist/loader.js` ([v0.4.16](https://github.com/NextCommerceCo/campaign-cart/releases/tag/v0.4.16)).
+
+**Campaigns reference:** **`olympus`** and **`olympus-mv-single-step`** pin **`sdk_version`:** **`0.4.16`** in [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json).
+
+**Fixes (no reference template markup changes required for these):**
+
+- **Exit-intent / exit-popup voucher:** applying a voucher from the exit popup now recalculates **bundle** and **toggle** card prices on checkout and upsell (previously stale).
+- **Voucher ordering in bundles:** bundle/tier vouchers are sent **before** user-applied coupons so stacked discounts match backend intent.
+
+**Not addressed:** session checkout coupons still participate in **`calculateBundlePrice`** display on upsell — remote **`bundle.*.price`** / **`discountPercentage`** can show **stacked** effective discount vs upsell-only headline (**BS-018**, still open). See [`docs/campaign-issues-overview.md`](campaign-issues-overview.md) and [`docs/template-bug-log.md`](template-bug-log.md).
+
 ### SDK 0.4.11 — `{line.*}` deprecated, `{item.*}` namespace, line total semantics
 
 **Loader:** `https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v0.4.11/dist/loader.js` ([v0.4.11](https://github.com/NextCommerceCo/campaign-cart/releases/tag/v0.4.11)).
-
-**Campaigns reference:** **`olympus`** and **`olympus-mv-single-step`** use **`sdk_version`:** **`0.4.11`** in [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json).
 
 **Breaking changes:**
 
@@ -357,6 +368,8 @@ Full example (distinct package IDs per card):
 
 ### Migrated — `campaign-kit-templates/` (SDK 0.4.x)
 
+**Loader pin:** bump **`sdk_version`** in [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json) when adopting newer Campaign Cart releases (reference repo: **0.4.16**).
+
 | Template | Selector fix | Token renames | Bug fixes | Notes |
 |----------|-------------|---------------|-----------|-------|
 | `olympus` | ✅ bundle selector | ✅ **0.4.10** | ✅ QA | Reference **bundle** checkout (`data-next-bundle-selector` + Summary v2). **#8** swap: **fixed**. **#3** bundle shipping: **fixed 0.4.12**. **#7** bumps: **fixed 0.4.14**. **#9** summary tokens: **fixed 0.4.11**. **#10** coupon display: **fixed via workaround 0.4.13**. Open: **#4** multi-package price slots (affects non-bundle selector path only). — [template bug log](template-bug-log.md) |
@@ -529,4 +542,4 @@ Public [Campaign Cart](https://developers.nextcommerce.com/docs/campaigns/campai
 ## Open Issues (templates)
 
 - **`olympus/checkout.html`** — primary **bundle selector** reference; full BS-xxx log in [`docs/template-bug-log.md`](template-bug-log.md). Previously-open items now resolved: **#8** swap/add lines (`fixed`), **#9** summary tokens (`fixed 0.4.11`), **#10** coupon display (`fixed via workaround 0.4.13`), **#3** bundle card shipping (`fixed 0.4.12`), **#7** bump regression (`fixed 0.4.14`), **#5** slot formatting (`fixed 0.4.11`). **Still open: #4** — `data-next-package-price="compare/savings"` slots return per-unit retail (not package total) for multi-package setups; `savingsAmount`/`savingsPercentage` are static (retail-vs-base only). Affects multi-package selector path only; bundle selector is the recommended direction.
-- **`olympus-mv-single-step/upsell-mv.html`** — **Approach B** MV upsell (tiers + vouchers); QA per-tier codes in Campaigns match `data-next-bundle-vouchers` on each card. Variant dropdown glue and qty toggle: **`assets/js/upsells-up01-mv.js`**. **Still open:** BS-018 (exit coupon bleed into upsell `calculateBundlePrice`) and issue #8 (variant resolver can jump to checkout package family on variant change) — see [`docs/campaign-issues-overview.md`](campaign-issues-overview.md).
+- **`olympus-mv-single-step/upsell-mv.html`** — **Approach B** MV upsell (tiers + vouchers); QA per-tier codes in Campaigns match `data-next-bundle-vouchers` on each card. Variant dropdown glue and qty toggle: **`assets/js/upsells-up01-mv.js`**. **Still open:** BS-018 (session checkout coupon bleed into upsell `bundle.*` display via `calculateBundlePrice`) and issue #8 (variant resolver can jump to checkout package family on variant change) — see [`docs/campaign-issues-overview.md`](campaign-issues-overview.md). **SDK 0.4.16** improves exit-popup voucher **refresh** on bundle/toggle UI and **voucher ordering** in bundles; it does **not** remove BS-018 / #8.

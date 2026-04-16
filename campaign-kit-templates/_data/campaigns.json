@@ -2,7 +2,7 @@
   "olympus": {
     "name": "Olympus",
     "description": "Olympus checkout funnel",
-    "sdk_version": "0.4.15",
+    "sdk_version": "0.4.16",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",
@@ -18,7 +18,7 @@
   "olympus-mv-single-step": {
     "name": "Olympus MV Single Step",
     "description": "Olympus multi-variant single-step checkout",
-    "sdk_version": "0.4.15",
+    "sdk_version": "0.4.16",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",

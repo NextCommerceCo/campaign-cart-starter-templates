@@ -315,6 +315,7 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 - **Workaround (stop-gap):** Scope the upsell voucher to all package ids the resolver can land on — both families — but this is fragile and fights the underlying model problem.
 - **Real fix (data/model):** Assign the upsell package set a **different `product_id`** than checkout so the resolver pool is isolated. Or remove duplicate variant rows so there is only one canonical package per variant tuple per `product_id`. Coupon scoping alone cannot fix this while both id families share a `product_id` and identical variant attribute combinations.
 - **Dependency note:** the variant-jump path (mechanism 2) only exists because a separate `packageId` family is required as a workaround for mechanism 1 (session coupon bleed). **If the SDK isolates `calculateBundlePrice` from session coupons** (mechanism 1 fixed), the same `packageId` becomes usable on both checkout and upsell — the resolver stays in a single family and the variant-jump issue becomes an unused code path for MV upsell.
+- **SDK 0.4.16 retest (2026-04-16):** release fixes exit-popup **refresh** on bundle/toggle pricing and **voucher ordering** in bundles — **does not** remove session checkout coupon bleed into **`bundle.*`** display tokens; **#7 / BS-018** symptoms (e.g. **82%** effective vs **80%** upsell headline) remain until a separate SDK change isolates upsell `calculateBundlePrice` display from persisted session coupons.
 
 ---
 

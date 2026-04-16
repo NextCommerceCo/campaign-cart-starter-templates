@@ -72,7 +72,7 @@ Registers every campaign. The `campaign` object in Liquid templates comes from h
     {
       "name": "My Campaign",
       "slug": "my-campaign",
-      "sdk_version": "0.4.12",
+      "sdk_version": "0.4.16",
       "store_name": "Acme Store",
       "store_url": "https://acme.com",
       "store_phone": "1-800-555-0100",

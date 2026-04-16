@@ -1,7 +1,7 @@
 # Olympus v0.4.0 SDK — QA checklist
 
 **Scope:** `campaign-kit-templates/src/olympus/`  
-**SDK:** Pin `sdk_version` in `_data/campaigns.json` (e.g. `0.4.12`).  
+**SDK:** Pin `sdk_version` in `_data/campaigns.json` (e.g. `0.4.16` — match [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json)).  
 **Template bug log (0.4.x, repo-wide — `olympus` is primary reference):** [`template-bug-log.md`](./template-bug-log.md)
 
 Use a real campaign (offers, shipping methods, coupons as in production). Update the bug log with `verified` / notes after each pass.
@@ -58,6 +58,8 @@ Use a real campaign (offers, shipping methods, coupons as in production). Update
 |--------|----------------|---------|
 | **Apply + refresh** | Coupon survives full page reload or not (Known #2). | Known #2 (migration) |
 | **Bundle vouchers** | If tiers use `data-next-bundle-vouchers`, codes apply/remove when switching tiers without double-apply. | BS-004 |
+| **Exit-popup voucher → prices** | Apply a code from exit intent on checkout: **bundle tier** and **toggle bump** money updates without stale placeholders (SDK **0.4.16+**). | — |
+| **Bundle + cart coupon order** | With bundle tier vouchers + a cart coupon, totals and breakdowns match intent (tier vouchers apply before user coupon in API path; **0.4.16+**). | — |
 
 ---
 
