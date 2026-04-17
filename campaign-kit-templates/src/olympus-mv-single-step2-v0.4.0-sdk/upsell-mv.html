@@ -172,3 +172,21 @@ scripts:
         {% campaign_include 'footer.html' %}
       </div>
     </div>
+
+
+  
+<script>
+  window.addEventListener('next:initialized', function() {
+    next.exitIntent({
+      image: 'https://placehold.co/600x400',
+      action: async () => {
+        const result = await next.applyCoupon('EXIT10');
+        if (result.success) {
+          console.log('Coupon applied:', result.message);
+        } else {
+          console.log('Coupon failed:', result.message);
+        }
+      }
+    });
+  });
+</script>
