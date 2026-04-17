@@ -4,6 +4,8 @@ Tracks changes needed across templates when upgrading from SDK 0.3.x to 0.4.0.
 
 **Bundle selector reference template:** `campaign-kit-templates/src/olympus/` — QA [`docs/olympus-v0.4.0-sdk-qa-checklist.md`](olympus-v0.4.0-sdk-qa-checklist.md). **Template bug log (0.4.x, repo-wide):** [`docs/template-bug-log.md`](template-bug-log.md)
 
+**Porting a v3 template to 0.4.x?** Follow the step-by-step process: [`docs/v3-to-v4-migration-checklist.md`](v3-to-v4-migration-checklist.md)
+
 ### SDK 0.4.17 — post-checkout session cleanup (cart + vouchers)
 
 **Loader:** `https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v0.4.17/dist/loader.js` ([v0.4.17](https://github.com/NextCommerceCo/campaign-cart/releases/tag/v0.4.17)).
@@ -382,6 +384,7 @@ Full example (distinct package IDs per card):
 
 | Template | Selector fix | Token renames | Bug fixes | Notes |
 |----------|-------------|---------------|-----------|-------|
+| `limos` | 🔄 in progress | 🔄 in progress | 🔄 QA | Upsell approach TBD. |
 | `olympus` | ✅ bundle selector | ✅ **0.4.10** | ✅ QA | Reference **bundle** checkout (`data-next-bundle-selector` + Summary v2). **#8** swap: **fixed**. **#3** bundle shipping: **fixed 0.4.12**. **#7** bumps: **fixed 0.4.14**. **#9** summary tokens: **fixed 0.4.11**. **#10** coupon display: **fixed via workaround 0.4.13**. Open: **#4** multi-package price slots (affects non-bundle selector path only). — [template bug log](template-bug-log.md) |
 | `olympus-mv-single-step` | ✅ native external slots | ✅ **0.4.10** | 🔄 QA | Native `data-next-bundle-slots-for` + `data-next-variant-selector-template-id`. Replaces bridge JS. **`upsell-mv.html`** is Approach B (bundle upsell + vouchers). **Variant UI:** SDK **native `<select>`** in staged slots works without JS; **`setupBundleSlotVariantDropdowns()`** is **opt-in** for the custom **`os-dropdown`** UI — see file-header comments in [`checkout-olympus-mv-full.js`](../campaign-kit-templates/src/olympus-mv-single-step/assets/js/checkout-olympus-mv-full.js) and [`upsells-up01-mv.js`](../campaign-kit-templates/src/olympus-mv-single-step/assets/js/upsells-up01-mv.js). |
 
@@ -393,7 +396,7 @@ Full example (distinct package IDs per card):
 | `olympus-mv-single-step` | ⬜ pending | ⬜ pending | |
 | `olympus-mv-two-step` | ⬜ pending | ⬜ pending | |
 | `demeter` | ⬜ pending | ⬜ pending | |
-| `limos` | ⬜ pending | ⬜ pending | |
+| `limos` | 🔄 in progress | 🔄 in progress | Promoted to `campaign-kit-templates/src/limos/` |
 | `shop-single-step` | — | — | No selector |
 | `shop-three-step` | — | — | No selector |
 

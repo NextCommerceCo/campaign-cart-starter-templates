@@ -1,4 +1,20 @@
 {
+  "limos": {
+    "name": "Limos",
+    "description": "Limos checkout funnel",
+    "sdk_version": "0.4.17",
+    "store_name": "Next Commerce",
+    "store_url": "https://demo.29next.com/",
+    "store_terms": "https://demo.29next.com/terms-conditions/",
+    "store_privacy": "https://demo.29next.com/privacy-policy/",
+    "store_contact": "https://demo.29next.com/contact/",
+    "store_returns": "https://demo.29next.com/returns/",
+    "store_shipping": "https://demo.29next.com/shipping/",
+    "store_phone": "1 (888) 831-6810",
+    "store_phone_tel": "tel:+18888316810",
+    "gtm_id": "GTM-XXXXXXX",
+    "fb_pixel_id": "123456789012345"
+  },
   "olympus": {
     "name": "Olympus",
     "description": "Olympus checkout funnel",

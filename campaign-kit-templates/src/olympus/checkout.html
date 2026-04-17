@@ -240,8 +240,8 @@ swiper_thumbs:
                                           </div>
                                           <div class="os-card__total-container">
                                             <div class="os-card__total-label">Total:</div>
-                                            <div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-price="originalPrice">-</span></div>
-                                            <div class="os-card__total-current {bundle.totalToneClass}"><span data-next-bundle-price="price">-</span></div>
+                                            <div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-display="originalPrice">-</span></div>
+                                            <div class="os-card__total-current {bundle.totalToneClass}"><span data-next-bundle-display="price">-</span></div>
                                           </div>
                                         </div>
                                       </div>
@@ -267,6 +267,7 @@ swiper_thumbs:
                                 class="os-option os-cards__vertical os--gap-xl"
                               ></div>
                               {% endcomment %}
+                              {% comment %} BS-020: data-next-include-shipping on [data-next-bundle-selector] is currently a no-op — the SDK reads it but does not pass it through to calculateBundlePrice (unlike PackageSelector). Safe to omit or keep for future parity. docs/template-bug-log.md {% endcomment %}
                               <div data-next-bundle-selector data-next-selector-id="drone-packages" data-next-selection-mode="swap" data-next-include-shipping="true" class="os-option"  data-next-await="">
                                 <div class="os-cards__vertical os--gap-xl">
                                   <div data-next-bundle-card data-next-bundle-id="drone-qty-1" data-next-shipping-id="2" data-next-bundle-items='[{"packageId":1,"quantity":1}]' data-next-selected="true" role="button" class="os-card">
@@ -298,8 +299,8 @@ swiper_thumbs:
                                             </div>
                                             <div class="os-card__total-container">
                                               <div class="os-card__total-label">Total:</div>
-                                              <div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-price="originalPrice">-</span></div>
-                                              <div class="os-card__total-current"><span data-next-bundle-price="price">-</span></div>
+                                              <div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-display="originalPrice">-</span></div>
+                                              <div class="os-card__total-current"><span data-next-bundle-display="price">-</span></div>
                                             </div>
                                           </div>
                                         </div>
@@ -343,8 +344,8 @@ swiper_thumbs:
                                             </div>
                                             <div class="os-card__total-container">
                                               <div class="os-card__total-label">Total:</div>
-                                              <div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-price="originalPrice">-</span></div>
-                                              <div class="os-card__total-current"><span data-next-bundle-price="price">-</span></div>
+                                              <div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-display="originalPrice">-</span></div>
+                                              <div class="os-card__total-current"><span data-next-bundle-display="price">-</span></div>
                                             </div>
                                           </div>
                                         </div>
@@ -388,8 +389,8 @@ swiper_thumbs:
                                             </div>
                                             <div class="os-card__total-container">
                                               <div class="os-card__total-label">Total:</div>
-                                              <div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-price="originalPrice">-</span></div>
-                                              <div class="os-card__total-current os-dark"><span data-next-bundle-price="price">-</span></div>
+                                              <div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-display="originalPrice">-</span></div>
+                                              <div class="os-card__total-current os-dark"><span data-next-bundle-display="price">-</span></div>
                                             </div>
                                           </div>
                                         </div>

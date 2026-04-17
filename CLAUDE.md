@@ -44,6 +44,7 @@ Note: when copying a template, the developer renames the folder to their product
 
 | Template | Pages |
 |----------|-------|
+| limos | /limos/checkout/ · /limos/upsell/ · /limos/receipt/ |
 | olympus | /olympus/checkout/ · /olympus/upsell-single/ · /olympus/upsell-quantity/ · /olympus/upsell-cards/ · /olympus/receipt/ |
 | olympus-mv-single-step | /olympus-mv-single-step/checkout/ · /olympus-mv-single-step/upsell-mv/ · /olympus-mv-single-step/receipt/ |
 
