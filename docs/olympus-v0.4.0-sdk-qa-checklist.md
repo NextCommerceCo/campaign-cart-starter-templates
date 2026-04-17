@@ -1,7 +1,7 @@
 # Olympus v0.4.0 SDK — QA checklist
 
 **Scope:** `campaign-kit-templates/src/olympus/`  
-**SDK:** Pin `sdk_version` in `_data/campaigns.json` (e.g. `0.4.16` — match [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json)).  
+**SDK:** Pin `sdk_version` in `_data/campaigns.json` (e.g. `0.4.17` — match [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json)).  
 **Template bug log (0.4.x, repo-wide — `olympus` is primary reference):** [`template-bug-log.md`](./template-bug-log.md)
 
 Use a real campaign (offers, shipping methods, coupons as in production). Update the bug log with `verified` / notes after each pass.
