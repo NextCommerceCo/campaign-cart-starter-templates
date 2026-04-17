@@ -22,7 +22,7 @@ Known cases where **`window.nextDebug`** output does **not** reflect what the pa
 
 **In short:** the debug cart's `offers` array on a upsell page is stale checkout data. It will almost always look wrong. Trust what is rendered on screen and what the receipt/Campaigns backend confirm.
 
-**Related issues:** [BS-018](template-bug-log.md#bs-018---mv-upsell-exitcheckout-coupon-bleeds-into-upsell-bundle-display-pricing-when-same-packageid-is-reused) (exit coupon bleed + variant resolver jumping package families — those are real problems, separate from this debug state quirk).
+**Related issues:** [BS-018](template-bug-log.md) — reference **`verified`** on **0.4.17+** (historical coupon/display skew + variant-family notes; separate from this debug state quirk). Post-checkout ghost session: [BS-019](template-bug-log.md) (**fixed** SDK 0.4.17).
 
 ---
 
@@ -43,7 +43,7 @@ console.log('resolved activePackageId:', root?._activePackageId ?? root?._state?
 // Or check getSelectedBundleItems if exposed
 ```
 
-**Why this matters:** If the resolved id is from the checkout package family (e.g. 2) rather than the upsell family (e.g. 67), the upsell voucher may be ineligible and the wrong price is both displayed and charged. See [issue #8 in campaign-issues-overview](campaign-issues-overview.md) for the full root cause.
+**Why this matters:** If **`slot.activePackageId`** resolves to a **checkout-family** id instead of an **upsell** id, the upsell voucher can be ineligible and **charge** can be wrong — rare **catalog / duplicate-tuple** edge case; see [campaign issues](campaign-issues-overview.md) fixed **#15** + [template bug log](template-bug-log.md) **BS-018** (historical mechanism 2). **BS-018** coupon→display skew is **verified** cleared on **0.4.17+** reference smoke (**#14**); this section is about **debug DOM** vs internal resolver state.
 
 ---
 
