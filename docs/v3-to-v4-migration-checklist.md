@@ -196,3 +196,11 @@ Upsell flow: `checkout → upsell-mv → receipt`
 - [ ] Verify `next_upsell_accept` / `next_upsell_decline` frontmatter on each upsell page matches the intended flow
 - [ ] Update `packageId` references in `data-next-bundle-items` to match this campaign's package IDs
 - [ ] Update voucher codes in `data-next-bundle-vouchers` to match codes configured in the Campaigns app
+
+### `upsells.js`
+
+The v3 `upsells.js` does not contain `initBundleQtyToggle` — required by `upsell-quantity.html` for the quantity button → hidden card wiring. Copy from olympus:
+
+```bash
+cp campaign-kit-templates/src/olympus/assets/js/upsells.js campaign-kit-templates/src/[slug]/assets/js/upsells.js
+```

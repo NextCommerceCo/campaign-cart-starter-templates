@@ -1,5 +1,42 @@
 // Shared utilities for upsell templates
 
+/**
+ * Bundle upsell qty toggle — wires [data-bundle-qty-btn] buttons to select
+ * the matching hidden [data-next-bundle-card] inside a [data-next-bundle-selector].
+ *
+ * Markup contract:
+ *   - Qty container: data-bundle-qty-for="<selectorId>"
+ *   - Qty buttons:   data-bundle-qty-btn="<N>"
+ *   - Bundle cards:  data-next-bundle-id="<selectorId>-<N>x"
+ *
+ * The bundle selector is hidden from view (display:none) and acts only as a
+ * state machine. Prices are shown via remote data-next-display="bundle.<selectorId>.*"
+ * outside the selector. On card selection the SDK re-renders remote display values,
+ * reflecting the new card's voucher-calculated price for that quantity.
+ *
+ * NOTE: This does NOT use data-next-upsell-quantity-toggle — that attribute only
+ * works with the single-package upsell path and does not update bundle items.
+ */
+function initBundleQtyToggle() {
+  document.querySelectorAll('[data-bundle-qty-for]').forEach(function(container) {
+    var selectorId = container.getAttribute('data-bundle-qty-for');
+    var buttons = container.querySelectorAll('[data-bundle-qty-btn]');
+    var selector = document.querySelector('[data-next-selector-id="' + selectorId + '"]');
+    if (!selector) return;
+
+    buttons.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var qty = btn.getAttribute('data-bundle-qty-btn');
+        var card = selector.querySelector('[data-next-bundle-id="' + selectorId + '-' + qty + 'x"]');
+        if (!card) return;
+        card.click();
+        buttons.forEach(function(b) { b.classList.remove('next-selected'); });
+        btn.classList.add('next-selected');
+      });
+    });
+  });
+}
+
 // Swiper gallery: init after DOM + Swiper are ready (Swiper script is deferred)
 // thumbsPerView — number of visible thumbnail slides (default 6, use 5 for portrait-ratio layouts)
 function initSwiperGalleries(thumbsPerView = 6) {
