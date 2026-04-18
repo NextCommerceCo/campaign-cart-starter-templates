@@ -80,7 +80,7 @@ The v3 cart summary uses the old `data-next-content` / `data-next-cart-items` pa
 
 ### Markup
 
-- [ ] Wrap the order summary panel content in `<div data-next-cart-summary>` + `<template>` — the accordion trigger/header stays **outside** the template
+- [ ] Wrap the order summary content area in `<div data-next-cart-summary>` + `<template>` — navigation chrome (accordion triggers, step headers, etc.) stays **outside** the template
 - [ ] Replace `template#cart-item-template` + `div[data-next-cart-items]` two-element pattern with `div[data-summary-lines]` + inner `<template>`
 - [ ] Cart item ID binding: `data-cart-item-id="{item.id}"` → `data-package-id="{item.packageId}"`
 - [ ] Remove `pb-cart` legacy attributes from all cart item elements
@@ -131,4 +131,8 @@ Add these rules (if not already present) — place alongside other `order-totals
 
 ### Partial
 
-- [ ] Extract the shared accordion content into `_includes/cart-summary.html` and use `{% campaign_include 'cart-summary.html' %}` in both the mobile and desktop instances in `checkout.html`
+- [ ] Extract the cart summary markup into a named partial in `_includes/`:
+  - `cart-summary01.html` — tabular style (olympus-style, no accordion)
+  - `cart-summary02.html` — accordion/card style (limos-style)
+  - Each template ships both styles as starting points — developers swap by changing the `{% campaign_include %}` reference
+  - Use `{% campaign_include 'cart-summaryNN.html' %}` in place of the inline markup in `checkout.html` (both mobile and desktop instances if present)
