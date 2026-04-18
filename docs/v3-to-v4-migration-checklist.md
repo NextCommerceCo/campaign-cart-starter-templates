@@ -142,3 +142,57 @@ The rules below are already present in the copied file — listed here for refer
   - `cart-summary02.html` — accordion/card style (limos-style)
   - Each template ships both styles as starting points — developers swap by changing the `{% campaign_include %}` reference
   - Use `{% campaign_include 'cart-summaryNN.html' %}` in place of the inline markup in `checkout.html` (both mobile and desktop instances if present)
+
+---
+
+## Step 5 — `checkout.html` — bump partials
+
+Bump partials are shared across templates. Copy directly from `olympus/_includes/` rather than adapting v3 versions:
+
+```bash
+cp campaign-kit-templates/src/olympus/_includes/bump-check01.html campaign-kit-templates/src/[slug]/_includes/bump-check01.html
+cp campaign-kit-templates/src/olympus/_includes/bump-check02.html campaign-kit-templates/src/[slug]/_includes/bump-check02.html
+cp campaign-kit-templates/src/olympus/_includes/bump-switch01.html campaign-kit-templates/src/[slug]/_includes/bump-switch01.html
+```
+
+Three bump styles available:
+
+| Partial | Variant | Style |
+|---------|---------|-------|
+| `bump-check01.html` | `check01` | Checkbox with expandable body (price + bullet list + image) |
+| `bump-check02.html` | `check02` | Arrow-checkbox, flat — compact single-line with description |
+| `bump-switch01.html` | `switch` | Toggle switch with description text |
+
+No JS changes required — bump behaviour is handled entirely by the SDK (`data-next-bump`, `data-component="prepurchase-upsell"`).
+
+---
+
+## Step 6 — Upsell pages
+
+Copy upsell pages directly from the reference template rather than adapting v3 versions.
+
+**Single-variant campaigns** — copy from `olympus/`:
+
+```bash
+cp campaign-kit-templates/src/olympus/upsell-single.html campaign-kit-templates/src/[slug]/upsell-single.html
+cp campaign-kit-templates/src/olympus/upsell-quantity.html campaign-kit-templates/src/[slug]/upsell-quantity.html
+cp campaign-kit-templates/src/olympus/upsell-cards.html campaign-kit-templates/src/[slug]/upsell-cards.html
+```
+
+Upsell flow: `checkout → upsell-single → upsell-quantity → upsell-cards → receipt`
+
+**Multi-variant campaigns** — copy from `olympus-mv-single-step/`:
+
+```bash
+cp campaign-kit-templates/src/olympus-mv-single-step/upsell-mv.html campaign-kit-templates/src/[slug]/upsell-mv.html
+```
+
+Upsell flow: `checkout → upsell-mv → receipt`
+
+### After copying
+
+- [ ] Remove the v3 `upsell.html` (now replaced)
+- [ ] Update `checkout.html` frontmatter `next_success_url` to point to the first upsell page
+- [ ] Verify `next_upsell_accept` / `next_upsell_decline` frontmatter on each upsell page matches the intended flow
+- [ ] Update `packageId` references in `data-next-bundle-items` to match this campaign's package IDs
+- [ ] Update voucher codes in `data-next-bundle-vouchers` to match codes configured in the Campaigns app
