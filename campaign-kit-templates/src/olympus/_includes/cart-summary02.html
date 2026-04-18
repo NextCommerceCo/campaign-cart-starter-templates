@@ -42,7 +42,10 @@
                             <div class="cart-item__header">
                               <div class="cart-item__title">{item.name}</div>
                             </div>
-                            <div class="cart-item__frequency">One time purchase</div>
+                            <div class="cart-item__frequency">
+                              <span data-next-show="item.isRecurring">{item.frequency}</span>
+                              <span data-next-hide="item.isRecurring">One-time purchase</span>
+                            </div>
                             <div>
                               <div class="text-2xs text-muted text-weight-normal diagonal-strike hide {item.hasDiscount}">{item.originalUnitPrice}/ea</div>
                               <div class="text-2xs text-muted text-weight-normal hide">{item.unitPrice}/ea</div>
