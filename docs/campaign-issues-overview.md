@@ -37,6 +37,15 @@ Reference pages on **`v0.4.0-offers-template-update`** — what to open when you
 | [`olympus/upsell-quantity.html`](../campaign-kit-templates/src/olympus/upsell-quantity.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/olympus/upsell-quantity/) | **Post-purchase upsell** — Approach B with **qty toggles** (`initBundleQtyToggle`): hidden tier row + **`data-next-upsell-context`**, accept wired to selector. |
 | [`olympus/upsell-cards.html`](../campaign-kit-templates/src/olympus/upsell-cards.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/olympus/upsell-cards/) | **Upsell example** — Approach B with **visible tier cards** + per-tier vouchers (same wiring as quantity page, card UX). |
 
+### Limos — `limos/`
+
+| File | Preview | Role |
+| ---- | ------- | ---- |
+| [`limos/checkout.html`](../campaign-kit-templates/src/limos/checkout.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/limos/checkout/) | **Checkout** with bundle picker, offers, and accordion cart summary (`cart-summary02.html`). |
+| [`limos/upsell-single.html`](../campaign-kit-templates/src/limos/upsell-single.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/limos/upsell-single/) | **Post-purchase upsell** — single-offer bundle + voucher; default `next_success_url` from checkout. |
+| [`limos/upsell-quantity.html`](../campaign-kit-templates/src/limos/upsell-quantity.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/limos/upsell-quantity/) | **Post-purchase upsell** — qty toggles (`initBundleQtyToggle`): hidden tier cards + `data-next-upsell-context`. |
+| [`limos/upsell-cards.html`](../campaign-kit-templates/src/limos/upsell-cards.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/limos/upsell-cards/) | **Upsell** — visible tier cards + per-tier vouchers (same wiring as quantity page, card UX). |
+
 ### Olympus MV Single Step — `olympus-mv-single-step/`
 
 | File | Preview | Role |
