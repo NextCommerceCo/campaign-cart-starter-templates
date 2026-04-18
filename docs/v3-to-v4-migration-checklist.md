@@ -71,3 +71,64 @@ Verify against `campaign-kit-templates/src/olympus/_layouts/base.html`.
 | `data-next-show="package.hasSavings"` / `package.hasRetailPrice` | `data-next-bundle-display="hasDiscount"` | Conditional wrapper |
 
 > **Do not mix** `data-next-bundle-display` and `data-next-display` on the same element.
+
+---
+
+## Step 4 — `checkout.html` — cart summary
+
+The v3 cart summary uses the old `data-next-content` / `data-next-cart-items` pattern. Migrate to `data-next-cart-summary` to unlock per-discount rows, CartSummaryEnhancer tokens, and state-class-driven visibility.
+
+### Markup
+
+- [ ] Wrap the order summary panel content in `<div data-next-cart-summary>` + `<template>` — the accordion trigger/header stays **outside** the template
+- [ ] Replace `template#cart-item-template` + `div[data-next-cart-items]` two-element pattern with `div[data-summary-lines]` + inner `<template>`
+- [ ] Cart item ID binding: `data-cart-item-id="{item.id}"` → `data-package-id="{item.packageId}"`
+- [ ] Remove `pb-cart` legacy attributes from all cart item elements
+- [ ] Remove dead hidden quantity-controls markup (permanently hidden in v3 templates)
+- [ ] Order totals — replace `data-next-display` calls with CartSummaryEnhancer tokens: `{subtotal}`, `{shipping}`, `{total}`
+- [ ] Remove `data-include-discounts=""` from subtotal (legacy attribute)
+- [ ] Add `data-next-discounts="offer"` + `data-next-discounts="voucher"` sections with `<template>` rows using `{discount.name}`, `{discount.amount}`
+- [ ] Discount/savings row: use `os-cart-summary-row--discount` class (not `data-next-show="cart.hasSavings"`) — visibility driven by CSS state class
+- [ ] Discount amount: use `{discounts}` token (not `data-next-display="cart.totalSavingsAmount"`)
+- [ ] Discount percentage badge: use `data-next-display="cart.totalDiscountPercentage"` (not `cart.totalSavingsPercentage`)
+- [ ] Savings banner (`data-next-show`): use `cart.hasDiscounts` (not `cart.hasSavings`)
+- [ ] Coupon tag: `data-next-show="cart.hasCoupon"` + `data-next-discounts="voucher"` with `{discount.description}` for the code string
+- [ ] Tax row: keep hidden (`class="hide"`) — `{tax}` token is not wired in CartSummaryEnhancer (BS-017)
+
+### Cart item token names (0.4.11+)
+
+| Before (v3) | After (0.4.x) |
+|-------------|---------------|
+| `{item.unitComparePrice}` | `{item.originalUnitPrice}` (per-unit, for `/ea` label) |
+| `{item.discountedPrice}` | `{item.price}` (line total after discount) |
+| _(missing)_ | `{item.originalPrice}` (line total before discount, for strikethrough) |
+| _(missing)_ | `{item.hasDiscount}` as CSS class — resolves to `"show"` or `"hide"` |
+
+### `next-core.css`
+
+`next-core.css` must be **identical across all templates**. When adding rules to one template, apply to all others.
+
+Add these rules (if not already present) — place alongside other `order-totals` rules:
+
+```css
+.order-totals__discount-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.order-totals__discount-list li {
+  margin: 0;
+  padding-left: 0;
+}
+
+[data-next-cart-summary].next-cart-empty .os-cart-summary-totals { display: none !important; }
+[data-next-cart-summary] .os-cart-summary-row--discount { display: none; }
+[data-next-cart-summary].next-has-discounts .os-cart-summary-row--discount { display: block; }
+[data-next-cart-summary] .os-cart-summary-row--tax { display: none; }
+[data-next-cart-summary].next-has-tax .os-cart-summary-row--tax { display: flex; }
+```
+
+### Partial
+
+- [ ] Extract the shared accordion content into `_includes/cart-summary.html` and use `{% campaign_include 'cart-summary.html' %}` in both the mobile and desktop instances in `checkout.html`

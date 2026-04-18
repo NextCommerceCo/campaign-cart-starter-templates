@@ -3819,6 +3819,23 @@ figcaption {
   justify-content: flex-end;
 }
 
+.order-totals__discount-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.order-totals__discount-list li {
+  margin: 0;
+  padding-left: 0;
+}
+
+[data-next-cart-summary].next-cart-empty .os-cart-summary-totals { display: none !important; }
+[data-next-cart-summary] .os-cart-summary-row--discount { display: none; }
+[data-next-cart-summary].next-has-discounts .os-cart-summary-row--discount { display: block; }
+[data-next-cart-summary] .os-cart-summary-row--tax { display: none; }
+[data-next-cart-summary].next-has-tax .os-cart-summary-row--tax { display: flex; }
+
 .order-totals__line.cc-subtotal {
   border-top: 1px solid #dedede;
   border-bottom: 1px solid #dedede;

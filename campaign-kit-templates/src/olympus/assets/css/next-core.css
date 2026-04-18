@@ -3812,11 +3812,12 @@ figcaption {
 
 .order-totals__discount-list {
   list-style: none;
-  margin: 0 0 .25rem;
+  margin: 0;
   padding: 0;
 }
 
 .order-totals__discount-list li {
+  margin: 0;
   padding-left: 0;
 }
 
