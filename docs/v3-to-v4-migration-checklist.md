@@ -106,9 +106,15 @@ The v3 cart summary uses the old `data-next-content` / `data-next-cart-items` pa
 
 ### `next-core.css`
 
-`next-core.css` must be **identical across all templates**. When adding rules to one template, apply to all others.
+`next-core.css` must be **identical across all templates**. The simplest approach when porting a new template is to copy the file directly from an existing 0.4.x template rather than patching the v3 version:
 
-Add these rules (if not already present) — place alongside other `order-totals` rules:
+```bash
+cp campaign-kit-templates/src/olympus/assets/css/next-core.css campaign-kit-templates/src/[slug]/assets/css/next-core.css
+```
+
+If the template has unique CSS that must be preserved (e.g. `#bundle-slots-stage` rules in olympus-mv-single-step), append those rules to the copied file so all shared rules stay in sync.
+
+The rules below are already present in the copied file — listed here for reference only:
 
 ```css
 .order-totals__discount-list {
