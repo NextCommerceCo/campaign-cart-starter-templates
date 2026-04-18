@@ -90,6 +90,7 @@ npm run dev
 
 | Slug | Funnel type | Preview |
 |------|-------------|---------|
+| `limos` | Single-step checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/limos/checkout/) · [upsell-single](https://nextcommerce-campaign-templates.netlify.app/limos/upsell-single/) · [upsell-quantity](https://nextcommerce-campaign-templates.netlify.app/limos/upsell-quantity/) · [upsell-cards](https://nextcommerce-campaign-templates.netlify.app/limos/upsell-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/limos/receipt/) |
 | `olympus` | Single-step checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus/checkout/) · [upsell-single](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-single/) · [upsell-quantity](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-quantity/) · [upsell-cards](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus/receipt/) |
 | `olympus-mv-single-step` | Single-step with variants | [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/checkout/) · [upsell](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/upsell-mv/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/receipt/) |
 

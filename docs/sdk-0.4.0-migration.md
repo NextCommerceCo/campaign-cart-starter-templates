@@ -384,7 +384,7 @@ Full example (distinct package IDs per card):
 
 | Template | Selector fix | Token renames | Bug fixes | Notes |
 |----------|-------------|---------------|-----------|-------|
-| `limos` | 🔄 in progress | 🔄 in progress | 🔄 QA | Upsell approach TBD. |
+| `limos` | ✅ bundle selector | ✅ **0.4.x** | 🔄 QA | Single-step checkout. Cart summary: `cart-summary02.html` (accordion style). Upsell: Approach B (bundle + vouchers) — `upsell-single → upsell-quantity → upsell-cards → receipt`. Bump partials + `next-core.css` + `upsells.js` copied from `olympus`. |
 | `olympus` | ✅ bundle selector | ✅ **0.4.10** | ✅ QA | Reference **bundle** checkout (`data-next-bundle-selector` + Summary v2). **#8** swap: **fixed**. **#3** bundle shipping: **fixed 0.4.12**. **#7** bumps: **fixed 0.4.14**. **#9** summary tokens: **fixed 0.4.11**. **#10** coupon display: **fixed via workaround 0.4.13**. Open: **#4** multi-package price slots (affects non-bundle selector path only). — [template bug log](template-bug-log.md) |
 | `olympus-mv-single-step` | ✅ native external slots | ✅ **0.4.10** | 🔄 QA | Native `data-next-bundle-slots-for` + `data-next-variant-selector-template-id`. Replaces bridge JS. **`upsell-mv.html`** is Approach B (bundle upsell + vouchers). **Variant UI:** SDK **native `<select>`** in staged slots works without JS; **`setupBundleSlotVariantDropdowns()`** is **opt-in** for the custom **`os-dropdown`** UI — see file-header comments in [`checkout-olympus-mv-full.js`](../campaign-kit-templates/src/olympus-mv-single-step/assets/js/checkout-olympus-mv-full.js) and [`upsells-up01-mv.js`](../campaign-kit-templates/src/olympus-mv-single-step/assets/js/upsells-up01-mv.js). |
 
@@ -396,7 +396,7 @@ Full example (distinct package IDs per card):
 | `olympus-mv-single-step` | ⬜ pending | ⬜ pending | |
 | `olympus-mv-two-step` | ⬜ pending | ⬜ pending | |
 | `demeter` | ⬜ pending | ⬜ pending | |
-| `limos` | 🔄 in progress | 🔄 in progress | Promoted to `campaign-kit-templates/src/limos/` |
+| `limos` | ✅ | ✅ | Promoted to `campaign-kit-templates/src/limos/` |
 | `shop-single-step` | — | — | No selector |
 | `shop-three-step` | — | — | No selector |
 
