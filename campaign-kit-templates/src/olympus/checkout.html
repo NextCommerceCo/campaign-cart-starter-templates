@@ -271,8 +271,7 @@ swiper_thumbs:
                                 </template>
                               </div>
                               {% endcomment %}
-                              {% comment %} Shipping mapping for active checkout tiers: 1x -> ref 2, 2x -> ref 2, 3x -> ref 1 (intentional by offer design). {% endcomment %}
-                              {% comment %} BS-020 note: data-next-include-shipping on [data-next-bundle-selector] may be ignored by current SDK path; card-level data-next-shipping-id is the effective shipping control here. See docs/template-bug-log.md. {% endcomment %}
+                              {% comment %} data-next-await: loading state while bundle prices hydrate. Per-tier shipping: data-next-shipping-id on each card below (1x/2x ref 2, 3x ref 1). {% endcomment %}
                               <div data-next-bundle-selector data-next-selector-id="drone-packages" data-next-selection-mode="swap" data-next-include-shipping="true" class="os-option"  data-next-await="">
                                 <div class="os-cards__vertical os--gap-xl">
                                   <div data-next-bundle-card data-next-bundle-id="drone-qty-1" data-next-shipping-id="2" data-next-bundle-items='[{"packageId":1,"quantity":1}]' data-next-selected="true" role="button" class="os-card">
@@ -437,7 +436,7 @@ swiper_thumbs:
                                       <div class="form-input"><label for="shipping_fname" class="label-checkout">First Name</label><input autocomplete="given-name" os-checkout-validate="required" placeholder="First Name*" maxlength="256" name="shipping_fname" data-name="Shipping First Name" type="text" id="shipping_fname" data-next-checkout-field="fname" class="input-flds"></div>
                                     </div>
                                     <div class="form-group">
-                                      <div class="form-input"><label for="shipping_lname" class="label-checkout">Last Name</label><input autocomplete="family-name" os-checkout-validate="required" placeholder="Last Name*" maxlength="256" name="shipping_lname" data-name="Shipping Lirst Name" type="text" id="shipping_lname" data-next-checkout-field="lname" class="input-flds"></div>
+                                      <div class="form-input"><label for="shipping_lname" class="label-checkout">Last Name</label><input autocomplete="family-name" os-checkout-validate="required" placeholder="Last Name*" maxlength="256" name="shipping_lname" data-name="Shipping Last Name" type="text" id="shipping_lname" data-next-checkout-field="lname" class="input-flds"></div>
                                     </div>
                                   </div>
                                   <div class="form-grid__row">
