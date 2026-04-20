@@ -16,13 +16,13 @@ Tracks changes needed across templates when upgrading from SDK 0.3.x to 0.4.0.
 - **`olympus/upsell-bundle-stepper.html`** — same native controls on a **post-purchase** bundle upsell (one hidden card).
 - **Inline `<template>` inside `[data-next-bundle-selector]`** (no template `id`) — noted in commented auto-render example on **`olympus/checkout.html`**; canonical olympus checkout remains manual inline cards.
 
-**`campaigns.json`:** **`olympus`** and **`limos`** pin **`sdk_version`:** **`0.4.18`**. **`olympus-mv-single-step`** remains **`0.4.17`** until MV checkout/upsell paths are smoke-tested on 0.4.18 (tier + slot layout differs from single-card limos demo).
+**`campaigns.json`:** **`olympus`**, **`limos`**, and **`olympus-mv-single-step`** pin **`sdk_version`:** **`0.4.18`** in the reference file. MV checkout still does **not** wire native checkout **`bundleQuantity`** (tier cards + slots — use **`limos/checkout.html`** for that demo); **`upsell-mv.html`** keeps **`initBundleQtyToggle`** + hidden tier cards, not **`upsell-bundle-stepper`**. Re-smoke MV checkout + upsell after loader bumps.
 
 ### SDK 0.4.17 — post-checkout session cleanup (cart + vouchers)
 
 **Loader:** `https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v0.4.17/dist/loader.js` ([v0.4.17](https://github.com/NextCommerceCo/campaign-cart/releases/tag/v0.4.17)).
 
-**Campaigns reference:** **`olympus-mv-single-step`** pins **`sdk_version`:** **`0.4.17`** in [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json) (see **0.4.18** section above for olympus/limos).
+**Reference pins:** [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json) uses **`0.4.18`** for **olympus**, **limos**, and **olympus-mv-single-step**. Pin **0.4.17** or older only when bisecting a regression against those releases.
 
 **Fixes (no reference template markup changes required):**
 
@@ -392,13 +392,13 @@ Full example (distinct package IDs per card):
 
 ### Migrated — `campaign-kit-templates/` (SDK 0.4.x)
 
-**Loader pin:** bump **`sdk_version`** in [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json) when adopting newer Campaign Cart releases (reference repo: **olympus/limos `0.4.18`**, **olympus-mv-single-step `0.4.17`** until re-verified).
+**Loader pin:** bump **`sdk_version`** in [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json) when adopting newer Campaign Cart releases (reference repo: **`0.4.18`** for **olympus**, **limos**, **olympus-mv-single-step**).
 
 | Template | Selector fix | Token renames | Bug fixes | Notes |
 |----------|-------------|---------------|-----------|-------|
 | `limos` | ✅ bundle selector | ✅ **0.4.x** | 🔄 QA | Single-step checkout. **`checkout.html`:** SDK **0.4.18** native **bundleQuantity** stepper under bundle selector (`limos-card`). Cart summary: `cart-summary02.html`. Upsell chain matches olympus file names. |
 | `olympus` | ✅ bundle selector | ✅ **0.4.x** | ✅ QA | Reference **bundle** checkout (`data-next-bundle-selector` + Summary v2); **no** checkout bundle-qty stepper (see **limos**). **sdk_version `0.4.18`**. Upsell: `upsell-bundle-stepper` (native qty) + tier pills/cards. — [template bug log](template-bug-log.md) |
-| `olympus-mv-single-step` | ✅ native external slots | ✅ **0.4.x** | 🔄 QA | **`sdk_version` `0.4.17`**. Checkout: tier cards + **`data-next-bundle-slots-for`**. **Native `bundleQuantity` on checkout not wired here** (tier UX + MV slots — use **limos** checkout for the 0.4.18 qty demo). **`upsell-mv.html`:** tier pills + `initBundleQtyToggle`, not `upsell-bundle-stepper`. Variant UI: see [`checkout-olympus-mv-full.js`](../campaign-kit-templates/src/olympus-mv-single-step/assets/js/checkout-olympus-mv-full.js) and [`upsells-up01-mv.js`](../campaign-kit-templates/src/olympus-mv-single-step/assets/js/upsells-up01-mv.js). |
+| `olympus-mv-single-step` | ✅ native external slots | ✅ **0.4.x** | 🔄 QA | **`sdk_version` `0.4.18`**. Checkout: tier cards + **`data-next-bundle-slots-for`**. **Native `bundleQuantity` on checkout not wired here** (tier UX + MV slots — use **limos** checkout for the qty demo). **`upsell-mv.html`:** tier pills + `initBundleQtyToggle`, not `upsell-bundle-stepper`. Variant UI: see [`checkout-olympus-mv-full.js`](../campaign-kit-templates/src/olympus-mv-single-step/assets/js/checkout-olympus-mv-full.js) and [`upsells-up01-mv.js`](../campaign-kit-templates/src/olympus-mv-single-step/assets/js/upsells-up01-mv.js). |
 
 ### Pending migration — `campaign-kit-templates-v3/` (SDK 0.3.x)
 
@@ -567,4 +567,4 @@ Public [Campaign Cart](https://developers.nextcommerce.com/docs/campaigns/campai
 ## Open Issues (templates)
 
 - **`olympus/checkout.html`** — primary **bundle selector** reference; full BS-xxx log in [`docs/template-bug-log.md`](template-bug-log.md). Previously-open items now resolved: **#8** swap/add lines (`fixed`), **#9** summary tokens (`fixed 0.4.11`), **#10** coupon display (`fixed via workaround 0.4.13`), **#3** bundle card shipping (`fixed 0.4.12`), **#7** bump regression (`fixed 0.4.14`), **#5** slot formatting (`fixed 0.4.11`). **BS-019** (ghost cart/coupon on receipt **reload** after submit): **fixed SDK 0.4.17**. **Still open: #4** — `data-next-package-price="compare/savings"` slots return per-unit retail (not package total) for multi-package setups; `savingsAmount`/`savingsPercentage` are static (retail-vs-base only). Affects multi-package selector path only; bundle selector is the recommended direction. **Checkout bundle multiplier:** demo on **`limos/checkout.html`** (SDK **0.4.18**); olympus checkout omits native **`bundleQuantity`** on purpose.
-- **`olympus-mv-single-step/upsell-mv.html`** — **Approach B** MV upsell (tiers + vouchers); QA per-tier codes in Campaigns match `data-next-bundle-vouchers` on each card. Variant dropdown glue and qty toggle: **`assets/js/upsells-up01-mv.js`**. **BS-018** (session coupon vs upsell **`bundle.*`** display): **`verified`** on **Campaign Cart 0.4.17+** reference smoke — see [`docs/campaign-issues-overview.md`](campaign-issues-overview.md) fixed **#14** / [`docs/template-bug-log.md`](template-bug-log.md) **BS-018**. Historical **#8** variant-family **workaround retired** (**#15**). **SDK 0.4.17** also clears post-checkout **`sessionStorage`** (**BS-019**). **Regression-watch** on SDK bumps.
+- **`olympus-mv-single-step/upsell-mv.html`** — **Approach B** MV upsell (tiers + vouchers); QA per-tier codes in Campaigns match `data-next-bundle-vouchers` on each card. Variant dropdown glue and qty toggle: **`assets/js/upsells-up01-mv.js`**. **BS-018** (session coupon vs upsell **`bundle.*`** display): **`verified`** on **Campaign Cart 0.4.17+** reference smoke — see [`docs/campaign-issues-overview.md`](campaign-issues-overview.md) fixed **#14** / [`docs/template-bug-log.md`](template-bug-log.md) **BS-018**. Historical **#8** variant-family **workaround retired** (**#15**). **BS-019** post-checkout **`sessionStorage`** cleanup shipped in **0.4.17** and remains in **0.4.18**. **Regression-watch** on SDK bumps.

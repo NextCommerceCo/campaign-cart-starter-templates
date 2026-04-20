@@ -59,7 +59,7 @@ Single-step checkout. All three follow the same page structure.
 
 No required params — pages load without `forcePackageId`.
 
-**Reference repo pins:** **`olympus`** and **`limos`** use **`sdk_version` `0.4.18`** in [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json). **`olympus-mv-single-step`** stays **`0.4.17`** until MV is re-smoked on newer loaders.
+**Reference repo pins:** **`olympus`**, **`limos`**, and **`olympus-mv-single-step`** use **`sdk_version` `0.4.18`** in [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json).
 
 **`limos` checkout — bundle quantity (0.4.18):** Use the **`.next-bundle-qty`** stepper (anchored on **`.checkout-bundle-offer`**, same “outside selector” pattern as **`upsell-bundle-stepper`**); totals and submitted line quantity should advance **one step per + click**. **`olympus`** checkout intentionally has **no** checkout bundle-qty UI — compare behavior on **limos** only.
 
@@ -78,7 +78,7 @@ Single-step checkout with multi-variant selection on the checkout page.
 - Selecting each variant on the checkout page updates the price and selected package correctly
 - `forcePackageId=` pre-selects a variant — verify the right option is highlighted
 
-**`olympus-mv-single-step`:** Pin **`sdk_version`** in `campaigns.json` to match your Campaign Cart build (reference repo **0.4.17**). Upsell at **`upsell-mv.html`** is **Approach B** (bundle selector + **`data-next-upsell-context`**). Confirm **per-tier voucher codes** in Campaigns match **`data-next-bundle-vouchers`** on each tier card; accept adds the selected tier with the right code. External slot variant UI: native **`<select>`** works without extra JS; custom **`os-dropdown`** requires **`setupBundleSlotVariantDropdowns()`** in campaign JS — see **`docs/sdk-0.4.0-migration.md`** and JS file headers. **BS-018** (checkout coupon vs upsell **`bundle.*`** display): **verified** on **0.4.17+** reference smoke — see **`docs/campaign-issues-overview.md`** fixed **#14** / **`docs/template-bug-log.md`** **BS-018**; regression-watch on SDK upgrades.
+**`olympus-mv-single-step`:** Pin **`sdk_version`** in `campaigns.json` to match your Campaign Cart build (reference repo **0.4.18**). Upsell at **`upsell-mv.html`** is **Approach B** (bundle selector + **`data-next-upsell-context`**). Confirm **per-tier voucher codes** in Campaigns match **`data-next-bundle-vouchers`** on each tier card; accept adds the selected tier with the right code. External slot variant UI: native **`<select>`** works without extra JS; custom **`os-dropdown`** requires **`setupBundleSlotVariantDropdowns()`** in campaign JS — see **`docs/sdk-0.4.0-migration.md`** and JS file headers. **BS-018** (checkout coupon vs upsell **`bundle.*`** display): **verified** on **0.4.17+** reference smoke — see **`docs/campaign-issues-overview.md`** fixed **#14** / **`docs/template-bug-log.md`** **BS-018**; regression-watch on SDK upgrades.
 
 ---
 
