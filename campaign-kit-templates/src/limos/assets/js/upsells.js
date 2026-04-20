@@ -10,8 +10,8 @@
  * the matching hidden [data-next-bundle-card] inside a [data-next-bundle-selector].
  *
  * Markup contract:
- *   - Qty container: data-bundle-qty-for="<selectorId>"
- *   - Qty buttons:   data-bundle-qty-btn="<N>"
+ *   - Qty container: data-bundle-qty-for="<selectorId>" (typically on `.next-bundle-qty__row`)
+ *   - Qty buttons:   data-bundle-qty-btn="<N>" (use `.next-bundle-qty__btn` — next-core.css)
  *   - Bundle cards:  data-next-bundle-id="<selectorId>-<N>x"
  *
  * The bundle selector is hidden from view (display:none) and acts only as a

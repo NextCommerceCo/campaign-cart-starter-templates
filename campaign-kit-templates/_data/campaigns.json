@@ -2,7 +2,7 @@
   "limos": {
     "name": "Limos",
     "description": "Limos checkout funnel",
-    "sdk_version": "0.4.17",
+    "sdk_version": "0.4.18",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",

@@ -14231,7 +14231,10 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   display: flex;
 }
 
-.upsell-offer__qty-label {
+/* Bundle quantity UI (SDK 0.4.18+ native stepper + tier toggles): generic block `.next-bundle-qty*`;
+   legacy `.upsell-offer__qty-*` / `.select-quantity-wrapper` remain as aliases for existing pages. */
+.upsell-offer__qty-label,
+.next-bundle-qty__label {
   grid-column-gap: .5rem;
   grid-row-gap: .5rem;
   align-items: center;
@@ -14239,17 +14242,22 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   display: flex;
 }
 
-.upsell-offer__quantity-row {
-  grid-column-gap: .5rem;
-  grid-row-gap: .5rem;
+.upsell-offer__quantity-row,
+.next-bundle-qty__row {
+  grid-column-gap: .75rem;
+  grid-row-gap: .75rem;
   border: 1px solid var(--brand--color--primary-light);
   background-color: #fff;
   border-radius: 8px;
   padding: .5rem;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-.upsell-offer__qty-btn {
+.upsell-offer__qty-btn,
+.next-bundle-qty__btn {
   cursor: pointer;
   border: 1px solid var(--brand--color--primary-light);
   background-color: var(--brand--color--primary-light);
@@ -14263,7 +14271,9 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 }
 
 .upsell-offer__qty-btn--selected,
-.upsell-offer__qty-btn.next-selected {
+.upsell-offer__qty-btn.next-selected,
+.next-bundle-qty__btn--selected,
+.next-bundle-qty__btn.next-selected {
   border-color: var(--brand--color--primary);
   background-color: var(--brand--color--primary);
   color: #fff;
@@ -14293,19 +14303,49 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   height: 110px;
 }
 
-/* Quantity row wrapper (up01 / up01-mv) – moved from next-core */
-.select-quantity-wrapper {
+/* Quantity block wrapper: upsell stepper, tier pills, tier cards grid, checkout card, etc. */
+.select-quantity-wrapper,
+.next-bundle-qty {
   justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 24px;
-    display: flex;
-    gap: 6px;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 6px;
+}
+
+/* Limos checkout: wrap [data-next-bundle-selector] + stepper in .checkout-bundle-offer — stepper stays
+   OUTSIDE the selector (like upsell-bundle-stepper) so +/− are not inside a clickable bundle card. */
+.checkout-bundle-offer {
+  position: relative;
+}
+
+.checkout-bundle-offer > .next-bundle-qty.next-bundle-qty--anchor-br {
+  position: absolute;
+  right: 0.65rem;
+  bottom: 0.65rem;
+  margin-bottom: 0;
+  z-index: 2;
+  width: auto;
+  max-width: calc(100% - 1.3rem);
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 0.35rem;
+}
+
+.checkout-bundle-offer > .next-bundle-qty.next-bundle-qty--anchor-br .next-bundle-qty__row {
+  justify-content: flex-end;
 }
 
 @media screen and (max-width: 991px) {
-  .select-quantity-wrapper {
+  .select-quantity-wrapper,
+  .next-bundle-qty {
     margin-bottom: 20px;
+  }
+
+  .checkout-bundle-offer > .next-bundle-qty.next-bundle-qty--anchor-br {
+    margin-bottom: 0;
   }
 }
 
@@ -14323,14 +14363,16 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
     width: 100%;
   }
 
-  .upsell-offer__qty-label {
+  .upsell-offer__qty-label,
+  .next-bundle-qty__label {
     grid-column-gap: 0;
     grid-row-gap: 0;
     margin-right: 1rem;
     line-height: 1.2;
   }
 
-  .upsell-offer__qty-btn {
+  .upsell-offer__qty-btn,
+  .next-bundle-qty__btn {
     width: 2rem;
     height: 2rem;
   }
@@ -14343,8 +14385,13 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
     font-size: var(--font-size--3xl);
   }
 
-  .select-quantity-wrapper {
+  .select-quantity-wrapper,
+  .next-bundle-qty {
     margin-bottom: 16px;
+  }
+
+  .checkout-bundle-offer > .next-bundle-qty.next-bundle-qty--anchor-br {
+    margin-bottom: 0;
   }
 }
 

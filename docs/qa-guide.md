@@ -59,6 +59,10 @@ Single-step checkout. All three follow the same page structure.
 
 No required params — pages load without `forcePackageId`.
 
+**Reference repo pins:** **`olympus`** and **`limos`** use **`sdk_version` `0.4.18`** in [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json). **`olympus-mv-single-step`** stays **`0.4.17`** until MV is re-smoked on newer loaders.
+
+**`limos` checkout — bundle quantity (0.4.18):** Use the **`.next-bundle-qty`** stepper (anchored on **`.checkout-bundle-offer`**, same “outside selector” pattern as **`upsell-bundle-stepper`**); totals and submitted line quantity should advance **one step per + click**. **`olympus`** checkout intentionally has **no** checkout bundle-qty UI — compare behavior on **limos** only.
+
 ---
 
 ### olympus-mv-single-step

@@ -72,7 +72,7 @@ Registers every campaign. The `campaign` object in Liquid templates comes from h
     {
       "name": "My Campaign",
       "slug": "my-campaign",
-      "sdk_version": "0.4.17",
+      "sdk_version": "0.4.18",
       "store_name": "Acme Store",
       "store_url": "https://acme.com",
       "store_phone": "1-800-555-0100",
@@ -587,7 +587,7 @@ For single-package upsells without voucher-driven pricing. If the upsell uses Ca
 ### Bundle upsell (SDK 0.4.x) and MV external slots
 
 - **Coupon/voucher-driven** upsell pricing uses **Approach B**: `data-next-bundle-selector` + `data-next-upsell-context`, `data-next-bundle-vouchers`, `data-next-upsell-action-for`. Full comparison table: [`docs/sdk-0.4.0-migration.md`](sdk-0.4.0-migration.md) (Approach A vs B).
-- **References:** `olympus/upsell-bundle-stepper.html` (one card + native bundleQuantity), `upsell-bundle-tier-pills.html` / `upsell-bundle-tier-cards.html` (tiered bundle tiers); **`olympus-mv-single-step/upsell-mv.html`** (tier pills + **`data-next-bundle-slots-for`** slot layout).
+- **References:** `limos/checkout.html` (checkout + native **bundleQuantity**, **`.checkout-bundle-offer`** + **`.next-bundle-qty--anchor-br`**, stepper **not** inside **`[data-next-bundle-card]`**); `olympus/upsell-bundle-stepper.html` (same **`.next-bundle-qty*`** stepper on upsell); `upsell-bundle-tier-pills.html` / `upsell-bundle-tier-cards.html` (tiered bundle tiers, same generic qty classes); **`olympus-mv-single-step/upsell-mv.html`** (tier pills + **`data-next-bundle-slots-for`** slot layout; checkout omits native checkout bundle qty — see **limos**). Styles: **`next-core.css`** (not upsell-only).
 - **Variant UI in staged bundle slots:** SDK-injected **native `<select>`** works **without** extra JS. **`setupBundleSlotVariantDropdowns()`** (custom **`os-dropdown`** UI) is **opt-in** — see file-header comments in **`checkout-olympus-mv-full.js`** and **`upsells-up01-mv.js`** on the **`olympus-mv-single-step`** template.
 
 ---

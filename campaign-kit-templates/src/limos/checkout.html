@@ -31,26 +31,39 @@ scripts:
                     <div><span class="checkout-high-demand__highlight">High Demand:</span> 62 people are looking at this offer!</div>
                   </div>
                   {% comment %} BS-020: data-next-include-shipping on [data-next-bundle-selector] is currently a no-op — the SDK reads it but does not pass it through to calculateBundlePrice (unlike PackageSelector). Safe to omit or keep for future parity. docs/template-bug-log.md {% endcomment %}
-                  <div data-next-bundle-selector data-next-selector-id="limos-card" data-next-selection-mode="swap" data-next-include-shipping="true" class="checkout-packages" data-next-await="">
-                    <div data-next-bundle-card data-next-bundle-id="limos-qty-1" data-next-shipping-id="2" data-next-bundle-items='[{"packageId":1,"quantity":1}]' data-next-selected="true" role="button" class="checkout-package">
-                      <div class="checkout__package-card-header">
-                        <div class="checkout__package-icon"><svg viewBox="0 0 14 13" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7 0L9.05725 4.16844L13.6574 4.83688L10.3287 8.08156L11.1145 12.6631L7 10.5L2.8855 12.6631L3.6713 8.08156L0.342604 4.83688L4.94275 4.16844L7 0Z"></path>
-                          </svg></div>
-                        <div><strong>SPECIAL OFFER</strong> - LIMITED TIME</div>
-                      </div>
-                      <div class="checkout__package-card-content" data-next-package-id="1">
-                        <div class="checkout__package-checkbox">
-                          <div class="checkout__package-checkbox-icon"><svg width="100%" height="100%" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M14 0L5.48471 8.99904L1.76471 5.86094L0 8.1909L4.70588 12.1695L5.69176 13L6.58824 12.0526L16 2.10616L14 0Z" fill="currentColor"></path>
+                  {% comment %} SDK 0.4.18+: native bundleQuantity — .next-bundle-qty* matches upsell-bundle-stepper; stepper sits OUTSIDE [data-next-bundle-selector] (same as that upsell) so +/− are not inside a clickable [data-next-bundle-card]. Single-card checkout: no role="button" on the card (tiers use role="button" on olympus). .checkout-bundle-offer + .next-bundle-qty--anchor-br in next-core.css. {% endcomment %}
+                  <div class="checkout-bundle-offer">
+                    <div data-next-bundle-selector data-next-selector-id="limos-card" data-next-selection-mode="swap" data-next-include-shipping="true" class="checkout-packages" data-next-await="">
+                      <div data-next-bundle-card data-next-bundle-id="limos-qty-1" data-next-shipping-id="2" data-next-bundle-items='[{"packageId":1,"quantity":1}]' data-next-quantity="1" data-next-min-quantity="1" data-next-max-quantity="5" data-next-selected="true" class="checkout-package">
+                        <div class="checkout__package-card-header">
+                          <div class="checkout__package-icon"><svg viewBox="0 0 14 13" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M7 0L9.05725 4.16844L13.6574 4.83688L10.3287 8.08156L11.1145 12.6631L7 10.5L2.8855 12.6631L3.6713 8.08156L0.342604 4.83688L4.94275 4.16844L7 0Z"></path>
                             </svg></div>
+                          <div><strong>SPECIAL OFFER</strong> - LIMITED TIME</div>
                         </div>
-                        <div class="checkout__package-media-wrapper"><img src="{{ 'images/1x1_1.svg' | campaign_asset }}" loading="lazy" data-next-display="package.image" alt="" class="checkout__package-media"></div>
-                        <div class="checkout__package-content">
-                          <div data-next-bundle-display="hasDiscount" class="package-price--regular"><span data-next-bundle-display="originalPrice">$119.98</span></div>
-                          <div class="package-price--sale"><span data-next-bundle-display="price">$59.99</span></div>
-                          <div class="package-savings">You Save <span data-next-bundle-display="discountAmount">$59.99</span></div>
+                        <div class="checkout__package-card-content" data-next-package-id="1">
+                          <div class="checkout__package-checkbox">
+                            <div class="checkout__package-checkbox-icon"><svg width="100%" height="100%" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14 0L5.48471 8.99904L1.76471 5.86094L0 8.1909L4.70588 12.1695L5.69176 13L6.58824 12.0526L16 2.10616L14 0Z" fill="currentColor"></path>
+                              </svg></div>
+                          </div>
+                          <div class="checkout__package-media-wrapper"><img src="{{ 'images/1x1_1.svg' | campaign_asset }}" loading="lazy" data-next-display="package.image" alt="" class="checkout__package-media"></div>
+                          <div class="checkout__package-content">
+                            <div data-next-bundle-display="hasDiscount" class="package-price--regular"><span data-next-bundle-display="originalPrice">$119.98</span></div>
+                            <div class="package-price--sale"><span data-next-bundle-display="price">$59.99</span></div>
+                            <div class="package-savings">You Save <span data-next-bundle-display="discountAmount">$59.99</span></div>
+                          </div>
                         </div>
+                      </div>
+                    </div>
+                    {% comment %}
+                      For a single fixed bundle quantity only (no multiplier UI): delete the `.next-bundle-qty` block below (from its opening div through the matching closing `</div>`), and remove `data-next-quantity`, `data-next-min-quantity`, and `data-next-max-quantity` from the `data-next-bundle-card` above. Same checklist as the “Single fixed qty only” note in `upsell-bundle-stepper.html`.
+                    {% endcomment %}
+                    <div class="next-bundle-qty next-bundle-qty--anchor-br" aria-label="Bundle quantity" data-next-await>
+                      <div class="next-bundle-qty__row" data-next-bundle-qty-for="limos-card">
+                        <button type="button" class="next-bundle-qty__btn" data-next-quantity-decrease aria-label="Decrease bundle quantity">−</button>
+                        <span class="text-lg tw-600" data-next-quantity-display style="min-width: 1.5rem; text-align: center;">1</span>
+                        <button type="button" class="next-bundle-qty__btn" data-next-quantity-increase aria-label="Increase bundle quantity">+</button>
                       </div>
                     </div>
                   </div>

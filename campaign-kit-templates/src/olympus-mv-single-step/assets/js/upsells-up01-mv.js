@@ -287,8 +287,8 @@ function setupBundleSlotVariantDropdowns() {
  * matching hidden [data-next-bundle-card] inside a [data-next-bundle-selector].
  *
  * Markup contract:
- *   Qty container: data-bundle-qty-for="<selectorId>"
- *   Qty buttons:   data-bundle-qty-btn="<N>"
+ *   Qty container: data-bundle-qty-for="<selectorId>" (typically `.next-bundle-qty__row`)
+ *   Qty buttons:   data-bundle-qty-btn="<N>" (`.next-bundle-qty__btn` — next-core.css)
  *   Bundle cards:  data-next-bundle-id="<selectorId>-<N>x"
  *
  * On card click the SDK re-fetches voucher-calculated price, updates remote

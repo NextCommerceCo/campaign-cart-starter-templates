@@ -42,8 +42,7 @@ swiper_thumbs:
   without per-tier card picking — vouchers ride AddUpsellLine on accept.
 
   SDK 0.4.18+ native bundle quantity: visible stepper (data-next-bundle-qty-for + data-next-quantity-*)
-  above the price block (same stack order as upsell-bundle-tier-pills.html) — bundleQuantity multiplier on this one offer (see campaign-cart BundleSelector
-  attributes.md «Inline bundle-quantity controls»). Card carries data-next-quantity / min / max.
+  above the price block — markup uses generic `.next-bundle-qty*` (next-core.css; limos checkout adds `.next-bundle-qty--anchor-br` for card corner). Card carries data-next-quantity / min / max.
   To ship fixed single qty only: remove/hide the stepper block in markup and remove those three attrs from the card.
 
   Align packageId in data-next-bundle-items with data-next-display="package.<id>.name" and Campaigns.
@@ -151,17 +150,17 @@ swiper_thumbs:
                     <!--
                       SDK 0.4.18+ bundleQuantity: data-next-bundle-qty-for matches data-next-selector-id on the hidden selector;
                       card uses data-next-quantity / min / max. Tiered line qty + per-step vouchers → upsell-bundle-tier-pills.html / upsell-bundle-tier-cards.html.
-                      Single fixed qty only: remove or hide this entire .select-quantity-wrapper and drop data-next-quantity (and min/max) from the hidden bundle card above.
+                      Single fixed qty only: remove or hide this entire .next-bundle-qty block and drop data-next-quantity (and min/max) from the hidden bundle card above.
                     -->
-                    <div class="select-quantity-wrapper">
-                      <div class="upsell-offer__qty-label">
+                    <div class="next-bundle-qty">
+                      <div class="next-bundle-qty__label">
                         <div>Select Quantity</div>
                         <div class="right-bullet-icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z"></path></svg></div>
                       </div>
-                      <div class="upsell-offer__quantity-row" data-next-bundle-qty-for="upsell-bundle" style="display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
-                        <button type="button" class="upsell-offer__qty-btn" data-next-quantity-decrease aria-label="Decrease quantity">−</button>
+                      <div class="next-bundle-qty__row" data-next-bundle-qty-for="upsell-bundle">
+                        <button type="button" class="next-bundle-qty__btn" data-next-quantity-decrease aria-label="Decrease quantity">−</button>
                         <span class="text-lg tw-600" data-next-quantity-display style="min-width: 1.5rem; text-align: center;">1</span>
-                        <button type="button" class="upsell-offer__qty-btn" data-next-quantity-increase aria-label="Increase quantity">+</button>
+                        <button type="button" class="next-bundle-qty__btn" data-next-quantity-increase aria-label="Increase quantity">+</button>
                       </div>
                     </div>
 
