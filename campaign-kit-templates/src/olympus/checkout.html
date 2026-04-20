@@ -207,67 +207,72 @@ swiper_thumbs:
                           <div class="form-sections">
                             <div class="form-section grid-row-gap2 form-section--first">
                               <h2 class="form-section__title">Step 1: Pick Your Bundle Deal</h2>
-                              <!-- Bundle selector: use inline cards (not data-next-bundles auto-render) so data-next-display="package.*" is in the initial DOM — injected template nodes are not bound by ProductDisplayEnhancer. Auto-render: https://developers.nextcommerce.com/docs/campaigns/guides/bundle-set-sale#step-4-auto-render-mode -->
+                              <!-- Canonical Olympus checkout pattern: manual inline bundle cards.
+                                   This keeps data-next-display="package.*" bindings reliable for image/name in initial DOM. -->
                               {% comment %}
-                              Optional Step 4 auto-render: uncomment this block and remove the inline data-next-bundle-selector below. Use {bundle.*} / static img src for title+image — data-next-display="package.*" on injected nodes will not bind.
-                              <template id="drone-bundle-card-tpl">
-                                <div data-next-bundle-card data-next-bundle-id="{bundle.id}" role="button" class="os-card">
-                                  <div class="os-card__header-slot"></div>
-                                  <div class="os-card__wrapper">
-                                    <div class="os-card__content os--align-middle" data-next-package-id="1">
-                                      <div data-selected="true" class="radio-style-1">
-                                        <div class="radio-inner"></div>
-                                      </div>
-                                      <div class="os-card__image-slot hide-tablet"><img data-next-display="package.image" alt="" class="image"></div>
-                                      <div class="os-card__main-slot">
-                                        <div class="os-card__title-section">
-                                          <div class="os-card__title-wrapper">
-                                            <div data-next-display="package.name" class="os-card__title">Package Title</div>
-                                            <div data-next-bundle-display="hasDiscount" class="os-card__title-badge pb--bestseller">
-                                              <div>SAVE <span data-next-bundle-display="discountPercentage">-</span></div>
-                                            </div>
-                                          </div>
-                                          <div class="os-card__subtitle-wrapper">
-                                            <div data-next-bundle-display="hasDiscount" class="os-card__subtitle-text">Save <span data-next-bundle-display="discountAmount">-</span><span data-next-show="shipping.isFree"> + Free Shipping</span></div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div class="os-card__secondary-slot">
-                                        <div class="os-card__pricing">
-                                          <div class="os-card__price-container">
-                                            <div data-next-bundle-display="hasDiscount" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>
-                                            <div class="os-card__price os--current"><span data-next-bundle-display="unitPrice">-</span>/ea</div>
-                                          </div>
-                                          <div class="os-card__total-container">
-                                            <div class="os-card__total-label">Total:</div>
-                                            <div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-display="originalPrice">-</span></div>
-                                            <div class="os-card__total-current {bundle.totalToneClass}"><span data-next-bundle-display="price">-</span></div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="os-card__bottom-slot hide"></div>
-                                  </div>
-                                  <div class="os-card__footer-slot"></div>
-                                  <div class="os-card__label-slot {bundle.labelSlotClass}">
-                                    <div class="os-card__label-2 os-card__label--middle-right {bundle.badgePillClass}">
-                                      <div class="card-icons"><svg width="100%" height="100%" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.49512 0.5L8.40542 4.37069L12.677 4.99139L9.58605 8.00431L10.3157 12.2586L6.49512 10.25L2.67451 12.2586L3.40418 8.00431L0.31325 4.99139L4.58482 4.37069L6.49512 0.5Z" fill="#FF9425"></path></svg></div>
-                                      <div class="os-card__label-text-2">{bundle.badgeText}</div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </template>
+                              Reference only — optional Step 4 auto-render variant.
+                              Kept for experimentation; do not treat as the default for Olympus checkout.
+                              Auto-render cards should use {bundle.*} fields for title/image (not data-next-display="package.*").
+                              SDK 0.4.18+: inline <template> inside selector is supported (no template id required).
                               <div
                                 data-next-bundle-selector
                                 data-next-selector-id="drone-packages"
-                                data-next-bundle-template-id="drone-bundle-card-tpl"
-                                data-next-bundles='[{"id":"drone-qty-1","labelSlotClass":"","totalToneClass":"","badgeText":"Most Popular","badgePillClass":"os-card__label--pill-primary","items":[{"packageId":1,"quantity":1}],"selected":true},{"id":"drone-qty-2","labelSlotClass":"","totalToneClass":"","badgeText":"Best Deal","badgePillClass":"os-card__label--pill-secondary","items":[{"packageId":1,"quantity":2}]},{"id":"drone-qty-3","labelSlotClass":"hide","totalToneClass":"os-dark","badgeText":"","badgePillClass":"","items":[{"packageId":1,"quantity":3}]}]'
+                                data-next-bundles='[{"id":"drone-qty-1","title":"1x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":2,"labelSlotClass":"","totalToneClass":"","badgeText":"Most Popular","badgePillClass":"os-card__label--pill-primary","items":[{"packageId":1,"quantity":1}],"selected":true},{"id":"drone-qty-2","title":"2x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":2,"labelSlotClass":"","totalToneClass":"","badgeText":"Best Deal","badgePillClass":"os-card__label--pill-secondary","items":[{"packageId":1,"quantity":2}]},{"id":"drone-qty-3","title":"3x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":1,"labelSlotClass":"hide","totalToneClass":"os-dark","badgeText":"","badgePillClass":"","items":[{"packageId":1,"quantity":3}]}]'
                                 data-next-selection-mode="swap"
                                 data-next-include-shipping="true"
                                 class="os-option os-cards__vertical os--gap-xl"
-                              ></div>
+                              >
+                                <template>
+                                  <div data-next-bundle-card data-next-bundle-id="{bundle.id}" data-next-shipping-id="{bundle.shippingId}" role="button" class="os-card">
+                                    <div class="os-card__header-slot"></div>
+                                    <div class="os-card__wrapper">
+                                      <div class="os-card__content os--align-middle" data-next-package-id="1">
+                                        <div data-selected="true" class="radio-style-1">
+                                          <div class="radio-inner"></div>
+                                        </div>
+                                        <div class="os-card__image-slot hide-tablet"><img src="{bundle.imageSrc}" alt="" class="image"></div>
+                                        <div class="os-card__main-slot">
+                                          <div class="os-card__title-section">
+                                            <div class="os-card__title-wrapper">
+                                              <div class="os-card__title">{bundle.title}</div>
+                                              <div data-next-bundle-display="hasDiscount" class="os-card__title-badge pb--bestseller">
+                                                <div>SAVE <span data-next-bundle-display="discountPercentage">-</span></div>
+                                              </div>
+                                            </div>
+                                            <div class="os-card__subtitle-wrapper">
+                                              <div data-next-bundle-display="hasDiscount" class="os-card__subtitle-text">Save <span data-next-bundle-display="discountAmount">-</span><span data-next-show="shipping.isFree"> + Free Shipping</span></div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="os-card__secondary-slot">
+                                          <div class="os-card__pricing">
+                                            <div class="os-card__price-container">
+                                              <div data-next-bundle-display="hasDiscount" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>
+                                              <div class="os-card__price os--current"><span data-next-bundle-display="unitPrice">-</span>/ea</div>
+                                            </div>
+                                            <div class="os-card__total-container">
+                                              <div class="os-card__total-label">Total:</div>
+                                              <div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-display="originalPrice">-</span></div>
+                                              <div class="os-card__total-current {bundle.totalToneClass}"><span data-next-bundle-display="price">-</span></div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="os-card__bottom-slot hide"></div>
+                                    </div>
+                                    <div class="os-card__footer-slot"></div>
+                                    <div class="os-card__label-slot {bundle.labelSlotClass}">
+                                      <div class="os-card__label-2 os-card__label--middle-right {bundle.badgePillClass}">
+                                        <div class="card-icons"><svg width="100%" height="100%" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.49512 0.5L8.40542 4.37069L12.677 4.99139L9.58605 8.00431L10.3157 12.2586L6.49512 10.25L2.67451 12.2586L3.40418 8.00431L0.31325 4.99139L4.58482 4.37069L6.49512 0.5Z" fill="#FF9425"></path></svg></div>
+                                        <div class="os-card__label-text-2">{bundle.badgeText}</div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </template>
+                              </div>
                               {% endcomment %}
-                              {% comment %} BS-020: data-next-include-shipping on [data-next-bundle-selector] is currently a no-op — the SDK reads it but does not pass it through to calculateBundlePrice (unlike PackageSelector). Safe to omit or keep for future parity. docs/template-bug-log.md {% endcomment %}
+                              {% comment %} Shipping mapping for active checkout tiers: 1x -> ref 2, 2x -> ref 2, 3x -> ref 1 (intentional by offer design). {% endcomment %}
+                              {% comment %} BS-020 note: data-next-include-shipping on [data-next-bundle-selector] may be ignored by current SDK path; card-level data-next-shipping-id is the effective shipping control here. See docs/template-bug-log.md. {% endcomment %}
                               <div data-next-bundle-selector data-next-selector-id="drone-packages" data-next-selection-mode="swap" data-next-include-shipping="true" class="os-option"  data-next-await="">
                                 <div class="os-cards__vertical os--gap-xl">
                                   <div data-next-bundle-card data-next-bundle-id="drone-qty-1" data-next-shipping-id="2" data-next-bundle-items='[{"packageId":1,"quantity":1}]' data-next-selected="true" role="button" class="os-card">
@@ -289,6 +294,25 @@ swiper_thumbs:
                                             <div class="os-card__subtitle-wrapper">
                                               <div data-next-bundle-display="hasDiscount" class="os-card__subtitle-text">Save <span data-next-bundle-display="discountAmount">-</span></div>
                                             </div>
+                                            {% comment %}
+                                            Example — per-tier offer / voucher rows inside a bundle card (SDK 0.4.13+).
+                                            Uncomment and copy to other tiers as needed. Each block needs a child <template>.
+                                            Use {discount.description} on voucher rows when you need the code string (see cart-summary01.html / BS-014).
+                                            <div data-next-discounts="offer">
+                                              <template>
+                                                <div class="os-card__title-badge">
+                                                  <span>{discount.name}</span>
+                                                </div>
+                                              </template>
+                                            </div>
+                                            <div data-next-discounts="voucher">
+                                              <template>
+                                                <div class="os-card__title-badge">
+                                                  <span>{discount.name}</span>
+                                                </div>
+                                              </template>
+                                            </div>
+                                            {% endcomment %}
                                           </div>
                                         </div>
                                         <div class="os-card__secondary-slot">
@@ -400,7 +424,7 @@ swiper_thumbs:
                                     <div class="os-card__footer-slot"></div>
                                   </div>
                                 </div>
-                              </div>
+                              </div> 
                             </div>
 
           
