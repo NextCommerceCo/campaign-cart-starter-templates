@@ -33,18 +33,18 @@ Reference pages on **`v0.4.0-offers-template-update`** — what to open when you
 | File | Preview | Role |
 | ---- | ------- | ---- |
 | [`olympus/checkout.html`](../campaign-kit-templates/src/olympus/checkout.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/olympus/checkout/) | Standard **checkout** with the **bundle picker** and **offers**, using the **new bundle selector** (`data-next-bundle-selector`, tier cards, cart summary). |
-| [`olympus/upsell-single.html`](../campaign-kit-templates/src/olympus/upsell-single.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/olympus/upsell-single/) | **Post-purchase upsell** — Approach A: **single-offer** bundle + vouchers (no quantity toggles); default **`next_success_url`** from checkout. |
-| [`olympus/upsell-quantity.html`](../campaign-kit-templates/src/olympus/upsell-quantity.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/olympus/upsell-quantity/) | **Post-purchase upsell** — Approach B with **qty toggles** (`initBundleQtyToggle`): hidden tier row + **`data-next-upsell-context`**, accept wired to selector. |
-| [`olympus/upsell-cards.html`](../campaign-kit-templates/src/olympus/upsell-cards.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/olympus/upsell-cards/) | **Upsell example** — Approach B with **visible tier cards** + per-tier vouchers (same wiring as quantity page, card UX). |
+| [`olympus/upsell-bundle-stepper.html`](../campaign-kit-templates/src/olympus/upsell-bundle-stepper.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-stepper/) | **Post-purchase upsell** — one hidden bundle card + optional **bundleQuantity** stepper (0.4.18+); default **`next_success_url`** from checkout. |
+| [`olympus/upsell-bundle-tier-pills.html`](../campaign-kit-templates/src/olympus/upsell-bundle-tier-pills.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-tier-pills/) | **Post-purchase upsell** — hidden tier cards + **pills** + `initBundleQtyToggle` + **`data-next-upsell-context`**. |
+| [`olympus/upsell-bundle-tier-cards.html`](../campaign-kit-templates/src/olympus/upsell-bundle-tier-cards.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-tier-cards/) | **Upsell** — **visible** tier bundle cards + per-tier vouchers (same wiring as tier pills; card UX). |
 
 ### Limos — `limos/`
 
 | File | Preview | Role |
 | ---- | ------- | ---- |
 | [`limos/checkout.html`](../campaign-kit-templates/src/limos/checkout.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/limos/checkout/) | **Checkout** with bundle picker, offers, and accordion cart summary (`cart-summary02.html`). |
-| [`limos/upsell-single.html`](../campaign-kit-templates/src/limos/upsell-single.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/limos/upsell-single/) | **Post-purchase upsell** — single-offer bundle + voucher; default `next_success_url` from checkout. |
-| [`limos/upsell-quantity.html`](../campaign-kit-templates/src/limos/upsell-quantity.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/limos/upsell-quantity/) | **Post-purchase upsell** — qty toggles (`initBundleQtyToggle`): hidden tier cards + `data-next-upsell-context`. |
-| [`limos/upsell-cards.html`](../campaign-kit-templates/src/limos/upsell-cards.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/limos/upsell-cards/) | **Upsell** — visible tier cards + per-tier vouchers (same wiring as quantity page, card UX). |
+| [`limos/upsell-bundle-stepper.html`](../campaign-kit-templates/src/limos/upsell-bundle-stepper.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/limos/upsell-bundle-stepper/) | **Post-purchase upsell** — mirrors olympus `upsell-bundle-stepper` (one card + optional bundleQuantity stepper). |
+| [`limos/upsell-bundle-tier-pills.html`](../campaign-kit-templates/src/limos/upsell-bundle-tier-pills.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/limos/upsell-bundle-tier-pills/) | **Post-purchase upsell** — mirrors olympus tier pills (`initBundleQtyToggle` + hidden tier cards). |
+| [`limos/upsell-bundle-tier-cards.html`](../campaign-kit-templates/src/limos/upsell-bundle-tier-cards.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/limos/upsell-bundle-tier-cards/) | **Upsell** — mirrors olympus tier cards (visible tier grid). |
 
 ### Olympus MV Single Step — `olympus-mv-single-step/`
 

@@ -587,7 +587,7 @@ For single-package upsells without voucher-driven pricing. If the upsell uses Ca
 ### Bundle upsell (SDK 0.4.x) and MV external slots
 
 - **Coupon/voucher-driven** upsell pricing uses **Approach B**: `data-next-bundle-selector` + `data-next-upsell-context`, `data-next-bundle-vouchers`, `data-next-upsell-action-for`. Full comparison table: [`docs/sdk-0.4.0-migration.md`](sdk-0.4.0-migration.md) (Approach A vs B).
-- **References:** `olympus/upsell-single.html` (A), `upsell-quantity.html` / `upsell-cards.html` (B); **`olympus-mv-single-step/upsell-mv.html`** (B + **`data-next-bundle-slots-for`** slot layout).
+- **References:** `olympus/upsell-bundle-stepper.html` (one card + native bundleQuantity), `upsell-bundle-tier-pills.html` / `upsell-bundle-tier-cards.html` (tiered bundle tiers); **`olympus-mv-single-step/upsell-mv.html`** (tier pills + **`data-next-bundle-slots-for`** slot layout).
 - **Variant UI in staged bundle slots:** SDK-injected **native `<select>`** works **without** extra JS. **`setupBundleSlotVariantDropdowns()`** (custom **`os-dropdown`** UI) is **opt-in** — see file-header comments in **`checkout-olympus-mv-full.js`** and **`upsells-up01-mv.js`** on the **`olympus-mv-single-step`** template.
 
 ---

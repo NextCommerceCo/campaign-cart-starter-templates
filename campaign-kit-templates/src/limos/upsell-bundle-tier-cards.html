@@ -1,8 +1,8 @@
 ---
-title: "Olympus — Upsell (quantity)"
+title: "Limos — Upsell (bundle tier cards)"
 page_type: upsell
-next_upsell_accept: upsell-cards.html
-next_upsell_decline: upsell-cards.html
+next_upsell_accept: receipt.html
+next_upsell_decline: receipt.html
 styles:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
 scripts:
@@ -37,39 +37,114 @@ swiper_thumbs:
 ---
 
 <!--
-  APPROACH B — Bundle upsell (data-next-bundle-selector + data-next-upsell-context)
-  See upsell-single.html for Approach A (package upsell, no voucher).
-  See upsell-cards.html for the same mechanics with visible tier cards (no initBundleQtyToggle).
+  APPROACH B (variant) — Same bundle + voucher mechanics as upsell-bundle-tier-pills.html, but tier
+  choice uses VISIBLE bundle cards in a 3-column grid (1×–3× tiers; click to select), similar in UX to the public
+  Upsells “card selection” pattern:
+  https://developers.nextcommerce.com/docs/campaigns/upsells#card-selection-pattern
 
-  STATUS (SDK 0.4.10):
-    ✅ Accept sends the selected tier’s voucher(s) (1× UP50, 2× UP60, 3× UP70, 4×–5× UP50) via AddUpsellLine bundle path
-    ✅ Voucher-aware pricing — calculateBundlePrice merges vouchers at init + on card change
-    ✅ Quantity toggle works — one hidden bundle card per qty tier, initBundleQtyToggle()
-       wires data-bundle-qty-btn buttons to click the matching card
-    ✅ Remote bundle display updates when qty card changes
-       (bundle.upsell-bundle.price / originalPrice / discountPercentage)
-    ✅ data-next-upsell="offer" on .upsell-wrapper — UpsellEnhancer host that scopes
-       both data-next-upsell-action="add" and data-next-upsell-action="skip"
-    ✅ Header price + % locked to 1x via upsell-bundle-1x display-only selector (must be
-       outside the offer — first in-offer [data-next-bundle-selector] drives submit, not
-       data-next-upsell-action-for)
+  Important: This is still data-next-bundle-selector + data-next-bundle-card — NOT
+  data-next-upsell-selector / data-next-upsell-option. Selection upsells in the docs do not
+  send data-next-bundle-vouchers on accept; we keep bundle markup so coupon-driven pricing
+  and AddUpsellLine vouchers stay correct (see docs/sdk-0.4.0-migration.md).
 
-  ARCHITECTURE (Option 3 — per-qty cards):
-    - One hidden data-next-bundle-card per qty (1x–5x) inside the selector
-    - Each card has the correct quantity in data-next-bundle-items
-    - Each card carries data-next-bundle-vouchers (1×/4×/5× UP50; 2× UP60; 3× UP70 — per-tier example)
-    - Qty buttons click the matching card → SDK re-fetches price + updates remote display
-    - Prices are shown via data-next-display="bundle.upsell-bundle.*" OUTSIDE the selector
+  Differences vs upsell-bundle-tier-pills.html:
+    - No hidden selector + initBundleQtyToggle — user clicks the tier card directly.
+    - Per-card data-next-bundle-display shows each tier’s calculated price before selection.
+    - Remote bundle.upsell-bundle.* block still reflects the selected card (summary).
+    - Per-tier vouchers: 1× UP50; 2× UP60; 3× UP70 (template example — create codes in Campaigns).
 
-  KNOWN LIMITATIONS:
-    - data-next-display="bundle.upsell-bundle.unitPrice" is NOT implemented for remote
-      bundle display (SDK 0.4.8). Use per-card data-next-bundle-display for unit prices.
-    - SDK BUG (0.4.8): BundleDisplayEnhancer resolves formatType before normalising
-      this.property, so remote bundle.* currency fields fall back to 'auto' and render
-      as plain integers (e.g. "14" instead of "$14.95"). Workaround: add
-      data-next-format="currency" on price/originalPrice nodes and
-      data-next-format="percentage" on discountPercentage nodes.
+  UpsellEnhancer resolves bundle submit from the first [data-next-bundle-selector] inside
+  [data-next-upsell="offer"] only — not data-next-upsell-action-for. The display-only
+  upsell-bundle-1x block (header / max-discount %) must sit outside the offer wrapper so the
+  first in-offer selector is upsell-bundle (visible tier grid).
+
+  Formatting: keep data-next-format="currency" / "percentage" on remote data-next-display="bundle.upsell-bundle.*"
+  nodes outside cards (same as upsell-bundle-tier-pills.html); see docs/safe-display-paths.md.
 -->
+
+<style>
+  .cc-upsell-bundle-tier-heading {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0 0 0.75rem;
+  }
+
+  /* Three tier cards — equal-width grid */
+  .cc-upsell-bundle-tier-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    width: 100%;
+  }
+
+  @media (max-width: 600px) {
+    .cc-upsell-bundle-tier-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .cc-upsell-bundle-tier-grid .os-card {
+    cursor: pointer;
+    margin: 0;
+    min-width: 0;
+    border: 2px solid #e5e5e5;
+    border-radius: 8px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .cc-upsell-bundle-tier-grid .os-card.next-selected {
+    border-color: var(--component--color--outline, #111);
+    box-shadow: 0 0 0 1px var(--component--color--outline, #111);
+  }
+
+  .cc-upsell-bundle-tier-card__inner {
+    padding: 0.85rem 0.75rem;
+    text-align: center;
+  }
+
+  .cc-upsell-bundle-tier-card__label {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 0.35rem;
+  }
+
+  .cc-upsell-bundle-tier-card__hint {
+    font-size: 0.75rem;
+    color: #5c5c5e;
+    margin: 0 0 0.5rem;
+    line-height: 1.25;
+  }
+
+  .cc-upsell-bundle-tier-card__price {
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .cc-upsell-bundle-tier-card__compare {
+    font-size: 0.8125rem;
+    color: #888;
+    text-decoration: line-through;
+    margin-top: 0.25rem;
+  }
+
+  .cc-upsell-bundle-tier-card__badge {
+    display: inline-block;
+    margin-top: 0.4rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--brand--color--primary, #1a7f37);
+  }
+
+  .cc-upsell-bundle-selector--visible {
+    margin-bottom: 0;
+  }
+</style>
 
 <div class="page-wrapper">
   <div class="main-wrapper">
@@ -83,75 +158,25 @@ swiper_thumbs:
       <div class="container">
         <div class="upsell-header__inner">
           <div class="upsell-header__title">Wait! Your Order Isn't Complete</div>
-          <!-- bundle.upsell-bundle.price updates with qty selection — use bundle.upsell-bundle-1x.price
-               (from the display-only selector below) for the header so it always shows the 1x price.
-               package.3.name reads the product name from campaign package data (3 = packageId). -->
-          <div class="upsell-header__offer">Special Discount: Get 1 More <span data-next-display="package.3.name">Product Title</span> For Only <span data-next-display="bundle.upsell-bundle-1x.price" data-next-format="currency">$14.95</span></div>
-          <div class="upsell-header__suboffer">Add this to your order and get a <span data-next-display="bundle.upsell-bundle-1x.discountPercentage" data-next-format="percentage">50%</span> discount<br></div>
+          <div class="upsell-header__offer">Special Discount: Add the <span data-next-display="package.3.name">Product Title</span> to your order</div>
+          <div class="upsell-header__suboffer">Save up to <span data-next-display="bundle.upsell-bundle-3x.discountPercentage" data-next-format="percentage"></span> on the <span data-next-display="package.3.name">Product Title</span> Today!<br></div>
         </div>
       </div>
     </section>
     <section class="section upsell-box">
       <div class="container">
-        <!--
-          Display-only — outside [data-next-upsell="offer"]: UpsellEnhancer picks the first
-          in-offer [data-next-bundle-selector] for AddUpsellLine; if this lived inside offer,
-          submit would always use 1× upsell-bundle-1x and ignore qty selection.
-        -->
+        <!-- Outside offer: UpsellEnhancer uses first in-offer [data-next-bundle-selector] for add — must be upsell-bundle. -->
         <div data-next-bundle-selector data-next-selector-id="upsell-bundle-1x" style="display:none">
           <div role="button"
                data-next-bundle-card
                data-next-bundle-id="upsell-bundle-1x-card"
-data-next-bundle-items='[{"packageId":3,"quantity":1}]'
+               data-next-bundle-items='[{"packageId":3,"quantity":1}]'
                data-next-bundle-vouchers='["UP50"]'
                data-next-selected="true"
                class="os-card next-selected"></div>
         </div>
 
         <div class="upsell-wrapper" data-next-upsell="offer" data-next-await="">
-
-          <!--
-            Hidden bundle selector — acts as a state machine only.
-            Prices surface via remote data-next-display="bundle.upsell-bundle.*" below.
-            data-next-upsell-context — tells UpsellEnhancer to use the bundle path on accept.
-            data-next-bundle-vouchers — voucher merged into calculateBundlePrice at init
-                                        AND sent with the order line on accept.
-          -->
-          <div data-next-bundle-selector data-next-upsell-context data-next-selector-id="upsell-bundle" class="os-option" style="display:none">
-            <div role="button"
-                 data-next-bundle-card
-                 data-next-bundle-id="upsell-bundle-1x"
-data-next-bundle-items='[{"packageId":3,"quantity":1}]'
-                 data-next-bundle-vouchers='["UP50"]'
-                 data-next-selected="true"
-                 class="os-card next-selected"></div>
-            <!-- 2× tier: per-tier voucher UP60 (1×/3×–5× use UP50). Configure UP60 in Campaigns. -->
-            <div role="button"
-                 data-next-bundle-card
-                 data-next-bundle-id="upsell-bundle-2x"
-data-next-bundle-items='[{"packageId":3,"quantity":2}]'
-                 data-next-bundle-vouchers='["UP60"]'
-                 class="os-card"></div>
-            <!-- 3× tier: per-tier voucher UP70 -->
-            <div role="button"
-                 data-next-bundle-card
-                 data-next-bundle-id="upsell-bundle-3x"
-data-next-bundle-items='[{"packageId":3,"quantity":3}]'
-                 data-next-bundle-vouchers='["UP70"]'
-                 class="os-card"></div>
-            <div role="button"
-                 data-next-bundle-card
-                 data-next-bundle-id="upsell-bundle-4x"
-data-next-bundle-items='[{"packageId":3,"quantity":4}]'
-                 data-next-bundle-vouchers='["UP50"]'
-                 class="os-card"></div>
-            <div role="button"
-                 data-next-bundle-card
-                 data-next-bundle-id="upsell-bundle-5x"
-data-next-bundle-items='[{"packageId":3,"quantity":5}]'
-                 data-next-bundle-vouchers='["UP50"]'
-                 class="os-card"></div>
-          </div>
 
           <div class="upsell-container">
           <div class="grid-full flex-col flex-horizontal-lg-up">
@@ -193,30 +218,66 @@ data-next-bundle-items='[{"packageId":3,"quantity":5}]'
                 </div>
                 <div class="divider_line margin-32"></div>
                 <div class="checkout-button-wrapper">
+                  <p class="cc-upsell-bundle-tier-heading">Choose quantity</p>
                   <div class="select-quantity-wrapper">
-                    <div class="upsell-offer__qty-label">
-                      <div>Select Quantity</div>
-                      <div class="right-bullet-icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z"></path></svg></div>
-                    </div>
+                    
                     <!--
-                      data-bundle-qty-for must match data-next-selector-id on the bundle selector.
-                      data-bundle-qty-btn value matches the suffix in data-next-bundle-id (e.g. "2" → "upsell-bundle-2x").
-                      initBundleQtyToggle() (upsells.js) wires these buttons to click the matching hidden card.
+                      Three visible tier cards (1×–3×). Same bundle/voucher pattern as upsell-bundle-tier-pills.html.
+                      Click selects the card; SDK applies .next-selected and updates bundle.upsell-bundle.* below.
                     -->
-                    <div class="upsell-offer__quantity-row" data-bundle-qty-for="upsell-bundle">
-                      <div data-bundle-qty-btn="1" class="upsell-offer__qty-btn next-selected"><div>1</div></div>
-                      <div data-bundle-qty-btn="2" class="upsell-offer__qty-btn"><div>2</div></div>
-                      <div data-bundle-qty-btn="3" class="upsell-offer__qty-btn"><div>3</div></div>
-                      <div data-bundle-qty-btn="4" class="upsell-offer__qty-btn"><div>4</div></div>
-                      <div data-bundle-qty-btn="5" class="upsell-offer__qty-btn"><div>5</div></div>
+                    <div
+                      data-next-bundle-selector
+                      data-next-upsell-context
+                      data-next-selector-id="upsell-bundle"
+                      class="os-option cc-upsell-bundle-selector--visible cc-upsell-bundle-tier-grid"
+                    >
+                      <div role="button"
+                           data-next-bundle-card
+                           data-next-bundle-id="upsell-bundle-1x"
+                           data-next-bundle-items='[{"packageId":3,"quantity":1}]'
+                           data-next-bundle-vouchers='["UP50"]'
+                           data-next-selected="true"
+                           class="os-card next-selected">
+                        <div class="cc-upsell-bundle-tier-card__inner" data-next-package-id="3">
+                          <p class="cc-upsell-bundle-tier-card__label">Buy 1</p>
+                          <p class="cc-upsell-bundle-tier-card__hint">1 unit</p>
+                          <div class="cc-upsell-bundle-tier-card__price"><span data-next-bundle-display="price">—</span></div>
+                          <div class="cc-upsell-bundle-tier-card__compare"><span data-next-bundle-display="originalPrice"></span></div>
+                          <div data-next-bundle-display="hasDiscount" class="cc-upsell-bundle-tier-card__badge"><span data-next-bundle-display="discountPercentage" data-next-format="percentage"></span> off</div>
+                        </div>
+                      </div>
+                      <!-- Per-tier voucher example: 2× uses UP60; configure UP60 in Campaigns app. -->
+                      <div role="button"
+                           data-next-bundle-card
+                           data-next-bundle-id="upsell-bundle-2x"
+                           data-next-bundle-items='[{"packageId":3,"quantity":2}]'
+                           data-next-bundle-vouchers='["UP60"]'
+                           class="os-card">
+                        <div class="cc-upsell-bundle-tier-card__inner" data-next-package-id="3">
+                          <p class="cc-upsell-bundle-tier-card__label">Buy 2</p>
+                          <p class="cc-upsell-bundle-tier-card__hint">2 units</p>
+                          <div class="cc-upsell-bundle-tier-card__price"><span data-next-bundle-display="price">—</span></div>
+                          <div class="cc-upsell-bundle-tier-card__compare"><span data-next-bundle-display="originalPrice"></span></div>
+                          <div data-next-bundle-display="hasDiscount" class="cc-upsell-bundle-tier-card__badge"><span data-next-bundle-display="discountPercentage" data-next-format="percentage"></span> off</div>
+                        </div>
+                      </div>
+                      <!-- 3× tier: per-tier voucher UP70 -->
+                      <div role="button"
+                           data-next-bundle-card
+                           data-next-bundle-id="upsell-bundle-3x"
+                           data-next-bundle-items='[{"packageId":3,"quantity":3}]'
+                           data-next-bundle-vouchers='["UP70"]'
+                           class="os-card">
+                        <div class="cc-upsell-bundle-tier-card__inner" data-next-package-id="3">
+                          <p class="cc-upsell-bundle-tier-card__label">Buy 3</p>
+                          <p class="cc-upsell-bundle-tier-card__hint">3 units</p>
+                          <div class="cc-upsell-bundle-tier-card__price"><span data-next-bundle-display="price">—</span></div>
+                          <div class="cc-upsell-bundle-tier-card__compare"><span data-next-bundle-display="originalPrice"></span></div>
+                          <div data-next-bundle-display="hasDiscount" class="cc-upsell-bundle-tier-card__badge"><span data-next-bundle-display="discountPercentage" data-next-format="percentage"></span> off</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <!--
-                    Selected-tier money via data-next-display="bundle.upsell-bundle.*" OUTSIDE any
-                    [data-next-bundle-card] (same pattern as the header 1× price). Remote bundle
-                    display often yields unformatted numbers — keep data-next-format="currency" on
-                    originalPrice / price (see KNOWN LIMITATIONS in the file comment above).
-                  -->
                   <div class="prices-text-wrapper">
                     <div class="price-wrapper">
                       <div class="text-sm tw-600">Retail Price</div>
@@ -226,18 +287,13 @@ data-next-bundle-items='[{"packageId":3,"quantity":5}]'
                     <div class="upsell-offer__divider"></div>
                     <div class="price-wrapper">
                       <div class="upsell-offer__price-heading">
-                        <div class="text-sm tw-600">Offer Price</div>
-                        <!-- data-next-show does not support bundle.* namespace — always shown; UP50 voucher guarantees savings -->
+                        <div class="text-sm tw-600">Selected offer total</div>
                         <div class="text-sm font-bold color-primary">(<span data-next-display="bundle.upsell-bundle.discountPercentage" data-next-format="percentage"></span> OFF)</div>
                       </div>
                       <div class="upsell-offer__price" data-next-display="bundle.upsell-bundle.price" data-next-format="currency">$24.95</div>
                       <div class="text-xs font-bold color-primary">+ FREE SHIPPING</div>
                     </div>
                   </div>
-                  <!--
-                    UpsellEnhancer does not use data-next-upsell-action-for (AcceptUpsellEnhancer).
-                    Bundle for add comes from the first [data-next-bundle-selector] in this offer (upsell-bundle).
-                  -->
                   <a data-next-upsell-action="add" href="#" class="button" pb-animate="pulse-upsell">
                     <div data-button="content" class="button_content"><div>Yes, Add to My Order</div></div>
                   </a>
@@ -273,5 +329,4 @@ data-next-bundle-items='[{"packageId":3,"quantity":5}]'
 
 <script>
   if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', () => initSwiperGalleries()); } else { initSwiperGalleries(); }
-  window.addEventListener('next:initialized', function () { initBundleQtyToggle(); });
 </script>

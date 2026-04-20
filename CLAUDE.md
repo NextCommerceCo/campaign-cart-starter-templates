@@ -44,8 +44,8 @@ Note: when copying a template, the developer renames the folder to their product
 
 | Template | Pages |
 |----------|-------|
-| limos | /limos/checkout/ · /limos/upsell-single/ · /limos/upsell-quantity/ · /limos/upsell-cards/ · /limos/receipt/ |
-| olympus | /olympus/checkout/ · /olympus/upsell-single/ · /olympus/upsell-quantity/ · /olympus/upsell-cards/ · /olympus/receipt/ |
+| limos | /limos/checkout/ · /limos/upsell-bundle-stepper/ · /limos/upsell-bundle-tier-pills/ · /limos/upsell-bundle-tier-cards/ · /limos/receipt/ |
+| olympus | /olympus/checkout/ · /olympus/upsell-bundle-stepper/ · /olympus/upsell-bundle-tier-pills/ · /olympus/upsell-bundle-tier-cards/ · /olympus/receipt/ |
 | olympus-mv-single-step | /olympus-mv-single-step/checkout/ · /olympus-mv-single-step/upsell-mv/ · /olympus-mv-single-step/receipt/ |
 
 ### campaign-kit-templates-v3/ (0.3.x archive)

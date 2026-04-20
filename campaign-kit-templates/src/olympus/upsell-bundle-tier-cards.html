@@ -1,5 +1,5 @@
 ---
-title: "Olympus — Upsell (cards)"
+title: "Olympus — Upsell (bundle tier cards)"
 page_type: upsell
 next_upsell_accept: receipt.html
 next_upsell_decline: receipt.html
@@ -37,7 +37,7 @@ swiper_thumbs:
 ---
 
 <!--
-  APPROACH B (variant) — Same bundle + voucher mechanics as upsell-quantity.html, but tier
+  APPROACH B (variant) — Same bundle + voucher mechanics as upsell-bundle-tier-pills.html, but tier
   choice uses VISIBLE bundle cards in a 3-column grid (1×–3× tiers; click to select), similar in UX to the public
   Upsells “card selection” pattern:
   https://developers.nextcommerce.com/docs/campaigns/upsells#card-selection-pattern
@@ -47,7 +47,7 @@ swiper_thumbs:
   send data-next-bundle-vouchers on accept; we keep bundle markup so coupon-driven pricing
   and AddUpsellLine vouchers stay correct (see docs/sdk-0.4.0-migration.md).
 
-  Differences vs upsell-quantity.html:
+  Differences vs upsell-bundle-tier-pills.html:
     - No hidden selector + initBundleQtyToggle — user clicks the tier card directly.
     - Per-card data-next-bundle-display shows each tier’s calculated price before selection.
     - Remote bundle.upsell-bundle.* block still reflects the selected card (summary).
@@ -59,7 +59,7 @@ swiper_thumbs:
   first in-offer selector is upsell-bundle (visible tier grid).
 
   Formatting: keep data-next-format="currency" / "percentage" on remote data-next-display="bundle.upsell-bundle.*"
-  nodes outside cards (same as upsell-quantity.html); see docs/safe-display-paths.md.
+  nodes outside cards (same as upsell-bundle-tier-pills.html); see docs/safe-display-paths.md.
 -->
 
 <style>
@@ -222,7 +222,7 @@ swiper_thumbs:
                   <div class="select-quantity-wrapper">
                     
                     <!--
-                      Three visible tier cards (1×–3×). Same bundle/voucher pattern as upsell-quantity.html.
+                      Three visible tier cards (1×–3×). Same bundle/voucher pattern as upsell-bundle-tier-pills.html.
                       Click selects the card; SDK applies .next-selected and updates bundle.upsell-bundle.* below.
                     -->
                     <div

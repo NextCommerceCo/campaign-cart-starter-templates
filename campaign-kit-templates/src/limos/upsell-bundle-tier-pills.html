@@ -1,8 +1,8 @@
 ---
-title: "Olympus — Upsell (quantity)"
+title: "Limos — Upsell (bundle tier pills)"
 page_type: upsell
-next_upsell_accept: upsell-cards.html
-next_upsell_decline: upsell-cards.html
+next_upsell_accept: upsell-bundle-tier-cards.html
+next_upsell_decline: upsell-bundle-tier-cards.html
 styles:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
 scripts:
@@ -38,8 +38,13 @@ swiper_thumbs:
 
 <!--
   APPROACH B — Bundle upsell (data-next-bundle-selector + data-next-upsell-context).
-  See upsell-single.html for the single-tier variant (no quantity row).
-  See upsell-cards.html for visible tier cards (no initBundleQtyToggle).
+  See upsell-bundle-stepper.html for one-card + native bundleQuantity stepper (not tier pills).
+  See upsell-bundle-tier-cards.html for visible tier cards (no initBundleQtyToggle).
+
+  Primary intent: one upsell package with a quantity-style control (1×–5× here) driving which
+  bundle tier is selected — not “stack N separate bundles of the same tier.” Per-step voucher
+  codes (e.g. UP50 / UP60 / UP70) are optional campaign examples of different coupons per qty;
+  simplify to one code or match your real Campaigns setup when cloning.
 
   Reference pattern (0.4.x; match sdk_version in campaigns.json):
     • Accept sends the selected tier’s voucher(s) via AddUpsellLine (example: 1× UP50, 2× UP60,
@@ -53,8 +58,9 @@ swiper_thumbs:
     • Header 1× price / % uses a display-only selector id upsell-bundle-1x outside the offer so
       the first in-offer selector remains upsell-bundle (submit path); not data-next-upsell-action-for.
 
-  Optional upgrade (SDK 0.4.18+): native bundle quantity stepper may replace hidden cards + JS toggle;
-  verify Next Commerce bundle docs before changing this funnel.
+  Optional upgrade (SDK 0.4.18+): for a single-tier offer, native bundle quantity (data-next-bundle-qty-for)
+  fits upsell-bundle-stepper.html; this page keeps tier cards + initBundleQtyToggle for per-tier vouchers.
+  See campaign-cart BundleSelector attributes.md — «Inline bundle-quantity controls».
 
   Display note: remote bundle.upsell-bundle.unitPrice is not a supported remote path — use
   per-card data-next-bundle-display for per-unit amounts on tier cards.
@@ -204,7 +210,7 @@ data-next-bundle-items='[{"packageId":3,"quantity":5}]'
                     Selected-tier money via data-next-display="bundle.upsell-bundle.*" OUTSIDE any
                     [data-next-bundle-card] (same pattern as the header 1× price). Remote bundle
                     display often yields unformatted numbers — keep data-next-format="currency" on
-                    originalPrice / price (see KNOWN LIMITATIONS in the file comment above).
+                    originalPrice / price (see file header / safe-display-paths.md).
                   -->
                   <div class="prices-text-wrapper">
                     <div class="price-wrapper">

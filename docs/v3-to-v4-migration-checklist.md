@@ -174,12 +174,12 @@ Copy upsell pages directly from the reference template rather than adapting v3 v
 **Single-variant campaigns** — copy from `olympus/`:
 
 ```bash
-cp campaign-kit-templates/src/olympus/upsell-single.html campaign-kit-templates/src/[slug]/upsell-single.html
-cp campaign-kit-templates/src/olympus/upsell-quantity.html campaign-kit-templates/src/[slug]/upsell-quantity.html
-cp campaign-kit-templates/src/olympus/upsell-cards.html campaign-kit-templates/src/[slug]/upsell-cards.html
+cp campaign-kit-templates/src/olympus/upsell-bundle-stepper.html campaign-kit-templates/src/[slug]/upsell-bundle-stepper.html
+cp campaign-kit-templates/src/olympus/upsell-bundle-tier-pills.html campaign-kit-templates/src/[slug]/upsell-bundle-tier-pills.html
+cp campaign-kit-templates/src/olympus/upsell-bundle-tier-cards.html campaign-kit-templates/src/[slug]/upsell-bundle-tier-cards.html
 ```
 
-Upsell flow: `checkout → upsell-single → upsell-quantity → upsell-cards → receipt`
+Upsell flow: `checkout → upsell-bundle-stepper → upsell-bundle-tier-pills → upsell-bundle-tier-cards → receipt`
 
 **Multi-variant campaigns** — copy from `olympus-mv-single-step/`:
 
@@ -199,7 +199,7 @@ Upsell flow: `checkout → upsell-mv → receipt`
 
 ### `upsells.js`
 
-The v3 `upsells.js` does not contain `initBundleQtyToggle` — required by `upsell-quantity.html` for the quantity button → hidden card wiring. Copy from olympus:
+The v3 `upsells.js` does not contain `initBundleQtyToggle` — required by `upsell-bundle-tier-pills.html` for the quantity button → hidden card wiring. Copy from olympus:
 
 ```bash
 cp campaign-kit-templates/src/olympus/assets/js/upsells.js campaign-kit-templates/src/[slug]/assets/js/upsells.js
