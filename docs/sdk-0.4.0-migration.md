@@ -406,11 +406,11 @@ Full example (distinct package IDs per card):
 |----------|-------------|---------------|-------|
 | `olympus` | 🔄 in progress | 🔄 in progress | Legacy **multi-package** track: `savingsAmount`/`savingsPercentage` static; `data-next-package-price` compare/savings wrong for multi-package; `finalPriceTotal` coupon-aware for totals only |
 | `olympus-mv-single-step` | ⬜ pending | ⬜ pending | |
-| `olympus-mv-two-step` | ⬜ pending | ⬜ pending | |
+| `olympus-mv-two-step` | ⬜ pending | ⬜ pending | Two-step flow: `select.html` (bundle pick) → `checkout.html` (form). SDK 0.4.18 "Add to Cart for bundle selectors" is relevant here — the select page can wire a bundle selector to an Add-to-Cart button to populate the cart before navigating to the checkout form, without a full page form submit. Evaluate on migration. |
 | `demeter` | ⬜ pending | ⬜ pending | |
 | `limos` | ✅ | ✅ | Promoted to `campaign-kit-templates/src/limos/` |
-| `shop-single-step` | — | — | No selector |
-| `shop-three-step` | — | — | No selector |
+| `shop-single-step` | — | — | No checkout bundle selector (package selector path). SDK 0.4.18 "Add to Cart for bundle selectors" relevant on migration if bundle selector is adopted — checkout page is a single form, but a pre-checkout product/landing page variant of this template would be a natural fit. |
+| `shop-three-step` | — | — | No checkout bundle selector (multi-step form: information → shipping → billing). SDK 0.4.18 "Add to Cart for bundle selectors" potentially relevant if a bundle-pick step is added before the form steps on migration. |
 
 ### Local-only (not tracked in repo)
 
