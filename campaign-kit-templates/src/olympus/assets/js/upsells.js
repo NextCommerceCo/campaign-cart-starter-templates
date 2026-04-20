@@ -1,4 +1,9 @@
 // Shared utilities for upsell templates
+//
+// Quantity UX: upsell-quantity.html uses hidden per-tier bundle cards + initBundleQtyToggle()
+// because data-next-upsell-quantity-toggle does not update bundle line items (see docs/sdk-0.4.0-migration.md).
+// SDK 0.4.18+ adds native bundle quantity controls — prefer those in new work once attributes are
+// confirmed in official bundle docs, then this helper can be removed from that page.
 
 /**
  * Bundle upsell qty toggle — wires [data-bundle-qty-btn] buttons to select

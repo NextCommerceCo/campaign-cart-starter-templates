@@ -37,38 +37,27 @@ swiper_thumbs:
 ---
 
 <!--
-  APPROACH B — Bundle upsell (data-next-bundle-selector + data-next-upsell-context)
-  See upsell-single.html for Approach A (package upsell, no voucher).
-  See upsell-cards.html for the same mechanics with visible tier cards (no initBundleQtyToggle).
+  APPROACH B — Bundle upsell (data-next-bundle-selector + data-next-upsell-context).
+  See upsell-single.html for the single-tier variant (no quantity row).
+  See upsell-cards.html for visible tier cards (no initBundleQtyToggle).
 
-  STATUS (SDK 0.4.10):
-    ✅ Accept sends the selected tier’s voucher(s) (1× UP50, 2× UP60, 3× UP70, 4×–5× UP50) via AddUpsellLine bundle path
-    ✅ Voucher-aware pricing — calculateBundlePrice merges vouchers at init + on card change
-    ✅ Quantity toggle works — one hidden bundle card per qty tier, initBundleQtyToggle()
-       wires data-bundle-qty-btn buttons to click the matching card
-    ✅ Remote bundle display updates when qty card changes
-       (bundle.upsell-bundle.price / originalPrice / discountPercentage)
-    ✅ data-next-upsell="offer" on .upsell-wrapper — UpsellEnhancer host that scopes
-       both data-next-upsell-action="add" and data-next-upsell-action="skip"
-    ✅ Header price + % locked to 1x via upsell-bundle-1x display-only selector (must be
-       outside the offer — first in-offer [data-next-bundle-selector] drives submit, not
-       data-next-upsell-action-for)
+  Reference pattern (0.4.x; match sdk_version in campaigns.json):
+    • Accept sends the selected tier’s voucher(s) via AddUpsellLine (example: 1× UP50, 2× UP60,
+      3× UP70, 4×–5× UP50 — configure codes in Campaigns).
+    • calculateBundlePrice merges tier vouchers at init and on card change.
+    • Quantity UI: hidden bundle cards per qty tier; initBundleQtyToggle() in assets/js/upsells.js
+      wires data-bundle-qty-btn to programmatically select the matching card (see file footer).
+    • Remote summary uses data-next-display="bundle.upsell-bundle.*" OUTSIDE cards — keep
+      data-next-format="currency" / "percentage" on those nodes (see docs/safe-display-paths.md).
+    • data-next-upsell="offer" on .upsell-wrapper scopes add/skip actions.
+    • Header 1× price / % uses a display-only selector id upsell-bundle-1x outside the offer so
+      the first in-offer selector remains upsell-bundle (submit path); not data-next-upsell-action-for.
 
-  ARCHITECTURE (Option 3 — per-qty cards):
-    - One hidden data-next-bundle-card per qty (1x–5x) inside the selector
-    - Each card has the correct quantity in data-next-bundle-items
-    - Each card carries data-next-bundle-vouchers (1×/4×/5× UP50; 2× UP60; 3× UP70 — per-tier example)
-    - Qty buttons click the matching card → SDK re-fetches price + updates remote display
-    - Prices are shown via data-next-display="bundle.upsell-bundle.*" OUTSIDE the selector
+  Optional upgrade (SDK 0.4.18+): native bundle quantity stepper may replace hidden cards + JS toggle;
+  verify Next Commerce bundle docs before changing this funnel.
 
-  KNOWN LIMITATIONS:
-    - data-next-display="bundle.upsell-bundle.unitPrice" is NOT implemented for remote
-      bundle display (SDK 0.4.8). Use per-card data-next-bundle-display for unit prices.
-    - SDK BUG (0.4.8): BundleDisplayEnhancer resolves formatType before normalising
-      this.property, so remote bundle.* currency fields fall back to 'auto' and render
-      as plain integers (e.g. "14" instead of "$14.95"). Workaround: add
-      data-next-format="currency" on price/originalPrice nodes and
-      data-next-format="percentage" on discountPercentage nodes.
+  Display note: remote bundle.upsell-bundle.unitPrice is not a supported remote path — use
+  per-card data-next-bundle-display for per-unit amounts on tier cards.
 -->
 
 <div class="page-wrapper">

@@ -58,7 +58,8 @@ swiper_thumbs:
   upsell-bundle-1x block (header / max-discount %) must sit outside the offer wrapper so the
   first in-offer selector is upsell-bundle (visible tier grid).
 
-  Same limitations / workarounds as upsell-quantity.html (data-next-format on remote bundle.*, etc.).
+  Formatting: keep data-next-format="currency" / "percentage" on remote data-next-display="bundle.upsell-bundle.*"
+  nodes outside cards (same as upsell-quantity.html); see docs/safe-display-paths.md.
 -->
 
 <style>

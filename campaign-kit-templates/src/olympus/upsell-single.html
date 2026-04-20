@@ -37,12 +37,16 @@ swiper_thumbs:
 ---
 
 <!--
-  Single-offer upsell (SDK 0.4.10): one hidden bundle card + data-next-upsell-context.
-  Same mechanics as upsell-quantity.html, without quantity toggles — vouchers ride AddUpsellLine.
+  Single-tier bundle upsell (SDK 0.4.x, pin in campaigns.json): one hidden data-next-bundle-card
+  + data-next-upsell-context. Same voucher + calculateBundlePrice mechanics as upsell-quantity.html,
+  without quantity toggles — vouchers ride AddUpsellLine on accept.
+
   Align packageId in data-next-bundle-items with data-next-display="package.<id>.name" and Campaigns.
-  Remote pricing: bundle.upsell-bundle.* — use data-next-format="currency" / "percentage" on those nodes.
-  Only one [data-next-bundle-selector] here (inside offer) — no upsell-bundle-1x sibling-order bug.
-  data-next-upsell-action-for is not read by UpsellEnhancer (AcceptUpsellEnhancer only).
+  Remote pricing: bundle.upsell-bundle.* — keep data-next-format="currency" / "percentage" on those
+  nodes (remote bundle.* display often needs explicit format; see docs/safe-display-paths.md).
+
+  Only one [data-next-bundle-selector] here (inside offer) — no sibling-order pitfall vs a separate
+  display-only selector. data-next-upsell-action-for is not read by UpsellEnhancer.
 -->
 <div class="page-wrapper">
   <div class="main-wrapper">
