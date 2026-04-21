@@ -12,7 +12,7 @@ A **complete, working campaign-kit project** that serves two purposes:
 1. Full demo — clone it, `npm install` + `npm run dev`, all current templates work
 2. Template library — developers copy individual `src/[slug]/` folders into their own kit projects
 
-Templates are being ported from `campaign-kit-templates-v3/` one by one, updated to SDK 0.4.x patterns as they go.
+Templates are ported from `campaign-kit-templates-v3/` into `campaign-kit-templates/` and updated to SDK **0.4.x** patterns (`olympus`, `limos`, `demeter`, `olympus-mv-single-step` today).
 
 ## Developer Workflow (end users of this repo)
 1. `npx campaign-init` in their own project → creates empty `_data/campaigns.json` + npm scripts
@@ -69,6 +69,8 @@ campaign-kit-templates/
 ├── _data/
 │   └── campaigns.json          ← reference: all current 0.4.x templates with full field structure
 ├── src/
+│   ├── demeter/
+│   ├── limos/
 │   ├── olympus/
 │   └── olympus-mv-single-step/
 └── package.json                ← kit scripts + next-campaign-page-kit dependency
@@ -96,7 +98,7 @@ campaign-kit-templates/
 ## base.html Pattern
 - `next-core.css` loaded **directly in base.html** — always needed, not in page frontmatter
 - Per-page CSS/JS injected via frontmatter `styles:` / `scripts:` loops using `campaign_asset`
-- Optional **GTM / Meta Pixel** in reference templates: injected from `campaign.gtm_id` / `campaign.fb_pixel_id` when Liquid `environment != "development"` (omit keys in `campaigns.json` to disable)
+- Optional **GTM / Meta Pixel** in reference templates: injected from `campaign.gtm_id` / `campaign.fb_pixel_id` when Liquid `environment != "development"` (omit keys in `campaigns.json` to disable). Use **`{% if campaign.gtm_id != "" %}`** / **`{% if campaign.fb_pixel_id != "" %}`** (not bare `{% if campaign.gtm_id %}`) — Liquid treats empty string as truthy.
 - Liquid conditionals for optional metatags:
   - `{% if next_success_url %}` → checkout pages only
   - `{% if next_upsell_accept %}` / `{% if next_upsell_decline %}` → upsell pages only
@@ -145,9 +147,9 @@ scripts:
 | `data-next-checkout-field="email"` | Binds input to a field |
 | `data-next-checkout-step="..."` | Multi-step navigation (value is `campaign_link` URL) |
 | `data-next-display="cart.total"` | Renders a dynamic value |
-| `data-next-show="cart.hasSavings"` | Conditional visibility |
+| `data-next-show="cart.hasDiscounts"` | Conditional visibility (0.4.x cart / receipt; prefer over legacy `cart.hasSavings`) |
 | `data-next-hide="cart.isEmpty"` | Inverse conditional |
-| `data-next-cart-items` | Cart item list container |
+| `data-next-cart-summary` + `data-summary-lines` | Cart summary v2 (0.4.x); replaces legacy `data-next-cart-items` |
 | `data-next-bump` | Order bump toggle |
 | `data-next-express-checkout="container"` | Express checkout (PayPal/Apple/Google Pay) |
 | `data-next-coupon="input"` | Coupon input component |
@@ -172,6 +174,8 @@ Inside `<template>` elements the SDK uses single-brace tokens (not Liquid):
 
 | Template | JS Files |
 |----------|----------|
+| demeter | checkout.js, checkout-demeter.js, upsells.js, promo-banner.js, promo-timer.js |
+| limos | checkout.js, checkout-limos.js, upsells.js, promo-banner.js, promo-timer.js |
 | olympus | checkout.js, checkout-olympus.js, upsells.js, promo-banner.js, promo-timer.js |
 | olympus-mv-single-step | checkout.js, checkout-olympus-mv-full.js, upsells-up01-mv.js, promo-banner.js, promo-timer.js |
 
