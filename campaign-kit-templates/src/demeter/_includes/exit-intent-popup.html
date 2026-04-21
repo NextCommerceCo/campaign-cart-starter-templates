@@ -2,7 +2,7 @@
      Include on checkout pages that use initExitIntentTemplate().
      Requires css/exit-intent-popup.css in page frontmatter styles.
      Args:
-       coupon_code   — coupon to apply on CTA click   (default: SAVE10)
+       coupon_code   — coupon to apply on CTA click   (default: EXIT5)
        popup_image   — left-column image URL          (required)
        headline      — large headline text            (default: Wait!)
        subheadline   — line below headline            (default: Are you sure you want to leave?)
@@ -41,7 +41,7 @@
           <button type="button"
                   class="exit-intent-popup__cta"
                   data-exit-intent-action="apply-coupon"
-                  data-coupon-code="{% if coupon_code %}{{ coupon_code }}{% else %}SAVE10{% endif %}">
+                  data-coupon-code="{% if coupon_code %}{{ coupon_code }}{% else %}EXIT5{% endif %}">
             {% if cta_label %}{{ cta_label }}{% else %}Apply My Discount Coupon{% endif %}
           </button>
 

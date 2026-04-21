@@ -43,7 +43,7 @@
                               <div class="cart-item__title">{item.name}</div>
                             </div>
                             <div class="cart-item__frequency">
-                              <span data-next-show="item.isRecurring">{item.frequency}</span>
+                              <span data-next-show="item.isRecurring" style="display:none">{item.frequency}</span>
                               <span data-next-hide="item.isRecurring">One-time purchase</span>
                             </div>
                             <div>
@@ -146,11 +146,11 @@
                 <div class="order-totals__line order-totals__line--total">
                   <div class="order-totals__label order-totals__label--total">Grand Total:</div>
                   <div class="order-totals__value-group">
-                    <div data-next-display="cart.currency" class="summary-total__coin">USD</div>
+                    <div data-next-display="cart.currency" class="summary-total__coin"></div>
                     <div class="order-totals__value order-totals__value--total">{total}</div>
                   </div>
                 </div>
-                <div data-next-show="cart.hasDiscounts" class="order-totals__savings">
+                <div data-next-show="cart.hasDiscounts" style="display:none" class="order-totals__savings">
                   <div class="order-totals__savings-content">
                     <div class="order-totals__savings-icon">
                       <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 18 18" focusable="false" aria-hidden="true" fill="none" stroke="currentColor">

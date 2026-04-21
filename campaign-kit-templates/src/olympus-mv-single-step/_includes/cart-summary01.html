@@ -10,9 +10,7 @@
           </div>
           <div data-os-cart-summary="summary-scroll" class="cart-items__scroll-hint cart-items__scroll-hint--active hide">
             <div>Scroll for more items</div>
-            <div class="icon__view-more">
-              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z"></path></svg>
-            </div>
+            <div class="icon__view-more">…</div>
           </div>
           <div class="cart-items__list" data-summary-lines>
             <template>
@@ -23,9 +21,9 @@
                       <div class="cart-item__description">
                         <div class="cart-item__header">
                           <div class="cart-item__title os-bold">
-                            <!-- Multi-variant: {item.variantName} | Single-variant swap: replace with {item.name} -->
-                            <!-- {item.quantity}x {item.name} -->
-                            {item.quantity}x {item.variantName}
+                            <!-- Single-variant: {item.name} | Multi-variant swap: replace with {item.variantName} -->
+                            {item.quantity}x {item.name}
+                            <!-- {item.quantity}x {item.variantName} -->
                             <div>
                               <div class="text-2xs text-muted text-weight-normal diagonal-strike {item.hasDiscount}">{item.originalUnitPrice}/ea</div>
                               <div class="text-2xs text-muted text-weight-normal">{item.unitPrice}/ea</div>
@@ -82,8 +80,8 @@
               </div>
             </div>
             <!-- BS-014: cart.discountCode unwired — use data-next-discounts="voucher" + {discount.description} for code string -->
-            <div class="coupon-tags">
-              <div data-next-show="cart.hasCoupon" class="order-totals__line items-center">
+            <div class="coupon-tags" data-next-show="cart.hasCoupon" style="display:none">
+              <div class="order-totals__line items-center">
                 <div class="cart-subtext">Code applied</div>
                 <div data-next-discounts="voucher">
                   <template>
@@ -116,7 +114,7 @@
             <div class="order-totals__line order-totals__line--total">
               <div class="order-totals__label order-totals__label--total">Grand Total:</div>
               <div class="order-totals__value-group">
-                <div data-next-display="cart.currency" class="summary-total__coin">USD</div>
+                <div data-next-display="cart.currency" class="summary-total__coin"></div>
                 <div class="order-totals__value order-totals__value--total">{total}</div>
               </div>
             </div>

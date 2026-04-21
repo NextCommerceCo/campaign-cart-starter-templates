@@ -80,8 +80,8 @@
               </div>
             </div>
             <!-- BS-014: cart.discountCode unwired — use data-next-discounts="voucher" + {discount.description} for code string -->
-            <div class="coupon-tags">
-              <div data-next-show="cart.hasCoupon" class="order-totals__line items-center">
+            <div class="coupon-tags" data-next-show="cart.hasCoupon" style="display:none">
+              <div class="order-totals__line items-center">
                 <div class="cart-subtext">Code applied</div>
                 <div data-next-discounts="voucher">
                   <template>
@@ -114,7 +114,7 @@
             <div class="order-totals__line order-totals__line--total">
               <div class="order-totals__label order-totals__label--total">Grand Total:</div>
               <div class="order-totals__value-group">
-                <div data-next-display="cart.currency" class="summary-total__coin">USD</div>
+                <div data-next-display="cart.currency" class="summary-total__coin"></div>
                 <div class="order-totals__value order-totals__value--total">{total}</div>
               </div>
             </div>
