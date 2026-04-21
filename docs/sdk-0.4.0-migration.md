@@ -16,13 +16,13 @@ Tracks changes needed across templates when upgrading from SDK 0.3.x to 0.4.0.
 - **`olympus/upsell-bundle-stepper.html`** — same native controls on a **post-purchase** bundle upsell (one hidden card).
 - **Inline `<template>` inside `[data-next-bundle-selector]`** (no template `id`) — noted in commented auto-render example on **`olympus/checkout.html`**; canonical olympus checkout remains manual inline cards.
 
-**`campaigns.json`:** **`olympus`**, **`limos`**, and **`olympus-mv-single-step`** pin **`sdk_version`:** **`0.4.18`** in the reference file. MV checkout still does **not** wire native checkout **`bundleQuantity`** (tier cards + slots — use **`limos/checkout.html`** for that demo); **`upsell-mv.html`** keeps **`initBundleQtyToggle`** + hidden tier cards, not **`upsell-bundle-stepper`**. Re-smoke MV checkout + upsell after loader bumps.
+**`campaigns.json`:** **`olympus`**, **`limos`**, **`demeter`**, and **`olympus-mv-single-step`** pin **`sdk_version`:** **`0.4.18`** in the reference file. MV checkout still does **not** wire native checkout **`bundleQuantity`** (tier cards + slots — use **`limos/checkout.html`** for that demo); **`upsell-mv.html`** keeps **`initBundleQtyToggle`** + hidden tier cards, not **`upsell-bundle-stepper`**. Re-smoke MV checkout + upsell after loader bumps.
 
 ### SDK 0.4.17 — post-checkout session cleanup (cart + vouchers)
 
 **Loader:** `https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v0.4.17/dist/loader.js` ([v0.4.17](https://github.com/NextCommerceCo/campaign-cart/releases/tag/v0.4.17)).
 
-**Reference pins:** [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json) uses **`0.4.18`** for **olympus**, **limos**, and **olympus-mv-single-step**. Pin **0.4.17** or older only when bisecting a regression against those releases.
+**Reference pins:** [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json) uses **`0.4.18`** for **olympus**, **limos**, **demeter**, and **olympus-mv-single-step**. Pin **0.4.17** or older only when bisecting a regression against those releases.
 
 **Fixes (no reference template markup changes required):**
 
@@ -392,7 +392,7 @@ Full example (distinct package IDs per card):
 
 ### Migrated — `campaign-kit-templates/` (SDK 0.4.x)
 
-**Loader pin:** bump **`sdk_version`** in [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json) when adopting newer Campaign Cart releases (reference repo: **`0.4.18`** for **olympus**, **limos**, **olympus-mv-single-step**).
+**Loader pin:** bump **`sdk_version`** in [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json) when adopting newer Campaign Cart releases (reference repo: **`0.4.18`** for **olympus**, **limos**, **demeter**, **olympus-mv-single-step**).
 
 | Template | Selector fix | Token renames | Bug fixes | Notes |
 |----------|-------------|---------------|-----------|-------|
