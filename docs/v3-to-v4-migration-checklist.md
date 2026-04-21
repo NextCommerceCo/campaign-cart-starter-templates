@@ -95,6 +95,27 @@ The v3 cart summary uses the old `data-next-content` / `data-next-cart-items` pa
 - [ ] Coupon tag: `data-next-show="cart.hasCoupon"` + `data-next-discounts="voucher"` with `{discount.description}` for the code string
 - [ ] Tax row: keep hidden (`class="hide"`) — `{tax}` token is not wired in CartSummaryEnhancer (BS-017)
 
+### Flash prevention (inside `data-next-cart-summary` templates)
+
+Elements with `data-next-show` / `data-next-hide` inside a `<template>` briefly appear in their default state on every cart re-render before the SDK evaluates the condition. Prevent this:
+
+- [ ] Move `data-next-show="cart.hasCoupon"` to the **outer** `.coupon-tags` wrapper (not an inner child), and add `style="display:none"` — starts hidden, SDK shows it when condition is true
+- [ ] Same pattern for any other conditional block inside the template (e.g. `data-next-show="cart.hasDiscounts"` savings banner, `data-next-show="item.isRecurring"` frequency span) — add `style="display:none"` directly on the element
+- [ ] `cart.currency` node: leave **empty** — no hardcoded `"USD"` literal. The SDK fills it; a literal shows briefly before being overwritten on re-render
+- [ ] For partials with static chrome (heading, product image): place those elements **outside** the `<template>` so they are not rebuilt on every cart update. Use `data-next-display="package.image"` / `data-next-display="package.name"` (scoped with `data-next-package-id`) outside the template — these update in-place via the normal display binding without triggering a full re-render (see `cart-summary03.html`)
+
+### `next-core.css` — discount % badge min-width
+
+Add to `next-core.css` to prevent layout shift when `cart.totalDiscountPercentage` changes value:
+
+```css
+/* Discount % badge in cart summary — fixed width prevents layout shift when value changes */
+[data-next-cart-summary] .order-totals__label-group .badge {
+  min-width: 4.5rem;
+  justify-content: center;
+}
+```
+
 ### Cart item token names (0.4.11+)
 
 | Before (v3) | After (0.4.x) |

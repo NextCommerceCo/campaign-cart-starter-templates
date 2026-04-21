@@ -545,6 +545,36 @@ All cards in a selector should have `data-next-shipping-id` if any do — cards 
 
 ---
 
+## Cart summary partials
+
+All templates ship three ready-to-use cart summary partials in `_includes/`. Swap by changing the `{% campaign_include %}` reference in `checkout.html`.
+
+| Partial | Style | Notes |
+|---------|-------|-------|
+| `cart-summary01.html` | Tabular, no accordion | Default for olympus. Clean item + totals list. |
+| `cart-summary02.html` | Accordion / card | Default for limos. Includes `item.isRecurring` / `item.frequency` row. |
+| `cart-summary03.html` | Tabular + feature block | Default for demeter. Cart heading + product image outside `<template>` — no flash on re-render. |
+
+### `[data-next-cart-summary]` pattern
+
+```html
+<div data-next-cart-summary>
+  <!-- Static chrome (heading, product image) here — not inside <template> -->
+  <template>
+    <!-- CartSummaryEnhancer tokens: {subtotal}, {shipping}, {total}, {discounts} -->
+    <!-- data-summary-lines + inner <template> for cart item rows -->
+  </template>
+</div>
+```
+
+Elements outside `<template>` render immediately and update in-place via `data-next-display`. Elements inside are rebuilt on every cart change — avoid `data-next-show` / `data-next-hide` inside the template where possible; if needed, add `style="display:none"` on the element to prevent flash before SDK evaluation.
+
+**`cart.currency` node:** always leave empty — the SDK fills it. A hardcoded `"USD"` literal flashes before being overwritten.
+
+See [`docs/bundle-display-cart-cheatsheet.md`](bundle-display-cart-cheatsheet.md) for full token reference and flash prevention patterns.
+
+---
+
 ## Upsell pages
 
 Upsell pages use a different set of attributes than checkout pages.

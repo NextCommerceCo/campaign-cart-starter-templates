@@ -48,6 +48,21 @@ Sam’s forwarded engineering note aligns with **`docs/sdk-0.4.0-migration.md` �
 
 ---
 
+## Demeter 0.4.18 QA — verified 2026-04-21
+
+Full migration QA pass against the olympus QA checklist. Same campaign/package/upsell chain as olympus. All items below confirmed working:
+
+- Bundle selector: 1x/2x/3x switching, line count stays 1, refresh after tier (BS-013 ✅)
+- Savings %: reads as percentage, not decimal
+- Cart summary (`cart-summary03.html`): product image + `package.name` update on tier change without flash (heading/image outside template)
+- Discount % badge: stable width on value change (min-width CSS)
+- Bumps (check01 + switch01): add/remove, prices update with tier
+- Shipping per tier: 1x/2x → method 2, 3x → method 1
+- Coupon / exit intent: `EXIT10` applies, prices update (SDK 0.4.16+ ✅)
+- Console: no hard errors, `window.next.version` === `0.4.18`
+
+---
+
 ## BS-001 - Auto-rendered cards do not bind `data-next-display="package.*"`
 
 - Status: `open`

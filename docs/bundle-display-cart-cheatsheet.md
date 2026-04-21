@@ -142,6 +142,35 @@ Outside **`[data-next-cart-summary]`**, other cart display paths may still diffe
 
 ---
 
+## 7. Cart summary partials — starter variants
+
+All four templates (`demeter`, `limos`, `olympus`, `olympus-mv-single-step`) ship three ready-to-use cart summary partials. Swap by changing the `{% campaign_include %}` reference in `checkout.html`.
+
+| Partial | Style | Distinctive features |
+|---------|-------|----------------------|
+| `cart-summary01.html` | Tabular, no accordion | Olympus default. Clean item + totals list. |
+| `cart-summary02.html` | Accordion / card | Limos default. Collapsible cart drawer. Includes `item.isRecurring` / `item.frequency` row. |
+| `cart-summary03.html` | Tabular + feature block | Demeter default. **Cart heading** (`Your Cart` + subtitle) and **product image feature block** (`data-next-display="package.image"` scoped with `data-next-package-id`) sit **outside** the `<template>` — they update in-place via display binding without re-rendering on every cart update. |
+
+### Flash prevention pattern (all partials)
+
+Elements conditionally shown/hidden by `data-next-show` / `data-next-hide` inside a cart summary `<template>` briefly appear in their default state on each re-render before the SDK evaluates the condition.
+
+**Fix:** add `style="display:none"` directly on the element and move `data-next-show` to the **outermost** wrapper for that block:
+
+```html
+<!-- coupon-tags: starts hidden, SDK shows when cart.hasCoupon is true -->
+<div class="coupon-tags" data-next-show="cart.hasCoupon" style="display:none">
+  ...
+</div>
+```
+
+Apply the same pattern to: savings banners (`cart.hasDiscounts`), frequency spans (`item.isRecurring`), and any other conditional inside the template.
+
+**`cart.currency` node:** always leave empty — no hardcoded `"USD"` literal. The SDK fills it; a literal flashes before being overwritten.
+
+---
+
 ## See also (paths in **campaign-cart** SDK repo)
 
 - `src/enhancers/cart/BundleSelector/guide/reference/attributes.md`  
