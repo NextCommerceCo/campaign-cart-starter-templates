@@ -5283,6 +5283,12 @@ figcaption {
   font-weight: 500;
 }
 
+/* Discount % badge in cart summary — fixed width prevents layout shift when value changes */
+[data-next-cart-summary] .order-totals__label-group .badge {
+  min-width: 4.5rem;
+  justify-content: center;
+}
+
 .coupon-button {
   border: 2px solid var(--brand--color--cta-primary);
   border-radius: var(--radius--input);
