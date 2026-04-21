@@ -399,7 +399,7 @@ Full example (distinct package IDs per card):
 | `limos` | ✅ bundle selector | ✅ **0.4.x** | 🔄 QA | Single-step checkout. **`checkout.html`:** SDK **0.4.18** native **bundleQuantity** stepper under bundle selector (`limos-card`). Cart summary: `cart-summary02.html`. Upsell chain matches olympus file names. |
 | `olympus` | ✅ bundle selector | ✅ **0.4.x** | ✅ QA | Reference **bundle** checkout (`data-next-bundle-selector` + Summary v2); **no** checkout bundle-qty stepper (see **limos**). **sdk_version `0.4.18`**. Upsell: `upsell-bundle-stepper` (native qty) + tier pills/cards. — [template bug log](template-bug-log.md) |
 | `olympus-mv-single-step` | ✅ native external slots | ✅ **0.4.x** | 🔄 QA | **`sdk_version` `0.4.18`**. Checkout: tier cards + **`data-next-bundle-slots-for`**. **Native `bundleQuantity` on checkout not wired here** (tier UX + MV slots — use **limos** checkout for the qty demo). **`upsell-mv.html`:** tier pills + `initBundleQtyToggle`, not `upsell-bundle-stepper`. Variant UI: see [`checkout-olympus-mv-full.js`](../campaign-kit-templates/src/olympus-mv-single-step/assets/js/checkout-olympus-mv-full.js) and [`upsells-up01-mv.js`](../campaign-kit-templates/src/olympus-mv-single-step/assets/js/upsells-up01-mv.js). |
-| `demeter` | 🔄 in progress | 🔄 in progress | **`sdk_version` `0.4.18`**. Bundle selector (matching olympus). Same campaign, upsell chain, and `next-core.css` as olympus. |
+| `demeter` | ✅ bundle selector | ✅ **0.4.x** | ✅ QA | **`sdk_version` `0.4.18`**. Bundle selector (matching olympus). Same campaign, upsell chain, and `next-core.css` as olympus. Cart summary: `cart-summary03.html` (demeter-specific: cart heading + product image feature block). |
 
 ### Pending migration — `campaign-kit-templates-v3/` (SDK 0.3.x)
 
