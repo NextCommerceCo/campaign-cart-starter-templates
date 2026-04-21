@@ -44,6 +44,7 @@ Note: when copying a template, the developer renames the folder to their product
 
 | Template | Pages |
 |----------|-------|
+| demeter | /demeter/checkout/ · /demeter/upsell-bundle-stepper/ · /demeter/upsell-bundle-tier-pills/ · /demeter/upsell-bundle-tier-cards/ · /demeter/receipt/ |
 | limos | /limos/checkout/ · /limos/upsell-bundle-stepper/ · /limos/upsell-bundle-tier-pills/ · /limos/upsell-bundle-tier-cards/ · /limos/receipt/ |
 | olympus | /olympus/checkout/ · /olympus/upsell-bundle-stepper/ · /olympus/upsell-bundle-tier-pills/ · /olympus/upsell-bundle-tier-cards/ · /olympus/receipt/ |
 | olympus-mv-single-step | /olympus-mv-single-step/checkout/ · /olympus-mv-single-step/upsell-mv/ · /olympus-mv-single-step/receipt/ |

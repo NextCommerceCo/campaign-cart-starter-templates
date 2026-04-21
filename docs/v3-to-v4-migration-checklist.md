@@ -106,7 +106,7 @@ The v3 cart summary uses the old `data-next-content` / `data-next-cart-items` pa
 
 ### `next-core.css`
 
-`next-core.css` must be **identical across all templates**. The simplest approach when porting a new template is to copy the file directly from an existing 0.4.x template rather than patching the v3 version:
+`next-core.css` must be **identical across all templates**. The simplest approach when porting a new template is to copy the file directly from an existing 0.4.x template rather than patching the v3 version. Any update to this file must also be replicated to all other templates (`demeter`, `limos`, `olympus`, `olympus-mv-single-step`).
 
 ```bash
 cp campaign-kit-templates/src/olympus/assets/css/next-core.css campaign-kit-templates/src/[slug]/assets/css/next-core.css
@@ -140,8 +140,15 @@ The rules below are already present in the copied file — listed here for refer
 - [ ] Extract the cart summary markup into a named partial in `_includes/`:
   - `cart-summary01.html` — tabular style (olympus-style, no accordion)
   - `cart-summary02.html` — accordion/card style (limos-style)
-  - Each template ships both styles as starting points — developers swap by changing the `{% campaign_include %}` reference
+  - `cart-summary03.html` — tabular with cart heading + product image feature block (demeter-style)
+  - Each template ships all three styles as starting points — developers swap by changing the `{% campaign_include %}` reference
   - Use `{% campaign_include 'cart-summaryNN.html' %}` in place of the inline markup in `checkout.html` (both mobile and desktop instances if present)
+- [ ] **Replicate across all templates** — cart summary partials are shared. Any new or updated partial must be copied to every template (`demeter`, `limos`, `olympus`, `olympus-mv-single-step`):
+  ```bash
+  for slug in demeter limos olympus olympus-mv-single-step; do
+    cp campaign-kit-templates/src/[source-slug]/_includes/cart-summaryNN.html campaign-kit-templates/src/$slug/_includes/cart-summaryNN.html
+  done
+  ```
 
 ---
 
@@ -170,6 +177,8 @@ No JS changes required — bump behaviour is handled entirely by the SDK (`data-
 ## Step 6 — Upsell pages
 
 Copy upsell pages directly from the reference template rather than adapting v3 versions.
+
+> **Upsell pages and `upsells.js` are shared across all single-variant templates.** Any update to these files in one template must be replicated to `demeter`, `limos`, and `olympus`. MV campaigns (`olympus-mv-single-step`) only carry `upsell-mv.html` — the bundle upsell chain does not apply.
 
 **Single-variant campaigns** — copy from `olympus/`:
 
