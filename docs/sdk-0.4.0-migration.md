@@ -400,6 +400,7 @@ Full example (distinct package IDs per card):
 | `olympus` | ✅ bundle selector | ✅ **0.4.x** | ✅ QA | Reference **bundle** checkout (`data-next-bundle-selector` + Summary v2); **no** checkout bundle-qty stepper (see **limos**). **sdk_version `0.4.18`**. Upsell: `upsell-bundle-stepper` (native qty) + tier pills/cards. — [template bug log](template-bug-log.md) |
 | `olympus-mv-single-step` | ✅ native external slots | ✅ **0.4.x** | 🔄 QA | **`sdk_version` `0.4.18`**. Checkout: tier cards + **`data-next-bundle-slots-for`**. **Native `bundleQuantity` on checkout not wired here** (tier UX + MV slots — use **limos** checkout for the qty demo). **`upsell-mv.html`:** tier pills + `initBundleQtyToggle`, not `upsell-bundle-stepper`. Variant UI: see [`checkout-olympus-mv-full.js`](../campaign-kit-templates/src/olympus-mv-single-step/assets/js/checkout-olympus-mv-full.js) and [`upsells-up01-mv.js`](../campaign-kit-templates/src/olympus-mv-single-step/assets/js/upsells-up01-mv.js). |
 | `demeter` | ✅ bundle selector | ✅ **0.4.x** | ✅ QA | **`sdk_version` `0.4.18`**. Bundle selector (matching olympus). Same campaign, upsell chain, and `next-core.css` as olympus. Cart summary: `cart-summary03.html` (demeter-specific: cart heading + product image feature block). |
+| `shop-single-step` | — no selector | 🔄 in progress | 🔄 in progress | **`sdk_version` `0.4.18`**. Shop flow — no bundle selector; cart pre-populated before checkout. Single long form. Upsell: standard bundle chain (stepper → tier-pills → tier-cards, matching olympus). |
 
 ### Pending migration — `campaign-kit-templates-v3/` (SDK 0.3.x)
 
@@ -410,7 +411,7 @@ Full example (distinct package IDs per card):
 | `olympus-mv-two-step` | ⬜ pending | ⬜ pending | Two-step flow: `select.html` (bundle pick) → `checkout.html` (form). SDK 0.4.18 "Add to Cart for bundle selectors" is relevant here — the select page can wire a bundle selector to an Add-to-Cart button to populate the cart before navigating to the checkout form, without a full page form submit. Evaluate on migration. |
 | `demeter` | ✅ | ✅ | Promoted to `campaign-kit-templates/src/demeter/` |
 | `limos` | ✅ | ✅ | Promoted to `campaign-kit-templates/src/limos/` |
-| `shop-single-step` | — | — | No checkout bundle selector (package selector path). SDK 0.4.18 "Add to Cart for bundle selectors" relevant on migration if bundle selector is adopted — checkout page is a single form, but a pre-checkout product/landing page variant of this template would be a natural fit. |
+| `shop-single-step` | ✅ | ✅ | Promoted to `campaign-kit-templates/src/shop-single-step/` |
 | `shop-three-step` | — | — | No checkout bundle selector (multi-step form: information → shipping → billing). SDK 0.4.18 "Add to Cart for bundle selectors" potentially relevant if a bundle-pick step is added before the form steps on migration. |
 
 ### Local-only (not tracked in repo)
