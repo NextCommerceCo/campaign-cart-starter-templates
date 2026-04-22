@@ -49,12 +49,14 @@ The QA dashboard has a params panel — use these to test how the page behaves w
 ## Template reference
 
 ### demeter / limos / olympus
-Single-step checkout. All three follow the same page structure.
+Single-step checkout. All three follow the same page structure with a 3-page upsell chain.
 
 | Page | URL |
 |------|-----|
 | Checkout | `/[slug]/checkout/` |
-| Upsell | `/[slug]/upsell/` |
+| Upsell — stepper | `/[slug]/upsell-bundle-stepper/` |
+| Upsell — tier pills | `/[slug]/upsell-bundle-tier-pills/` |
+| Upsell — tier cards | `/[slug]/upsell-bundle-tier-cards/` |
 | Receipt | `/[slug]/receipt/` |
 
 No required params — pages load without `forcePackageId`.
@@ -102,15 +104,17 @@ Two-step checkout — variant selection is a separate page before billing.
 ---
 
 ### shop-single-step
-Shop-style checkout. Requires a package ID to render.
+Shop-style checkout. Requires a package ID to render — cart is pre-populated before checkout (no bundle selector on the checkout page).
 
 | Page | URL |
 |------|-----|
-| Checkout | `/[slug]/checkout/?forcePackageId=2:1` |
-| Upsell | `/[slug]/upsell/?forcePackageId=2:1` |
-| Receipt | `/[slug]/receipt/?forcePackageId=2:1` |
+| Checkout | `/[slug]/checkout/?forcePackageId=1:1` |
+| Upsell — stepper | `/[slug]/upsell-bundle-stepper/?forcePackageId=1:1` |
+| Upsell — tier pills | `/[slug]/upsell-bundle-tier-pills/?forcePackageId=1:1` |
+| Upsell — tier cards | `/[slug]/upsell-bundle-tier-cards/?forcePackageId=1:1` |
+| Receipt | `/[slug]/receipt/?forcePackageId=1:1` |
 
-**`forcePackageId` is required** — without it the cart is empty and the page will not render correctly. Always include it when loading pages directly.
+**`forcePackageId` is required** — without it the cart is empty and the page will not render correctly. Always include it when loading pages directly. Upsell chain matches olympus (stepper → tier-pills → tier-cards).
 
 ---
 
