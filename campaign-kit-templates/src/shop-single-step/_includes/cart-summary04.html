@@ -1,6 +1,8 @@
-<h4 class="order-summary__title">Order Summary</h4>
 <div class="summary-wrapper" data-next-cart-summary>
   <template>
+    <div class="order-summary">
+      <h4 class="order-summary__title">Order Summary</h4>
+      <div class="order-summary__content">
 
     <div class="cart-items cart-items__list">
       <div data-next-component="scroll-hint" class="cart-items__scroll-hint cart-items__scroll-hint--active">
@@ -31,7 +33,7 @@
                       <span data-next-show="item.isRecurring" style="display:none">{item.frequency}</span>
                       <span data-next-hide="item.isRecurring">One-time purchase</span>
                     </div>
-                    <div>
+                    <div class="hide">
                       <div class="text-2xs text-muted text-weight-normal diagonal-strike {item.hasDiscount}">{item.originalUnitPrice}/ea</div>
                       <div class="text-2xs text-muted text-weight-normal">{item.unitPrice}/ea</div>
                     </div>
@@ -48,7 +50,7 @@
       </div>
     </div>
 
-    <div class="order-totals">
+    <div class="order-totals os-cart-summary-totals">
 
       <div class="order-totals__section">
         <div class="order-totals__line">
@@ -62,16 +64,16 @@
         <ul class="order-totals__discount-list" data-next-discounts="offer" aria-label="Offer discounts">
           <template>
             <li class="order-totals__line">
-              <div class="order-totals__label text-sm text-muted">{discount.name}</div>
-              <div class="order-totals__value text-sm text-muted">−{discount.amount}</div>
+              <div class="order-totals__label text-muted">{discount.name}</div>
+              <div class="order-totals__value text-muted">−{discount.amount}</div>
             </li>
           </template>
         </ul>
         <ul class="order-totals__discount-list" data-next-discounts="voucher" aria-label="Coupon discounts">
           <template>
             <li class="order-totals__line">
-              <div class="order-totals__label text-sm text-muted">{discount.name}</div>
-              <div class="order-totals__value text-sm text-muted">−{discount.amount}</div>
+              <div class="order-totals__label text-muted">{discount.name}</div>
+              <div class="order-totals__value text-muted">−{discount.amount}</div>
             </li>
           </template>
         </ul>
@@ -160,6 +162,9 @@
         </div>
       </div>
 
+    </div>
+
+      </div>
     </div>
 
   </template>

@@ -3336,7 +3336,6 @@ figcaption {
   border: 1px solid #dbdbdb;
   max-width: none;
   margin-top: 20px;
-  display: none;
 }
 
 .accordion__trigger {
@@ -7511,6 +7510,22 @@ figcaption {
   .flex-horizontal-lg-up { display: flex !important; justify-content: center; align-items: stretch;flex-direction: row; }
   .flex-center-lg-up { display: flex !important; justify-content: center; align-items: center; }
   .flex-between-lg-up { display: flex !important; justify-content: space-between; align-items: center; }
+
+  /* display:none skips cart display binding (safe-display-paths.md); keep off-screen + clipped so data-next-display still hydrates */
+  .order-summary-mobile {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    pointer-events: none;
+    display: flex;
+  }
 }
 
 @media screen and (min-width: 1280px) {
