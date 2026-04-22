@@ -150,6 +150,7 @@ scripts:
 | `data-next-checkout-step="..."` | Multi-step navigation (value is `campaign_link` URL) |
 | `data-next-display="cart.total"` | Renders a dynamic value |
 | `data-next-show="cart.hasDiscounts"` | Conditional visibility (0.4.x cart / receipt; prefer over legacy `cart.hasSavings`) |
+| `data-next-display="cart.originalPrice"` | **Unsupported** on `cart.*` in current `CartDisplayEnhancer` (unresolved path / no DOM update). For crossed pricing with `cart.total`, use `data-next-display="cart.subtotal"` with `data-next-show="cart.hasDiscounts"`. |
 | `data-next-hide="cart.isEmpty"` | Inverse conditional |
 | `data-next-cart-summary` + `data-summary-lines` | Cart summary v2 (0.4.x); replaces legacy `data-next-cart-items` |
 | `data-next-bump` | Order bump toggle |

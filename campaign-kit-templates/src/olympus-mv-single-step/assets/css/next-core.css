@@ -3336,7 +3336,6 @@ figcaption {
   border: 1px solid #dbdbdb;
   max-width: none;
   margin-top: 20px;
-  display: none;
 }
 
 .accordion__trigger {
@@ -7511,6 +7510,22 @@ figcaption {
   .flex-horizontal-lg-up { display: flex !important; justify-content: center; align-items: stretch;flex-direction: row; }
   .flex-center-lg-up { display: flex !important; justify-content: center; align-items: center; }
   .flex-between-lg-up { display: flex !important; justify-content: space-between; align-items: center; }
+
+  /* display:none skips cart display binding (safe-display-paths.md); keep off-screen + clipped so data-next-display still hydrates */
+  .order-summary-mobile {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    pointer-events: none;
+    display: flex;
+  }
 }
 
 @media screen and (min-width: 1280px) {
@@ -7798,7 +7813,15 @@ figcaption {
   .checkout__form-container.cc-checkout,
   .checkout__form-container--main {
     max-width: none;
+  }
+
+  .checkout__form-container.cc-checkout {
     padding: 1.25rem;
+  }
+
+  /* checkout--shop-single-step: mobile order summary + header supply top rhythm (see checkout.html page-wrapper) */
+  .checkout--shop-single-step .checkout__form-container--main {
+    padding: 0 1.25rem 1.25rem;
   }
 
   .show-tablet {
@@ -9796,9 +9819,13 @@ figcaption {
     position: relative;
   }
 
-  .checkout__form-container.cc-checkout,
-  .checkout__form-container--main {
+  .checkout__form-container.cc-checkout {
     padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .checkout--shop-single-step .checkout__form-container--main {
+    padding-top: 0;
     padding-bottom: 1rem;
   }
 
@@ -11782,6 +11809,10 @@ figcaption {
 
   .checkout-header--lg .checkout-header__inner {
     min-height: 4.5rem;
+  }
+
+  .checkout--shop-single-step .checkout-header--lg {
+    border-bottom: 0;
   }
 }
 
