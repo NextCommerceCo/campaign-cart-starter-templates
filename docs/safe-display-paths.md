@@ -26,6 +26,8 @@ Safe when a cart session exists (checkout / cart drawer).
 | `cart.couponCount` | Untested — verify against your SDK build |
 | `cart.discountCode`, `cart.discountCodes`, `cart.coupons[0].code`, `cart.coupons[1].code` | ⚠️ Still broken for **`data-next-display`** — node stays empty despite voucher in cart state; use **`data-next-discounts="voucher"`** + `{discount.description}` in a `<template>` instead (see [BS-014](template-bug-log.md)) |
 
+**Not a `cart.*` display path:** **`cart.originalPrice`** — do **not** use `data-next-display="cart.originalPrice"` on inline checkout/receipt markup. Current **`CartDisplayEnhancer`** does not resolve it (value stays undefined; DOM may never update — same class of issue as unknown keys). Reference templates use **`cart.subtotal`** with **`data-next-show="cart.hasDiscounts"`** for a crossed “merchandise subtotal” line next to **`cart.total`**. This is separate from **`{item.originalPrice}`** inside **`data-summary-lines`** / cart summary **`<template>`** tokens (template pipeline, different semantics after 0.4.11).
+
 Use **`cart-summary`** the same way where your theme expects that alias (scanner treats it like cart).
 
 ---

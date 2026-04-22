@@ -361,7 +361,7 @@ Reads from the **active bundle selection**. Use inside `data-next-bundle-card` t
 ### Conditional visibility
 
 ```html
-<div data-next-show="cart.hasSavings">You save: <span data-next-display="cart.savings"></span></div>
+<div data-next-show="cart.hasDiscounts">You save: <span data-next-display="cart.totalDiscount"></span></div>
 <div data-next-hide="cart.isEmpty"><!-- shown when cart has items --></div>
 ```
 
