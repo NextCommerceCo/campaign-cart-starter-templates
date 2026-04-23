@@ -55,6 +55,15 @@ Reference pages on **`v0.4.0-offers-template-update`** — what to open when you
 
 **Note — older MV variants (frozen):** `olympus-mv-single-step-v0.4-bridge` and `olympus-mv-single-step-v0.4-cards` were **interim** templates for problems **native `olympus-mv-single-step` now solves**. Both are **local-only** (untracked via `.git/info/exclude`; not in the repo) and **not updated going forward** — see [`docs/sdk-0.4.0-migration.md`](sdk-0.4.0-migration.md) (*Olympus MV single-step — bridge and cards (frozen)*). Use **`olympus-mv-single-step`** for all new work.
 
+### Olympus MV Two Step — `olympus-mv-two-step/`
+
+| File | Preview | Role |
+| ---- | ------- | ---- |
+| [`olympus-mv-two-step/select.html`](../campaign-kit-templates/src/olympus-mv-two-step/select.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/select/) | **Step 1** — bundle tier picker + variant slot reveal. Uses `data-next-bundle-selector` + `checkout-olympus-mv-full.js` + thin `checkout-olympus-mv-selection.js` (1000ms spinner/reveal transition). |
+| [`olympus-mv-two-step/checkout.html`](../campaign-kit-templates/src/olympus-mv-two-step/checkout.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/checkout/) | **Step 2** — checkout form. Cart summary uses `cart-summary04.html` (image + variant name per line). Same JS as single-step (`checkout-olympus-mv-full.js`). |
+| [`olympus-mv-two-step/upsell-mv.html`](../campaign-kit-templates/src/olympus-mv-two-step/upsell-mv.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/upsell-mv/) | **Post-purchase upsell** — mirrors `olympus-mv-single-step/upsell-mv.html` (Approach B, hidden tier cards, qty buttons, slot layout). |
+| [`olympus-mv-two-step/receipt.html`](../campaign-kit-templates/src/olympus-mv-two-step/receipt.html) | [Open preview](https://deploy-preview-5--nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/receipt/) | **Receipt** — mirrors `olympus-mv-single-step/receipt.html`. |
+
 ---
 
 Within each table, issues are listed **high → medium → low** by severity. `#` is the row id **within that table** only.
