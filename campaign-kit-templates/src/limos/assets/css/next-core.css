@@ -14828,3 +14828,14 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   display: block;
 }
 
+
+/* BS-016: temp fix — intl-tel-input inline padding override until SDK restores normalization */
+.iti input.iti__tel-input,
+.iti input.iti__tel-input[type=text],
+.iti input.iti__tel-input[type=tel],
+.iti:not(.iti--allow-dropdown) input,
+.iti:not(.iti--allow-dropdown) input[type=text],
+.iti:not(.iti--allow-dropdown) input[type=tel] { padding-left: 12px !important; }
+.iti:not(.iti--allow-dropdown) input,
+.iti:not(.iti--allow-dropdown) input[type=text],
+.iti:not(.iti--allow-dropdown) input[type=tel] { padding-right: 52px !important; }
