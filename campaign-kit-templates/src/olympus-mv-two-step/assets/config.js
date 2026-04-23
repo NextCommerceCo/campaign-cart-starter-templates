@@ -4,7 +4,7 @@ window.nextReady = window.nextReady || [];
 
 window.nextConfig = {
   // Required: Your Campaign Cart API key
-  apiKey: "FQqAM3Qj3ijsq3tSR5cC6NaS8u6NFO95Xq3rIQhO",
+  apiKey: "Fdm0h0Jcm8TfhkBvhIhP0xDQzc5F5Ev8oNHnlv91",
   
   // Currency behavior when country changes
   currencyBehavior: 'auto', // 'auto' | 'manual'

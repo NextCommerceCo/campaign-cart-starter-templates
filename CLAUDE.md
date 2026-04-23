@@ -1,15 +1,18 @@
 # Repo Memory — campaign-cart-starter-templates
 
 ## Repo Overview
-One top-level folder:
-- `campaign-kit-templates/` — campaign-kit enabled versions. **This is the active work area.**
+Two top-level folders:
+- `campaign-kit-templates/` — **active work area.** 0.4.x templates, growing over time.
+- `campaign-kit-templates-v3/` — 0.3.x archive. Reference only — do not add new work here.
 
 ---
 
 ## campaign-kit-templates/ Purpose
 A **complete, working campaign-kit project** that serves two purposes:
-1. Full demo — clone it, `npm install` + `npm run dev`, all 7 templates work
+1. Full demo — clone it, `npm install` + `npm run dev`, all current templates work
 2. Template library — developers copy individual `src/[slug]/` folders into their own kit projects
+
+Templates are ported from `campaign-kit-templates-v3/` into `campaign-kit-templates/` and updated to SDK **0.4.x** patterns (`olympus`, `limos`, `demeter`, `olympus-mv-single-step`, `olympus-mv-two-step`, `shop-single-step`, `shop-three-step` today).
 
 ## Developer Workflow (end users of this repo)
 1. `npx campaign-init` in their own project → creates empty `_data/campaigns.json` + npm scripts
@@ -20,14 +23,14 @@ A **complete, working campaign-kit project** that serves two purposes:
 
 Note: `npx campaign-init` does NOT create any src/ folders — it only creates `_data/campaigns.json` and adds npm scripts to `package.json`.
 
-Note: when copying a template, the developer renames the folder to their product/campaign name (e.g. `wintergloves`), NOT the template name (e.g. `demeter`). The folder name becomes the slug and drives the URL: `campaign-domain.com/wintergloves/checkout`.
+Note: when copying a template, the developer renames the folder to their product/campaign name (e.g. `wintergloves`), NOT the template name (e.g. `olympus`). The folder name becomes the slug and drives the URL: `campaign-domain.com/wintergloves/checkout`.
 
 ---
 
 ## campaigns.json
 - **Project-level, not template-specific** — accumulates all campaigns a developer adds
-- `campaign-kit-templates/_data/campaigns.json` is a reference file showing full field structure for all 7 templates
-- Fields: `name`, `slug`, `description`, `sdk_version`, `store_name`, `store_url`, `store_terms`, `store_privacy`, `store_contact`, `store_returns`, `store_shipping`, `store_phone`, `store_phone_tel`; optional layout analytics: `gtm_id`, `fb_pixel_id` (see `docs/campaign-page-kit-template-context.md` / `docs/qa-guide.md`)
+- `campaign-kit-templates/_data/campaigns.json` is a reference file showing full field structure for all current templates
+- Fields: `name`, `slug`, `description`, `sdk_version`, `store_name`, `store_url`, `store_terms`, `store_privacy`, `store_contact`, `store_returns`, `store_shipping`, `store_phone`, `store_phone_tel`; optional layout analytics: `gtm_id`, `fb_pixel_id` (see `docs/campaign-page-kit-template-context.md`)
 - slug drives URL: `campaign-domain.com/[slug]/page`
 
 ## npm run build behaviour
@@ -36,6 +39,34 @@ Note: when copying a template, the developer renames the folder to their product
 - `_site/` is gitignored
 
 ## Dev server preview URLs (localhost:3000)
+
+### campaign-kit-templates/ (0.4.x)
+
+| Template | Pages |
+|----------|-------|
+| demeter | /demeter/checkout/ · /demeter/upsell-bundle-stepper/ · /demeter/upsell-bundle-tier-pills/ · /demeter/upsell-bundle-tier-cards/ · /demeter/receipt/ |
+| limos | /limos/checkout/ · /limos/upsell-bundle-stepper/ · /limos/upsell-bundle-tier-pills/ · /limos/upsell-bundle-tier-cards/ · /limos/receipt/ |
+| olympus | /olympus/checkout/ · /olympus/upsell-bundle-stepper/ · /olympus/upsell-bundle-tier-pills/ · /olympus/upsell-bundle-tier-cards/ · /olympus/receipt/ |
+| olympus-mv-single-step | /olympus-mv-single-step/checkout/ · /olympus-mv-single-step/upsell-mv/ · /olympus-mv-single-step/receipt/ |
+| olympus-mv-two-step | /olympus-mv-two-step/select/ · /olympus-mv-two-step/checkout/ · /olympus-mv-two-step/upsell-mv/ · /olympus-mv-two-step/receipt/ |
+| shop-single-step | /shop-single-step/checkout/ · /shop-single-step/upsell-bundle-stepper/ · /shop-single-step/upsell-bundle-tier-pills/ · /shop-single-step/upsell-bundle-tier-cards/ · /shop-single-step/receipt/ |
+| shop-three-step | /shop-three-step/information/ · /shop-three-step/shipping/ · /shop-three-step/billing/ · /shop-three-step/upsell-bundle-stepper/ · /shop-three-step/upsell-bundle-tier-pills/ · /shop-three-step/upsell-bundle-tier-cards/ · /shop-three-step/receipt/ |
+
+### Live Netlify previews (0.4.x)
+
+Base URL: `https://nextcommerce-campaign-templates.netlify.app` — append the localhost paths above (always trailing slash).
+
+| Template | Links |
+|----------|-------|
+| demeter | [checkout](https://nextcommerce-campaign-templates.netlify.app/demeter/checkout/) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/demeter/upsell-bundle-stepper/) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/demeter/upsell-bundle-tier-pills/) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/demeter/upsell-bundle-tier-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/demeter/receipt/) |
+| limos | [checkout](https://nextcommerce-campaign-templates.netlify.app/limos/checkout/) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/limos/upsell-bundle-stepper/) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/limos/upsell-bundle-tier-pills/) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/limos/upsell-bundle-tier-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/limos/receipt/) |
+| olympus | [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus/checkout/) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-stepper/) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-tier-pills/) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-tier-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus/receipt/) |
+| olympus-mv-single-step | [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/checkout/) · [upsell-mv](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/upsell-mv/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/receipt/) |
+| olympus-mv-two-step | [select](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/select/) · [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/checkout/) · [upsell-mv](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/upsell-mv/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/receipt/) |
+| shop-single-step | [checkout](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/checkout/) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell-bundle-stepper/) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell-bundle-tier-pills/) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell-bundle-tier-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/receipt/) |
+| shop-three-step | [information](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/information/) · [shipping](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/shipping/) · [billing](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/billing/) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell-bundle-stepper/) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell-bundle-tier-pills/) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell-bundle-tier-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/receipt/) |
+
+### campaign-kit-templates-v3/ (0.3.x archive)
 
 | Template | Pages |
 |----------|-------|
@@ -53,7 +84,7 @@ Note: when copying a template, the developer renames the folder to their product
 ```
 campaign-kit-templates/
 ├── _data/
-│   └── campaigns.json          ← reference: all 7 templates with full field structure
+│   └── campaigns.json          ← reference: all current 0.4.x templates with full field structure
 ├── src/
 │   ├── demeter/
 │   ├── limos/
@@ -87,10 +118,11 @@ campaign-kit-templates/
 ## base.html Pattern
 - `next-core.css` loaded **directly in base.html** — always needed, not in page frontmatter
 - Per-page CSS/JS injected via frontmatter `styles:` / `scripts:` loops using `campaign_asset`
-- Optional **GTM / Meta Pixel** in reference templates: injected from `campaign.gtm_id` / `campaign.fb_pixel_id` when Liquid `environment != "development"` (omit keys in `campaigns.json` to disable)
+- Optional **GTM / Meta Pixel** in reference templates: injected from `campaign.gtm_id` / `campaign.fb_pixel_id` when Liquid `environment != "development"` (omit keys in `campaigns.json` to disable). Use **`{% if campaign.gtm_id != "" %}`** / **`{% if campaign.fb_pixel_id != "" %}`** (not bare `{% if campaign.gtm_id %}`) — Liquid treats empty string as truthy.
 - Liquid conditionals for optional metatags:
   - `{% if next_success_url %}` → checkout pages only
   - `{% if next_upsell_accept %}` / `{% if next_upsell_decline %}` → upsell pages only
+- **Shop checkout top bar (`checkout-header--lg`):** `{% campaign_include 'checkout-header.html' %}` (section **`checkout-header checkout-header--lg`**) inside **`main-wrapper`**. **`shop-single-step`:** enabled on **`checkout.html`** with **`checkout--shop`** on **`page-wrapper`** and **`hide`** on the duplicate **`.checkout-header__brand`** in the main column. **`shop-three-step`:** default **`page-wrapper`** is **`checkout--shop checkout--shop-column-logo`** (include **commented out**; **`checkout--shop-column-logo`** restores full main-column **`padding: 1.25rem`** where **`checkout--shop`** alone uses zero top padding for the top bar). For top bar like single-step: uncomment include, remove **`checkout--shop-column-logo`**, add **`hide`** on the column brand. **`next-core.css`** in each template defines **`.checkout--shop`** / **`.checkout--shop-column-logo`** and **`.checkout-header--lg`** border tweaks.
 
 ## Page Frontmatter Fields
 ```yaml
@@ -136,9 +168,10 @@ scripts:
 | `data-next-checkout-field="email"` | Binds input to a field |
 | `data-next-checkout-step="..."` | Multi-step navigation (value is `campaign_link` URL) |
 | `data-next-display="cart.total"` | Renders a dynamic value |
-| `data-next-show="cart.hasSavings"` | Conditional visibility |
+| `data-next-show="cart.hasDiscounts"` | Conditional visibility (0.4.x cart / receipt; prefer over legacy `cart.hasSavings`) |
+| `data-next-display="cart.originalPrice"` | **Unsupported** on `cart.*` in current `CartDisplayEnhancer` (unresolved path / no DOM update). For crossed pricing with `cart.total`, use `data-next-display="cart.subtotal"` with `data-next-show="cart.hasDiscounts"`. |
 | `data-next-hide="cart.isEmpty"` | Inverse conditional |
-| `data-next-cart-items` | Cart item list container |
+| `data-next-cart-summary` + `data-summary-lines` | Cart summary v2 (0.4.x); replaces legacy `data-next-cart-items` |
 | `data-next-bump` | Order bump toggle |
 | `data-next-express-checkout="container"` | Express checkout (PayPal/Apple/Google Pay) |
 | `data-next-coupon="input"` | Coupon input component |
@@ -158,6 +191,21 @@ Inside `<template>` elements the SDK uses single-brace tokens (not Liquid):
 ---
 
 ## JS Files Per Template
+
+### campaign-kit-templates/ (0.4.x)
+
+| Template | JS Files |
+|----------|----------|
+| demeter | checkout.js, checkout-demeter.js, upsells.js, promo-banner.js, promo-timer.js |
+| limos | checkout.js, checkout-limos.js, upsells.js, promo-banner.js, promo-timer.js |
+| olympus | checkout.js, checkout-olympus.js, upsells.js, promo-banner.js, promo-timer.js |
+| olympus-mv-single-step | checkout.js, checkout-olympus-mv-full.js, upsells-up01-mv.js, promo-banner.js, promo-timer.js |
+| olympus-mv-two-step | checkout.js, checkout-olympus-mv-full.js, checkout-olympus-mv-selection.js, upsells-up01-mv.js, promo-banner.js, promo-timer.js |
+| shop-single-step | checkout.js, upsells.js, promo-banner.js, promo-timer.js |
+| shop-three-step | checkout.js, checkout-shop-three.js, checkout-shop-three-billing.js, checkout-shop-three-shipping.js, upsells.js, promo-banner.js, promo-timer.js |
+
+### campaign-kit-templates-v3/ (0.3.x archive)
+
 | Template | JS Files |
 |----------|----------|
 | demeter | checkout.js, upsells.js |
@@ -171,19 +219,19 @@ Inside `<template>` elements the SDK uses single-brace tokens (not Liquid):
 ---
 
 ## .gitignore
-- Removed blanket `package.json` / `package-lock.json` ignores (needed for campaign-kit-templates/package.json to be tracked)
+- Removed blanket `package.json` / `package-lock.json` ignores (needed for both folder package.json files to be tracked)
 - Added `_site/` (build output)
 - `node_modules/` remains ignored globally
+- Experimental scratch folders excluded via `.git/info/exclude` (local-only, not committed)
 
 ---
 
-## Docs Structure (decisions made)
-- `CLAUDE.md` (this file) — AI context for working ON this repo. Not for SDK usage guidance.
-- `README.md` — public-facing: two-folder structure, developer workflow, template inventory, npm scripts, SDK links, AI rules pointer
-- `docs/campaign-page-kit-template-context.md` — AI context for developers working with campaign-kit-templates (see below)
-- `campaign-kit-template-CONTEXT.md` — **deleted** (wrong project layout, content migrated here and to README)
+## Docs in this repo
+- `CLAUDE.md` (this file) — AI context for working **on** this starter repo (structure, conventions, preview URLs).
+- `README.md` — public onboarding: clone workflow, template inventory with live preview links, npm scripts, SDK links.
+- `docs/campaign-page-kit-template-context.md` — the **copyable** AI rules file for developers working **in** their own campaign-kit projects (copy into project root or `.cursor/rules/` per tool). The `docs/` folder in this repo is only that file.
 
-## SDK Customization Rules File — DONE
+## SDK customization rules file (`docs/campaign-page-kit-template-context.md`)
 `docs/campaign-page-kit-template-context.md` is the copyable AI context file for developers working in their own campaign-kit projects. Covers:
 - Project structure, campaigns.json schema, page frontmatter
 - Liquid filters (`campaign_asset`, `campaign_link`, `campaign_include`) and common variables
@@ -199,7 +247,4 @@ Design decisions:
 - **Analytics docs not included** — main SDK docs URL is sufficient; AI fetches specific pages when needed
 - **Long-term goal**: wire into `npx campaign-init` so it's auto-delivered to developer projects
 
-README has an "AI development rules" section pointing to both rules files (kit vs static).
-
-## Commit preferences
-- No `Co-Authored-By: Claude` lines in commit messages
+README has an "AI development rules" section pointing developers to copy `docs/campaign-page-kit-template-context.md` into their project.

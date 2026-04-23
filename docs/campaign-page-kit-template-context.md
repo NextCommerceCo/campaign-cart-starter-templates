@@ -30,6 +30,19 @@ A campaign funnel built with:
 
 ---
 
+## SDK 0.4.x campaign model
+
+**One package, one base price — use Campaign Offers for tier pricing.**
+
+- **One `packageId`** with a base price set in the Campaigns App
+- **Campaign Offers** define tier discounts (e.g. buy 2 → 30% off, buy 3 → 50% off) — the SDK reads these automatically
+- **Bundle selector** (`data-next-bundle-selector` + `data-next-bundle-card`) presents tiers; each card uses `data-next-bundle-items` with the same `packageId` at different quantities
+- **Coupons / vouchers** layer on top of offer pricing without any template changes needed
+
+This replaces the 0.3.x pattern of separate packages per tier + `data-next-cart-selector` swap mode. The bundle selector is offer-aware; the old swap selector is not. When you see `data-next-cart-selector` in older templates, treat it as legacy.
+
+---
+
 ## Read the SDK docs first
 
 Before making any changes that touch cart, checkout, upsells, or SDK wiring, read:
@@ -77,7 +90,7 @@ Registers every campaign. The `campaign` object in Liquid templates comes from h
     {
       "name": "My Campaign",
       "slug": "my-campaign",
-      "sdk_version": "← copy from campaign-kit-templates/_data/campaigns.json — do not guess",
+      "sdk_version": "0.4.18",
       "store_name": "Acme Store",
       "store_url": "https://acme.com",
       "store_phone": "1-800-555-0100",
@@ -342,10 +355,31 @@ The SDK is controlled entirely through HTML attributes. Do not write JavaScript 
 <span data-next-display="cart.savings"></span>
 ```
 
+**SDK 0.4.x:** `data-next-display="cart.discountCode"` is **not** wired in the cart-summary display resolver (Known #10 / BS-014). Use `data-next-discounts="voucher"` + `{discount.description}` to show the code string, `{discount.name}` for the display label. For bundle-line and summary tokens, use the [Campaign Cart SDK docs](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) and bundle selector reference in the [campaign-cart](https://github.com/NextCommerceCo/campaign-cart) repo as needed.
+
+### Bundle tier display (`data-next-bundle-display`)
+
+Reads from the **active bundle selection**. Use inside `data-next-bundle-card` to show that card's tier values, or on the `data-next-bundle-selector` container to reflect the selected tier.
+
+```html
+<!-- On a bundle card — shows this card's tier values -->
+<div data-next-bundle-card data-next-bundle-id="buy2" ...>
+  Save <span data-next-bundle-display="discountPercentage">XX%</span> OFF
+  <span data-next-bundle-display="total"></span>
+</div>
+
+<!-- Outside cards — reflects the currently selected tier -->
+<span data-next-bundle-display="price"></span>
+<span data-next-bundle-display="total"></span>
+<span data-next-bundle-display="discountPercentage"></span>
+```
+
+`data-next-bundle-display` is separate from `data-next-display` — do not mix them. Allowed keys follow the SDK’s bundle display resolver — confirm against current [Campaign Cart](https://github.com/NextCommerceCo/campaign-cart) bundle/upsell enhancer docs rather than guessing paths.
+
 ### Conditional visibility
 
 ```html
-<div data-next-show="cart.hasSavings">You save: <span data-next-display="cart.savings"></span></div>
+<div data-next-show="cart.hasDiscounts">You save: <span data-next-display="cart.totalDiscount"></span></div>
 <div data-next-hide="cart.isEmpty"><!-- shown when cart has items --></div>
 ```
 
@@ -366,6 +400,35 @@ The SDK is controlled entirely through HTML attributes. Do not write JavaScript 
 
 Note: Inside `<template>` elements, tokens use single braces `{item.field}`, not Liquid `{{ }}`.
 
+### Cart summary v2 (`data-next-cart-summary`)
+
+Live summary panel — updates on tier change, coupon apply, and bump toggle. Use `data-summary-lines` for line rows; tokens use `{item.*}` (SDK 0.4.11+). **Do not use `{line.*}` legacy names — removed in 0.4.11, render silently blank.**
+
+```html
+<div data-next-cart-summary>
+  <div data-summary-lines>
+    <template>
+      <div data-package-id="{item.packageId}">
+        <span>{item.quantity}x {item.name}</span>
+        <span class="{item.hasDiscount}">{item.originalUnitPrice}/ea</span> <!-- strikethrough -->
+        <span>{item.unitPrice}/ea</span>
+        <span class="{item.hasDiscount}">{item.originalPrice}</span> <!-- line total strikethrough -->
+        <span>{item.price}</span> <!-- line total after discount -->
+      </div>
+    </template>
+  </div>
+  <div data-next-discounts="offer">
+    <template><div>{discount.name}: −{discount.amount}</div></template>
+  </div>
+  <div data-next-discounts="voucher">
+    <template><div>{discount.description}: −{discount.amount}</div></template>
+  </div>
+  <span data-next-display="cart.total"></span>
+</div>
+```
+
+Key token semantics (0.4.11+): `{item.price}` / `{item.originalPrice}` = **line totals** (qty × price); `{item.unitPrice}` / `{item.originalUnitPrice}` = **per-unit**. `{item.hasDiscount}` returns `"show"` or `"hide"` as a CSS class value. Cross-check any additional `{item.*}` / `{line.*}` names against the SDK version you pin in `campaigns.json` — the [official docs](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) track supported summary tokens.
+
 ### Order bump
 
 ```html
@@ -373,10 +436,12 @@ Note: Inside `<template>` elements, tokens use single braces `{item.field}`, not
 <div data-next-await="">
   <!-- data-next-bump: the toggle container
        data-next-package-id: package to add/remove when toggled
-       data-next-package-sync: comma-separated main package IDs — syncs bump quantity to match -->
+       data-next-package-sync: main package ID(s) — syncs bump quantity to match.
+         0.4.x one-package model: typically a single ID (e.g. "123").
+         Legacy multi-package model: comma-separated list per tier (e.g. "123,124,125"). -->
   <div data-next-bump=""
        data-next-package-id="456"
-       data-next-package-sync="123,124,125"
+       data-next-package-sync="123"
        class="next-active">
 
     <!-- data-next-toggle="toggle": the clickable area that toggles the bump -->
@@ -423,10 +488,39 @@ CSS required for checkbox state (already in `checkout.css` — only add if using
 <button data-next-quantity="increase" data-next-package-id="123">+</button>
 ```
 
-### Package selectors (product/checkout pages)
+### Bundle selector — primary 0.4.x pattern
+
+One package, multiple quantity tiers. `data-next-bundle-items` is JSON: `packageId` (from Campaigns App) + `quantity`. Campaign Offers drive tier pricing automatically.
 
 ```html
-<!-- Swap mode: clicking a card immediately replaces cart contents -->
+<div data-next-bundle-selector data-next-selector-id="main" data-next-selection-mode="swap">
+  <div data-next-bundle-card data-next-bundle-id="buy1"
+       data-next-bundle-items='[{"packageId":1,"quantity":1}]'
+       data-next-selected="true" role="button">
+    <span>1x</span>
+    <span data-next-bundle-display="total"></span>
+  </div>
+  <div data-next-bundle-card data-next-bundle-id="buy2"
+       data-next-bundle-items='[{"packageId":1,"quantity":2}]'
+       role="button">
+    <span>2x</span>
+    Save <span data-next-bundle-display="discountPercentage"></span>
+    <span data-next-bundle-display="total"></span>
+  </div>
+  <div data-next-bundle-card data-next-bundle-id="buy3"
+       data-next-bundle-items='[{"packageId":1,"quantity":3}]'
+       role="button">
+    <span>3x</span>
+    <span data-next-bundle-display="total"></span>
+  </div>
+</div>
+```
+
+### Package swap selector (legacy / 0.3.x pattern)
+
+Still functional but **not offer-aware** — tier pricing must be set per-package in the Campaigns App. Use bundle selector for new campaigns.
+
+```html
 <div data-next-cart-selector data-next-selection-mode="swap">
   <div data-next-selector-card data-next-package-id="123" data-next-selected="true">
     1 bottle — <span data-next-display="package.price" data-next-package-id="123"></span>
@@ -436,6 +530,18 @@ CSS required for checkbox state (already in `checkout.css` — only add if using
   </div>
 </div>
 ```
+
+### Per-card shipping (`data-next-shipping-id`)
+
+Sets the shipping method when a card is selected. Works on both `data-next-selector-card` (swap mode) and `data-next-bundle-card` (SDK 0.4.12+). Value is the shipping method `ref_id` from the Campaigns App.
+
+```html
+<!-- Bundle cards — functional from SDK 0.4.12 -->
+<div data-next-bundle-card data-next-bundle-id="buy1" data-next-shipping-id="2" ...>1x — $5 shipping</div>
+<div data-next-bundle-card data-next-bundle-id="buy3" data-next-shipping-id="1" ...>3x — Free shipping</div>
+```
+
+All cards in a selector should have `data-next-shipping-id` if any do — cards without it will not change the active shipping method when selected.
 
 ### Add to cart button
 
@@ -457,6 +563,72 @@ CSS required for checkbox state (already in `checkout.css` — only add if using
 
 ---
 
+## Cart summary partials
+
+All templates ship three ready-to-use cart summary partials in `_includes/`. Swap by changing the `{% campaign_include %}` reference in `checkout.html`.
+
+| Partial | Style | Notes |
+|---------|-------|-------|
+| `cart-summary01.html` | Tabular, no accordion | Default for olympus. Clean item + totals list. |
+| `cart-summary02.html` | Accordion / card | Default for limos. Includes `item.isRecurring` / `item.frequency` row. |
+| `cart-summary03.html` | Tabular + feature block | Default for demeter. Cart heading + product image outside `<template>` — no flash on re-render. |
+
+### `[data-next-cart-summary]` pattern
+
+```html
+<div data-next-cart-summary>
+  <!-- Static chrome (heading, product image) here — not inside <template> -->
+  <template>
+    <!-- CartSummaryEnhancer tokens: {subtotal}, {shipping}, {total}, {discounts} -->
+    <!-- data-summary-lines + inner <template> for cart item rows -->
+  </template>
+</div>
+```
+
+Elements outside `<template>` render immediately and update in-place via `data-next-display`. Elements inside are rebuilt on every cart change — avoid `data-next-show` / `data-next-hide` inside the template where possible; if needed, add `style="display:none"` on the element to prevent flash before SDK evaluation.
+
+**`cart.currency` node:** always leave empty — the SDK fills it. A hardcoded `"USD"` literal flashes before being overwritten.
+
+See the [Campaign Cart SDK documentation](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) for supported display paths, `data-next-format`, and cart-summary behavior (including avoiding flash on currency nodes).
+
+---
+
+## Swiper component (sw1)
+
+`swiper-gallery.html` is a reusable component used across checkout and upsell layouts.
+
+### Contract (do not break)
+
+- JS init targets: `data-component="swiper"` + `data-variant="sw1"` together.
+- Do not rename/change `data-variant` unless the same selector is updated everywhere Swiper is initialized.
+- Required inner hooks remain: `[swiper="slider-main"]`, `[swiper="slider-thumbs"]`, `[swiper="prev-button"]`, `[swiper="next-button"]`.
+
+### Default behavior
+
+- Main and thumbs are square (`1 / 1`) by default.
+- No params needed for legacy square galleries.
+
+### Optional include params (CSS-only; JS unchanged)
+
+- `swiper_aspect`: main stage ratio token (`landscape`, `16/9`, `16-9`, `3/2`, `3-2`, `4/3`, `4-3`)
+- `swiper_thumb_aspect`: thumb ratio token (same values; omit to keep square thumbs)
+- `swiper_fit`: `contain` (default for non-square) or `cover`
+
+Unknown aspect tokens are normalized and ignored if unsupported (attribute omitted).
+
+```liquid
+{% campaign_include 'swiper-gallery.html'
+  main_slides=swiper_slides
+  thumbs=swiper_thumbs
+  variant='sw1'
+  swiper_aspect='16-9'
+  swiper_fit='cover'
+  swiper_thumb_aspect='16-9'
+%}
+```
+
+---
+
 ## Upsell pages
 
 Upsell pages use a different set of attributes than checkout pages.
@@ -468,7 +640,9 @@ Upsell pages use a different set of attributes than checkout pages.
 <button data-next-upsell-action="skip">No thanks</button>
 ```
 
-### Direct upsell offer
+### Direct upsell offer (simple / no offer-aware pricing)
+
+For single-package upsells without voucher-driven pricing. If the upsell uses Campaign Offers or per-tier vouchers, use the **Bundle upsell** pattern below instead.
 
 ```html
 <div data-next-upsell="offer" data-next-package-id="789">
@@ -493,6 +667,12 @@ Upsell pages use a different set of attributes than checkout pages.
 <span data-next-display="package.hasSavings"></span>
 <span data-next-display="package.savingsPercentage"></span>
 ```
+
+### Bundle upsell (SDK 0.4.x) and MV external slots
+
+- **Coupon/voucher-driven** upsell pricing uses **Approach B**: `data-next-bundle-selector` + `data-next-upsell-context`, `data-next-bundle-vouchers`, `data-next-upsell-action-for`. Contrast with simple single-package upsells in the [Upsells](https://developers.nextcommerce.com/docs/campaigns/upsells) documentation (bundle vs selection patterns).
+- **References:** `limos/checkout.html` (checkout + native **bundleQuantity**, **`.checkout-bundle-offer`** + **`.next-bundle-qty--anchor-br`**, stepper **not** inside **`[data-next-bundle-card]`**); `olympus/upsell-bundle-stepper.html` (same **`.next-bundle-qty*`** stepper on upsell); `upsell-bundle-tier-pills.html` / `upsell-bundle-tier-cards.html` (tiered bundle tiers, same generic qty classes); **`olympus-mv-single-step/upsell-mv.html`** (tier pills + **`data-next-bundle-slots-for`** slot layout; checkout omits native checkout bundle qty — see **limos**). Styles: **`next-core.css`** (not upsell-only).
+- **Variant UI in staged bundle slots:** SDK-injected **native `<select>`** works **without** extra JS. **`setupBundleSlotVariantDropdowns()`** (custom **`os-dropdown`** UI) is **opt-in** — see file-header comments in **`checkout-olympus-mv-full.js`** and **`upsells-up01-mv.js`** on the **`olympus-mv-single-step`** template.
 
 ---
 
@@ -593,6 +773,13 @@ Use these when implementing or verifying a specific task. Work through each item
 - [ ] Previous upsell page's `next_upsell_decline` routing updated intentionally
 - [ ] Progress bar / step indicator updated on affected pages (this is plain HTML, not SDK-driven)
 
+### External bundle slots + variant dropdown (MV 0.4.x)
+
+- [ ] **`data-next-bundle-slots-for`** and slot markup match the campaign’s bundle structure — see [Upsells](https://developers.nextcommerce.com/docs/campaigns/upsells) and the reference implementation **`olympus-mv-single-step/checkout.html`** in [campaign-cart-starter-templates](https://github.com/NextCommerceCo/campaign-cart-starter-templates)
+- [ ] **Barebones path:** if native **`<select>`** styling is enough, do **not** call **`setupBundleSlotVariantDropdowns()`** (no custom dropdown JS required)
+- [ ] **Custom dropdown path:** if you call **`setupBundleSlotVariantDropdowns()`** from **`checkout-olympus-mv-full.js`** / **`upsells-up01-mv.js`**, keep **`initBundleQtyToggle()`** (or equivalent) in sync on upsell when using quantity toggles + Approach B
+- [ ] **Per-tier vouchers** on bundle upsell cards exist in Campaigns and match **`data-next-bundle-vouchers`** on each **`data-next-bundle-card`**
+
 ### Configuring FOMO popups
 
 - [ ] `initFomo()` is called inside the `next:initialized` event handler in the checkout JS file
@@ -631,7 +818,7 @@ Available sale names: `newyear` · `valentinesday` · `stpatricks` · `easter` �
 ### Debugging — SDK not working
 
 - [ ] Run `window.next.version` in browser console — if undefined, the SDK failed to load
-- [ ] Check `sdk_version` in `campaigns.json` is a valid version string copied from the reference `_data/campaigns.json` — do not guess or use a hardcoded version from memory
+- [ ] Check `sdk_version` in `campaigns.json` is a valid version string (e.g. `"0.4.6"`), not `"latest"`
 - [ ] Check browser console for 404 on the SDK CDN script or `config.js`
 - [ ] Confirm `config.js` loads before the SDK in rendered `<head>` source
 - [ ] Confirm `apiKey` in `config.js` is correct for this campaign
@@ -710,9 +897,8 @@ Enable debug mode via URL parameter or meta tag:
 <!-- in base.html or the page -->
 <meta name="next-debug" content="true">
 ```
-```
-?debugger=true
-```
+
+Or append `?debugger=true` to the page URL.
 
 Available utilities in browser console:
 

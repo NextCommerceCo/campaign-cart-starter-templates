@@ -1,0 +1,41 @@
+/*
+ * External bundle slots: visible variant UI is button + os-dropdown-menu (see checkout-olympus-mv-full.js),
+ * same structural idea as olympus-mv-single-step — not native <select> chrome.
+ * [data-next-variant-selectors] uses display:contents so each .next-slot-variant-field flexes inside
+ * .os-card__variant-grid.cc-horiz. JS wraps label + os-dropdown in .os-card__variant-group.cc-full.
+ * Toggle/menu/swatch: next-core.css #bundle-slots-stage .os-card__variant-*.
+ */
+
+#bundle-slots-stage .os-card__variant-grid.cc-horiz > [data-next-variant-selectors] {
+  display: contents;
+}
+
+#bundle-slots-stage .os-card__variant-grid.cc-horiz > [data-next-variant-selectors] > .next-slot-variant-field {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/*
+ * --- Optional: data-next-variant-option-template-id + uncomment template in checkout.html ---
+ * .mv-variant-btn { appearance: none; -webkit-appearance: none; font: inherit; cursor: pointer;
+ *   display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem; min-height: 2rem;
+ *   padding: 0.25rem 0.65rem; border-radius: 999px; border: 1px solid #ddd; background: #fff; color: #111;
+ *   font-size: 0.8125rem; font-weight: 600; line-height: 1.2;
+ *   transition: border-color 0.12s ease, background 0.12s ease, box-shadow 0.12s ease; }
+ * .mv-variant-btn:hover { border-color: #bbb; }
+ * .mv-variant-btn.next-variant-selected, .mv-variant-btn[data-selected="true"] {
+ *   border-color: var(--component--color--outline, #000); box-shadow: 0 0 0 1px var(--component--color--outline, #000);
+ *   background: var(--brand--color--surface, #fff); }
+ * .mv-variant-btn.next-variant-unavailable, .mv-variant-btn[data-available="false"] {
+ *   opacity: 0.45; cursor: not-allowed; text-decoration: line-through; }
+ * .mv-variant-btn[data-attr-code="color"]::before { content: ""; flex: none; width: 1rem; height: 1rem;
+ *   border-radius: 50%; background: var(--swatch, transparent); border: 1px solid rgba(0, 0, 0, 0.15); }
+ */
+
+.cart_box-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

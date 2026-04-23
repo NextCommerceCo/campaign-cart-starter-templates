@@ -1,7 +1,7 @@
 {
   "name": "campaign-kit-templates",
   "version": "1.0.0",
-  "description": "Starter templates for next-campaign-page-kit",
+  "description": "Starter templates for next-campaign-page-kit (SDK 0.4.x)",
   "scripts": {
     "setup": "npx campaign-init",
     "start": "npx campaign-start",
@@ -13,6 +13,6 @@
     "compress:preview": "npx campaign-compress --preview"
   },
   "dependencies": {
-    "next-campaign-page-kit": "^0.0.8"
+    "next-campaign-page-kit": "^0.0.9"
   }
 }

@@ -9,6 +9,33 @@ scripts:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js
   - js/upsells-up01-mv.js
 ---
+<!--
+  APPROACH B — Bundle upsell (data-next-bundle-selector + data-next-upsell-context + configurable:true)
+  packageId 1 matches the checkout bundle. Per-tier vouchers (UP50/UP60/UP70) control offer pricing.
+  Variant selection per slot via data-next-bundle-slots-for + upsell-slot-template.
+  upsells-up01-mv.js: setupBundleSlotVariantDropdowns() + initBundleQtyToggle() (no UpsellController).
+  Reference campaigns.json pins sdk_version 0.4.18 (see https://developers.nextcommerce.com/docs/campaigns/upsells). Native bundleQuantity on a single visible card is demo'd on limos checkout and olympus upsell-bundle-stepper, not this tier + hidden-card upsell.
+
+  ARCHITECTURE (Option 3 — per-qty hidden cards):
+    - Display-only selector (upsell-bundle-1x): always 1×; used only to lock header price/%.
+      MUST sit outside [data-next-upsell="offer"]: UpsellEnhancer resolves bundleSelectorId from the
+      first [data-next-bundle-selector] inside the offer only (not data-next-upsell-action-for).
+    - Hidden state-machine selector (upsell-bundle): 1×–5× cards, first selector inside the offer,
+      each with configurable:true items and per-tier vouchers. data-next-bundle-slot-template-id
+      renders configurable slots.
+    - data-next-bundle-slots-for="upsell-bundle" targets #bundle-slots-stage (reuses
+      next-core.css #bundle-slots-stage styles — same ID, different page, no conflict).
+    - Qty buttons use data-bundle-qty-btn / data-bundle-qty-for; initBundleQtyToggle()
+      clicks the matching hidden card → SDK updates slots + remote bundle.upsell-bundle.* display.
+    - Accept: UpsellEnhancer submits _getSelectedBundleItems() from that first-in-offer selector
+      (upsell-bundle), i.e. the same state as qty + slot UI.
+
+  KNOWN LIMITATIONS (same as olympus `upsell-bundle-tier-pills.html`):
+    - Remote bundle.* currency fields may render unformatted; keep data-next-format="currency".
+    - data-next-show does not support bundle.* namespace — always-visible fallback used.
+    - NOTE: data-next-bundle-slots-for on a hidden (display:none) selector is assumed to work;
+      if slots do not render, move the selector off-screen instead of display:none.
+-->
 <div class="page-wrapper">
 
       <div class="main-wrapper">
@@ -22,21 +49,99 @@ scripts:
           <div class="container cc-medium">
             <div class="upsell-header__inner">
               <div class="upsell-header__title">Wait! Your Order Isn't Complete</div>
-              <div class="upsell-header__offer">Special Discount: Get 1 More <span data-next-display="package.name">Product Title</span> For Only $19.99</div>
-              <div class="upsell-header__suboffer">Add this to your order and get a 50% discount<br></div>
+              <!-- bundle.upsell-bundle-1x.price stays locked to 1× regardless of qty selection -->
+              <div class="upsell-header__offer">Special Discount: Get Another <span data-next-display="package.1.name">Product Title</span> For Only <span data-next-display="bundle.upsell-bundle-1x.price" data-next-format="currency">$19.99</span></div>
+              <div class="upsell-header__suboffer">Add to your order and get a <span data-next-display="bundle.upsell-bundle-1x.discountPercentage" data-next-format="percentage">50%</span> discount<br></div>
             </div>
           </div>
         </section>
         <section class="section upsell-box">
           <div class="container">
-            <div class="upsell-wrapper" data-next-upsell="offer">
+            <!--
+              Display-only selector — outside [data-next-upsell="offer"] on purpose.
+              UpsellEnhancer picks the first [data-next-bundle-selector] inside the offer for submit;
+              if this block lived inside the offer, add would always use 1× upsell-bundle-1x and
+              ignore qty + #bundle-slots-stage (upsell-bundle).
+            -->
+            <div data-next-bundle-selector data-next-selector-id="upsell-bundle-1x" style="display:none">
+              <div role="button"
+                   data-next-bundle-card
+                   data-next-bundle-id="upsell-bundle-1x-card"
+                   data-next-bundle-items='[{"packageId":1,"quantity":1,"configurable":true}]'
+                   data-next-bundle-vouchers='["UP80TSHIRT"]'
+                   data-next-selected="true"
+                   class="os-card next-selected"></div>
+            </div>
+
+            <div class="upsell-wrapper" data-next-upsell="offer" data-next-await="">
+
+              <!--
+                Hidden state-machine selector (first [data-next-bundle-selector] in offer — drives accept).
+                data-next-upsell-context: UpsellEnhancer reads selected card bundle items + vouchers on accept.
+                data-next-bundle-slot-template-id: SDK renders one slot per configurable item into #bundle-slots-stage.
+                Prices via remote data-next-display="bundle.upsell-bundle.*" outside this selector.
+                data-next-bundle-vouchers: voucher merged into calculateBundlePrice at init AND sent on accept.
+              -->
+              <div data-next-bundle-selector
+                   data-next-upsell-context
+                   data-next-selector-id="upsell-bundle"
+                   data-next-bundle-slot-template-id="upsell-slot-template"
+                   style="display:none">
+                <div role="button"
+                     data-next-bundle-card
+                     data-next-bundle-id="upsell-bundle-1x"
+                     data-next-bundle-items='[{"packageId":1,"quantity":1,"configurable":true}]'
+                     data-next-bundle-vouchers='["UP80TSHIRT"]'
+                     data-next-selected="true"
+                     class="os-card next-selected"></div>
+                <div role="button"
+                     data-next-bundle-card
+                     data-next-bundle-id="upsell-bundle-2x"
+                     data-next-bundle-items='[{"packageId":1,"quantity":2,"configurable":true}]'
+                     data-next-bundle-vouchers='["UP80TSHIRT"]'
+                     class="os-card"></div>
+                <div role="button"
+                     data-next-bundle-card
+                     data-next-bundle-id="upsell-bundle-3x"
+                     data-next-bundle-items='[{"packageId":1,"quantity":3,"configurable":true}]'
+                     data-next-bundle-vouchers='["UP80TSHIRT"]'
+                     class="os-card"></div>
+                <div role="button"
+                     data-next-bundle-card
+                     data-next-bundle-id="upsell-bundle-4x"
+                     data-next-bundle-items='[{"packageId":1,"quantity":4,"configurable":true}]'
+                     data-next-bundle-vouchers='["UP80TSHIRT"]'
+                     class="os-card"></div>
+                <div role="button"
+                     data-next-bundle-card
+                     data-next-bundle-id="upsell-bundle-5x"
+                     data-next-bundle-items='[{"packageId":1,"quantity":5,"configurable":true}]'
+                     data-next-bundle-vouchers='["UP80TSHIRT"]'
+                     class="os-card"></div>
+              </div>
+
+              <!--
+                Slot template — one slot rendered per configurable item in the selected tier card.
+                SDK injects .next-slot-variant-field elements (label + select) into [data-next-variant-selectors].
+                setupBundleSlotVariantDropdowns() (upsells-up01-mv.js) swaps native selects with os-dropdown UI.
+                Rendered into #bundle-slots-stage; next-core.css #bundle-slots-stage rules apply automatically.
+              -->
+              <template id="upsell-slot-template">
+                <div class="os-card__upsell-grid cc-two-col">
+                  <div class="os-card__variant-number os-option grid-cell">
+                    <div data-next-bind="slot-number">#{slot.unitNumber}</div>
+                  </div>
+                  <div data-next-variant-selectors></div>
+                </div>
+              </template>
+
               <div class="upsell-container">
-                <div data-pb-slot="content" class="grid-full flex-col flex-horizontal-lg-up">
+                <div class="grid-full flex-col flex-horizontal-lg-up">
                   <div class="upsell-content__column">
                     <div class="upsell-offer__card">
-                 
-                        <h2 class="display-lg"><span data-next-display="package.name">Product Title</span></h2>
-         
+
+                        <h2 class="display-lg"><span data-next-display="package.1.name">Product Title</span></h2>
+
                       <div class="review_component cc-sm margin-12">
                         <div class="review_component-wrapper">
                           <div class="review_stars-wrapper cc-color cc-black">
@@ -59,7 +164,7 @@ scripts:
                           <div class="font-bold">(19,569 Ratings)</div>
                         </div>
                       </div>
-                       
+
                       <div class="divider_line _25"></div>
                       <div class="upsell-offer__bullets">
                         <div class="bullet_inner-one">
@@ -135,123 +240,88 @@ scripts:
                       </div>
                       <div class="divider_line margin-32"></div>
                       <div class="checkout-button-wrapper">
-                        <div class="select-quantity-wrapper">
-                          <div class="upsell-offer__qty-label">
+                        <div class="next-bundle-qty">
+                          <div class="next-bundle-qty__label">
                             <div>Select Quantity</div>
                             <div class="right-bullet-icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
                                 <path fill="currentColor" d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z"></path>
                               </svg></div>
                           </div>
-                          <div class="upsell-offer__quantity-row">
-                            <div data-next-upsell-quantity-toggle="1" class="upsell-offer__qty-btn next-selected">
+                          <!--
+                            data-bundle-qty-for must match data-next-selector-id on the hidden bundle selector.
+                            data-bundle-qty-btn value matches suffix in data-next-bundle-id (e.g. "2" → "upsell-bundle-2x").
+                            initBundleQtyToggle() (upsells-up01-mv.js) clicks the matching hidden card on each button press.
+                          -->
+                          <div class="next-bundle-qty__row" data-bundle-qty-for="upsell-bundle">
+                            <div data-bundle-qty-btn="1" class="next-bundle-qty__btn next-selected">
                               <div>1</div>
                             </div>
-                            <div data-next-upsell-quantity-toggle="2" class="upsell-offer__qty-btn">
+                            <div data-bundle-qty-btn="2" class="next-bundle-qty__btn">
                               <div>2</div>
                             </div>
-                            <div data-next-upsell-quantity-toggle="3" class="upsell-offer__qty-btn">
+                            <div data-bundle-qty-btn="3" class="next-bundle-qty__btn">
                               <div>3</div>
                             </div>
-                            <div data-next-upsell-quantity-toggle="4" class="upsell-offer__qty-btn">
+                            <div data-bundle-qty-btn="4" class="next-bundle-qty__btn">
                               <div>4</div>
                             </div>
-                            <div data-next-upsell-quantity-toggle="5" class="upsell-offer__qty-btn">
+                            <div data-bundle-qty-btn="5" class="next-bundle-qty__btn">
                               <div>5</div>
                             </div>
                           </div>
                         </div>
+                        <!--
+                          Variant slot rows rendered here by SDK via data-next-bundle-slots-for.
+                          One slot per configurable item in the selected tier card.
+                          setupBundleSlotVariantDropdowns() swaps SDK-injected native selects with os-dropdown UI.
+                          id="bundle-slots-stage" reuses all next-core.css #bundle-slots-stage styles.
+                        -->
                         <div class="upsell_variants-wrapper">
                           <div class="os-card__variants-container">
-                            <div class="os-card__upsell-grid">
+                            <div class="os-card__upsell-grid cc-two-col">
                               <div class="os-card__variant-number">
-                                <div class="os-card__variant-label-item">
-                                  <div class="hide">#</div>
-                                </div>
+                                <div class="os-card__variant-label-item"><div class="hide">#</div></div>
                               </div>
-                              <div class="os-card__variant-label-item grid-cell">
-                                <div>Select Color</div>
-                              </div>
-                              <div class="os-card__variant-label-item">
-                                <div>Select Size</div>
+                              <div class="os-card__variant-label-items">
+                                <div class="os-card__variant-label-item grid-cell"><div>Select Size</div></div>
+                                <div class="os-card__variant-label-item"><div>Select Color</div></div>
                               </div>
                             </div>
                             <div class="os-card__variant-label">
                               <div class="os-card__variant-label-number"></div>
                             </div>
-                            <div class="os-card__variant-options">
-                              <div next-tier-slot="1" class="os-card__upsell-grid">
-                                <div class="os-card__variant-number os-option grid-cell">
-                                  <div data-next-bind="slot-number">#1</div>
-                                </div>
-                                <div os-component="variant-dropdown" class="os-card__variant-dropdown-wrapper"><os-dropdown next-variant-option="color" class="os-variant-dropdown"><button type="button" aria-expanded="false" class="os-card__variant-dropdown-toggle">
-                                      <div class="os-card__toggle-option">
-                                        <div class="os-card__variant-toggle-info">
-                                          <div data-swatch="color" class="os-card__option-swatch"></div>
-                                          <div class="os-card__variant-toggle-name">{color}</div>
-                                        </div>
-                                      </div>
-                                      <div class="os-card__variant-dropdown-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                          <path d="M11.9999 13.1714L16.9497 8.22168L18.3639 9.63589L11.9999 15.9999L5.63599 9.63589L7.0502 8.22168L11.9999 13.1714Z"></path>
-                                        </svg></div>
-                                    </button><os-dropdown-menu os-element="dropdown-menu" id="" class="os-card__variant-dropdown-menu-v2"><os-dropdown-item value="obsidian-grey" class="os-card__variant-dropdown-item selected">
-                                        <div class="os-card__toggle-option">
-                                          <div class="os-card__variant-toggle-info">
-                                            <div class="os-card__option-swatch"></div>
-                                            <div class="os-card__variant-toggle-name">{color}</div>
-                                          </div>
-                                        </div>
-                                      </os-dropdown-item><os-dropdown-item value="obsidian-grey" class="os-card__variant-dropdown-item">
-                                        <div class="os-card__toggle-option">
-                                          <div class="os-card__variant-toggle-info">
-                                            <div class="os-card__option-swatch"></div>
-                                            <div class="os-card__variant-toggle-name">{color}</div>
-                                          </div>
-                                        </div>
-                                      </os-dropdown-item></os-dropdown-menu></os-dropdown></div>
-                                <div os-component="variant-dropdown" class="os-card__variant-dropdown-wrapper"><os-dropdown next-variant-option="size" class="os-variant-dropdown"><button type="button" aria-expanded="false" class="os-card__variant-dropdown-toggle">
-                                      <div class="os-card__toggle-option">
-                                        <div class="os-card__variant-toggle-info">
-                                          <div class="os-card__variant-toggle-name">Select Your Size</div>
-                                        </div>
-                                      </div>
-                                      <div class="os-card__variant-dropdown-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                          <path d="M11.9999 13.1714L16.9497 8.22168L18.3639 9.63589L11.9999 15.9999L5.63599 9.63589L7.0502 8.22168L11.9999 13.1714Z"></path>
-                                        </svg></div>
-                                    </button><os-dropdown-menu os-element="dropdown-menu" id="" class="os-card__variant-dropdown-menu-v2"><os-dropdown-item value="obsidian-grey" class="os-card__variant-dropdown-item selected">
-                                        <div class="os-card__toggle-option">
-                                          <div class="os-card__variant-toggle-info">
-                                            <div class="os-card__variant-toggle-name">{color}</div>
-                                          </div>
-                                        </div>
-                                      </os-dropdown-item></os-dropdown-menu></os-dropdown></div>
-                              </div>
-                            </div>
+                            <div data-next-bundle-slots-for="upsell-bundle" class="os-card__variant-options" id="bundle-slots-stage"></div>
                           </div>
                         </div>
+                        <!--
+                          Selected-tier money via remote bundle.upsell-bundle.* display.
+                          data-next-format="currency"/"percentage" compensates for known SDK formatting gap
+                          on remote bundle display (see KNOWN LIMITATIONS).
+                        -->
                         <div class="prices-text-wrapper">
                           <div class="price-wrapper">
                             <div class="text-sm tw-600">Retail Price</div>
-                            <div id="originalPrice" data-next-multiply-quantity="" data-next-display="package.price_retail" class="upsell-offer__price diagonal-strike color-muted">$49.99</div>
+                            <div class="upsell-offer__price diagonal-strike color-muted" data-next-display="bundle.upsell-bundle.originalPrice" data-next-format="currency">$49.99</div>
                             <div class="text-xs font-bold"><strike>+$4.95 SHIPPING</strike></div>
                           </div>
                           <div class="upsell-offer__divider"></div>
                           <div class="price-wrapper">
                             <div class="upsell-offer__price-heading">
                               <div class="text-sm tw-600">Offer Price</div>
-                              <div class="text-sm font-bold color-primary">(<span data-next-display="package.savingsPercentage">56%</span> OFF)</div>
+                              <div class="text-sm font-bold color-primary">(<span data-next-display="bundle.upsell-bundle.discountPercentage" data-next-format="percentage"></span> OFF)</div>
                             </div>
-                            <div id="currentPrice" data-next-multiply-quantity="true" data-next-display="package.price_total" class="upsell-offer__price">$21.25</div>
+                            <div class="upsell-offer__price" data-next-display="bundle.upsell-bundle.price" data-next-format="currency">$21.25</div>
                             <div class="text-xs font-bold color-primary">+ FREE SHIPPING</div>
                           </div>
                         </div>
-                        <a data-next-upsell-action="add" href="#" class="button"  pb-animate="pulse-upsell">
+                        <!--
+                          UpsellEnhancer does not use data-next-upsell-action-for (that’s AcceptUpsellEnhancer).
+                          Bundle for add comes from the first [data-next-bundle-selector] inside this offer (upsell-bundle).
+                        -->
+                        <a data-next-upsell-action="add" href="#" class="button" pb-animate="pulse-upsell">
                           <div data-button="content" class="button_content">
                             <div>Yes, Add to My Order</div>
-                          </div><svg viewBox="0 0 50 50" data-button="spinner" class="button_spinner">
-                            <circle class="ring ring" cx="25" cy="25" r="22.5"></circle>
-                            <circle cx="25" cy="25" r="22.5" class="line"></circle>
-                          </svg>
-
+                          </div>
                         </a>
                         <div class="upsell-ships-info">
                           <img class="upsell-ships-info__icon" src="{{ 'images/usps.png' | campaign_asset }}" alt="USPS">
@@ -261,7 +331,7 @@ scripts:
                       </div>
                     </div>
                   </div>
-                  <div data-pb-element="image-column" class="upsell-offer__image-column">
+                  <div class="upsell-offer__image-column">
                     <img src="{{ 'images/1x1_1.svg' | campaign_asset }}" alt="" class="contain" loading="lazy" data-next-display="package.image">
                     {% campaign_include 'upsell-payment-logos.html' wrapper_class="hide-tablet-down" %}
                   </div>
@@ -273,7 +343,7 @@ scripts:
                       <path fill="currentColor" d="M16 2C8.2 2 2 8.2 2 16s6.2 14 14 14s14-6.2 14-14S23.8 2 16 2m0 26C9.4 28 4 22.6 4 16S9.4 4 16 4s12 5.4 12 12s-5.4 12-12 12"></path>
                       <path fill="currentColor" d="M21.4 23L16 17.6L10.6 23L9 21.4l5.4-5.4L9 10.6L10.6 9l5.4 5.4L21.4 9l1.6 1.6l-5.4 5.4l5.4 5.4z"></path>
                     </svg></div>
-                  <div class="text-sm tw-600 cc-upsell4">No thank you, I don’t want this one-time offer</div>
+                  <div class="text-sm tw-600 cc-upsell4">No thank you, I don't want this one-time offer</div>
                 </a>
               </div>
             </div>
@@ -282,3 +352,9 @@ scripts:
         {% campaign_include 'footer.html' %}
       </div>
     </div>
+
+<script>
+  window.addEventListener('next:initialized', function () {
+    initBundleQtyToggle();
+  });
+</script>

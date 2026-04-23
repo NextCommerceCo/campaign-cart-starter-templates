@@ -20,12 +20,13 @@
     {% if next_upsell_accept %}<meta name="next-upsell-accept-url" content="{{ next_upsell_accept | campaign_link }}">{% endif %}
     {% if next_upsell_decline %}<meta name="next-upsell-decline-url" content="{{ next_upsell_decline | campaign_link }}">{% endif %}
     <meta name="next-page-type" content="{{ page_type }}">
+    <!-- BS-013 / Known #8 diagnostic only: <meta name="next-clear-cart" content="true"> clears session cart every load (masks merge bugs; breaks persistence — do not ship). -->
 
     <!-- Campaign Cart SDK -->
     <script src="https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v{{ campaign.sdk_version }}/dist/loader.js" type="module"></script>
 
     {% unless environment == "development" %}
-    {% if campaign.gtm_id %}
+    {% if campaign.gtm_id != "" %}
     <!-- Google Tag Manager -->
     <script>
       (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -35,7 +36,7 @@
       })(window,document,'script','dataLayer','{{ campaign.gtm_id }}');
     </script>
     {% endif %}
-    {% if campaign.fb_pixel_id %}
+    {% if campaign.fb_pixel_id != "" %}
     <!-- Meta Pixel Code -->
     <script>
       !function(f,b,e,v,n,t,s)
@@ -64,11 +65,11 @@
   </head>
   <body>
     {% unless environment == "development" %}
-    {% if campaign.gtm_id %}
+    {% if campaign.gtm_id != "" %}
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ campaign.gtm_id }}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     {% endif %}
-    {% if campaign.fb_pixel_id %}
+    {% if campaign.fb_pixel_id != "" %}
     <!-- Meta Pixel (noscript) -->
     <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id={{ campaign.fb_pixel_id }}&ev=PageView&noscript=1"></noscript>
     {% endif %}

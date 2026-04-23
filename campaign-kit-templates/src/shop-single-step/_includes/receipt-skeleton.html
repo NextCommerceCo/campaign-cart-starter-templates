@@ -4,17 +4,21 @@
       <div class="checkout__layout">
         <div class="checkout__column checkout__column--left">
           <div class="checkout__form-container cc-checkout">
-            <div class="checkout__header">
-              <div class="checkout__header-brand cc-shop"><img src="{{ 'images/next-logo.png' | campaign_asset }}" loading="eager" alt="{{ campaign.store_name }}" class="brand-logo"></div>
-              <div class="order-summary-mobile">
-                <div class="order-summary-mobile__accordion">
-                  <div class="accordion__trigger">
-                    <div class="accordion__inner">
-                      <div class="accordion__left">
+            <div class="checkout__header-brand cc-shop"><img src="{{ 'images/next-logo.png' | campaign_asset }}" loading="eager" alt="{{ campaign.store_name }}" class="brand-logo"></div>
+            <div class="order-summary-mobile">
+              <div class="order-summary-mobile__accordion">
+                <div class="order-summary__trigger">
+                  <div class="order-summary__inner">
+                    <div class="order-summary__mobile-left">
+                      <div class="summary-toggle">
+                        <div class="skeleton skeleton-text skeleton-text--medium"></div>
+                      </div>
+                    </div>
+                    <div class="order-summary__mobile-right">
+                      <div class="summary_price price--crossed cc-sm">
                         <div class="skeleton skeleton-text skeleton-text--tiny"></div>
                       </div>
-                      <div class="accordion__right">
-                        <div class="skeleton skeleton-text skeleton-text--tiny"></div>
+                      <div class="summary_price price--total">
                         <div class="skeleton skeleton-text skeleton-text--tiny"></div>
                       </div>
                     </div>

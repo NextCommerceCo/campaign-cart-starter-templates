@@ -8,7 +8,8 @@ Starter templates for building sales funnel pages — checkout, post-purchase up
 
 | Folder | What it is |
 |--------|------------|
-| `campaign-kit-templates/` | A [next-campaign-page-kit](https://github.com/NextCommerceCo/next-campaign-page-kit) project with all 7 templates. **Start here.** |
+| `campaign-kit-templates/` | 0.4.x templates — [next-campaign-page-kit](https://github.com/NextCommerceCo/next-campaign-page-kit) project. **Start here.** |
+| `campaign-kit-templates-v3/` | 0.3.x archive — reference for the older SDK version. |
 
 ---
 
@@ -30,7 +31,7 @@ npx campaign-init
 Pick a template from the [available templates](#available-templates) table below. Copy its folder into your project and rename it to your product — this becomes the slug used in your URLs.
 
 ```bash
-cp -r campaign-cart-starter-templates/campaign-kit-templates/src/demeter your-project/src/your-campaign-name
+cp -r campaign-cart-starter-templates/campaign-kit-templates/src/olympus your-project/src/your-campaign-name
 ```
 
 Your campaign will be served at `https://your-campaign-domain/your-campaign-name/checkout`.
@@ -64,9 +65,7 @@ Pick your campaign from the interactive prompt. The dev server will hot-reload a
 
 ---
 
-### Preview all templates locally
-
-To browse all 7 templates before picking one:
+### Preview templates locally
 
 ```bash
 git clone https://github.com/NextCommerceCo/campaign-cart-starter-templates.git
@@ -75,25 +74,61 @@ npm install
 npm run dev
 ```
 
+To browse the 0.3.x archive instead:
+
+```bash
+cd campaign-cart-starter-templates/campaign-kit-templates-v3
+npm install
+npm run dev
+```
+
 ---
 
 ## Available templates
 
+### Current — SDK 0.4.x (`campaign-kit-templates/`)
+
 | Slug | Funnel type | Preview |
 |------|-------------|---------|
-| `demeter` | Single-step checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/demeter/checkout/) · [upsell](https://nextcommerce-campaign-templates.netlify.app/demeter/upsell/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/demeter/receipt/) |
-| `limos` | Single-step checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/limos/checkout/) · [upsell](https://nextcommerce-campaign-templates.netlify.app/limos/upsell/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/limos/receipt/) |
-| `olympus` | Single-step checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus/checkout/) · [upsell](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus/receipt/) |
+| `demeter` | Single-step checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/demeter/checkout/) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/demeter/upsell-bundle-stepper/) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/demeter/upsell-bundle-tier-pills/) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/demeter/upsell-bundle-tier-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/demeter/receipt/) |
+| `limos` | Single-step checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/limos/checkout/) (SDK **0.4.18** native **bundleQuantity** on checkout) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/limos/upsell-bundle-stepper/) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/limos/upsell-bundle-tier-pills/) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/limos/upsell-bundle-tier-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/limos/receipt/) |
+| `olympus` | Single-step checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus/checkout/) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-stepper/) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-tier-pills/) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-tier-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus/receipt/) |
 | `olympus-mv-single-step` | Single-step with variants | [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/checkout/) · [upsell](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/upsell-mv/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/receipt/) |
 | `olympus-mv-two-step` | Two-step with variants | [select](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/select/) · [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/checkout/) · [upsell](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/upsell-mv/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/receipt/) |
-| `shop-single-step` | Shop checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/checkout/?forcePackageId=2:1) · [upsell](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell/?forcePackageId=2:1) · [receipt](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/receipt/?forcePackageId=2:1) |
-| `shop-three-step` | 3-step shop checkout | [information](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/information/?forcePackageId=2:1) · [shipping](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/shipping/?forcePackageId=2:1) · [billing](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/billing/?forcePackageId=2:1) · [upsell](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell/?forcePackageId=2:1) · [receipt](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/receipt/?forcePackageId=2:1) |
+| `shop-single-step` | Shop checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/checkout/) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell-bundle-stepper/) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell-bundle-tier-pills/) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell-bundle-tier-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/receipt/) |
+| `shop-three-step` | Three-step shop checkout | [information](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/information/) · [shipping](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/shipping/) · [billing](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/billing/) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell-bundle-stepper/) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell-bundle-tier-pills/) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell-bundle-tier-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/receipt/) |
+
+#### Bundle upsell patterns (teaching order)
+
+**Olympus** and **limos** use the same three upsell filenames and flow (`checkout` → stepper → tier pills → tier cards → `receipt`). Walk **olympus** (or **limos**) in this order when onboarding. **Limos** `checkout` also wires **native checkout bundle quantity** (same **`.next-bundle-qty*`** pattern as `upsell-bundle-stepper`: stepper **outside** **`[data-next-bundle-selector]`**, **`.checkout-bundle-offer`** + **`.next-bundle-qty--anchor-br`** for layout); **olympus** `checkout` omits that on purpose. All three upsell pages use the **bundle upsell** path (`data-next-bundle-selector` + `data-next-upsell-context` + `data-next-bundle-vouchers`). They are **not** the SDK’s separate non-bundle “selection upsell” pattern (`data-next-upsell-selector` / `data-next-upsell-option` — see [Upsells](https://developers.nextcommerce.com/docs/campaigns/upsells)). **`upsell-bundle-stepper`** is one bundle **definition** (one hidden card) plus optional native **bundleQuantity** — not the non-bundle “single-package upsell API.”
+
+| Page | What it demonstrates | Mechanism | Where to look (olympus) |
+|------|----------------------|-----------|----------------|
+| [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-stepper/) | Minimal bundle upsell + optional quantity | One hidden `data-next-bundle-card`; SDK **bundleQuantity** stepper ([BundleSelector `attributes.md` — inline bundle-quantity controls](https://github.com/NextCommerceCo/campaign-cart/blob/main/src/enhancers/cart/BundleSelector/guide/reference/attributes.md)) | [`campaign-kit-templates/src/olympus/upsell-bundle-stepper.html`](campaign-kit-templates/src/olympus/upsell-bundle-stepper.html) |
+| [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-tier-pills/) | Discrete tiers (pill UX) | Hidden **card per quantity**; pills + `initBundleQtyToggle()` in [`upsells.js`](campaign-kit-templates/src/olympus/assets/js/upsells.js) | [`upsell-bundle-tier-pills.html`](campaign-kit-templates/src/olympus/upsell-bundle-tier-pills.html) |
+| [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-tier-cards/) | Tiered bundle, visible card grid | User selects a **visible** tier card (same bundle rules as tier pills; no `initBundleQtyToggle`) | [`upsell-bundle-tier-cards.html`](campaign-kit-templates/src/olympus/upsell-bundle-tier-cards.html) — aligns with [card selection pattern](https://developers.nextcommerce.com/docs/campaigns/upsells#card-selection-pattern) |
+
+**Suggested demo path:** upsell-bundle-stepper → upsell-bundle-tier-pills → upsell-bundle-tier-cards (simplest markup → pills → visible tiers). Same paths under `src/limos/`.
+
+### Legacy — SDK 0.3.x (`campaign-kit-templates-v3/`)
+
+Preview locally by running `npm run dev` inside `campaign-kit-templates-v3/`.
+
+| Slug | Funnel type |
+|------|-------------|
+| `demeter` | Single-step checkout |
+| `limos` | Single-step checkout |
+| `olympus` | Single-step checkout |
+| `olympus-mv-single-step` | Single-step with variants |
+| `olympus-mv-two-step` | Two-step with variants |
+| `shop-single-step` | Shop checkout |
+| `shop-three-step` | 3-step shop checkout |
 
 ---
 
 ## npm scripts
 
-Run these inside `campaign-kit-templates/`:
+Run these inside `campaign-kit-templates/` (or `campaign-kit-templates-v3/` for the 0.3.x archive):
 
 ```bash
 npm run dev        # interactive campaign picker + dev server
@@ -108,32 +143,6 @@ npm run config     # set Campaigns App API keys
 ## Deploy your campaign
 
 See [docs/campaign-page-kit-template-context.md](docs/campaign-page-kit-template-context.md) for deployment instructions covering Netlify, Vercel, GitHub Pages, and generic static hosting.
-
----
-
-## QA your campaign
-
-Use the [Sellmore QA dashboard](https://github.com/Sellmore-Co/QA-Sellmore) to validate deployed campaigns. It provides structured checklists for checkout funnels, automated checks for tracking pixels and meta tags, PageSpeed scoring, and Jira integration for bug reporting.
-
-See [docs/qa-guide.md](docs/qa-guide.md) for template-specific guidance — which pages to load, required URL params, and what to check per template.
-
----
-
-## Claude Code skill (optional)
-
-If you use [Claude Code](https://claude.ai/claude-code), you can install a `/new-cpk-campaign` skill that scaffolds new campaigns automatically — copies the template, fetches the correct `sdk_version`, merges the `campaigns.json` entry, and installs `CLAUDE.md` in one command.
-
-**Install:**
-
-```bash
-mkdir -p ~/.claude/skills/new-cpk-campaign
-curl -sL "https://raw.githubusercontent.com/NextCommerceCo/campaign-cart-starter-templates/HEAD/docs/claude-skill-new-campaign.md" \
-  -o ~/.claude/skills/new-cpk-campaign/SKILL.md
-```
-
-Then in any Claude Code session: `/new-cpk-campaign`
-
-The skill source is at [docs/claude-skill-new-campaign.md](docs/claude-skill-new-campaign.md).
 
 ---
 

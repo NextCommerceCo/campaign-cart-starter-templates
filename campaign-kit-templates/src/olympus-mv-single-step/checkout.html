@@ -5,6 +5,7 @@ next_success_url: upsell-mv.html
 promo_sale: "default"
 styles:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
+  - css/checkout.css
 scripts:
   - js/promo-banner.js
   - js/promo-timer.js
@@ -200,12 +201,30 @@ swiper_thumbs:
                     </div>
                     <promo-timer{% if promo_sale %} force-sale="{{ promo_sale }}"{% endif %}></promo-timer>
                     <div class="checkout-form">
-                      <div class="checkout-selectors">
+                      <div class="checkout-selectors"  data-next-await="">
                         <div class="form-section form-section--first">
                           <h2 class="form-section__title">Choose your package</h2>
-                          <div data-next-controller-id="tier" data-next-controller="selector" data-next-controller-mode="swap" class="os-option">
+                          <!--
+                            Slot variants: SDK injects <select class="next-slot-variant-select" data-next-variant-code="…"> (0.4.10). checkout-olympus-mv-full.js swaps in button + os-dropdown-menu; keeps select hidden for cart. Colors: BUNDLE_SLOT_COLOR_STYLES. display:contents on [data-next-variant-selectors] for .os-card__variant-grid.cc-horiz. Optional: data-next-variant-option-template-id (Liquid comment below).
+                            Native SDK 0.4.18 checkout bundleQuantity (data-next-bundle-qty-for + card data-next-quantity) is not used here — tier cards + slots differ from the single-card limos checkout demo. Reference campaigns.json pins sdk_version 0.4.18; re-smoke MV checkout + upsell-mv after loader changes.
+                          -->
+                          <div
+                            data-next-bundle-selector
+                            data-next-selector-id="main"
+                            data-next-selection-mode="swap"
+                            data-next-bundle-slot-template-id="mv-slot-template"
+                            class="os-option"
+                          >
                             <div class="os-cards__grid os--three">
-                              <div data-next-tier="1" role="button" class="os-card next-selected">
+                              <div
+                                data-next-bundle-card
+                                data-next-bundle-id="buy1"
+                                data-next-bundle-items='[{"packageId":1,"quantity":1,"configurable":true}]'
+                                data-next-selected="true"
+                                role="button"
+                                class="os-card"
+                                data-next-shipping-id="2"
+                              >
                                 <div class="os-card__header-slot"></div>
                                 <div class="os-card__wrapper cc-sm">
                                   <div class="os-card__content os-wrap">
@@ -217,38 +236,45 @@ swiper_thumbs:
                                     <div class="os-card__main-slot">
                                       <div class="os-card__title-section">
                                         <div class="os-card__title-wrapper">
-                                          <div data-next-display="package.name" class="os-card__title-2 os-bold">1x Unit</div>
+                                          <div class="os-card__title-2 os-bold">1x Unit</div>
                                         </div>
                                       </div>
                                     </div>
                                   </div>
                                   <div os-slot="bottom" class="os-card__bottom-slot cc-gap">
                                     <div class="card-sup">Next Commerce Shirts</div>
-                                    <div class="os-card__subtitle-text-2">Save <span data-next-display="profile.default.bestSavingsPercentage">50%</span> OFF</div>
+                                    <div class="os-card__subtitle-text-2">Save <span data-next-bundle-display="discountPercentage">XX%</span> OFF</div>
                                   </div>
                                 </div>
                                 <div os-slot="footer" class="os-card__footer-slot"></div>
                               </div>
-                              <div data-next-tier="2" role="button" class="os-card">
+                              <div
+                                data-next-bundle-card
+                                data-next-bundle-id="buy2"
+                                data-next-bundle-items='[{"packageId":1,"quantity":2,"configurable":true}]'
+                                role="button"
+                                class="os-card"
+                                data-next-shipping-id="2"
+                              >
                                 <div os-slot="header" class="os-card__header-slot"></div>
                                 <div class="os-card__wrapper cc-sm">
                                   <div class="os-card__content os-wrap">
                                     <div class="os-card__radio">
-                                      <div data-selected="true" class="radio-style-1">
+                                      <div class="radio-style-1">
                                         <div class="radio-inner"></div>
                                       </div>
                                     </div>
                                     <div class="os-card__main-slot">
                                       <div class="os-card__title-section">
                                         <div class="os-card__title-wrapper">
-                                          <div data-next-display="package.name" class="os-card__title-2 os-bold">2x Units</div>
+                                          <div class="os-card__title-2 os-bold">2x Units</div>
                                         </div>
                                       </div>
                                     </div>
                                   </div>
                                   <div os-slot="bottom" class="os-card__bottom-slot cc-gap">
                                     <div class="card-sup">Next Commerce Shirts</div>
-                                    <div class="os-card__subtitle-text-2">Save <span data-next-display="profile.default.bestSavingsPercentage">55%</span> OFF</div>
+                                    <div class="os-card__subtitle-text-2">Save <span data-next-bundle-display="discountPercentage">XX%</span> OFF</div>
                                   </div>
                                 </div>
                                 <div os-slot="footer" class="os-card__footer-slot"></div>
@@ -261,26 +287,33 @@ swiper_thumbs:
                                   </div>
                                 </div>
                               </div>
-                              <div data-next-tier="3" role="button" class="os-card">
+                              <div
+                                data-next-bundle-card
+                                data-next-bundle-id="buy3"
+                                data-next-bundle-items='[{"packageId":1,"quantity":3,"configurable":true}]'
+                                role="button"
+                                class="os-card"
+                                data-next-shipping-id="1"
+                              >
                                 <div os-slot="header" class="os-card__header-slot"></div>
                                 <div class="os-card__wrapper cc-sm">
                                   <div class="os-card__content os-wrap">
                                     <div class="os-card__radio">
-                                      <div data-selected="true" class="radio-style-1">
+                                      <div class="radio-style-1">
                                         <div class="radio-inner"></div>
                                       </div>
                                     </div>
                                     <div class="os-card__main-slot">
                                       <div class="os-card__title-section">
                                         <div class="os-card__title-wrapper">
-                                          <div data-next-display="package.name" class="os-card__title-2 os-bold">3x Units</div>
+                                          <div class="os-card__title-2 os-bold">3x Units</div>
                                         </div>
                                       </div>
                                     </div>
                                   </div>
                                   <div os-slot="bottom" class="os-card__bottom-slot cc-gap">
                                     <div class="card-sup">Next Commerce Shirts</div>
-                                    <div class="os-card__subtitle-text-2">Save <span data-next-display="profile.default.bestSavingsPercentage">60%</span> OFF</div>
+                                    <div class="os-card__subtitle-text-2">Save <span data-next-bundle-display="discountPercentage">XX%</span> OFF</div>
                                   </div>
                                 </div>
                                 <div os-slot="footer" class="os-card__footer-slot"></div>
@@ -298,83 +331,49 @@ swiper_thumbs:
                         </div>
                         <div class="form-section form-section--first">
                           <h2 class="form-section__title">Select your color and size</h2>
-                          <div data-next-await="" class="os-slots">
-                            <div next-tier-slot="1" id="" class="next-slot">
-                              <div class="next-slot__step">
-                                <div data-next-bind="slot-number">#1</div>
-                              </div>
-                              <div class="slot__right">
-                                <div class="step__wrap">
-                                  <div class="next-slot__image"><img next-tier-slot-element="image" loading="lazy" alt="" src="{{ 'images/black.png' | campaign_asset }}"></div>
-                                  <div class="os-card__pricing">
-                                    <div os-component="price-container" class="os-card__price-container os--stacked">
-                                      <div data-option="reg" class="os-card__price diagonal-strike">$XX.XX</div>
-                                      <div class="os-card__price os--current"><span data-option="price">$XX.XX</span>/ea</div>
-                                      <div class="os-card__subtitle-text-2">Save <span data-option="savingPct">XX%</span> OFF</div>
-                                      <div class="os-card__subtitle-text-2 data-profile-savings">+10% OFF</div>
-                                    </div>
+                          <!-- id=bundle-slots-stage: data-next-bundle-slots-for target; variant dropdown JS + next-core slot styles -->
+                          <div data-next-bundle-slots-for="main" class="os-slots" id="bundle-slots-stage"></div>
+                        </div>
+                        {% comment %}
+                          Optional (C): add data-next-variant-option-template-id="variant-option-template" on data-next-bundle-selector and uncomment .mv-variant-btn rules in assets/css/checkout.css.
+                          <template id="variant-option-template">
+                            <button type="button" class="mv-variant-btn" data-selected="{option.selected}" data-available="{option.available}" data-attr-code="{attr.code}" style="--swatch:{option.value}">{option.value}</button>
+                          </template>
+                        {% endcomment %}
+                        <!-- SDK 0.4.11+ bundle slot tokens: originalUnitPrice / unitPrice (per-unit). {item.price} / {item.originalPrice} are line totals in 0.4.11+. -->
+                        <template id="mv-slot-template" >
+                          <div class="next-slot">
+                            <div class="next-slot__step">
+                              <div># {slot.unitNumber}</div>
+                            </div>
+                            <div class="slot__right">
+                              <div class="step__wrap">
+                                <div class="next-slot__image"><img loading="lazy" alt="" src="{item.image}"></div>
+                                <div class="os-card__pricing">
+                                  <div class="os-card__price-container os--stacked">
+                                    <div class="os-card__price diagonal-strike">{item.originalUnitPrice}</div>
+                                    <div class="os-card__price os--current">{item.unitPrice}/ea</div>
+                                    <!-- Slots rendered under data-next-bundle-slots-for sit outside [data-next-bundle-card]; bundle-display slots do not bind. Use remote bundle.{selectorId} (matches data-next-selector-id="main"). -->
+                                    <div class="os-card__subtitle-text-2">Save <span data-next-display="bundle.main.discountPercentage">-</span> OFF</div>
                                   </div>
                                 </div>
-                                <div class="os-slot__selection cc-big">
-                                  <div class="os-card__variant-options">
-                                    <div class="os-card__variant-grid cc-horiz">
-                                      <div class="os-card__variant-group cc-full">
-                                        <div class="os-card__variant-label">Select Color:</div><os-dropdown next-variant-option="color" class="os-variant-dropdown"><button aria-expanded="false" class="os-card__variant-dropdown-toggle">
-                                            <div class="os-card__toggle-option">
-                                              <div class="os-card__variant-toggle-info">
-                                                <div data-swatch="color" class="os-card__option-swatch"></div>
-                                                <div class="os-card__variant-toggle-name">{color}</div>
-                                              </div>
-                                            </div>
-                                            <div class="os-card__variant-dropdown-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                                <path d="M11.9999 13.1714L16.9497 8.22168L18.3639 9.63589L11.9999 15.9999L5.63599 9.63589L7.0502 8.22168L11.9999 13.1714Z"></path>
-                                              </svg></div>
-                                          </button><os-dropdown-menu os-element="dropdown-menu" id="" class="os-card__variant-dropdown-menu-v2"><os-dropdown-item value="obsidian-grey" class="os-card__variant-dropdown-item selected">
-                                              <div class="os-card__toggle-option">
-                                                <div class="os-card__variant-toggle-info">
-                                                  <div class="os-card__option-swatch"></div>
-                                                  <div class="os-card__variant-toggle-name">{color}</div>
-                                                </div>
-                                              </div>
-                                            </os-dropdown-item><os-dropdown-item value="obsidian-grey" class="os-card__variant-dropdown-item">
-                                              <div class="os-card__toggle-option">
-                                                <div class="os-card__variant-toggle-info">
-                                                  <div class="os-card__option-swatch"></div>
-                                                  <div class="os-card__variant-toggle-name">{color}</div>
-                                                </div>
-                                              </div>
-                                            </os-dropdown-item></os-dropdown-menu></os-dropdown>
-                                      </div>
-                                      <div class="os-card__variant-group cc-full">
-                                        <div class="os-card__variant-label">Select Size:</div><os-dropdown next-variant-option="size" class="os-variant-dropdown"><button aria-expanded="false" class="os-card__variant-dropdown-toggle">
-                                            <div class="os-card__toggle-option">
-                                              <div class="os-card__variant-toggle-info">
-                                                <div class="os-card__variant-toggle-name">Select Your Size</div>
-                                              </div>
-                                            </div>
-                                            <div class="os-card__variant-dropdown-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                                <path d="M11.9999 13.1714L16.9497 8.22168L18.3639 9.63589L11.9999 15.9999L5.63599 9.63589L7.0502 8.22168L11.9999 13.1714Z"></path>
-                                              </svg></div>
-                                          </button><os-dropdown-menu os-element="dropdown-menu" id="" class="os-card__variant-dropdown-menu-v2"><os-dropdown-item value="obsidian-grey" class="os-card__variant-dropdown-item selected">
-                                              <div class="os-card__toggle-option">
-                                                <div class="os-card__variant-toggle-info">
-                                                  <div class="os-card__variant-toggle-name">{color}</div>
-                                                </div>
-                                              </div>
-                                            </os-dropdown-item></os-dropdown-menu></os-dropdown>
-                                      </div>
-                                    </div>
+                              </div>
+                              <div class="os-slot__selection cc-big" >
+                                <div class="os-card__variant-options">
+                                  <div class="os-card__variant-grid cc-horiz">
+                                    <!-- SDK placeholder (native select); JS swaps to button + menu UI like olympus-mv-single-step checkout -->
+                                    <div data-next-variant-selectors></div>
                                   </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
+                        </template>
                         <div class="form-section form-section--first">
                           <div class="_2step__size-guide">
                             <div class="size_chart-wrapper">
                               <div>Not sure on size? Check the chart &gt;</div>
-                              <div class="size_chart-right next-modal__trigger" role="button" tabindex="0" data-modal-target="#next-size-modal">
+                              <div class="size_chart-right next-page-modal__trigger" role="button" tabindex="0" data-modal-target="#next-size-modal">
                                 <div class="size_chart-icon"><svg width="39" height="14" viewBox="0 0 39 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <g clip-path="url(#clip0_205_1498)">
                                       <mask id="mask0_205_1498" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="39" height="14">
@@ -508,109 +507,11 @@ swiper_thumbs:
                             </div>
                             <div class="form-section form-section--last">
                               <div class="cart-box cart-box--card">
-                                <div class="summary-wrapper">
-                                  <div class="order-summary">
-                                    <div class="order-summary__content">
-                                      <div data-os-cart-summary="line-wrapper" class="cart-items">
-                                        <div class="cart-summary__line pb--header">
-                                          <div class="cart-summary__line-item">
-                                            <div>Item</div>
-                                          </div>
-                                          <div class="cart-summary__line-item">
-                                            <div>Amount</div>
-                                          </div>
-                                        </div>
-                                        <div data-os-cart-summary="summary-scroll" class="cart-items__scroll-hint cart-items__scroll-hint--active hide">
-                                          <div>Scroll for more items</div>
-                                          <div class="icon__view-more"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                              <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z"></path>
-                                            </svg></div>
-                                        </div>
-                                        <div data-next-hide="cart.isEmpty"><template id="cart-item-template" class="item-template os-show">
-                                            <div data-cart-item-id="{item.id}" class="cart-item">
-                                              <div class="cart-item__wrapper">
-                                                <div class="cart-item__details cc-left-0">
-                                                  <div class="cart-item__content">
-                                                    <div class="cart-item__description">
-                                                      <div class="cart-item__header">
-                                                        <div pb-cart="line_item-title" class="cart-item__title">{item.quantity}x {item.variantName}</div>
-                                                      </div>
-                                                      <div class="quantity-controls hide">
-                                                        <div id="quantity_-item.packageId" data-flavor="original" class="cart-quantity-controls__container">
-                                                          <div data-package-id="{item.packageId}" data-next-quantity="decrease" role="button" class="quantity-controls__button quantity-controls__button--decrease">-</div>
-                                                          <div pb-cart="line_item-quantity" class="quantity-controls__display">{item.quantity}</div>
-                                                          <div data-package-id="{item.packageId}" data-next-quantity="increase" role="button" class="quantity-controls__button quantity-controls__button--increase">+</div>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                    <div class="cart-item__pricing">
-                                                      <div id="line_compare" pb-cart="line_item-compare_price" class="cart-price diagonal-strike">{item.lineCompare}</div>
-                                                      <div class="checkout__line-item__final-price">{item.lineTotal}</div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
-                                          </template>
-                                          <div data-group-items="" data-next-cart-items="" data-item-template-id="cart-item-template" class="cart-items__list"></div>
-                                        </div>
-                                      </div>
-                                      <div>
-                                        <div class="shipping-note">Shipping and tax will be settled upon checkout confirmation</div>
-                                      </div>
-                                      <div data-next-hide="cart.isEmpty" class="order-totals">
-                                        <div class="order-totals__line hide">
-                                          <div class="order-totals__label">Subtotal</div>
-                                          <div data-next-display="cart.subtotal" class="order-totals__value">$138.30<br></div>
-                                        </div>
-                                        <div data-next-show="cart.hasSavings" class="order-totals__section">
-                                          <div class="order-totals__line">
-                                            <div class="order-totals__label-group">
-                                              <div class="order-totals__label ts-lg tw-600">Today you saved<br></div>
-                                            </div>
-                                            <div class="accordion__right">
-                                              <div class="order-totals__label">Discount:<br></div>
-                                              <div data-next-display="cart.savingsAmount" class="order-totals__value ts-lg tw-600 cc-disc">$28.34<br></div>
-                                            </div>
-                                          </div>
-                                          <div class="coupon-tags"></div>
-                                        </div>
-                                        <div class="order-totals__section hide">
-                                          <div class="order-totals__line">
-                                            <div class="accordion__right">
-                                              <div class="order-totals__label">Shipping<br></div>
-                                            </div>
-                                            <div class="accordion__right">
-                                              <div data-next-display="cart.shipping" class="order-totals__value">$7.99<br></div>
-                                              <div data-next-display="cart.shipping" class="order-totals__value">FREE<br></div>
-                                            </div>
-                                          </div>
-                                          <div class="coupon-tags">
-                                            <div class="coupon-tag__summary">
-                                              <div class="coupon-tag__remove"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" focusable="false" aria-hidden="true" class="a8x1wu10 a8x1wuz _1fragem1y _1fragemof _1fragemkk _1fragemka _1fragemnm" fill="none" stroke="currentColor">
-                                                  <path stroke-linecap="round" d="M7.284 1.402h4.964a.35.35 0 0 1 .35.35v4.964a.7.7 0 0 1-.205.495L7.49 12.115a.7.7 0 0 1-.99 0L1.885 7.5a.7.7 0 0 1 0-.99L6.79 1.607a.7.7 0 0 1 .495-.205Z"></path>
-                                                  <circle cx="9.1" cy="4.9" r="0.7" fill="currentColor"></circle>
-                                                  <path stroke-linecap="round" stroke-linejoin="round" d="M9.102 4.897h-.005v.005h.005z"></path>
-                                                </svg></div>
-                                              <div>FREESHIPPING</div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div class="order-totals__section cc-total">
-                                          <div class="order-totals__line order-totals__line--total">
-                                            <div class="order-totals__label order-totals__label--total">Grand Total:</div>
-                                            <div class="order-totals__value-group">
-                                              <div data-next-display="cart.currency" class="summary-total__coin">USD<br></div>
-                                              <div data-next-display="cart.total" class="order-totals__value order-totals__value--total">$109.96</div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
+                                {% campaign_include 'cart-summary01.html' %}
                               </div>
                             </div>
+                            <!-- END SUMMARY -->
+
                             <div class="form-section form-section--last">
                               <div class="submit-section">
                                 <div class="submit-section__button"><button os-checkout-payment="combo" data-action="submit" type="submit" class="button cc-gold">
@@ -711,20 +612,20 @@ swiper_thumbs:
         </div>
         {% campaign_include 'footer.html' %}
         <!-- Next size chart modal (standalone component) -->
-        <div id="next-size-modal" class="next-modal" aria-hidden="true">
-          <div class="next-modal__overlay" data-next-modal-close=""></div>
-          <div class="next-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="next-size-modal-title">
-            <div class="next-modal__header">
-              <h2 id="next-size-modal-title" class="next-modal__title">Size chart</h2>
-              <button type="button" class="next-modal__close" aria-label="Close" data-next-modal-close="">
+        <div id="next-size-modal" class="next-page-modal" aria-hidden="true">
+          <div class="next-page-modal__overlay" data-next-modal-close=""></div>
+          <div class="next-page-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="next-size-modal-title">
+            <div class="next-page-modal__header">
+              <h2 id="next-size-modal-title" class="next-page-modal__title">Size chart</h2>
+              <button type="button" class="next-page-modal__close" aria-label="Close" data-next-modal-close="">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M0.317912 13.9531C-0.10513 14.3763 -0.105064 15.0622 0.318042 15.4852C0.741149 15.9082 1.42707 15.9082 1.8501 15.4851L7.90078 9.43337L13.952 15.4845C14.375 15.9076 15.061 15.9076 15.484 15.4845C15.907 15.0615 15.907 14.3755 15.484 13.9525L9.43272 7.90121L15.4836 1.8493C15.9065 1.42619 15.9065 0.740272 15.4834 0.317241C15.0603 -0.105801 14.3743 -0.105736 13.9513 0.31737L7.90056 6.36916L1.84937 0.317891C1.4263 -0.105173 0.740369 -0.105173 0.317306 0.317891C-0.105769 0.740965 -0.105769 1.42689 0.317306 1.84996L6.36873 7.90132L0.317912 13.9531Z" fill="currentColor"></path>
                 </svg>
               </button>
             </div>
-            <div class="next-modal__content">
-              <h3 class="next-modal__subtitle">SIZE CHART</h3>
-              <table class="next-modal__table">
+            <div class="next-page-modal__content">
+              <h3 class="next-page-modal__subtitle">SIZE CHART</h3>
+              <table class="next-page-modal__table">
                 <thead>
                   <tr>
                     <th>SIZE</th>
@@ -778,7 +679,7 @@ swiper_thumbs:
                   </tr>
                 </tbody>
               </table>
-              <div class="next-modal__visual" aria-label="Sizing guidance image">
+              <div class="next-page-modal__visual" aria-label="Sizing guidance image">
                 <img src="{{ 'images/4x3.svg' | campaign_asset }}" alt="Visual sizing guidance" loading="lazy">
               </div>
             </div>
