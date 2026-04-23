@@ -148,9 +148,15 @@ See [docs/campaign-page-kit-template-context.md](docs/campaign-page-kit-template
 
 ## AI development rules
 
-Copy the relevant rules file into your project before using an AI assistant to build or modify templates. Most AI tools load a rules file automatically from your project root — check your tool's documentation for the exact filename and location (e.g. `CLAUDE.md` for Claude Code, `.cursor/rules/` for Cursor).
+Copy [docs/campaign-page-kit-template-context.md](docs/campaign-page-kit-template-context.md) into your project root as `CLAUDE.md` before using an AI assistant to build or modify templates.
 
-Copy [docs/campaign-page-kit-template-context.md](docs/campaign-page-kit-template-context.md) into your project root as your AI rules file.
+```bash
+cp campaign-cart-starter-templates/docs/campaign-page-kit-template-context.md your-project/CLAUDE.md
+```
+
+This gives your AI assistant the context it needs to work correctly with Campaign Cart templates — project structure, Liquid filters, SDK attributes, config, and task checklists. Without it, the assistant will not know the correct SDK version, required `campaigns.json` fields, or how to use `campaign_asset` / `campaign_link` / `campaign_include`.
+
+For other AI tools: Cursor loads rules from `.cursor/rules/`, Windsurf from `.windsurfrules`. The file content works for all of them — only the filename/location differs.
 
 ---
 
