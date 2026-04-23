@@ -66,6 +66,9 @@ Used in the **root** `<template>` inside `data-next-cart-summary` (not inside `d
 | `{savings}` | Total savings (retail + applied discounts) |
 | `{compareTotal}` | Compare-at style total |
 | `{itemCount}` | Number of cart lines |
+| `{currency}` | Currency code (e.g. `"USD"`) — use this inside the `<template>`; **do not** leave the node empty or hardcode `"USD"` (flashes before SDK fills it) |
+
+> ⚠️ **`data-next-display="cart.currency"` is unreliable** — `CartDisplayEnhancer` reads `currency` from the cart store, which is only populated after `setLastCurrency` runs (not on the cached campaign load path). Use the **`{currency}`** template token instead; it resolves via the same fallback chain as `{total}`.
 
 **State classes** on the host (for CSS): e.g. `next-cart-empty`, `next-cart-has-items`, `next-has-discounts`, `next-no-discounts`, `next-free-shipping`, `next-has-tax`, `next-calculating`, `next-not-calculating`, etc. Prefer these over fragile **`data-next-show`** inside the injected template when timing matters — see migration **Cart Summary v2 Notes**.
 
@@ -144,13 +147,14 @@ Outside **`[data-next-cart-summary]`**, other cart display paths may still diffe
 
 ## 7. Cart summary partials — starter variants
 
-All four templates (`demeter`, `limos`, `olympus`, `olympus-mv-single-step`) ship three ready-to-use cart summary partials. Swap by changing the `{% campaign_include %}` reference in `checkout.html`.
+Most templates ship three ready-to-use cart summary partials; `olympus-mv-two-step` adds a fourth. Swap by changing the `{% campaign_include %}` reference in `checkout.html`.
 
-| Partial | Style | Distinctive features |
-|---------|-------|----------------------|
-| `cart-summary01.html` | Tabular, no accordion | Olympus default. Clean item + totals list. |
-| `cart-summary02.html` | Accordion / card | Limos default. Collapsible cart drawer. Includes `item.isRecurring` / `item.frequency` row. |
-| `cart-summary03.html` | Tabular + feature block | Demeter default. **Cart heading** (`Your Cart` + subtitle) and **product image feature block** (`data-next-display="package.image"` scoped with `data-next-package-id`) sit **outside** the `<template>` — they update in-place via display binding without re-rendering on every cart update. |
+| Partial | Used by | Style | Distinctive features |
+|---------|---------|-------|----------------------|
+| `cart-summary01.html` | `demeter`, `limos`, `olympus`, `olympus-mv-single-step`, `shop-single-step`, `shop-three-step` | Tabular, no accordion | Olympus default. Clean item + totals list. |
+| `cart-summary02.html` | `limos` default | Accordion / card | Collapsible cart drawer. Includes `item.isRecurring` / `item.frequency` row. |
+| `cart-summary03.html` | `demeter` default | Tabular + feature block | **Cart heading** (`Your Cart` + subtitle) and **product image feature block** (`data-next-display="package.image"` scoped with `data-next-package-id`) sit **outside** the `<template>` — they update in-place via display binding without re-rendering on every cart update. |
+| `cart-summary04.html` | all templates | Tabular, no accordion | Based on `cart-summary01.html`. Adds `{item.image}` thumbnail and `{item.variantName}` to each line item — useful when variant context (size, color) should be visible in the cart summary alongside the product image. |
 
 ### Flash prevention pattern (all partials)
 
