@@ -407,8 +407,8 @@ Full example (distinct package IDs per card):
 
 | Template | Selector fix | Token renames | Notes |
 |----------|-------------|---------------|-------|
-| `olympus` | 🔄 in progress | 🔄 in progress | Legacy **multi-package** track: `savingsAmount`/`savingsPercentage` static; `data-next-package-price` compare/savings wrong for multi-package; `finalPriceTotal` coupon-aware for totals only |
-| `olympus-mv-single-step` | ⬜ pending | ⬜ pending | |
+| `olympus` | ✅ | ✅ | Promoted to `campaign-kit-templates/src/olympus/` |
+| `olympus-mv-single-step` | ✅ | ✅ | Promoted to `campaign-kit-templates/src/olympus-mv-single-step/` |
 | `olympus-mv-two-step` | ⬜ pending | ⬜ pending | Two-step flow: `select.html` (bundle pick) → `checkout.html` (form). SDK 0.4.18 "Add to Cart for bundle selectors" is relevant here — the select page can wire a bundle selector to an Add-to-Cart button to populate the cart before navigating to the checkout form, without a full page form submit. Evaluate on migration. |
 | `demeter` | ✅ | ✅ | Promoted to `campaign-kit-templates/src/demeter/` |
 | `limos` | ✅ | ✅ | Promoted to `campaign-kit-templates/src/limos/` |
