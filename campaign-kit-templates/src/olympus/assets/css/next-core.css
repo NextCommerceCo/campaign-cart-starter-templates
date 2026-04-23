@@ -13528,7 +13528,7 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 
 .upsell-container {
   border-radius: var(--radius--cards);
-  background-color: #fff;
+  background-color: var(--brand--color--primary-light);
   overflow: hidden;
   -webkit-box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.4);
   box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.4);
@@ -14295,6 +14295,7 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   width: 100%;
   max-width: 565px;
   overflow: hidden;
+  background-color: #fff;
 }
 
 @media screen and (max-width: 991px) {
@@ -14487,9 +14488,9 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 
 /* Upsell offer image column (up01 / up01-mv) – was .grid-item.max-w-474 */
 .upsell-offer__image-column {
-  background-color: var(--brand--color--primary-light);
   flex-flow: row;
   align-items: stretch;
+  align-self: center;
   width: 100%;
   padding: 24px;
   display: block;
