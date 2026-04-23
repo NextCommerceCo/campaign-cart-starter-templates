@@ -409,7 +409,7 @@ Full example (distinct package IDs per card):
 |----------|-------------|---------------|-------|
 | `olympus` | ✅ | ✅ | Promoted to `campaign-kit-templates/src/olympus/` |
 | `olympus-mv-single-step` | ✅ | ✅ | Promoted to `campaign-kit-templates/src/olympus-mv-single-step/` |
-| `olympus-mv-two-step` | ⬜ pending | ⬜ pending | Two-step flow: `select.html` (bundle pick) → `checkout.html` (form). SDK 0.4.18 "Add to Cart for bundle selectors" is relevant here — the select page can wire a bundle selector to an Add-to-Cart button to populate the cart before navigating to the checkout form, without a full page form submit. Evaluate on migration. |
+| `olympus-mv-two-step` | ✅ | ✅ | Promoted to `campaign-kit-templates/src/olympus-mv-two-step/`. Two-step: `select.html` (bundle pick + variant reveal) → `checkout.html` (form). Uses `data-next-bundle-selector` + `checkout-olympus-mv-full.js` (same as single-step) + thin `checkout-olympus-mv-selection.js` for 1000ms spinner/reveal transition. |
 | `demeter` | ✅ | ✅ | Promoted to `campaign-kit-templates/src/demeter/` |
 | `limos` | ✅ | ✅ | Promoted to `campaign-kit-templates/src/limos/` |
 | `shop-single-step` | ✅ | ✅ | Promoted to `campaign-kit-templates/src/shop-single-step/` |

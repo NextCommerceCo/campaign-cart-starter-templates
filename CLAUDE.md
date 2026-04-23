@@ -12,7 +12,7 @@ A **complete, working campaign-kit project** that serves two purposes:
 1. Full demo — clone it, `npm install` + `npm run dev`, all current templates work
 2. Template library — developers copy individual `src/[slug]/` folders into their own kit projects
 
-Templates are ported from `campaign-kit-templates-v3/` into `campaign-kit-templates/` and updated to SDK **0.4.x** patterns (`olympus`, `limos`, `demeter`, `olympus-mv-single-step`, `shop-single-step`, `shop-three-step` today).
+Templates are ported from `campaign-kit-templates-v3/` into `campaign-kit-templates/` and updated to SDK **0.4.x** patterns (`olympus`, `limos`, `demeter`, `olympus-mv-single-step`, `olympus-mv-two-step`, `shop-single-step`, `shop-three-step` today).
 
 ## Developer Workflow (end users of this repo)
 1. `npx campaign-init` in their own project → creates empty `_data/campaigns.json` + npm scripts
@@ -48,6 +48,7 @@ Note: when copying a template, the developer renames the folder to their product
 | limos | /limos/checkout/ · /limos/upsell-bundle-stepper/ · /limos/upsell-bundle-tier-pills/ · /limos/upsell-bundle-tier-cards/ · /limos/receipt/ |
 | olympus | /olympus/checkout/ · /olympus/upsell-bundle-stepper/ · /olympus/upsell-bundle-tier-pills/ · /olympus/upsell-bundle-tier-cards/ · /olympus/receipt/ |
 | olympus-mv-single-step | /olympus-mv-single-step/checkout/ · /olympus-mv-single-step/upsell-mv/ · /olympus-mv-single-step/receipt/ |
+| olympus-mv-two-step | /olympus-mv-two-step/select/ · /olympus-mv-two-step/checkout/ · /olympus-mv-two-step/upsell-mv/ · /olympus-mv-two-step/receipt/ |
 | shop-single-step | /shop-single-step/checkout/ · /shop-single-step/upsell-bundle-stepper/ · /shop-single-step/upsell-bundle-tier-pills/ · /shop-single-step/upsell-bundle-tier-cards/ · /shop-single-step/receipt/ |
 | shop-three-step | /shop-three-step/information/ · /shop-three-step/shipping/ · /shop-three-step/billing/ · /shop-three-step/upsell-bundle-stepper/ · /shop-three-step/upsell-bundle-tier-pills/ · /shop-three-step/upsell-bundle-tier-cards/ · /shop-three-step/receipt/ |
 
@@ -75,6 +76,7 @@ campaign-kit-templates/
 │   ├── limos/
 │   ├── olympus/
 │   ├── olympus-mv-single-step/
+│   ├── olympus-mv-two-step/
 │   ├── shop-single-step/
 │   └── shop-three-step/
 └── package.json                ← kit scripts + next-campaign-page-kit dependency
@@ -184,6 +186,7 @@ Inside `<template>` elements the SDK uses single-brace tokens (not Liquid):
 | limos | checkout.js, checkout-limos.js, upsells.js, promo-banner.js, promo-timer.js |
 | olympus | checkout.js, checkout-olympus.js, upsells.js, promo-banner.js, promo-timer.js |
 | olympus-mv-single-step | checkout.js, checkout-olympus-mv-full.js, upsells-up01-mv.js, promo-banner.js, promo-timer.js |
+| olympus-mv-two-step | checkout.js, checkout-olympus-mv-full.js, checkout-olympus-mv-selection.js, upsells-up01-mv.js, promo-banner.js, promo-timer.js |
 | shop-single-step | checkout.js, upsells.js, promo-banner.js, promo-timer.js |
 | shop-three-step | checkout.js, checkout-shop-three.js, checkout-shop-three-billing.js, checkout-shop-three-shipping.js, upsells.js, promo-banner.js, promo-timer.js |
 
