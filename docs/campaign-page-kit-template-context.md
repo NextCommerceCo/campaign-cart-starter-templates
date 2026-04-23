@@ -337,7 +337,7 @@ The SDK is controlled entirely through HTML attributes. Do not write JavaScript 
 <span data-next-display="cart.savings"></span>
 ```
 
-**SDK 0.4.x:** `data-next-display="cart.discountCode"` is **not** wired in the cart-summary display resolver (Known #10 / BS-014). Use `data-next-discounts="voucher"` + `{discount.description}` to show the code string, `{discount.name}` for the display label. Full token table: `docs/bundle-display-cart-cheatsheet.md`.
+**SDK 0.4.x:** `data-next-display="cart.discountCode"` is **not** wired in the cart-summary display resolver (Known #10 / BS-014). Use `data-next-discounts="voucher"` + `{discount.description}` to show the code string, `{discount.name}` for the display label. For bundle-line and summary tokens, use the [Campaign Cart SDK docs](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) and bundle selector reference in the [campaign-cart](https://github.com/NextCommerceCo/campaign-cart) repo as needed.
 
 ### Bundle tier display (`data-next-bundle-display`)
 
@@ -356,7 +356,7 @@ Reads from the **active bundle selection**. Use inside `data-next-bundle-card` t
 <span data-next-bundle-display="discountPercentage"></span>
 ```
 
-`data-next-bundle-display` is separate from `data-next-display` — do not mix them. Full value list: `docs/bundle-display-cart-cheatsheet.md` section 2.
+`data-next-bundle-display` is separate from `data-next-display` — do not mix them. Allowed keys follow the SDK’s bundle display resolver — confirm against current [Campaign Cart](https://github.com/NextCommerceCo/campaign-cart) bundle/upsell enhancer docs rather than guessing paths.
 
 ### Conditional visibility
 
@@ -409,7 +409,7 @@ Live summary panel — updates on tier change, coupon apply, and bump toggle. Us
 </div>
 ```
 
-Key token semantics (0.4.11+): `{item.price}` / `{item.originalPrice}` = **line totals** (qty × price); `{item.unitPrice}` / `{item.originalUnitPrice}` = **per-unit**. `{item.hasDiscount}` returns `"show"` or `"hide"` as a CSS class value. Full table: `docs/bundle-display-cart-cheatsheet.md` section 4.
+Key token semantics (0.4.11+): `{item.price}` / `{item.originalPrice}` = **line totals** (qty × price); `{item.unitPrice}` / `{item.originalUnitPrice}` = **per-unit**. `{item.hasDiscount}` returns `"show"` or `"hide"` as a CSS class value. Cross-check any additional `{item.*}` / `{line.*}` names against the SDK version you pin in `campaigns.json` — the [official docs](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) track supported summary tokens.
 
 ### Order bump
 
@@ -571,7 +571,7 @@ Elements outside `<template>` render immediately and update in-place via `data-n
 
 **`cart.currency` node:** always leave empty — the SDK fills it. A hardcoded `"USD"` literal flashes before being overwritten.
 
-See [`docs/bundle-display-cart-cheatsheet.md`](bundle-display-cart-cheatsheet.md) for full token reference and flash prevention patterns.
+See the [Campaign Cart SDK documentation](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) for supported display paths, `data-next-format`, and cart-summary behavior (including avoiding flash on currency nodes).
 
 ---
 
@@ -652,7 +652,7 @@ For single-package upsells without voucher-driven pricing. If the upsell uses Ca
 
 ### Bundle upsell (SDK 0.4.x) and MV external slots
 
-- **Coupon/voucher-driven** upsell pricing uses **Approach B**: `data-next-bundle-selector` + `data-next-upsell-context`, `data-next-bundle-vouchers`, `data-next-upsell-action-for`. Full comparison table: [`docs/sdk-0.4.0-migration.md`](sdk-0.4.0-migration.md) (Approach A vs B).
+- **Coupon/voucher-driven** upsell pricing uses **Approach B**: `data-next-bundle-selector` + `data-next-upsell-context`, `data-next-bundle-vouchers`, `data-next-upsell-action-for`. Contrast with simple single-package upsells in the [Upsells](https://developers.nextcommerce.com/docs/campaigns/upsells) documentation (bundle vs selection patterns).
 - **References:** `limos/checkout.html` (checkout + native **bundleQuantity**, **`.checkout-bundle-offer`** + **`.next-bundle-qty--anchor-br`**, stepper **not** inside **`[data-next-bundle-card]`**); `olympus/upsell-bundle-stepper.html` (same **`.next-bundle-qty*`** stepper on upsell); `upsell-bundle-tier-pills.html` / `upsell-bundle-tier-cards.html` (tiered bundle tiers, same generic qty classes); **`olympus-mv-single-step/upsell-mv.html`** (tier pills + **`data-next-bundle-slots-for`** slot layout; checkout omits native checkout bundle qty — see **limos**). Styles: **`next-core.css`** (not upsell-only).
 - **Variant UI in staged bundle slots:** SDK-injected **native `<select>`** works **without** extra JS. **`setupBundleSlotVariantDropdowns()`** (custom **`os-dropdown`** UI) is **opt-in** — see file-header comments in **`checkout-olympus-mv-full.js`** and **`upsells-up01-mv.js`** on the **`olympus-mv-single-step`** template.
 
@@ -757,7 +757,7 @@ Use these when implementing or verifying a specific task. Work through each item
 
 ### External bundle slots + variant dropdown (MV 0.4.x)
 
-- [ ] **`data-next-bundle-slots-for`** and slot markup match the campaign’s bundle structure — see [`docs/sdk-0.4.0-migration.md`](sdk-0.4.0-migration.md) and **`olympus-mv-single-step/checkout.html`**
+- [ ] **`data-next-bundle-slots-for`** and slot markup match the campaign’s bundle structure — see [Upsells](https://developers.nextcommerce.com/docs/campaigns/upsells) and the reference implementation **`olympus-mv-single-step/checkout.html`** in [campaign-cart-starter-templates](https://github.com/NextCommerceCo/campaign-cart-starter-templates)
 - [ ] **Barebones path:** if native **`<select>`** styling is enough, do **not** call **`setupBundleSlotVariantDropdowns()`** (no custom dropdown JS required)
 - [ ] **Custom dropdown path:** if you call **`setupBundleSlotVariantDropdowns()`** from **`checkout-olympus-mv-full.js`** / **`upsells-up01-mv.js`**, keep **`initBundleQtyToggle()`** (or equivalent) in sync on upsell when using quantity toggles + Approach B
 - [ ] **Per-tier vouchers** on bundle upsell cards exist in Campaigns and match **`data-next-bundle-vouchers`** on each **`data-next-bundle-card`**
@@ -879,9 +879,8 @@ Enable debug mode via URL parameter or meta tag:
 <!-- in base.html or the page -->
 <meta name="next-debug" content="true">
 ```
-```
-?debugger=true
-```
+
+Or append `?debugger=true` to the page URL.
 
 Available utilities in browser console:
 

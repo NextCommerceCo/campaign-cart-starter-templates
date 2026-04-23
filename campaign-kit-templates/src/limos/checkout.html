@@ -30,7 +30,7 @@ scripts:
                       </svg></div>
                     <div><span class="checkout-high-demand__highlight">High Demand:</span> 62 people are looking at this offer!</div>
                   </div>
-                  {% comment %} BS-020: data-next-include-shipping on [data-next-bundle-selector] is currently a no-op — the SDK reads it but does not pass it through to calculateBundlePrice (unlike PackageSelector). Safe to omit or keep for future parity. docs/template-bug-log.md {% endcomment %}
+                  {% comment %} BS-020: data-next-include-shipping on [data-next-bundle-selector] is currently a no-op — the SDK reads it but does not pass it through to calculateBundlePrice (unlike PackageSelector). Safe to omit or keep for future parity. {% endcomment %}
                   {% comment %} SDK 0.4.18+: native bundleQuantity — .next-bundle-qty* matches upsell-bundle-stepper; stepper sits OUTSIDE [data-next-bundle-selector] (same as that upsell) so +/− are not inside a clickable [data-next-bundle-card]. Single-card checkout: no role="button" on the card (tiers use role="button" on olympus). .checkout-bundle-offer + .next-bundle-qty--anchor-br in next-core.css. {% endcomment %}
                   <div class="checkout-bundle-offer">
                     <div data-next-bundle-selector data-next-selector-id="limos-card" data-next-selection-mode="swap" data-next-include-shipping="true" class="checkout-packages" data-next-await="">

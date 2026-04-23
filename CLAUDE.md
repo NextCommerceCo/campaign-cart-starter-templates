@@ -30,7 +30,7 @@ Note: when copying a template, the developer renames the folder to their product
 ## campaigns.json
 - **Project-level, not template-specific** — accumulates all campaigns a developer adds
 - `campaign-kit-templates/_data/campaigns.json` is a reference file showing full field structure for all current templates
-- Fields: `name`, `slug`, `description`, `sdk_version`, `store_name`, `store_url`, `store_terms`, `store_privacy`, `store_contact`, `store_returns`, `store_shipping`, `store_phone`, `store_phone_tel`; optional layout analytics: `gtm_id`, `fb_pixel_id` (see `docs/campaign-page-kit-template-context.md` / `docs/qa-guide.md`)
+- Fields: `name`, `slug`, `description`, `sdk_version`, `store_name`, `store_url`, `store_terms`, `store_privacy`, `store_contact`, `store_returns`, `store_shipping`, `store_phone`, `store_phone_tel`; optional layout analytics: `gtm_id`, `fb_pixel_id` (see `docs/campaign-page-kit-template-context.md`)
 - slug drives URL: `campaign-domain.com/[slug]/page`
 
 ## npm run build behaviour
@@ -51,6 +51,20 @@ Note: when copying a template, the developer renames the folder to their product
 | olympus-mv-two-step | /olympus-mv-two-step/select/ · /olympus-mv-two-step/checkout/ · /olympus-mv-two-step/upsell-mv/ · /olympus-mv-two-step/receipt/ |
 | shop-single-step | /shop-single-step/checkout/ · /shop-single-step/upsell-bundle-stepper/ · /shop-single-step/upsell-bundle-tier-pills/ · /shop-single-step/upsell-bundle-tier-cards/ · /shop-single-step/receipt/ |
 | shop-three-step | /shop-three-step/information/ · /shop-three-step/shipping/ · /shop-three-step/billing/ · /shop-three-step/upsell-bundle-stepper/ · /shop-three-step/upsell-bundle-tier-pills/ · /shop-three-step/upsell-bundle-tier-cards/ · /shop-three-step/receipt/ |
+
+### Live Netlify previews (0.4.x)
+
+Base URL: `https://nextcommerce-campaign-templates.netlify.app` — append the localhost paths above (always trailing slash).
+
+| Template | Links |
+|----------|-------|
+| demeter | [checkout](https://nextcommerce-campaign-templates.netlify.app/demeter/checkout/) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/demeter/upsell-bundle-stepper/) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/demeter/upsell-bundle-tier-pills/) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/demeter/upsell-bundle-tier-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/demeter/receipt/) |
+| limos | [checkout](https://nextcommerce-campaign-templates.netlify.app/limos/checkout/) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/limos/upsell-bundle-stepper/) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/limos/upsell-bundle-tier-pills/) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/limos/upsell-bundle-tier-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/limos/receipt/) |
+| olympus | [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus/checkout/) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-stepper/) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-tier-pills/) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-tier-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus/receipt/) |
+| olympus-mv-single-step | [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/checkout/) · [upsell-mv](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/upsell-mv/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/receipt/) |
+| olympus-mv-two-step | [select](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/select/) · [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/checkout/) · [upsell-mv](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/upsell-mv/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/receipt/) |
+| shop-single-step | [checkout](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/checkout/) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell-bundle-stepper/) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell-bundle-tier-pills/) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell-bundle-tier-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/receipt/) |
+| shop-three-step | [information](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/information/) · [shipping](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/shipping/) · [billing](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/billing/) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell-bundle-stepper/) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell-bundle-tier-pills/) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell-bundle-tier-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/receipt/) |
 
 ### campaign-kit-templates-v3/ (0.3.x archive)
 
@@ -212,17 +226,12 @@ Inside `<template>` elements the SDK uses single-brace tokens (not Liquid):
 
 ---
 
-## Docs Structure (decisions made)
-- `CLAUDE.md` (this file) — AI context for working ON this repo. Not for SDK usage guidance.
-- `README.md` — public-facing: two-folder structure, developer workflow, template inventory, npm scripts, SDK links, AI rules pointer
-- `docs/campaign-page-kit-template-context.md` — AI context for developers working with campaign-kit-templates (see below)
-- `docs/safe-display-paths.md` — allowlist of safe `data-next-display` paths by namespace (cart, package, selection, order, shipping, bundle); includes `data-next-format` caveats and bundle display limitations
-- `docs/selector-attribute-cheatsheet.md` — package selector and selection.* display reference
-- `docs/bundle-display-cart-cheatsheet.md` — bundle display + cart summary tokens
-- `docs/sdk-0.4.0-migration.md` — 0.4.x migration notes, template crosswalk, upsell approaches A/B
-- `campaign-kit-template-CONTEXT.md` — **deleted** (wrong project layout, content migrated here and to README)
+## Docs in this repo
+- `CLAUDE.md` (this file) — AI context for working **on** this starter repo (structure, conventions, preview URLs).
+- `README.md` — public onboarding: clone workflow, template inventory with live preview links, npm scripts, SDK links.
+- `docs/campaign-page-kit-template-context.md` — the **copyable** AI rules file for developers working **in** their own campaign-kit projects (copy into project root or `.cursor/rules/` per tool). The `docs/` folder in this repo is only that file.
 
-## SDK Customization Rules File — DONE
+## SDK customization rules file (`docs/campaign-page-kit-template-context.md`)
 `docs/campaign-page-kit-template-context.md` is the copyable AI context file for developers working in their own campaign-kit projects. Covers:
 - Project structure, campaigns.json schema, page frontmatter
 - Liquid filters (`campaign_asset`, `campaign_link`, `campaign_include`) and common variables
@@ -238,7 +247,4 @@ Design decisions:
 - **Analytics docs not included** — main SDK docs URL is sufficient; AI fetches specific pages when needed
 - **Long-term goal**: wire into `npx campaign-init` so it's auto-delivered to developer projects
 
-README has an "AI development rules" section pointing to both rules files (kit vs static).
-
-## Commit preferences
-- No `Co-Authored-By: Claude` lines in commit messages
+README has an "AI development rules" section pointing developers to copy `docs/campaign-page-kit-template-context.md` into their project.
