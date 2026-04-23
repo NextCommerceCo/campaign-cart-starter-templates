@@ -8,9 +8,12 @@ scripts:
   - js/promo-banner.js
   - js/promo-timer.js
 ---
-<div class="page-wrapper">
+<div class="page-wrapper checkout--shop checkout--shop-column-logo">
 
       <div class="main-wrapper">
+        {% comment %}Optional top bar (checkout-header--lg): uncomment include; remove checkout--shop-column-logo from page-wrapper and add hide on duplicate .checkout-header__brand below.
+        {% campaign_include 'checkout-header.html' %}
+        {% endcomment %}
         <div class="checkout-content">
           <div class="checkout__content">
             <div class="checkout__layout">

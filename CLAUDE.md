@@ -106,6 +106,7 @@ campaign-kit-templates/
 - Liquid conditionals for optional metatags:
   - `{% if next_success_url %}` → checkout pages only
   - `{% if next_upsell_accept %}` / `{% if next_upsell_decline %}` → upsell pages only
+- **Shop checkout top bar (`checkout-header--lg`):** `{% campaign_include 'checkout-header.html' %}` (section **`checkout-header checkout-header--lg`**) inside **`main-wrapper`**. **`shop-single-step`:** enabled on **`checkout.html`** with **`checkout--shop`** on **`page-wrapper`** and **`hide`** on the duplicate **`.checkout-header__brand`** in the main column. **`shop-three-step`:** default **`page-wrapper`** is **`checkout--shop checkout--shop-column-logo`** (include **commented out**; **`checkout--shop-column-logo`** restores full main-column **`padding: 1.25rem`** where **`checkout--shop`** alone uses zero top padding for the top bar). For top bar like single-step: uncomment include, remove **`checkout--shop-column-logo`**, add **`hide`** on the column brand. **`next-core.css`** in each template defines **`.checkout--shop`** / **`.checkout--shop-column-logo`** and **`.checkout-header--lg`** border tweaks.
 
 ## Page Frontmatter Fields
 ```yaml

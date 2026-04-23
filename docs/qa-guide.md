@@ -116,6 +116,9 @@ Shop-style checkout. Requires a package ID to render — cart is pre-populated b
 
 **`forcePackageId` is required** — without it the cart is empty and the page will not render correctly. Always include it when loading pages directly. Upsell chain matches olympus (stepper → tier-pills → tier-cards).
 
+**Things to check:**
+- Top **`checkout-header--lg`** bar + **`checkout--shop`** layout: logo once, mobile order summary aligns with main column padding
+
 ---
 
 ### shop-three-step
@@ -134,6 +137,7 @@ Three-step shop checkout. Requires a package ID to render.
 **`forcePackageId` is required** on all pages.
 
 **Things to check:**
+- Default: logo in the **left column** (no top **`checkout-header--lg`** bar); **`page-wrapper`** has **`checkout--shop checkout--shop-column-logo`**. If you enable the top bar, remove **`checkout--shop-column-logo`**, uncomment the include, add **`hide`** on the column brand, and confirm a single logo and spacing.
 - Full step flow: information → shipping → billing → upsell-bundle-stepper → upsell-bundle-tier-pills → upsell-bundle-tier-cards → receipt
 - Step indicator updates correctly on each page (Information active on step 1, Shipping on step 2, Payment on step 3)
 - Shipping methods render dynamically on `/shipping/` (populated by `checkout-shop-three-shipping.js`)

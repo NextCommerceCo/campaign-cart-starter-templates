@@ -7819,9 +7819,14 @@ figcaption {
     padding: 1.25rem;
   }
 
-  /* checkout--shop-single-step: mobile order summary + header supply top rhythm (see checkout.html page-wrapper) */
-  .checkout--shop-single-step .checkout__form-container--main {
+  /* checkout--shop: shop checkout page-wrapper (checkout-header--lg + mobile order summary; main column padding + header border) */
+  .checkout--shop .checkout__form-container--main {
     padding: 0 1.25rem 1.25rem;
+  }
+
+  /* checkout--shop-column-logo: no top checkout-header bar — full padding on main column (shop-three-step default) */
+  .checkout--shop.checkout--shop-column-logo .checkout__form-container--main {
+    padding: 1.25rem;
   }
 
   .show-tablet {
@@ -9824,9 +9829,13 @@ figcaption {
     padding-bottom: 1rem;
   }
 
-  .checkout--shop-single-step .checkout__form-container--main {
+  .checkout--shop .checkout__form-container--main {
     padding-top: 0;
     padding-bottom: 1rem;
+  }
+
+  .checkout--shop.checkout--shop-column-logo .checkout__form-container--main {
+    padding: 1.25rem;
   }
 
   .scarcity-banner__right {
@@ -11811,7 +11820,7 @@ figcaption {
     min-height: 4.5rem;
   }
 
-  .checkout--shop-single-step .checkout-header--lg {
+  .checkout--shop .checkout-header--lg {
     border-bottom: 0;
   }
 }
