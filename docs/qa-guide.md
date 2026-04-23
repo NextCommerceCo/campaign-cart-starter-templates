@@ -8,7 +8,7 @@ Use this guide alongside the [Sellmore QA dashboard](https://github.com/Sellmore
 
 1. Open the QA dashboard
 2. Select the **Checkout & Upsells** mode
-3. Enter your deployed checkout URL as the funnel URL (e.g. `https://your-campaign-domain.com/[slug]/checkout/`)
+3. Enter your deployed checkout URL as the funnel URL (e.g. `https://your-campaign-domain.com/[slug]/checkout/`). For **shop-three-step**, use **`…/[slug]/information/`** as the entry (there is no **`/checkout/`** page).
 4. Add upsell and receipt URLs in the additional pages fields
 5. Run through the checklist
 
