@@ -2262,6 +2262,50 @@ figcaption {
   aspect-ratio: 1 / 1;
 }
 
+/* Optional main aspect for sw1 — include: swiper_aspect: 'landscape' | '16/9' | '3/2' | '4/3' (see swiper-gallery partial) */
+[data-component="swiper"][data-variant="sw1"][data-swiper-aspect="16-9"] [swiper="slider-main"] .swiper-slide_image-wrap {
+  aspect-ratio: 16 / 9;
+}
+[data-component="swiper"][data-variant="sw1"][data-swiper-aspect="3-2"] [swiper="slider-main"] .swiper-slide_image-wrap {
+  aspect-ratio: 3 / 2;
+}
+[data-component="swiper"][data-variant="sw1"][data-swiper-aspect="4-3"] [swiper="slider-main"] .swiper-slide_image-wrap {
+  aspect-ratio: 4 / 3;
+}
+[data-component="swiper"][data-variant="sw1"][data-swiper-aspect="16-9"]:not([data-swiper-fit="cover"]) [swiper="slider-main"] .swiper-slide_image-wrap img.cover,
+[data-component="swiper"][data-variant="sw1"][data-swiper-aspect="3-2"]:not([data-swiper-fit="cover"]) [swiper="slider-main"] .swiper-slide_image-wrap img.cover,
+[data-component="swiper"][data-variant="sw1"][data-swiper-aspect="4-3"]:not([data-swiper-fit="cover"]) [swiper="slider-main"] .swiper-slide_image-wrap img.cover {
+  object-fit: contain;
+}
+
+[data-component="swiper"][data-variant="sw1"][data-swiper-fit="cover"][data-swiper-aspect="16-9"] [swiper="slider-main"] .swiper-slide_image-wrap img.cover,
+[data-component="swiper"][data-variant="sw1"][data-swiper-fit="cover"][data-swiper-aspect="3-2"] [swiper="slider-main"] .swiper-slide_image-wrap img.cover,
+[data-component="swiper"][data-variant="sw1"][data-swiper-fit="cover"][data-swiper-aspect="4-3"] [swiper="slider-main"] .swiper-slide_image-wrap img.cover {
+  object-fit: cover;
+}
+
+/* Optional thumb aspect — swiper_thumb_aspect (same tokens; omit for 1∶1 thumbs) */
+[data-component="swiper"][data-variant="sw1"][data-swiper-thumb-aspect="16-9"] [swiper="slider-thumbs"] .swiper-slide_image-wrap {
+  aspect-ratio: 16 / 9;
+}
+[data-component="swiper"][data-variant="sw1"][data-swiper-thumb-aspect="3-2"] [swiper="slider-thumbs"] .swiper-slide_image-wrap {
+  aspect-ratio: 3 / 2;
+}
+[data-component="swiper"][data-variant="sw1"][data-swiper-thumb-aspect="4-3"] [swiper="slider-thumbs"] .swiper-slide_image-wrap {
+  aspect-ratio: 4 / 3;
+}
+[data-component="swiper"][data-variant="sw1"][data-swiper-thumb-aspect="16-9"]:not([data-swiper-fit="cover"]) [swiper="slider-thumbs"] .swiper-slide_image-wrap img.cover,
+[data-component="swiper"][data-variant="sw1"][data-swiper-thumb-aspect="3-2"]:not([data-swiper-fit="cover"]) [swiper="slider-thumbs"] .swiper-slide_image-wrap img.cover,
+[data-component="swiper"][data-variant="sw1"][data-swiper-thumb-aspect="4-3"]:not([data-swiper-fit="cover"]) [swiper="slider-thumbs"] .swiper-slide_image-wrap img.cover {
+  object-fit: contain;
+}
+
+[data-component="swiper"][data-variant="sw1"][data-swiper-fit="cover"][data-swiper-thumb-aspect="16-9"] [swiper="slider-thumbs"] .swiper-slide_image-wrap img.cover,
+[data-component="swiper"][data-variant="sw1"][data-swiper-fit="cover"][data-swiper-thumb-aspect="3-2"] [swiper="slider-thumbs"] .swiper-slide_image-wrap img.cover,
+[data-component="swiper"][data-variant="sw1"][data-swiper-fit="cover"][data-swiper-thumb-aspect="4-3"] [swiper="slider-thumbs"] .swiper-slide_image-wrap img.cover {
+  object-fit: cover;
+}
+
 /* Prevent uninitialized thumb flash — pre-style as flex row matching Swiper's layout */
 [data-component="swiper"][data-variant="sw1"] [swiper="slider-thumbs"]:not(.swiper-initialized) .swiper-wrapper {
   display: flex;

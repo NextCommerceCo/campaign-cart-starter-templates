@@ -1,4 +1,36 @@
-<div data-component="swiper" data-variant="{{ variant | default: 'sw1' }}">
+{% comment %}
+  Optional swiper_aspect — main stage; optional swiper_thumb_aspect — thumb strip.
+  Optional swiper_fit: 'contain' (default) | 'cover' — object-fit when a non-square aspect is set.
+  Same sw1 JS; CSS-only data attributes. Slugs: 16-9, 3-2, 4-3
+  Pass: landscape | 16/9 | 16-9 → 16-9 ; 3/2 | 3-2 → 3-2 ; 4/3 | 4-3 → 4-3
+  Omit swiper_thumb_aspect to keep thumbnails square (1∶1).
+  Unknown aspect values after normalization are omitted (no attribute).
+{% endcomment %}
+{% assign _swiper_aspect = swiper_aspect | default: '' | strip %}
+{% if _swiper_aspect != '' %}
+  {% assign _swiper_aspect = _swiper_aspect | downcase | replace: '/', '-' | replace: ':', '-' | replace: ' ', '' %}
+  {% if _swiper_aspect == 'landscape' %}
+    {% assign _swiper_aspect = '16-9' %}
+  {% endif %}
+  {% unless _swiper_aspect == '16-9' or _swiper_aspect == '3-2' or _swiper_aspect == '4-3' %}
+    {% assign _swiper_aspect = '' %}
+  {% endunless %}
+{% endif %}
+{% assign _swiper_thumb_aspect = swiper_thumb_aspect | default: '' | strip %}
+{% if _swiper_thumb_aspect != '' %}
+  {% assign _swiper_thumb_aspect = _swiper_thumb_aspect | downcase | replace: '/', '-' | replace: ':', '-' | replace: ' ', '' %}
+  {% if _swiper_thumb_aspect == 'landscape' %}
+    {% assign _swiper_thumb_aspect = '16-9' %}
+  {% endif %}
+  {% unless _swiper_thumb_aspect == '16-9' or _swiper_thumb_aspect == '3-2' or _swiper_thumb_aspect == '4-3' %}
+    {% assign _swiper_thumb_aspect = '' %}
+  {% endunless %}
+{% endif %}
+{% assign _swiper_fit = swiper_fit | default: '' | strip | downcase %}
+{% if _swiper_fit != 'cover' and _swiper_fit != 'contain' %}
+  {% assign _swiper_fit = '' %}
+{% endif %}
+<div data-component="swiper" data-variant="{{ variant | default: 'sw1' }}"{% if _swiper_aspect != '' %} data-swiper-aspect="{{ _swiper_aspect }}"{% endif %}{% if _swiper_thumb_aspect != '' %} data-swiper-thumb-aspect="{{ _swiper_thumb_aspect }}"{% endif %}{% if _swiper_fit == 'cover' %}{% if _swiper_aspect != '' or _swiper_thumb_aspect != '' %} data-swiper-fit="cover"{% endif %}{% endif %}>
   <div class="slider_component">
     <div class="slider_component-wrapper">
       <div swiper="slider-main" class="swiper">
