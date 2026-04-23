@@ -575,6 +575,42 @@ See [`docs/bundle-display-cart-cheatsheet.md`](bundle-display-cart-cheatsheet.md
 
 ---
 
+## Swiper component (sw1)
+
+`swiper-gallery.html` is a reusable component used across checkout and upsell layouts.
+
+### Contract (do not break)
+
+- JS init targets: `data-component="swiper"` + `data-variant="sw1"` together.
+- Do not rename/change `data-variant` unless the same selector is updated everywhere Swiper is initialized.
+- Required inner hooks remain: `[swiper="slider-main"]`, `[swiper="slider-thumbs"]`, `[swiper="prev-button"]`, `[swiper="next-button"]`.
+
+### Default behavior
+
+- Main and thumbs are square (`1 / 1`) by default.
+- No params needed for legacy square galleries.
+
+### Optional include params (CSS-only; JS unchanged)
+
+- `swiper_aspect`: main stage ratio token (`landscape`, `16/9`, `16-9`, `3/2`, `3-2`, `4/3`, `4-3`)
+- `swiper_thumb_aspect`: thumb ratio token (same values; omit to keep square thumbs)
+- `swiper_fit`: `contain` (default for non-square) or `cover`
+
+Unknown aspect tokens are normalized and ignored if unsupported (attribute omitted).
+
+```liquid
+{% campaign_include 'swiper-gallery.html'
+  main_slides=swiper_slides
+  thumbs=swiper_thumbs
+  variant='sw1'
+  swiper_aspect='16-9'
+  swiper_fit='cover'
+  swiper_thumb_aspect='16-9'
+%}
+```
+
+---
+
 ## Upsell pages
 
 Upsell pages use a different set of attributes than checkout pages.
