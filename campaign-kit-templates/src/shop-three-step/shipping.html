@@ -1,0 +1,137 @@
+---
+title: "Shop Three Step — Shipping"
+page_type: checkout
+next_success_url: billing.html
+scripts:
+  - js/checkout.js
+  - js/checkout-shop-three-billing.js
+  - js/checkout-shop-three-shipping.js
+---
+<script>
+window.CHECKOUT_CONFIG = {
+  currentStep: 2,
+  redirectUrl: "{{ 'information.html' | campaign_link }}",
+  stepUrls: {
+    1: "{{ 'information.html' | campaign_link }}",
+    2: "{{ 'shipping.html' | campaign_link }}",
+    3: "{{ 'billing.html' | campaign_link }}"
+  }
+};
+</script>
+<div class="page-wrapper">
+
+      <div class="main-wrapper">
+        <div class="checkout-content">
+          <div class="checkout__content">
+            <div class="checkout__layout">
+              <div class="checkout__column checkout__column--left">
+                <div class="checkout__form-container checkout__form-container--main">
+                  <div class="checkout-header__brand justify-center"><img src="{{ 'images/next-logo.png' | campaign_asset }}" loading="eager" alt="{{ campaign.store_name }}" class="brand-logo"></div>
+                  <div class="order-summary-mobile">
+                    <div data-initial-state="closed" data-next-accordion="order-summary" data-open-text="Hide Order Summary" data-close-text="Show Order Summary" data-toggle-class="next-expanded" class="order-summary-mobile__accordion">
+                      <div data-next-accordion-trigger="order-summary" class="order-summary__trigger">
+                        <div class="order-summary__inner">
+                          <div class="order-summary__mobile-left">
+                            <div class="summary-toggle">
+                              <div data-next-accordion-text="order-summary" class="summary-toggle__text show_text">Show Order Summary</div><img os-summary-icon="" loading="lazy" alt="" src="{{ 'images/arrow-down.svg' | campaign_asset }}" class="summary-toggle__icon">
+                            </div>
+                          </div>
+                          <div data-next-show="cart.hasItems" class="order-summary__mobile-right">
+                            <div data-next-show="cart.hasDiscounts" data-next-display="cart.subtotal" class="summary_price price--crossed cc-sm"></div>
+                            <div data-next-display="cart.total" class="summary_price price--total"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div data-next-accordion-panel="order-summary" class="accordion__panel payment-method__form--expanded">
+                        {% campaign_include 'cart-summary04.html' %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="checkout__header-steps">
+                    <div class="steps-text">Information<br></div>
+                    <div class="steps-arrow"><svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" focusable="false" aria-hidden="true">
+                        <path stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" d="m4.75 2 4.646 4.646a.5.5 0 0 1 0 .708L4.75 12"></path>
+                      </svg></div>
+                    <div class="steps-text steps-text--active">Shipping<br></div>
+                    <div class="steps-arrow"><svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" focusable="false" aria-hidden="true">
+                        <path stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" d="m4.75 2 4.646 4.646a.5.5 0 0 1 0 .708L4.75 12"></path>
+                      </svg></div>
+                    <div class="steps-text">Payment<br></div>
+                  </div>
+                  <div class="checkout-form">
+                    <form data-next-checkout="form" id="combo_form" method="post" data-next-checkout-step="{{ 'billing.html' | campaign_link }}" data-next-step-number="2">
+                      <div class="form-content">
+                        <div class="form-sections">
+                          <div class="form-section">
+                            <div data-next-await="" data-next-enhancer="checkout-review" class="checkout__form-review">
+                              <div class="checkout__form-row">
+                                <div class="checkout__form-row-line">
+                                  <div class="checkout__form-row-text">Contact</div>
+                                  <div data-next-checkout-review="email"></div>
+                                </div>
+                                <div class="checkout__form-row-change">
+                                  <a href="{{ 'information.html' | campaign_link }}" class="checkout__form-review--link">
+                                    <div>Change</div>
+                                  </a>
+                                </div>
+                              </div>
+                              <div class="checkout__form-row checkout__form-row--last">
+                                <div class="checkout__form-row-line">
+                                  <div class="checkout__form-row-text">Ship to<br></div>
+                                  <div data-next-format="address" data-next-checkout-review="address"></div>
+                                </div>
+                                <div class="checkout__form-row-change">
+                                  <a href="{{ 'information.html' | campaign_link }}" class="checkout__form-review--link">
+                                    <div>Change</div>
+                                  </a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-section">
+                            <h1 class="form-section__title">Shipping Method</h1>
+                            <div id="next-shipping-options-container" class="shipping-selector" role="radiogroup" aria-label="Shipping method"></div>
+                          </div>
+                          <div class="submit-section cc-shop__three">
+                            <div>
+                              <a href="{{ 'information.html' | campaign_link }}" class="checkout__button-prev">
+                                <div class="checkout__button-prev-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="100%" height="100%" focusable="false" aria-hidden="true">
+                                    <path stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" d="M9.25 12 4.604 7.354a.5.5 0 0 1 0-.708L9.25 2"></path>
+                                  </svg></div>
+                                <div>Return to information</div>
+                              </a>
+                            </div>
+                            <div class="submit-section__button"><button data-action="submit" type="submit" class="submit-button cc-shop__three">
+                                <div data-pb-element="checkout-button-spinner" class="submit-button__loader">
+                                  <div class="three-quarter-spinner black"></div>
+                                </div>
+                                <div data-pb-element="checkout-button-info" class="submit-button__content">
+                                  <div class="submit-button__text">
+                                    <div class="submit-button__main-text cc-shop__three">Continue to Payment</div>
+                                  </div>
+                                </div>
+                              </button></div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  {% campaign_include 'checkout-footer-links.html' %}
+                </div>
+              </div>
+              <div class="checkout__column checkout__column--right">
+                <div class="checkout__summary">
+                  <div class="summary-desktop">
+                    <div class="summary-wrap">
+                      <div class="summary-holder">
+                        {% campaign_include 'cart-summary04.html' %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

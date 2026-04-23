@@ -392,7 +392,7 @@ Full example (distinct package IDs per card):
 
 ### Migrated — `campaign-kit-templates/` (SDK 0.4.x)
 
-**Loader pin:** bump **`sdk_version`** in [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json) when adopting newer Campaign Cart releases (reference repo: **`0.4.18`** for **olympus**, **limos**, **demeter**, **olympus-mv-single-step**).
+**Loader pin:** bump **`sdk_version`** in [`campaign-kit-templates/_data/campaigns.json`](../campaign-kit-templates/_data/campaigns.json) when adopting newer Campaign Cart releases (reference repo: **`0.4.18`** for **olympus**, **limos**, **demeter**, **olympus-mv-single-step**, **shop-single-step**, **shop-three-step**).
 
 | Template | Selector fix | Token renames | Bug fixes | Notes |
 |----------|-------------|---------------|-----------|-------|
@@ -401,6 +401,7 @@ Full example (distinct package IDs per card):
 | `olympus-mv-single-step` | ✅ native external slots | ✅ **0.4.x** | 🔄 QA | **`sdk_version` `0.4.18`**. Checkout: tier cards + **`data-next-bundle-slots-for`**. **Native `bundleQuantity` on checkout not wired here** (tier UX + MV slots — use **limos** checkout for the qty demo). **`upsell-mv.html`:** tier pills + `initBundleQtyToggle`, not `upsell-bundle-stepper`. Variant UI: see [`checkout-olympus-mv-full.js`](../campaign-kit-templates/src/olympus-mv-single-step/assets/js/checkout-olympus-mv-full.js) and [`upsells-up01-mv.js`](../campaign-kit-templates/src/olympus-mv-single-step/assets/js/upsells-up01-mv.js). |
 | `demeter` | ✅ bundle selector | ✅ **0.4.x** | ✅ QA | **`sdk_version` `0.4.18`**. Bundle selector (matching olympus). Same campaign, upsell chain, and `next-core.css` as olympus. Cart summary: `cart-summary03.html` (demeter-specific: cart heading + product image feature block). |
 | `shop-single-step` | — no selector | ✅ **0.4.x** | ✅ QA | **`sdk_version` `0.4.18`**. Shop flow — no bundle selector; cart pre-populated before checkout. Single long form. Cart summary: `cart-summary04.html` (shop-specific: image items + qty badge; no coupon input — `CouponInputEnhancer` does not initialise inside `data-next-cart-summary` host). Upsell: standard bundle chain (stepper → tier-pills → tier-cards, matching olympus). Scoped CSS hook: `checkout--shop-single-step` on `checkout.html`. |
+| `shop-three-step` | — no selector | ✅ **0.4.x** | ✅ QA | **`sdk_version` `0.4.18`**. Shop multi-step flow: `information.html` (email + shipping fields) → `shipping.html` (review + method selection) → `billing.html` (review + payment) → upsell chain → receipt. Step guard: `checkout-shop-three-billing.js` reads `sessionStorage` to block out-of-order page access. Cart summary: `cart-summary04.html` on all 3 checkout pages (no coupon input — same `CouponInputEnhancer` limitation as `shop-single-step`). Shipping methods: `checkout-shop-three-shipping.js` calls `sdk.getShippingMethods()` and renders into `#next-shipping-options-container`. Billing hidden form (`.next-hidden-form`): preserves shipping fields for SDK submission. `window.CHECKOUT_CONFIG` injected inline on `shipping.html` (step 2) and `billing.html` (step 3). Upsell: standard bundle chain (stepper → tier-pills → tier-cards, matching olympus/shop-single-step). |
 
 ### Pending migration — `campaign-kit-templates-v3/` (SDK 0.3.x)
 
@@ -412,7 +413,7 @@ Full example (distinct package IDs per card):
 | `demeter` | ✅ | ✅ | Promoted to `campaign-kit-templates/src/demeter/` |
 | `limos` | ✅ | ✅ | Promoted to `campaign-kit-templates/src/limos/` |
 | `shop-single-step` | ✅ | ✅ | Promoted to `campaign-kit-templates/src/shop-single-step/` |
-| `shop-three-step` | — | — | No checkout bundle selector (multi-step form: information → shipping → billing). SDK 0.4.18 "Add to Cart for bundle selectors" potentially relevant if a bundle-pick step is added before the form steps on migration. |
+| `shop-three-step` | ✅ | ✅ | Promoted to `campaign-kit-templates/src/shop-three-step/` |
 
 ### Local-only (not tracked in repo)
 

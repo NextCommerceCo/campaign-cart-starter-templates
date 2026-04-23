@@ -123,19 +123,24 @@ Three-step shop checkout. Requires a package ID to render.
 
 | Page | URL |
 |------|-----|
-| Information | `/[slug]/information/?forcePackageId=2:1` |
-| Shipping | `/[slug]/shipping/?forcePackageId=2:1` |
-| Billing | `/[slug]/billing/?forcePackageId=2:1` |
-| Upsell | `/[slug]/upsell/?forcePackageId=2:1` |
-| Receipt | `/[slug]/receipt/?forcePackageId=2:1` |
+| Information | `/[slug]/information/?forcePackageId=1:1` |
+| Shipping | `/[slug]/shipping/?forcePackageId=1:1` |
+| Billing | `/[slug]/billing/?forcePackageId=1:1` |
+| Upsell — stepper | `/[slug]/upsell-bundle-stepper/?forcePackageId=1:1` |
+| Upsell — tier pills | `/[slug]/upsell-bundle-tier-pills/?forcePackageId=1:1` |
+| Upsell — tier cards | `/[slug]/upsell-bundle-tier-cards/?forcePackageId=1:1` |
+| Receipt | `/[slug]/receipt/?forcePackageId=1:1` |
 
 **`forcePackageId` is required** on all pages.
 
 **Things to check:**
-- Full step flow: information → shipping → billing → upsell → receipt
-- Step indicator updates correctly on each page
-- Shipping method selected on `/shipping/` appears in the order summary on `/billing/`
+- Full step flow: information → shipping → billing → upsell-bundle-stepper → upsell-bundle-tier-pills → upsell-bundle-tier-cards → receipt
+- Step indicator updates correctly on each page (Information active on step 1, Shipping on step 2, Payment on step 3)
+- Shipping methods render dynamically on `/shipping/` (populated by `checkout-shop-three-shipping.js`)
+- Shipping method selected on `/shipping/` appears in the review section on `/billing/`
+- Review fields on `/billing/` show correct email, address, phone, and shipping method name
 - Navigating back between steps preserves previously entered data
+- Step guard: accessing `/billing/` directly (without completing step 1) should redirect to `/information/`
 
 ---
 
