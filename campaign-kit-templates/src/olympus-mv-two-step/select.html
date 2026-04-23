@@ -66,7 +66,7 @@ scripts:
                 <!-- LEFT: variant selector -->
                 <div class="checkout-layout__left">
                   <div class="checkout-selection-step">
-                    <promo-timer{% if promo_sale %} force-sale="{{ promo_sale }}"{% endif %}></promo-timer>
+                    <div class="hide-tablet"><promo-timer{% if promo_sale %} force-sale="{{ promo_sale }}"{% endif %}></promo-timer></div>
                     <div class="checkout-selectors" data-next-await="">
 
                       <!-- STEP ONE: Quantity selection -->
@@ -201,7 +201,6 @@ scripts:
                                 </div>
                               </div>
                             </div>
-                          </div>
                           <div data-next-component="quantity-cta" class="checkout_cta-sec">
                             <button data-next-action="select-variants" class="button cc-gold">
                               <div data-next-component="loader" class="submit-button__loader">
@@ -243,6 +242,7 @@ scripts:
                               </div>
                               <img loading="lazy" src="{{ 'images/upsell-payment-logos.svg' | campaign_asset }}" alt="" class="card-flags-2 cc-2step">
                             </div>
+                          </div>
                           </div>
                         </div>
                       </div>

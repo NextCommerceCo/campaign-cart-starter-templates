@@ -33,3 +33,9 @@
  * .mv-variant-btn[data-attr-code="color"]::before { content: ""; flex: none; width: 1rem; height: 1rem;
  *   border-radius: 50%; background: var(--swatch, transparent); border: 1px solid rgba(0, 0, 0, 0.15); }
  */
+
+.cart_box-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
