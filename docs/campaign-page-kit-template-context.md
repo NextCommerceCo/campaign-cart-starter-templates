@@ -93,6 +93,8 @@ The `landing` slug in the starter repo is a **component showcase**, not a drop-i
 
 Landing pages do not use `config.js` or any Campaign Cart SDK attributes. The only integration point is `cta_url` — set it to the root-relative URL of your checkout page (e.g. `/wintergloves/checkout/`). Do not use `campaign_link` on `cta_url`; these links cross slug boundaries and must be absolute or root-relative.
 
+**Tailwind CSS:** Landing and presell templates use Tailwind. In development (`npm run dev`) the Tailwind CDN loads automatically — arbitrary values like `text-[28px]` work with no build step. In production (`npm run build`) the layout switches to a pre-built `assets/css/tailwind.css`. If you add new Tailwind utility classes (including new arbitrary values) after copying these templates, run `npm run css:build` from `campaign-kit-templates/` to regenerate the file before deploying.
+
 ### Presell pages (`presell-1/`)
 
 Presell templates are ready-to-use pages. You have two options:
@@ -714,11 +716,12 @@ For single-package upsells without voucher-driven pricing. If the upsell uses Ca
 Run from inside your project directory (where `package.json` is):
 
 ```bash
-npm run dev          # interactive campaign picker + dev server
-npm run build        # build all campaigns to _site/
-npm run clone        # duplicate a campaign to a new slug
-npm run config       # set API key for a campaign
-npm run compress     # compress images in a campaign
+npm run dev              # interactive campaign picker + dev server
+npm run build            # build all campaigns to _site/
+npm run clone            # duplicate a campaign to a new slug
+npm run config           # set API key for a campaign
+npm run compress         # compress images in a campaign
+npm run css:build        # rebuild Tailwind CSS for landing and presell-1 (run after adding new utility classes)
 ```
 
 ---
@@ -732,6 +735,12 @@ npm run build
 ```
 
 Outputs all campaigns to `_site/`. Before building, make sure `config.js` in each campaign has a real API key — not the placeholder set during development.
+
+If your campaign includes a landing or presell page and you have added or changed Tailwind utility classes since copying the template, regenerate the compiled CSS first:
+
+```bash
+npm run css:build
+```
 
 **2. Deploy `_site/`**
 
