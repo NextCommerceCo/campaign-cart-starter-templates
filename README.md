@@ -129,7 +129,7 @@ The `landing` slug is a component showcase — browse the examples to find secti
 
 **Presell pages**
 
-Presell pages can be used as a standalone pre-checkout slug (with `cta_url` pointing to your checkout) or copied into your funnel slug alongside `checkout.html`. See [docs/campaign-page-kit-template-context.md](docs/campaign-page-kit-template-context.md) for usage details.
+Copy the presell into **the same campaign slug** as `checkout.html` (shared `config.js` and `campaigns.json`). See [docs/pre-checkout-pages.md](docs/pre-checkout-pages.md) and [docs/campaign-page-kit-template-context.md](docs/campaign-page-kit-template-context.md).
 
 | Template | Description | Preview |
 |----------|-------------|---------|
@@ -180,6 +180,8 @@ cp campaign-cart-starter-templates/docs/campaign-page-kit-template-context.md yo
 ```
 
 This gives your AI assistant the context it needs to work correctly with Campaign Cart templates — project structure, Liquid filters, SDK attributes, config, and task checklists. Without it, the assistant will not know the correct SDK version, required `campaigns.json` fields, or how to use `campaign_asset` / `campaign_link` / `campaign_include`.
+
+Pre-checkout **landing** and **presell** deep dive (Tailwind production build, same-slug presell, CTAs): [docs/pre-checkout-pages.md](docs/pre-checkout-pages.md).
 
 For other AI tools: Cursor loads rules from `.cursor/rules/`, Windsurf from `.windsurfrules`. The file content works for all of them — only the filename/location differs.
 

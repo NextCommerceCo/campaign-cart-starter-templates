@@ -12,7 +12,7 @@
    ```bash
    cp docs/campaign-page-kit-template-context.md CLAUDE.md
    ```
-   If this file came from a GitHub URL, write it to `CLAUDE.md` in the working directory directly.
+   If this file came from a GitHub URL, write it to `CLAUDE.md` in the working directory directly. For **landing / presell** work, also open [pre-checkout-pages.md](https://github.com/NextCommerceCo/campaign-cart-starter-templates/blob/main/docs/pre-checkout-pages.md) (that guide does not ship inside this single file).
 
 2. **Look up the current `sdk_version`** — do not guess or use a version from your training data. Read `campaign-kit-templates/_data/campaigns.json` from the [campaign-cart-starter-templates repo](https://github.com/NextCommerceCo/campaign-cart-starter-templates) and copy the exact `sdk_version` string from there. It changes with every SDK release.
 
@@ -85,38 +85,15 @@ Each campaign is fully isolated. Assets, layouts, and pages from one campaign ne
 
 ## Pre-checkout pages (landing and presell)
 
-Landing and presell pages are pre-checkout — they have no SDK cart or checkout wiring, just a CTA that drives traffic into a funnel.
+Pre-checkout pages have **no checkout form, cart, or upsell UI**, but a **live** lander or presell should still align with the Campaign Cart stack (`config.js`, SDK loader, `next-*` meta tags, optional layout GTM/Pixel from `campaigns.json`) the same way checkout does — see [SDK configuration (config.js)](#sdk-configuration-configjs), [SDK meta tags](#sdk-meta-tags-set-in-basehtml-via-frontmatter), and [Optional GTM and Meta Pixel](#optional-gtm-and-meta-pixel-gtm_id-fb_pixel_id) below.
 
-### Landing pages (`landing/`)
+- **`landing/`** (starter) — **section showcase**: copy `_includes/` into your slug. **Cross-slug CTAs** use a root-relative checkout URL in `cta_url`, not `campaign_link`.
+- **`presell/`** — **ready-to-use article** in the **same campaign slug** as `checkout.html`; use **`campaign_link`** for the checkout CTA.
+- **Tailwind** — CDN in dev; compile `tailwind.css` for production.
 
-The `landing` slug in the starter repo is a **component showcase**, not a drop-in template. Its `_includes/` folder contains a library of reusable page sections (heroes, benefits, reviews, ingredients, UGC, etc.). Browse the example pages (`supplement-sleep`, `skincare-serum`, `fitness-program`) to find sections that suit your campaign, then copy those `_includes/` files into your own funnel slug and assemble your page there.
-
-Landing pages do not use `config.js` or any Campaign Cart SDK attributes. The only integration point is `cta_url` — set it to the root-relative URL of your checkout page (e.g. `/wintergloves/checkout/`). Do not use `campaign_link` on `cta_url`; these links cross slug boundaries and must be absolute or root-relative.
-
-**Tailwind CSS:** Landing and presell templates load Tailwind via CDN — fine for development and prototyping. Before deploying to production, compile a static CSS file:
-
-1. Copy `tailwind.config.js` and `tailwind.input.css` from `campaign-kit-templates/` into your project root (skip if already there)
-2. Install tailwindcss if not already a devDependency: `npm install -D tailwindcss`
-3. Build the CSS for your slug:
-   ```bash
-   npx tailwindcss -c tailwind.config.js -i tailwind.input.css \
-     -o src/[slug]/assets/css/tailwind.css \
-     --content 'src/[slug]/**/*.html' --minify
-   ```
-4. In `base-landing.html` / `base-presell.html`, replace the CDN `<script>` block with:
-   ```html
-   <link rel="stylesheet" href="{{ 'css/tailwind.css' | campaign_asset }}">
-   ```
-5. Re-run step 3 any time you add new Tailwind utility classes before deploying.
-
-### Presell pages (`presell/`)
-
-Presell templates are ready-to-use pages. You have two options:
-
-1. **Standalone pre-checkout slug** — keep the presell as its own slug (e.g. `wintergloves-presell`) and set `cta_url` in frontmatter to your checkout URL. The user lands on `wintergloves-presell/`, reads the article, and clicks through to `wintergloves/checkout/`.
-2. **Inside the funnel slug** — copy `index.html` into your funnel slug as `presell.html` (or `landing.html`) alongside `checkout.html`. The page becomes part of the same campaign and shares its `campaigns.json` entry.
-
-Either way, set `cta_url` to the full root-relative path of the checkout page. The footer uses `campaign.store_terms` and `campaign.store_privacy` from `campaigns.json` — update those fields in your campaign entry.
+**Full guide:** [docs/pre-checkout-pages.md](./pre-checkout-pages.md) (clone this repo) — canonical copy on GitHub:  
+<https://github.com/NextCommerceCo/campaign-cart-starter-templates/blob/main/docs/pre-checkout-pages.md>  
+If you only copy this file into your project as `CLAUDE.md`, use the **GitHub** URL so the deep guide stays reachable.
 
 ---
 
