@@ -22,7 +22,7 @@ The `landing` slug is a **component showcase**, not a drop-in template.
 The `presell` slug is a **ready-to-use** advertorial-style article page.
 
 - Keep the presell inside the **same campaign slug** as `checkout.html` — copy `presell/index.html` into your slug as `presell.html`
-- It shares the same `campaigns.json` entry, `config.js`, and `assets/` as your checkout pages
+- It then shares the same `campaigns.json` entry, `assets/config.js`, and `assets/` tree as your checkout pages (no second copy of config)
 - Set `cta_url` in frontmatter to the checkout page filename (e.g. `checkout.html`)
 - The CTA uses `campaign_link`: `href="{{ cta_url | campaign_link }}"` — no manual URL needed
 - The footer reads `campaign.store_terms` and `campaign.store_privacy` from `campaigns.json` — update those fields in your campaign entry
@@ -56,6 +56,8 @@ Landing and presell layouts load Tailwind via **CDN** — fine for development a
 ## Production hardening
 
 The starter layouts (`base-landing.html`, `base-presell.html`) are intentionally minimal — Tailwind, design tokens, and page content only. For a live funnel, uncomment the SDK wiring block already in both layout files to align with the Campaign Cart stack.
+
+**Typical workflow:** Copy these layouts (and pages) into an **existing** funnel slug that already has **`assets/config.js`** from checkout setup. You reuse that file; uncommenting the block is enough. The standalone `landing` / `presell` reference slugs in this repo omit `config.js` on purpose — they are showcases until folded into a real campaign.
 
 **What to uncomment and why:**
 
