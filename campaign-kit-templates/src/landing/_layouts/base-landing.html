@@ -43,6 +43,22 @@
   {% for style in styles %}
   <link rel="stylesheet" href="{{ style | campaign_asset }}">
   {% endfor %}
+
+  <!--
+    PRODUCTION HARDENING — uncomment to align with Campaign Cart stack:
+
+    1. Load config.js before the SDK (same file as checkout, contains apiKey + analytics)
+    <script src="{{ 'config.js' | campaign_asset }}"></script>
+
+    2. SDK meta tags (next-funnel and next-page-type are required by the SDK loader)
+    <meta name="next-funnel" content="{{ campaign.name }}">
+    <meta name="next-page-type" content="{{ page_type }}">
+
+    3. Campaign Cart SDK loader (same version as checkout — pinned in campaigns.json)
+    <script src="https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v{{ campaign.sdk_version }}/dist/loader.js" type="module"></script>
+
+    See docs/pre-checkout-pages.md for full guidance.
+  -->
 </head>
 <body class="font-sans bg-white text-[var(--text-primary)]">
 

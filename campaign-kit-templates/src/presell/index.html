@@ -389,7 +389,7 @@ footer_copyright: "Copyright ©2026 Next Commerce"
           </p>
 
           <!-- CTA button -->
-          <a href="{{ cta_url }}"
+          <a href="{{ cta_url | campaign_link }}"
              class="w-full bg-[var(--brand-primary)] text-white font-extrabold text-[20px] uppercase py-[20px] px-6 rounded-[6px] flex items-center justify-center gap-4 hover:opacity-90 transition-opacity">
             <span>{{ cta_text }}</span>
             <img src="{{ 'images/_shared/arrow-right.svg' | campaign_asset }}" alt="" class="w-[18px] h-[14px] brightness-0 invert">

@@ -119,7 +119,7 @@ Each checkout template includes all upsell variants and a receipt — copy the w
 
 **Landing pages**
 
-The `landing` slug is a component showcase — browse the examples to find sections you want, then copy those `_includes/` files into your own funnel slug. See [docs/campaign-page-kit-template-context.md](docs/campaign-page-kit-template-context.md) for usage details.
+The `landing` slug is a component showcase — browse the examples to find sections you want, then copy those `_includes/` files into your own funnel slug. See [docs/pre-checkout-pages.md](docs/pre-checkout-pages.md) for usage details.
 
 | Template | Description | Preview |
 |----------|-------------|---------|
@@ -129,7 +129,7 @@ The `landing` slug is a component showcase — browse the examples to find secti
 
 **Presell pages**
 
-Copy the presell into **the same campaign slug** as `checkout.html` (shared `config.js` and `campaigns.json`). See [docs/pre-checkout-pages.md](docs/pre-checkout-pages.md) and [docs/campaign-page-kit-template-context.md](docs/campaign-page-kit-template-context.md).
+Copy the presell into **the same campaign slug** as `checkout.html` (shared `config.js` and `campaigns.json`). See [docs/pre-checkout-pages.md](docs/pre-checkout-pages.md).
 
 | Template | Description | Preview |
 |----------|-------------|---------|
