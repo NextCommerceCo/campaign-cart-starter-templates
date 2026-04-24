@@ -93,14 +93,21 @@ The `landing` slug in the starter repo is a **component showcase**, not a drop-i
 
 Landing pages do not use `config.js` or any Campaign Cart SDK attributes. The only integration point is `cta_url` — set it to the root-relative URL of your checkout page (e.g. `/wintergloves/checkout/`). Do not use `campaign_link` on `cta_url`; these links cross slug boundaries and must be absolute or root-relative.
 
-**Tailwind CSS:** Landing and presell templates load Tailwind via CDN — fine for development and prototyping. Before deploying to production, replace the CDN `<script>` block in `base-landing.html` / `base-presell.html` with a compiled CSS file:
+**Tailwind CSS:** Landing and presell templates load Tailwind via CDN — fine for development and prototyping. Before deploying to production, compile a static CSS file:
 
-```bash
-npm install -D tailwindcss
-npx tailwindcss -o assets/css/tailwind.css --content './**/*.html' --minify
-```
-
-Then swap the `<script src="https://cdn.tailwindcss.com">` block for `<link rel="stylesheet" href="{{ 'css/tailwind.css' | campaign_asset }}">`. Run the CLI again any time you add new Tailwind utility classes.
+1. Copy `tailwind.config.js` and `tailwind.input.css` from `campaign-kit-templates/` into your project root (skip if already there)
+2. Install tailwindcss if not already a devDependency: `npm install -D tailwindcss`
+3. Build the CSS for your slug:
+   ```bash
+   npx tailwindcss -c tailwind.config.js -i tailwind.input.css \
+     -o src/[slug]/assets/css/tailwind.css \
+     --content 'src/[slug]/**/*.html' --minify
+   ```
+4. In `base-landing.html` / `base-presell.html`, replace the CDN `<script>` block with:
+   ```html
+   <link rel="stylesheet" href="{{ 'css/tailwind.css' | campaign_asset }}">
+   ```
+5. Re-run step 3 any time you add new Tailwind utility classes before deploying.
 
 ### Presell pages (`presell/`)
 
