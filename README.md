@@ -88,15 +88,52 @@ npm run dev
 
 ### Current — SDK 0.4.x (`campaign-kit-templates/`)
 
-| Slug | Funnel type | Preview |
-|------|-------------|---------|
-| `demeter` | Single-step checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/demeter/checkout/) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/demeter/upsell-bundle-stepper/) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/demeter/upsell-bundle-tier-pills/) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/demeter/upsell-bundle-tier-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/demeter/receipt/) |
-| `limos` | Single-step checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/limos/checkout/) (SDK **0.4.18** native **bundleQuantity** on checkout) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/limos/upsell-bundle-stepper/) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/limos/upsell-bundle-tier-pills/) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/limos/upsell-bundle-tier-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/limos/receipt/) |
-| `olympus` | Single-step checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus/checkout/) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-stepper/) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-tier-pills/) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-tier-cards/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus/receipt/) |
-| `olympus-mv-single-step` | Single-step with variants | [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/checkout/) · [upsell](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/upsell-mv/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/receipt/) |
-| `olympus-mv-two-step` | Two-step with variants | [select](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/select/) · [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/checkout/) · [upsell](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/upsell-mv/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/receipt/) |
-| `shop-single-step` | Shop checkout | [checkout](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/checkout/?forcePackageId=1:1) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell-bundle-stepper/?forcePackageId=1:1) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell-bundle-tier-pills/?forcePackageId=1:1) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell-bundle-tier-cards/?forcePackageId=1:1) · [receipt](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/receipt/?forcePackageId=1:1) |
-| `shop-three-step` | Three-step shop checkout | [information](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/information/?forcePackageId=1:1) · [shipping](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/shipping/?forcePackageId=1:1) · [billing](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/billing/?forcePackageId=1:1) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell-bundle-stepper/?forcePackageId=1:1) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell-bundle-tier-pills/?forcePackageId=1:1) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell-bundle-tier-cards/?forcePackageId=1:1) · [receipt](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/receipt/?forcePackageId=1:1) |
+Each checkout template includes all upsell variants and a receipt — copy the whole folder to get the full flow.
+
+**Checkouts**
+
+| Template | Description | Preview |
+|----------|-------------|---------|
+| `demeter` | Single-step checkout | [preview](https://nextcommerce-campaign-templates.netlify.app/demeter/checkout/) |
+| `limos` | Single-step · native bundle qty on page | [preview](https://nextcommerce-campaign-templates.netlify.app/limos/checkout/) |
+| `olympus` | Single-step checkout | [preview](https://nextcommerce-campaign-templates.netlify.app/olympus/checkout/) |
+| `olympus-mv-single-step` | Single-step · multi-variant | [preview](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/checkout/) |
+| `olympus-mv-two-step` | Two-step · variant select then checkout | [preview](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/select/) |
+| `shop-single-step` | Shop-style single-step | [preview](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/checkout/?forcePackageId=1:1) |
+| `shop-three-step` | Shop-style three-step (info → shipping → billing) | [preview](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/information/?forcePackageId=1:1) |
+
+**Upsells**
+
+| Variant | Description | Preview |
+|---------|-------------|---------|
+| `upsell-bundle-stepper` | Quantity stepper with tier pricing | [preview](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-stepper/) |
+| `upsell-bundle-tier-pills` | Pill-style tier selector | [preview](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-tier-pills/) |
+| `upsell-bundle-tier-cards` | Card-style tier selector | [preview](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-tier-cards/) |
+| `upsell-mv` | Multi-variant upsell | [preview](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/upsell-mv/) |
+
+**Receipt**
+
+| Variant | Description | Preview |
+|---------|-------------|---------|
+| `receipt` | Order confirmation page | [preview](https://nextcommerce-campaign-templates.netlify.app/olympus/receipt/) |
+
+**Landing pages**
+
+The `landing` slug is a component showcase — browse the examples to find sections you want, then copy those `_includes/` files into your own funnel slug. See [docs/pre-checkout-pages.md](docs/pre-checkout-pages.md) for usage details.
+
+| Template | Description | Preview |
+|----------|-------------|---------|
+| `landing` · supplement | Sleep supplement example | [preview](https://nextcommerce-campaign-templates.netlify.app/landing/supplement-sleep/) |
+| `landing` · skincare | Skincare serum example | [preview](https://nextcommerce-campaign-templates.netlify.app/landing/skincare-serum/) |
+| `landing` · fitness | Fitness program example | [preview](https://nextcommerce-campaign-templates.netlify.app/landing/fitness-program/) |
+
+**Presell pages**
+
+Copy the presell into **the same campaign slug** as `checkout.html` (shared `config.js` and `campaigns.json`). See [docs/pre-checkout-pages.md](docs/pre-checkout-pages.md).
+
+| Template | Description | Preview |
+|----------|-------------|---------|
+| `presell` | Advertorial "10 reasons" article format | [preview](https://nextcommerce-campaign-templates.netlify.app/presell/index/) |
 
 ### Legacy — SDK 0.3.x (`campaign-kit-templates-v3/`)
 
@@ -143,6 +180,8 @@ cp campaign-cart-starter-templates/docs/campaign-page-kit-template-context.md yo
 ```
 
 This gives your AI assistant the context it needs to work correctly with Campaign Cart templates — project structure, Liquid filters, SDK attributes, config, and task checklists. Without it, the assistant will not know the correct SDK version, required `campaigns.json` fields, or how to use `campaign_asset` / `campaign_link` / `campaign_include`.
+
+Pre-checkout **landing** and **presell** deep dive (Tailwind production build, same-slug presell, CTAs): [docs/pre-checkout-pages.md](docs/pre-checkout-pages.md).
 
 For other AI tools: Cursor loads rules from `.cursor/rules/`, Windsurf from `.windsurfrules`. The file content works for all of them — only the filename/location differs.
 

@@ -12,11 +12,14 @@
    ```bash
    cp docs/campaign-page-kit-template-context.md CLAUDE.md
    ```
-   If this file came from a GitHub URL, write it to `CLAUDE.md` in the working directory directly.
+   If this file came from a GitHub URL, write it to `CLAUDE.md` in the working directory directly. For **landing / presell** work, also open [pre-checkout-pages.md](https://github.com/NextCommerceCo/campaign-cart-starter-templates/blob/main/docs/pre-checkout-pages.md) (that guide does not ship inside this single file).
 
 2. **Look up the current `sdk_version`** — do not guess or use a version from your training data. Read `campaign-kit-templates/_data/campaigns.json` from the [campaign-cart-starter-templates repo](https://github.com/NextCommerceCo/campaign-cart-starter-templates) and copy the exact `sdk_version` string from there. It changes with every SDK release.
 
-3. **Include `gtm_id` and `fb_pixel_id` in every `campaigns.json` entry** — use placeholder values (`"GTM-XXXXXXX"` / `"123456789012345"`) if real IDs are not yet known. These fields are required in the entry even if the values are placeholders; the layout conditionally skips them when blank.
+3. **Include `gtm_id` and `fb_pixel_id` keys on every `campaigns.json` entry** — set them intentionally:
+   - **`""` (empty string)** — layout **does not** inject GTM / Meta snippets in these starter templates (`base.html` uses `{% if campaign.gtm_id != "" %}` / `{% if campaign.fb_pixel_id != "" %}`).
+   - **Any non-empty value** (including placeholders like `"GTM-XXXXXXX"` or `"123456789012345"`) — in **non-`development`** builds, the **snippets still load** and hit GTM / Facebook with that ID. Placeholders are **not** the same as “off”; they are “on with dummy IDs.” Use real production IDs when you want tracking; use `""` when you want layout-driven tags disabled.
+   - **Omitting the keys** — may behave like missing data depending on your CPK/Liquid defaults; **prefer explicit `""`** when disabling so behavior matches these templates.
 
 Do not proceed with code generation until you have completed all three steps above.
 
@@ -80,6 +83,20 @@ Each campaign is fully isolated. Assets, layouts, and pages from one campaign ne
 
 ---
 
+## Pre-checkout pages (landing and presell)
+
+Pre-checkout pages have **no checkout form, cart, or upsell UI**, but a **live** lander or presell should still align with the Campaign Cart stack (`config.js`, SDK loader, `next-*` meta tags, optional layout GTM/Pixel from `campaigns.json`) the same way checkout does — see [SDK configuration (config.js)](#sdk-configuration-configjs), [SDK meta tags](#sdk-meta-tags-set-in-basehtml-via-frontmatter), and [Optional GTM and Meta Pixel](#optional-gtm-and-meta-pixel-gtm_id-fb_pixel_id) below.
+
+- **`landing/`** (starter) — **section showcase**: copy `_includes/` into your slug. **Cross-slug CTAs** use a root-relative checkout URL in `cta_url`, not `campaign_link`.
+- **`presell/`** — **ready-to-use article** in the **same campaign slug** as `checkout.html`; use **`campaign_link`** for the checkout CTA.
+- **Tailwind** — CDN in dev; compile `tailwind.css` for production.
+
+**Full guide:** [docs/pre-checkout-pages.md](./pre-checkout-pages.md) (clone this repo) — canonical copy on GitHub:  
+<https://github.com/NextCommerceCo/campaign-cart-starter-templates/blob/main/docs/pre-checkout-pages.md>  
+If you only copy this file into your project as `CLAUDE.md`, use the **GitHub** URL so the deep guide stays reachable.
+
+---
+
 ## campaigns.json
 
 Registers every campaign. The `campaign` object in Liquid templates comes from here.
@@ -109,6 +126,8 @@ Registers every campaign. The `campaign` object in Liquid templates comes from h
 
 Add any additional key to a campaign entry and it becomes available as `{{ campaign.key }}` on every page in that campaign.
 
+**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.18"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
+
 ### Build environment (`environment`)
 
 [next-campaign-page-kit](https://github.com/NextCommerceCo/campaign-page-kit) exposes `environment` in Liquid: `development` for `npm run dev`, `production` for `npm run build`. Override with `CPK_ENV` (e.g. `CPK_ENV=staging npm run build`). Use this to keep third-party scripts out of local previews.
@@ -118,9 +137,14 @@ Add any additional key to a campaign entry and it becomes available as `{{ campa
 These starter templates inject **Google Tag Manager** and **Meta Pixel** from each campaign’s `_layouts/base.html` when:
 
 - `environment` is not `development`, and  
-- `gtm_id` and/or `fb_pixel_id` are set on that campaign in `_data/campaigns.json`.
+- `gtm_id` and/or `fb_pixel_id` are **non-empty strings** in `_data/campaigns.json` (checked with `{% if campaign.gtm_id != "" %}` / `{% if campaign.fb_pixel_id != "" %}`).
 
-Omit those keys to skip loading entirely. This is **separate** from `analytics.providers.gtm` / `facebook` in `config.js` — the SDK can load GTM/Facebook too. Enabling **both** without a plan often duplicates events (e.g. double `PageView`).
+**Gotchas**
+
+- **`""` disables layout injection** for that tag. **`"GTM-XXXXXXX"`** (or any other non-empty placeholder) **still injects** on staging/production builds — do not assume placeholders mean “no script.”
+- **Liquid:** do not replace `!= ""` with a bare `{% if campaign.gtm_id %}` — in Liquid, an **empty string can be truthy**, so you could inject broken or unwanted snippets.
+
+This layout injection is **separate** from `analytics.providers.gtm` / `facebook` in `config.js` — the SDK can load GTM/Facebook too. Enabling **both** without a plan often duplicates events (e.g. double `PageView`).
 
 ---
 
@@ -131,6 +155,7 @@ Every `.html` page starts with YAML frontmatter:
 ```yaml
 ---
 title: "Page Title"
+page_layout: base.html               # optional — defaults to base.html; set to use a named layout
 page_type: checkout          # checkout | upsell | receipt | product
 next_success_url: upsell.html        # checkout pages: where to go after order
 next_upsell_accept: up02.html        # upsell pages: accept destination
@@ -144,6 +169,7 @@ scripts:
 ---
 ```
 
+- `page_layout` is optional — omit to use `base.html`. Set to a named layout file (e.g. `base-landing.html`) when a slug contains pages that need different layout stacks side by side, such as a landing page alongside checkout pages.
 - `page_type` is required — it tells the SDK how to behave on this page
 - `next_success_url` is required on checkout pages
 - `next_upsell_accept` / `next_upsell_decline` are required on upsell pages

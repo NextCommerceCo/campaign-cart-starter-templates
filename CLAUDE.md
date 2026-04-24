@@ -51,6 +51,8 @@ Note: when copying a template, the developer renames the folder to their product
 | olympus-mv-two-step | /olympus-mv-two-step/select/ · /olympus-mv-two-step/checkout/ · /olympus-mv-two-step/upsell-mv/ · /olympus-mv-two-step/receipt/ |
 | shop-single-step | /shop-single-step/checkout/ · /shop-single-step/upsell-bundle-stepper/ · /shop-single-step/upsell-bundle-tier-pills/ · /shop-single-step/upsell-bundle-tier-cards/ · /shop-single-step/receipt/ |
 | shop-three-step | /shop-three-step/information/ · /shop-three-step/shipping/ · /shop-three-step/billing/ · /shop-three-step/upsell-bundle-stepper/ · /shop-three-step/upsell-bundle-tier-pills/ · /shop-three-step/upsell-bundle-tier-cards/ · /shop-three-step/receipt/ |
+| landing | /landing/index/ · /landing/supplement-sleep/ · /landing/skincare-serum/ · /landing/fitness-program/ |
+| presell | /presell/index/ |
 
 ### Live Netlify previews (0.4.x)
 
@@ -65,6 +67,8 @@ Base URL: `https://nextcommerce-campaign-templates.netlify.app` — append the l
 | olympus-mv-two-step | [select](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/select/) · [checkout](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/checkout/) · [upsell-mv](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/upsell-mv/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/receipt/) |
 | shop-single-step | [checkout](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/checkout/?forcePackageId=1:1) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell-bundle-stepper/?forcePackageId=1:1) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell-bundle-tier-pills/?forcePackageId=1:1) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell-bundle-tier-cards/?forcePackageId=1:1) · [receipt](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/receipt/?forcePackageId=1:1) |
 | shop-three-step | [information](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/information/?forcePackageId=1:1) · [shipping](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/shipping/?forcePackageId=1:1) · [billing](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/billing/?forcePackageId=1:1) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell-bundle-stepper/?forcePackageId=1:1) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell-bundle-tier-pills/?forcePackageId=1:1) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell-bundle-tier-cards/?forcePackageId=1:1) · [receipt](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/receipt/?forcePackageId=1:1) |
+| landing | [index](https://nextcommerce-campaign-templates.netlify.app/landing/index/) · [supplement-sleep](https://nextcommerce-campaign-templates.netlify.app/landing/supplement-sleep/) · [skincare-serum](https://nextcommerce-campaign-templates.netlify.app/landing/skincare-serum/) · [fitness-program](https://nextcommerce-campaign-templates.netlify.app/landing/fitness-program/) |
+| presell | [index](https://nextcommerce-campaign-templates.netlify.app/presell/index/) |
 
 ### campaign-kit-templates-v3/ (0.3.x archive)
 
@@ -92,7 +96,9 @@ campaign-kit-templates/
 │   ├── olympus-mv-single-step/
 │   ├── olympus-mv-two-step/
 │   ├── shop-single-step/
-│   └── shop-three-step/
+│   ├── shop-three-step/
+│   ├── landing/               ← pre-checkout landing pages (no SDK)
+│   └── presell/             ← advertorial presell page (no SDK)
 └── package.json                ← kit scripts + next-campaign-page-kit dependency
 ```
 
@@ -118,7 +124,7 @@ campaign-kit-templates/
 ## base.html Pattern
 - `next-core.css` loaded **directly in base.html** — always needed, not in page frontmatter
 - Per-page CSS/JS injected via frontmatter `styles:` / `scripts:` loops using `campaign_asset`
-- Optional **GTM / Meta Pixel** in reference templates: injected from `campaign.gtm_id` / `campaign.fb_pixel_id` when Liquid `environment != "development"` (omit keys in `campaigns.json` to disable). Use **`{% if campaign.gtm_id != "" %}`** / **`{% if campaign.fb_pixel_id != "" %}`** (not bare `{% if campaign.gtm_id %}`) — Liquid treats empty string as truthy.
+- Optional **GTM / Meta Pixel** in reference templates: injected from `campaign.gtm_id` / `campaign.fb_pixel_id` when Liquid `environment != "development"` **and** the value is **non-empty** (`{% if campaign.gtm_id != "" %}` / `{% if campaign.fb_pixel_id != "" %}`). Use **`""`** in `campaigns.json` to disable layout injection; **placeholders like `GTM-XXXXXXX` still load snippets** on non-dev builds (not “off”). Do **not** use bare `{% if campaign.gtm_id %}` — Liquid can treat `""` as truthy.
 - Liquid conditionals for optional metatags:
   - `{% if next_success_url %}` → checkout pages only
   - `{% if next_upsell_accept %}` / `{% if next_upsell_decline %}` → upsell pages only
@@ -128,6 +134,7 @@ campaign-kit-templates/
 ```yaml
 ---
 title: "Page Title"
+page_layout: base.html               # optional — defaults to base.html; use named layouts (e.g. base-landing.html) when multiple layout stacks coexist in one slug
 page_type: checkout | upsell | receipt
 next_success_url: up01.html          # checkout pages only
 next_upsell_accept: up02.html        # upsell pages only

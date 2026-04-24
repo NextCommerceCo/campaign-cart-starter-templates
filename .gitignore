@@ -9,6 +9,5 @@ _site/
 # Local Netlify folder
 .netlify
 
-# Claude Code local settings
-.claude/settings.local.json
-.claude/settings.json
+# Claude Code — ignore all .claude directories (settings, worktrees, etc.)
+**/.claude/
