@@ -1,5 +1,6 @@
 module.exports = {
-  content: [],
+  // Update to your slug: './src/[your-slug]/**/*.html'
+  content: ['./src/landing/**/*.html', './src/presell/**/*.html'],
   theme: {
     extend: {
       fontFamily: {
