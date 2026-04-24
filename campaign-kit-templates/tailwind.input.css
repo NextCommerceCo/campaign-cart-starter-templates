@@ -1,3 +1,29 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/*
+  Design token colour aliases — maps Tailwind utility classes to CSS custom
+  properties defined in assets/css/tokens.css.
+
+  @theme inline is required: without it Tailwind tries to resolve var() at
+  build time and the values come out blank.
+
+  Update the @source path to match your slug before running the CLI:
+    npx @tailwindcss/cli -i tailwind.input.css -o src/[slug]/assets/css/tailwind.css --minify
+*/
+
+@source "./src/landing/**/*.html";
+@source "./src/presell/**/*.html";
+
+@theme inline {
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+
+  --color-brand-primary:   var(--brand-primary);
+  --color-brand-secondary: var(--brand-secondary);
+  --color-brand-accent:    var(--brand-accent);
+  --color-surface-bg:      var(--surface-bg);
+  --color-surface-card:    var(--surface-card);
+  --color-surface-alt:     var(--surface-alt);
+  --color-text-primary:    var(--text-primary);
+  --color-text-secondary:  var(--text-secondary);
+  --color-text-inverse:    var(--text-inverse);
+}
