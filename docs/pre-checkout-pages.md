@@ -51,13 +51,7 @@ Landing and presell layouts load Tailwind via **CDN** — fine for development a
    ```html
    <link rel="stylesheet" href="{{ 'css/tailwind.css' | campaign_asset }}">
    ```
-   **Do not add `tailwind.css` to page frontmatter `styles:`.** Netlify runs a smoke-check before `npm run build`, so any generated file listed in frontmatter will fail validation before it exists.
 6. Re-run step 4 any time you add new Tailwind utility classes before deploying
-
-**v4 notes:**
-- `tailwindcss` (core) and `@tailwindcss/cli` are separate packages — install both
-- Config lives in CSS (`tailwind.input.css`), not a JS file — `tailwind.config.js` is not used in v4
-- `@theme inline` is required when referencing CSS custom properties (`var(--token)`) — without `inline`, values resolve blank at build time
 
 ---
 
