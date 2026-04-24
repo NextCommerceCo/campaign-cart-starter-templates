@@ -133,7 +133,7 @@ Presell pages can be used as a standalone pre-checkout slug (with `cta_url` poin
 
 | Template | Description | Preview |
 |----------|-------------|---------|
-| `presell-1` | Advertorial "10 reasons" article format | [preview](https://nextcommerce-campaign-templates.netlify.app/presell-1/index/) |
+| `presell` | Advertorial "10 reasons" article format | [preview](https://nextcommerce-campaign-templates.netlify.app/presell/index/) |
 
 ### Legacy — SDK 0.3.x (`campaign-kit-templates-v3/`)
 
@@ -161,7 +161,7 @@ npm run build          # build all campaigns to _site/
 npm run clone          # duplicate a campaign with a new slug
 npm run compress       # optimise images
 npm run config         # set Campaigns App API keys
-npm run css:build      # rebuild Tailwind CSS for landing and presell-1 (run after adding new utility classes)
+npm run css:build      # rebuild Tailwind CSS for landing and presell (run after adding new utility classes)
 ```
 
 ---

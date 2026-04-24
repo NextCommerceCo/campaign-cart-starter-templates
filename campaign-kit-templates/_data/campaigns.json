@@ -127,8 +127,8 @@
     "gtm_id": "",
     "fb_pixel_id": ""
   },
-  "presell-1": {
-    "name": "Presell 1",
+  "presell": {
+    "name": "Presell",
     "description": "Advertorial-style presell page — frontmatter-driven '10 reasons' article format with countdown CTA",
     "sdk_version": "0.4.18",
     "store_name": "Next Commerce",

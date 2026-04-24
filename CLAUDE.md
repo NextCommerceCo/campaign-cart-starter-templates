@@ -52,7 +52,7 @@ Note: when copying a template, the developer renames the folder to their product
 | shop-single-step | /shop-single-step/checkout/ · /shop-single-step/upsell-bundle-stepper/ · /shop-single-step/upsell-bundle-tier-pills/ · /shop-single-step/upsell-bundle-tier-cards/ · /shop-single-step/receipt/ |
 | shop-three-step | /shop-three-step/information/ · /shop-three-step/shipping/ · /shop-three-step/billing/ · /shop-three-step/upsell-bundle-stepper/ · /shop-three-step/upsell-bundle-tier-pills/ · /shop-three-step/upsell-bundle-tier-cards/ · /shop-three-step/receipt/ |
 | landing | /landing/index/ · /landing/supplement-sleep/ · /landing/skincare-serum/ · /landing/fitness-program/ |
-| presell-1 | /presell-1/index/ |
+| presell | /presell/index/ |
 
 ### Live Netlify previews (0.4.x)
 
@@ -68,7 +68,7 @@ Base URL: `https://nextcommerce-campaign-templates.netlify.app` — append the l
 | shop-single-step | [checkout](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/checkout/?forcePackageId=1:1) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell-bundle-stepper/?forcePackageId=1:1) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell-bundle-tier-pills/?forcePackageId=1:1) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/upsell-bundle-tier-cards/?forcePackageId=1:1) · [receipt](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/receipt/?forcePackageId=1:1) |
 | shop-three-step | [information](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/information/?forcePackageId=1:1) · [shipping](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/shipping/?forcePackageId=1:1) · [billing](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/billing/?forcePackageId=1:1) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell-bundle-stepper/?forcePackageId=1:1) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell-bundle-tier-pills/?forcePackageId=1:1) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/upsell-bundle-tier-cards/?forcePackageId=1:1) · [receipt](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/receipt/?forcePackageId=1:1) |
 | landing | [index](https://nextcommerce-campaign-templates.netlify.app/landing/index/) · [supplement-sleep](https://nextcommerce-campaign-templates.netlify.app/landing/supplement-sleep/) · [skincare-serum](https://nextcommerce-campaign-templates.netlify.app/landing/skincare-serum/) · [fitness-program](https://nextcommerce-campaign-templates.netlify.app/landing/fitness-program/) |
-| presell-1 | [index](https://nextcommerce-campaign-templates.netlify.app/presell-1/index/) |
+| presell | [index](https://nextcommerce-campaign-templates.netlify.app/presell/index/) |
 
 ### campaign-kit-templates-v3/ (0.3.x archive)
 
@@ -98,7 +98,7 @@ campaign-kit-templates/
 │   ├── shop-single-step/
 │   ├── shop-three-step/
 │   ├── landing/               ← pre-checkout landing pages (no SDK)
-│   └── presell-1/             ← advertorial presell page (no SDK)
+│   └── presell/             ← advertorial presell page (no SDK)
 └── package.json                ← kit scripts + next-campaign-page-kit dependency
 ```
 

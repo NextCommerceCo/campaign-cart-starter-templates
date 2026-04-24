@@ -12,8 +12,8 @@
     "compress": "npx campaign-compress",
     "compress:preview": "npx campaign-compress --preview",
     "css:build:landing": "tailwindcss -c ./tailwind.config.js -i ./tailwind.input.css -o ./src/landing/assets/css/tailwind.css --content './src/landing/**/*.html' --minify",
-    "css:build:presell-1": "tailwindcss -c ./tailwind.config.js -i ./tailwind.input.css -o ./src/presell-1/assets/css/tailwind.css --content './src/presell-1/**/*.html' --minify",
-    "css:build": "npm run css:build:landing && npm run css:build:presell-1"
+    "css:build:presell": "tailwindcss -c ./tailwind.config.js -i ./tailwind.input.css -o ./src/presell/assets/css/tailwind.css --content './src/presell/**/*.html' --minify",
+    "css:build": "npm run css:build:landing && npm run css:build:presell"
   },
   "dependencies": {
     "next-campaign-page-kit": "^0.0.9"
