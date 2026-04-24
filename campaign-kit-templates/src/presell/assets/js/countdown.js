@@ -1,5 +1,5 @@
 (function () {
-  var STORAGE_KEY = 'presell1_countdown_end';
+  var STORAGE_KEY = 'countdown_end_' + location.pathname.replace(/\W+/g, '_');
   var DURATION_MS = 15 * 60 * 1000; // 15 minutes
 
   function getEndTime() {
