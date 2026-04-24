@@ -156,12 +156,11 @@ Preview locally by running `npm run dev` inside `campaign-kit-templates-v3/`.
 Run these inside `campaign-kit-templates/` (or `campaign-kit-templates-v3/` for the 0.3.x archive):
 
 ```bash
-npm run dev            # interactive campaign picker + dev server
-npm run build          # build all campaigns to _site/
-npm run clone          # duplicate a campaign with a new slug
-npm run compress       # optimise images
-npm run config         # set Campaigns App API keys
-npm run css:build      # rebuild Tailwind CSS for landing and presell (run after adding new utility classes)
+npm run dev        # interactive campaign picker + dev server
+npm run build      # build all campaigns to _site/
+npm run clone      # duplicate a campaign with a new slug
+npm run compress   # optimise images
+npm run config     # set Campaigns App API keys
 ```
 
 ---
