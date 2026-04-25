@@ -110,7 +110,7 @@ See [Optional GTM and Meta Pixel](./campaign-page-kit-template-context.md#option
 
 ## Section catalog
 
-74 composable partials in `src/landing/_includes/`. Include in any order via `{% campaign_include 'hero-1.html' %}`.
+76 composable partials in `src/landing/_includes/`. Include in any order via `{% campaign_include 'hero-1.html' %}`.
 
 | Category | Available sections |
 |----------|--------------------|
