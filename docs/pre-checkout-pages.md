@@ -100,9 +100,8 @@ The starter layouts (`base-landing.html`, `base-presell.html`) are intentionally
 
 **Analytics alignment checklist:**
 
-- [ ] `analytics.providers` in `config.js` matches what checkout uses — avoid enabling the same provider in both `config.js` and layout GTM/Pixel injection
-- [ ] `gtm_id` / `fb_pixel_id` in `campaigns.json` set correctly — `""` disables layout injection, any non-empty value enables it on non-`development` builds
-- [ ] If both layout injection and `config.js` analytics are enabled for the same provider, events will fire twice — decide on one loader per provider
+- [ ] `gtm_id` / `fb_pixel_id` in `campaigns.json` set correctly — `""` disables layout injection, any non-empty value enables it on non-`development` builds. Layout injection loads the snippet/pixel on the page.
+- [ ] `analytics.providers` in `config.js` enables the SDK to fire events through an already-loaded provider — these are separate concerns. Layout injection loads the snippet; `config.js` providers send SDK events through it. Both are typically needed together.
 
 See [Optional GTM and Meta Pixel](./campaign-page-kit-template-context.md#optional-gtm-and-meta-pixel-gtm_id-fb_pixel_id) and [SDK configuration (config.js)](./campaign-page-kit-template-context.md#sdk-configuration-configjs) in the main AI rules file.
 
