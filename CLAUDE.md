@@ -211,7 +211,8 @@ The 0.3.x archive is out of scope for this repository.
 ## Docs in this repo
 - `CLAUDE.md` (this file) — AI context for working **on** this starter repo (structure, conventions, preview URLs).
 - `README.md` — public onboarding: clone workflow, template inventory with live preview links, npm scripts, SDK links.
-- `docs/campaign-page-kit-template-context.md` — the **copyable** AI rules file for developers working **in** their own campaign-kit projects (copy into project root or `.cursor/rules/` per tool). The `docs/` folder in this repo is only that file.
+- `docs/campaign-page-kit-template-context.md` — the **copyable** AI rules file for developers working **in** their own campaign-kit projects (copy into project root or `.cursor/rules/` per tool).
+- `docs/pre-checkout-pages.md` — implementation guidance for landing/presell pages (Tailwind build flow, same-slug presell setup, CTA/linking conventions).
 
 ## SDK customization rules file (`docs/campaign-page-kit-template-context.md`)
 `docs/campaign-page-kit-template-context.md` is the copyable AI context file for developers working in their own campaign-kit projects. Covers:

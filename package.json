@@ -8,7 +8,6 @@
     "dev": "npx campaign-dev",
     "build": "npx campaign-build",
     "clone": "npx campaign-clone",
-    "clone-template": "node ./scripts/clone-template.js",
     "config": "npx campaign-config",
     "compress": "npx campaign-compress",
     "compress:preview": "npx campaign-compress --preview"
