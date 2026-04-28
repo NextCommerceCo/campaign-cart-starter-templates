@@ -6,16 +6,30 @@ Starter templates for building sales funnel pages — checkout, post-purchase up
 
 ## What's in this repo
 
-| Folder | What it is |
-|--------|------------|
-| `campaign-kit-templates/` | 0.4.x templates — [next-campaign-page-kit](https://github.com/NextCommerceCo/next-campaign-page-kit) project. **Start here.** |
-| `campaign-kit-templates-v3/` | 0.3.x archive — reference for the older SDK version. |
+This repository is the active **0.4.x starter templates** project for [next-campaign-page-kit](https://github.com/NextCommerceCo/next-campaign-page-kit).
 
 ---
 
 ## Getting started
 
-**Step 1 — Initialise your project** (if you haven't already)
+### Quick start (recommended)
+
+Clone this repo and run the templates as-is. This is the fastest way to get a working campaign on localhost.
+
+```bash
+git clone https://github.com/NextCommerceCo/campaign-cart-starter-templates.git
+cd campaign-cart-starter-templates
+npm install
+npm run dev
+```
+
+Pick a campaign from the interactive prompt. The dev server will hot-reload as you edit.
+
+### Use a template inside your own project
+
+Use this path when you want to copy a starter into an existing/fresh campaign-kit project.
+
+**Step 1 — Initialize your project** (if needed)
 
 ```bash
 mkdir my-campaigns && cd my-campaigns
@@ -24,26 +38,30 @@ npm install next-campaign-page-kit
 npx campaign-init
 ```
 
-`my-campaigns` is a local directory that houses all your campaigns — rename it to whatever makes sense for your setup. This installs the kit, creates `_data/campaigns.json`, and adds the `dev`, `build`, `clone`, and `config` npm scripts to your `package.json`.
+`my-campaigns` is a local directory that houses your campaigns. This creates `_data/campaigns.json` and adds the core npm scripts.
 
-**Step 2 — Copy a template and name it after your product**
+**Step 2 — Copy a starter template**
 
-Pick a template from the [available templates](#available-templates) table below. Copy its folder into your project and rename it to your product — this becomes the slug used in your URLs.
+From your project root (where you ran `npx campaign-init`), copy one template folder into `src/` and rename it to your campaign slug:
 
 ```bash
-cp -r campaign-cart-starter-templates/campaign-kit-templates/src/olympus your-project/src/your-campaign-name
+# run from your project root
+cp -r ../campaign-cart-starter-templates/src/olympus src/my-campaign
 ```
 
-Your campaign will be served at `https://your-campaign-domain/your-campaign-name/checkout`.
+- `olympus` = template source
+- `my-campaign` = your slug (folder + URL path)
+
+Your local preview URL will be `http://localhost:3000/my-campaign/checkout/`.
 
 **Step 3 — Add the campaign entry**
 
-Open `campaign-cart-starter-templates/campaign-kit-templates/_data/campaigns.json`, find the entry matching the template you chose, and paste it into your project's `_data/campaigns.json`. Then update:
+Open `campaign-cart-starter-templates/_data/campaigns.json`, find the matching template entry, and paste it into your project's `_data/campaigns.json`. Then update:
 
-- `slug` — must match the folder name you used (e.g. `your-campaign-name`)
+- `slug` — must match the folder name you used (e.g. `my-campaign`)
 - `name` — human-readable campaign name
 - `store_url`, `store_name`, and other store fields
-- Leave `sdk_version` as-is unless you need a specific version
+- leave `sdk_version` as-is unless you need a specific version
 
 **Step 4 — Set your API key**
 
@@ -51,7 +69,7 @@ Open `campaign-cart-starter-templates/campaign-kit-templates/_data/campaigns.jso
 npm run config
 ```
 
-This prompts you to enter your [Campaigns App API key](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) and writes it into `src/[slug]/assets/config.js`.
+This writes your [Campaigns App API key](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) into `src/[slug]/assets/config.js`.
 
 **Step 5 — Start developing**
 
@@ -59,34 +77,15 @@ This prompts you to enter your [Campaigns App API key](https://developers.nextco
 npm run dev
 ```
 
-Pick your campaign from the interactive prompt. The dev server will hot-reload as you edit.
-
+> **Working in this starter repo itself?** Run `npm run clone-template` to pick a template from a prompt and create a new campaign slug automatically.
+>
 > **To create a variant:** run `npm run clone` — it copies an existing campaign to a new slug and updates `campaigns.json` automatically.
-
----
-
-### Preview templates locally
-
-```bash
-git clone https://github.com/NextCommerceCo/campaign-cart-starter-templates.git
-cd campaign-cart-starter-templates/campaign-kit-templates
-npm install
-npm run dev
-```
-
-To browse the 0.3.x archive instead:
-
-```bash
-cd campaign-cart-starter-templates/campaign-kit-templates-v3
-npm install
-npm run dev
-```
 
 ---
 
 ## Available templates
 
-### Current — SDK 0.4.x (`campaign-kit-templates/`)
+### Current — SDK 0.4.x
 
 Each checkout template includes all upsell variants and a receipt — copy the whole folder to get the full flow.
 
@@ -135,30 +134,15 @@ Copy the presell into **the same campaign slug** as `checkout.html` (shared `con
 |----------|-------------|---------|
 | `presell` | Advertorial "10 reasons" article format | [preview](https://nextcommerce-campaign-templates.netlify.app/presell/index/) |
 
-### Legacy — SDK 0.3.x (`campaign-kit-templates-v3/`)
-
-Preview locally by running `npm run dev` inside `campaign-kit-templates-v3/`.
-
-| Slug | Funnel type |
-|------|-------------|
-| `demeter` | Single-step checkout |
-| `limos` | Single-step checkout |
-| `olympus` | Single-step checkout |
-| `olympus-mv-single-step` | Single-step with variants |
-| `olympus-mv-two-step` | Two-step with variants |
-| `shop-single-step` | Shop checkout |
-| `shop-three-step` | 3-step shop checkout |
-
----
-
 ## npm scripts
 
-Run these inside `campaign-kit-templates/` (or `campaign-kit-templates-v3/` for the 0.3.x archive):
+Run these inside the repository root:
 
 ```bash
 npm run dev        # interactive campaign picker + dev server
 npm run build      # build all campaigns to _site/
 npm run clone      # duplicate a campaign with a new slug
+npm run clone-template # clone from a starter template menu
 npm run compress   # optimise images
 npm run config     # set Campaigns App API keys
 ```
