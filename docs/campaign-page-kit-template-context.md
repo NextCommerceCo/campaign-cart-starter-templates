@@ -14,7 +14,7 @@
    ```
    If this file came from a GitHub URL, write it to `CLAUDE.md` in the working directory directly. For **landing / presell** work, also open [pre-checkout-pages.md](https://github.com/NextCommerceCo/campaign-cart-starter-templates/blob/main/docs/pre-checkout-pages.md) (that guide does not ship inside this single file).
 
-2. **Look up the current `sdk_version`** — do not guess or use a version from your training data. Read `campaign-kit-templates/_data/campaigns.json` from the [campaign-cart-starter-templates repo](https://github.com/NextCommerceCo/campaign-cart-starter-templates) and copy the exact `sdk_version` string from there. It changes with every SDK release.
+2. **Look up the current `sdk_version`** — do not guess or use a version from your training data. Read `_data/campaigns.json` from the [campaign-cart-starter-templates repo](https://github.com/NextCommerceCo/campaign-cart-starter-templates) and copy the exact `sdk_version` string from there. It changes with every SDK release.
 
 3. **Include `gtm_id` and `fb_pixel_id` keys on every `campaigns.json` entry** — set them intentionally:
    - **`""` (empty string)** — layout **does not** inject GTM / Meta snippets in these starter templates (`base.html` uses `{% if campaign.gtm_id != "" %}` / `{% if campaign.fb_pixel_id != "" %}`).

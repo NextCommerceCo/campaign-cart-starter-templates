@@ -60,12 +60,12 @@ The `presell` slug is a **ready-to-use** advertorial-style article page.
 
 Landing and presell layouts load Tailwind via **CDN** — fine for development and prototyping. For production:
 
-1. Copy `tailwind.input.css` from `campaign-kit-templates/` into your project root (skip if already there)
+1. Copy `tailwind.input.css` from this repo root into your project root (skip if already there)
 2. Install Tailwind v4 if not already a devDependency:
    ```bash
    npm install -D tailwindcss @tailwindcss/cli
    ```
-   _(Skip if your project is based on `campaign-kit-templates/` — both packages are already in `devDependencies`)_
+   _(Skip if your project is based on this starter repo — both packages are already in `devDependencies`)_
    > **v4 note:** `tailwindcss` (core) and `@tailwindcss/cli` are **separate packages** in v4 — both are required. v4 config lives entirely in CSS (`@import "tailwindcss"` + `@theme inline` + `@source`) — there is no `tailwind.config.js`.
 3. Update the `@source` paths in `tailwind.input.css` to point at your slug:
    ```css

@@ -1,23 +1,22 @@
 # Repo Memory — campaign-cart-starter-templates
 
 ## Repo Overview
-Two top-level folders:
-- `campaign-kit-templates/` — **active work area.** 0.4.x templates, growing over time.
-- `campaign-kit-templates-v3/` — 0.3.x archive. Reference only — do not add new work here.
+This repo is the **active 0.4.x templates project** at the repository root.
+The previous 0.3.x archive is no longer part of this working tree.
 
 ---
 
-## campaign-kit-templates/ Purpose
+## Repo Purpose
 A **complete, working campaign-kit project** that serves two purposes:
 1. Full demo — clone it, `npm install` + `npm run dev`, all current templates work
 2. Template library — developers copy individual `src/[slug]/` folders into their own kit projects
 
-Templates are ported from `campaign-kit-templates-v3/` into `campaign-kit-templates/` and updated to SDK **0.4.x** patterns (`olympus`, `limos`, `demeter`, `olympus-mv-single-step`, `olympus-mv-two-step`, `shop-single-step`, `shop-three-step` today).
+Templates follow SDK **0.4.x** patterns (`olympus`, `limos`, `demeter`, `olympus-mv-single-step`, `olympus-mv-two-step`, `shop-single-step`, `shop-three-step` today).
 
 ## Developer Workflow (end users of this repo)
 1. `npx campaign-init` in their own project → creates empty `_data/campaigns.json` + npm scripts
-2. Copy `campaign-kit-templates/src/[slug]/` → their project's `src/[slug]/`
-3. Copy the matching entry from `campaign-kit-templates/_data/campaigns.json` into their project's `campaigns.json`, update slug + store URLs
+2. Copy `src/[slug]/` → their project's `src/[slug]/`
+3. Copy the matching entry from `_data/campaigns.json` into their project's `campaigns.json`, update slug + store URLs
 4. `npm run dev` → interactive campaign picker
 5. To clone a variant: `npm run clone` → picks existing campaign → new slug → auto-updates `campaigns.json`
 
@@ -29,7 +28,7 @@ Note: when copying a template, the developer renames the folder to their product
 
 ## campaigns.json
 - **Project-level, not template-specific** — accumulates all campaigns a developer adds
-- `campaign-kit-templates/_data/campaigns.json` is a reference file showing full field structure for all current templates
+- `_data/campaigns.json` is a reference file showing full field structure for all current templates
 - Fields: `name`, `slug`, `description`, `sdk_version`, `store_name`, `store_url`, `store_terms`, `store_privacy`, `store_contact`, `store_returns`, `store_shipping`, `store_phone`, `store_phone_tel`; optional layout analytics: `gtm_id`, `fb_pixel_id` (see `docs/campaign-page-kit-template-context.md`)
 - slug drives URL: `campaign-domain.com/[slug]/page`
 
@@ -40,7 +39,7 @@ Note: when copying a template, the developer renames the folder to their product
 
 ## Dev server preview URLs (localhost:3000)
 
-### campaign-kit-templates/ (0.4.x)
+### 0.4.x templates
 
 | Template | Pages |
 |----------|-------|
@@ -70,23 +69,9 @@ Base URL: `https://nextcommerce-campaign-templates.netlify.app` — append the l
 | landing | [index](https://nextcommerce-campaign-templates.netlify.app/landing/index/) · [supplement-sleep](https://nextcommerce-campaign-templates.netlify.app/landing/supplement-sleep/) · [skincare-serum](https://nextcommerce-campaign-templates.netlify.app/landing/skincare-serum/) · [fitness-program](https://nextcommerce-campaign-templates.netlify.app/landing/fitness-program/) |
 | presell | [index](https://nextcommerce-campaign-templates.netlify.app/presell/index/) |
 
-### campaign-kit-templates-v3/ (0.3.x archive)
-
-| Template | Pages |
-|----------|-------|
-| demeter | /demeter/checkout/ · /demeter/upsell/ · /demeter/receipt/ |
-| limos | /limos/checkout/ · /limos/upsell/ · /limos/receipt/ |
-| olympus | /olympus/checkout/ · /olympus/upsell/ · /olympus/receipt/ |
-| olympus-mv-single-step | /olympus-mv-single-step/checkout/ · /olympus-mv-single-step/upsell-mv/ · /olympus-mv-single-step/receipt/ |
-| olympus-mv-two-step | /olympus-mv-two-step/select/ · /olympus-mv-two-step/checkout/ · /olympus-mv-two-step/upsell-mv/ · /olympus-mv-two-step/receipt/ |
-| shop-single-step | /shop-single-step/checkout/ · /shop-single-step/upsell/ · /shop-single-step/receipt/ |
-| shop-three-step | /shop-three-step/information/ · /shop-three-step/shipping/ · /shop-three-step/billing/ · /shop-three-step/upsell/ · /shop-three-step/receipt/ |
-
----
-
-## campaign-kit-templates/ File Structure
+## File Structure
 ```
-campaign-kit-templates/
+repo-root/
 ├── _data/
 │   └── campaigns.json          ← reference: all current 0.4.x templates with full field structure
 ├── src/
@@ -199,7 +184,7 @@ Inside `<template>` elements the SDK uses single-brace tokens (not Liquid):
 
 ## JS Files Per Template
 
-### campaign-kit-templates/ (0.4.x)
+### 0.4.x
 
 | Template | JS Files |
 |----------|----------|
@@ -211,17 +196,7 @@ Inside `<template>` elements the SDK uses single-brace tokens (not Liquid):
 | shop-single-step | checkout.js, upsells.js, promo-banner.js, promo-timer.js |
 | shop-three-step | checkout.js, checkout-shop-three.js, checkout-shop-three-billing.js, checkout-shop-three-shipping.js, upsells.js, promo-banner.js, promo-timer.js |
 
-### campaign-kit-templates-v3/ (0.3.x archive)
-
-| Template | JS Files |
-|----------|----------|
-| demeter | checkout.js, upsells.js |
-| limos | checkout.js, checkout-limos.js, upsells.js |
-| olympus | checkout.js, upsells.js |
-| olympus-mv-single-step | checkout.js, checkout-olympus-mv-full.js, upsells-up01-mv.js |
-| olympus-mv-two-step | checkout.js, checkout-olympus-mv-selection.js, upsells-up01-mv.js |
-| shop-single-step | upsells.js |
-| shop-three-step | checkout-shop-three-billing.js, checkout-shop-three-shipping.js, upsells.js |
+The 0.3.x archive is out of scope for this repository.
 
 ---
 
@@ -236,7 +211,8 @@ Inside `<template>` elements the SDK uses single-brace tokens (not Liquid):
 ## Docs in this repo
 - `CLAUDE.md` (this file) — AI context for working **on** this starter repo (structure, conventions, preview URLs).
 - `README.md` — public onboarding: clone workflow, template inventory with live preview links, npm scripts, SDK links.
-- `docs/campaign-page-kit-template-context.md` — the **copyable** AI rules file for developers working **in** their own campaign-kit projects (copy into project root or `.cursor/rules/` per tool). The `docs/` folder in this repo is only that file.
+- `docs/campaign-page-kit-template-context.md` — the **copyable** AI rules file for developers working **in** their own campaign-kit projects (copy into project root or `.cursor/rules/` per tool).
+- `docs/pre-checkout-pages.md` — implementation guidance for landing/presell pages (Tailwind build flow, same-slug presell setup, CTA/linking conventions).
 
 ## SDK customization rules file (`docs/campaign-page-kit-template-context.md`)
 `docs/campaign-page-kit-template-context.md` is the copyable AI context file for developers working in their own campaign-kit projects. Covers:
