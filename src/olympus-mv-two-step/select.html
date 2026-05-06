@@ -11,6 +11,34 @@ scripts:
   - js/checkout.js
   - js/checkout-olympus-mv-full.js
   - js/checkout-olympus-mv-selection.js
+select_step:
+  selector_id: "main"
+  slot_template_id: "mv-slot-template"
+checkout_step:
+  selector_id: "main"
+  slot_template_id: "mv-slot-template"
+  slot_stage_id: "bundle-slots-stage"
+variant_slots:
+  - id: "buy1"
+    items_json: '[{"packageId":1,"quantity":1,"configurable":true}]'
+    shipping_id: 2
+    selected: true
+    title: "1x Unit"
+    card_sup: "Next Commerce Shirts"
+  - id: "buy2"
+    items_json: '[{"packageId":1,"quantity":2,"configurable":true}]'
+    shipping_id: 2
+    title: "2x Units"
+    card_sup: "Next Commerce Shirts"
+    label_text: "Most Popular"
+    label_class: "os-card__label-2 os-card__label--middle-center os-card__label--pill-primary"
+  - id: "buy3"
+    items_json: '[{"packageId":1,"quantity":3,"configurable":true}]'
+    shipping_id: 1
+    title: "3x Units"
+    card_sup: "Next Commerce Shirts"
+    label_text: "Best Deal"
+    label_class: "os-card__label-2 os-card__label--middle-center os-card__label--pill-secondary"
 ---
 <div class="page-wrapper">
       <div class="main-wrapper">

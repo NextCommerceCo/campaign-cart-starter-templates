@@ -59,7 +59,7 @@ When adapting designed HTML into a Campaign Cart funnel, choose the template fam
 
 Do **not** infer the whole template family from brand colors, product category, copy tone, or a shared primitive like `payment-methods.html`.
 
-If the family is ambiguous, ask the user before wiring SDK components. This is faster and safer than burning tokens on uncertain inference. Example:
+High confidence means `>= 0.85` in the commerce surface JSON catalog. If the family is below that threshold, or if two families plausibly fit, ask the user before wiring SDK components. This is faster and safer than burning tokens on uncertain inference. Example:
 
 > I can map this checkout to `olympus` or `olympus-mv-two-step`. The ambiguity is tier cards plus MV variant slot behavior. Which family should I use before wiring SDK components?
 

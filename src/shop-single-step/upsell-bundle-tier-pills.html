@@ -8,6 +8,35 @@ styles:
 scripts:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js
   - js/upsells.js
+upsell_offer:
+  package_id: 3
+  selector_id: "upsell-bundle"
+  display_selector_id: "upsell-bundle-1x"
+  display_bundle_id: "upsell-bundle-1x-card"
+  accept_text: "Yes, Add to My Order"
+  decline_text: "No thank you, I don't want this one-time offer"
+upsell_bundle_tiers:
+  - id: "upsell-bundle-1x"
+    button_value: "1"
+    items_json: '[{"packageId":3,"quantity":1}]'
+    vouchers_json: '["UP50"]'
+    selected: true
+  - id: "upsell-bundle-2x"
+    button_value: "2"
+    items_json: '[{"packageId":3,"quantity":2}]'
+    vouchers_json: '["UP60"]'
+  - id: "upsell-bundle-3x"
+    button_value: "3"
+    items_json: '[{"packageId":3,"quantity":3}]'
+    vouchers_json: '["UP70"]'
+  - id: "upsell-bundle-4x"
+    button_value: "4"
+    items_json: '[{"packageId":3,"quantity":4}]'
+    vouchers_json: '["UP50"]'
+  - id: "upsell-bundle-5x"
+    button_value: "5"
+    items_json: '[{"packageId":3,"quantity":5}]'
+    vouchers_json: '["UP50"]'
 swiper_slides:
   - src: "images/1x1_1.svg"
     alt: ""
@@ -65,6 +94,11 @@ swiper_thumbs:
   Display note: remote bundle.upsell-bundle.unitPrice is not a supported remote path — use
   per-card data-next-bundle-display for per-unit amounts on tier cards.
 -->
+{% assign upsell_package_id = upsell_offer.package_id | default: 3 -%}
+{% assign upsell_display_selector_id = upsell_offer.display_selector_id | default: 'upsell-bundle-1x' -%}
+{% assign upsell_package_name_path = 'package.' | append: upsell_package_id | append: '.name' -%}
+{% assign upsell_display_price_path = 'bundle.' | append: upsell_display_selector_id | append: '.price' -%}
+{% assign upsell_display_discount_path = 'bundle.' | append: upsell_display_selector_id | append: '.discountPercentage' -%}
 
 <div class="page-wrapper">
   <div class="main-wrapper">
@@ -80,9 +114,9 @@ swiper_thumbs:
           <div class="upsell-header__title">Wait! Your Order Isn't Complete</div>
           <!-- bundle.upsell-bundle.price updates with qty selection — use bundle.upsell-bundle-1x.price
                (from the display-only selector below) for the header so it always shows the 1x price.
-               package.3.name reads the product name from campaign package data (3 = packageId). -->
-          <div class="upsell-header__offer">Special Discount: Get 1 More <span data-next-display="package.3.name">Product Title</span> For Only <span data-next-display="bundle.upsell-bundle-1x.price" data-next-format="currency">$14.95</span></div>
-          <div class="upsell-header__suboffer">Add this to your order and get a <span data-next-display="bundle.upsell-bundle-1x.discountPercentage" data-next-format="percentage">50%</span> discount<br></div>
+               package path reads the product name from campaign package data (packageId comes from upsell_offer). -->
+          <div class="upsell-header__offer">Special Discount: Get 1 More <span data-next-display="{{ upsell_package_name_path }}">Product Title</span> For Only <span data-next-display="{{ upsell_display_price_path }}" data-next-format="currency">$14.95</span></div>
+          <div class="upsell-header__suboffer">Add this to your order and get a <span data-next-display="{{ upsell_display_discount_path }}" data-next-format="percentage">50%</span> discount<br></div>
         </div>
       </div>
     </section>

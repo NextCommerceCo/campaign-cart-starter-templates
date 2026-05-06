@@ -3,23 +3,30 @@
   next_version: 1
   next_sdk_owns: receipt order item template and data-next-order-items target
   next_sdk_surface: receipt order summary
-  next_dont_touch: data-next-order-items, data-item-template-id, order-item-template
+  next_params:
+    receipt_summary: object. title, scroll_hint, desktop_item_template_id.
+    item_template_id: string override for the SDK order-line template id.
+  next_dont_touch: data-next-order-items and data-item-template-id must reference the same template id.
 -->
+{% assign summary = receipt_summary -%}
+{% assign summary_title = title | default: summary.title | default: 'Order Summary' -%}
+{% assign scroll_hint = scroll_hint | default: summary.scroll_hint | default: 'Scroll for more items' -%}
+{% assign tpl_id = item_template_id | default: summary.desktop_item_template_id | default: 'order-item-template' -%}
                 <div data-next-catalog-component="shop-single-step-receipt-order-summary" class="checkout__summary">
                   <div class="summary-desktop">
                     <div class="summary-wrap">
                       <div class="summary-holder">
                         <div class="order-summary">
-                          <h4 class="order-summary__title checkout">Order Summary</h4>
+                          <h4 class="order-summary__title checkout">{{ summary_title }}</h4>
                           <div class="order-summary__content">
                             <div class="cart-items">
                               <div data-next-component="scroll-hint" class="cart-items__scroll-hint cart-items__scroll-hint--active">
-                                <div>Scroll for more items</div>
+                                <div>{{ scroll_hint }}</div>
                                 <div class="icon__view-more"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
                                     <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z"></path>
                                   </svg></div>
                               </div>
-                              <div data-next-hide="cart.isEmpty"><template id="order-item-template" class="item-template os-show">
+                              <div data-next-hide="cart.isEmpty"><template id="{{ tpl_id }}" class="item-template os-show">
                                   <div data-order-line-id="{item.id}" class="cart-item">
                                     <div class="cart-item__wrapper">
                                       <div class="cart-item__image-container">
@@ -49,7 +56,7 @@
                                     </div>
                                   </div>
                                 </template>
-                                <div data-item-template-id="order-item-template" data-next-order-items="" class="cart-items__list"></div>
+                                <div data-item-template-id="{{ tpl_id }}" data-next-order-items="" class="cart-items__list"></div>
                               </div>
                             </div>
                             <div data-next-content="">

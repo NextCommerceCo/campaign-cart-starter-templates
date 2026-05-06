@@ -3,8 +3,23 @@
   next_version: 1
   next_sdk_owns: bundle selector, bundle cards, quantity control, upsell add/skip actions
   next_sdk_surface: upsell offer
+  next_params:
+    upsell_offer: object. package_id, selector_id, bundle_id, items_json, vouchers_json, quantity bounds, accept/decline text.
   next_dont_touch: data-next-bundle-*, data-next-quantity-*, data-next-upsell-*
 -->
+{% assign offer = upsell_offer -%}
+{% assign package_id = offer.package_id | default: 3 -%}
+{% assign selector_id = offer.selector_id | default: 'upsell-bundle' -%}
+{% assign bundle_id = offer.bundle_id | default: 'upsell-bundle-1x' -%}
+{% assign items_json = offer.items_json | default: '[{"packageId":3,"quantity":1}]' -%}
+{% assign vouchers_json = offer.vouchers_json | default: '["UP50"]' -%}
+{% assign default_quantity = offer.default_quantity | default: 1 -%}
+{% assign min_quantity = offer.min_quantity | default: 1 -%}
+{% assign max_quantity = offer.max_quantity | default: 5 -%}
+{% assign package_name_path = 'package.' | append: package_id | append: '.name' -%}
+{% assign bundle_price_path = 'bundle.' | append: selector_id | append: '.price' -%}
+{% assign bundle_original_price_path = 'bundle.' | append: selector_id | append: '.originalPrice' -%}
+{% assign bundle_discount_path = 'bundle.' | append: selector_id | append: '.discountPercentage' -%}
 <div data-next-catalog-component="shop-single-step-upsell-offer">
       <section class="section upsell-box">
         <div class="container">
@@ -14,19 +29,19 @@
             <div
               data-next-bundle-selector
               data-next-upsell-context
-              data-next-selector-id="upsell-bundle"
+              data-next-selector-id="{{ selector_id }}"
               class="os-option"
               style="display:none"
             >
               <div
                 role="button"
                 data-next-bundle-card
-                data-next-bundle-id="upsell-bundle-1x"
-                data-next-bundle-items='[{"packageId":3,"quantity":1}]'
-                data-next-bundle-vouchers='["UP50"]'
-                data-next-quantity="1"
-                data-next-min-quantity="1"
-                data-next-max-quantity="5"
+                data-next-bundle-id="{{ bundle_id }}"
+                data-next-bundle-items='{{ items_json }}'
+                data-next-bundle-vouchers='{{ vouchers_json }}'
+                data-next-quantity="{{ default_quantity }}"
+                data-next-min-quantity="{{ min_quantity }}"
+                data-next-max-quantity="{{ max_quantity }}"
                 data-next-selected="true"
                 class="os-card next-selected"
               ></div>
@@ -36,7 +51,7 @@
               <div class="grid-full flex-col flex-horizontal-lg-up">
                 <div class="upsell-content__column">
                   <div class="upsell-offer__card">
-                    <h2 class="display-lg"><span data-next-display="package.3.name">Product Title</span></h2>
+                    <h2 class="display-lg"><span data-next-display="{{ package_name_path }}">Product Title</span></h2>
                     <div class="review_component cc-sm margin-12">
                       <div class="review_component-wrapper">
                         <div class="review_stars-wrapper cc-color cc-black">
@@ -83,9 +98,9 @@
                           <div>Select Quantity</div>
                           <div class="right-bullet-icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z"></path></svg></div>
                         </div>
-                        <div class="next-bundle-qty__row" data-next-bundle-qty-for="upsell-bundle">
+                        <div class="next-bundle-qty__row" data-next-bundle-qty-for="{{ selector_id }}">
                           <button type="button" class="next-bundle-qty__btn" data-next-quantity-decrease aria-label="Decrease quantity">−</button>
-                          <span class="text-lg tw-600" data-next-quantity-display style="min-width: 1.5rem; text-align: center;">1</span>
+                          <span class="text-lg tw-600" data-next-quantity-display style="min-width: 1.5rem; text-align: center;">{{ default_quantity }}</span>
                           <button type="button" class="next-bundle-qty__btn" data-next-quantity-increase aria-label="Increase quantity">+</button>
                         </div>
                       </div>
@@ -95,7 +110,7 @@
                           <div class="text-sm tw-600">Retail Price</div>
                           <div
                             class="upsell-offer__price diagonal-strike color-muted"
-                            data-next-display="bundle.upsell-bundle.originalPrice"
+                            data-next-display="{{ bundle_original_price_path }}"
                             data-next-format="currency"
                           >$49.99</div>
                           <div class="text-xs font-bold"><strike>+$4.95 SHIPPING</strike></div>
@@ -105,12 +120,12 @@
                           <div class="upsell-offer__price-heading">
                             <div class="text-sm tw-600">Offer Price</div>
                             <div class="text-sm font-bold color-primary">
-                              (<span data-next-display="bundle.upsell-bundle.discountPercentage" data-next-format="percentage"></span> OFF)
+                              (<span data-next-display="{{ bundle_discount_path }}" data-next-format="percentage"></span> OFF)
                             </div>
                           </div>
                           <div
                             class="upsell-offer__price"
-                            data-next-display="bundle.upsell-bundle.price"
+                            data-next-display="{{ bundle_price_path }}"
                             data-next-format="currency"
                           >$24.95</div>
                           <div class="text-xs font-bold color-primary">+ FREE SHIPPING</div>
@@ -123,7 +138,7 @@
                         class="button"
                         pb-animate="pulse-upsell"
                       >
-                        <div data-button="content" class="button_content"><div>Yes, Add to My Order</div></div>
+                        <div data-button="content" class="button_content"><div>{{ offer.accept_text | default: 'Yes, Add to My Order' }}</div></div>
                       </a>
 
                       <div class="upsell-ships-info">
@@ -151,7 +166,7 @@
             <div class="cc-decline-wrapper">
               <a data-next-upsell-action="skip" href="#" class="upsell-link cc-decline cc-upsell4">
                 <div class="next-icon cc-1-25em"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--carbon" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32"><path fill="currentColor" d="M16 2C8.2 2 2 8.2 2 16s6.2 14 14 14s14-6.2 14-14S23.8 2 16 2m0 26C9.4 28 4 22.6 4 16S9.4 4 16 4s12 5.4 12 12s-5.4 12-12 12"></path><path fill="currentColor" d="M21.4 23L16 17.6L10.6 23L9 21.4l5.4-5.4L9 10.6L10.6 9l5.4 5.4L21.4 9l1.6 1.6l-5.4 5.4l5.4 5.4z"></path></svg></div>
-                <div class="text-sm tw-600 cc-upsell4">No thank you, I don't want this one-time offer</div>
+                <div class="text-sm tw-600 cc-upsell4">{{ offer.decline_text | default: "No thank you, I don't want this one-time offer" }}</div>
               </a>
             </div>
           </div>

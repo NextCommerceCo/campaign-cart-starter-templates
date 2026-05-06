@@ -8,10 +8,11 @@
     await:              bool, default true. Renders skeleton while bundle prices hydrate.
     include_shipping:   bool, default true. Kept for parity with tier-specific data-next-shipping-id.
     selection_mode:     enum [swap, select], default "swap".
-    bundles:            array of card defs. Defaults to canonical Demeter 1x/2x/3x package_id 1 tiers.
-                        Each card: { id, shipping_id, items_json, selected, title_prefix,
-                          package_id, subtitle_text, shipping_label, total_tone_class,
-                          badge_text, badge_class }
+	    bundles:            array of card defs. Defaults to canonical Demeter 1x/2x/3x package_id 1 tiers.
+	                        Each card: { id, shipping_id, items_json, selected, title_prefix,
+	                          package_id, subtitle_text, shipping_label, total_tone_class,
+	                          badge_text, badge_class, price_display_variant }
+	    price_display_variant: enum [compare-unit-total, total-only], default "compare-unit-total".
   next_sdk_owns:
     - data-next-bundle-selector
     - data-next-selector-id
@@ -43,6 +44,7 @@
 {% endcomment %}
 {% assign sel_id = selector_id | default: 'drone-packages' -%}
 {% assign sel_mode = selection_mode | default: 'swap' -%}
+{% assign selector_price_variant = price_display_variant | default: 'compare-unit-total' -%}
 {% if include_shipping == nil %}{% assign include_shipping = true %}{% endif -%}
 {% if await == nil %}{% assign await = true %}{% endif -%}
 <div data-next-catalog-component="editorial-tier-selector" data-next-bundle-selector data-next-selector-id="{{ sel_id }}" data-next-selection-mode="{{ sel_mode }}"{% if include_shipping %} data-next-include-shipping="true"{% endif %} class="os-option"{% if await %} data-next-await=""{% endif %}>
@@ -74,14 +76,17 @@
               </div>
             </div>
           </div>
-          <div class="os-card__secondary-slot">
-            <div class="os-card__pricing">
-              <div class="os-card__price-container">
-                <div data-next-bundle-display="hasDiscount" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>
-                <div class="os-card__price os--current"><span data-next-bundle-display="unitPrice">-</span>/ea</div>
-              </div>
-              <div class="os-card__total-container">
-                <div class="os-card__total-label">Total:</div>
+              {% assign card_price_variant = b.price_display_variant | default: selector_price_variant -%}
+              <div class="os-card__secondary-slot">
+	            <div class="os-card__pricing">
+	              {% unless card_price_variant == 'total-only' %}
+	              <div class="os-card__price-container">
+	                <div data-next-bundle-display="hasDiscount" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>
+	                <div class="os-card__price os--current"><span data-next-bundle-display="unitPrice">-</span>/ea</div>
+	              </div>
+	              {% endunless %}
+	              <div class="os-card__total-container">
+	                <div class="os-card__total-label">Total:</div>
                 <div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-display="originalPrice">-</span></div>
                 <div class="os-card__total-current{% if b.total_tone_class %} {{ b.total_tone_class }}{% endif %}"><span data-next-bundle-display="price">-</span></div>
               </div>

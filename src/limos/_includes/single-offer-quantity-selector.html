@@ -12,10 +12,12 @@
     quantity:              number, default 1. Initial data-next-quantity and visible display.
     quantity_min:          number, default 1. data-next-min-quantity.
     quantity_max:          number, default 5. data-next-max-quantity.
-    show_quantity_stepper: bool, default true. Remove quantity attrs when false.
-    image_src:             string asset path, default "images/1x1_1.svg".
-    offer_label:           string, default "SPECIAL OFFER".
-    offer_suffix:          string, default " - LIMITED TIME".
+	    show_quantity_stepper: bool, default true. Remove quantity attrs when false.
+	    image_src:             string asset path, default "images/1x1_1.svg".
+	    offer_label:           string, default "SPECIAL OFFER".
+	    offer_suffix:          string, default " - LIMITED TIME".
+	    price_display_variant: enum [line-total, unit], default "line-total".
+	    single_offer:          optional frontmatter object containing the params above.
   next_sdk_owns:
     - data-next-bundle-selector
     - data-next-selector-id
@@ -48,18 +50,20 @@
     - default (single visible offer with native quantity stepper)
     - fixed-quantity (show_quantity_stepper=false)
 {% endcomment %}
-{% assign sel_id = selector_id | default: 'limos-card' -%}
-{% assign b_id = bundle_id | default: 'limos-qty-1' -%}
-{% assign pkg_id = package_id | default: 1 -%}
-{% assign ship_id = shipping_id | default: 2 -%}
-{% assign items = items_json | default: '[{"packageId":1,"quantity":1}]' -%}
-{% assign qty = quantity | default: 1 -%}
-{% assign qty_min = quantity_min | default: 1 -%}
-{% assign qty_max = quantity_max | default: 5 -%}
-{% if show_quantity_stepper == nil %}{% assign show_qty = true %}{% else %}{% assign show_qty = show_quantity_stepper %}{% endif -%}
-{% assign img_src = image_src | default: 'images/1x1_1.svg' -%}
-{% assign label = offer_label | default: 'SPECIAL OFFER' -%}
-{% assign suffix = offer_suffix | default: ' - LIMITED TIME' -%}
+{% assign offer = single_offer -%}
+{% assign sel_id = selector_id | default: offer.selector_id | default: 'limos-card' -%}
+{% assign b_id = bundle_id | default: offer.bundle_id | default: 'limos-qty-1' -%}
+{% assign pkg_id = package_id | default: offer.package_id | default: 1 -%}
+{% assign ship_id = shipping_id | default: offer.shipping_id | default: 2 -%}
+{% assign items = items_json | default: offer.items_json | default: '[{"packageId":1,"quantity":1}]' -%}
+{% assign qty = quantity | default: offer.quantity | default: 1 -%}
+{% assign qty_min = quantity_min | default: offer.quantity_min | default: 1 -%}
+{% assign qty_max = quantity_max | default: offer.quantity_max | default: 5 -%}
+{% if show_quantity_stepper == nil and offer.show_quantity_stepper == nil %}{% assign show_qty = true %}{% elsif show_quantity_stepper != nil %}{% assign show_qty = show_quantity_stepper %}{% else %}{% assign show_qty = offer.show_quantity_stepper %}{% endif -%}
+{% assign img_src = image_src | default: offer.image_src | default: 'images/1x1_1.svg' -%}
+{% assign label = offer_label | default: offer.offer_label | default: 'SPECIAL OFFER' -%}
+{% assign suffix = offer_suffix | default: offer.offer_suffix | default: ' - LIMITED TIME' -%}
+{% assign price_variant = price_display_variant | default: offer.price_display_variant | default: 'line-total' -%}
 <div data-next-catalog-component="single-offer-quantity-selector" class="checkout-bundle-offer">
   <div data-next-bundle-selector data-next-selector-id="{{ sel_id }}" data-next-selection-mode="swap" data-next-include-shipping="true" class="checkout-packages" data-next-await="">
     <div data-next-bundle-card data-next-bundle-id="{{ b_id }}" data-next-shipping-id="{{ ship_id }}" data-next-bundle-items='{{ items }}'{% if show_qty %} data-next-quantity="{{ qty }}" data-next-min-quantity="{{ qty_min }}" data-next-max-quantity="{{ qty_max }}"{% endif %} data-next-selected="true" class="checkout-package">
@@ -75,12 +79,18 @@
               <path d="M14 0L5.48471 8.99904L1.76471 5.86094L0 8.1909L4.70588 12.1695L5.69176 13L6.58824 12.0526L16 2.10616L14 0Z" fill="currentColor"></path>
             </svg></div>
         </div>
-        <div class="checkout__package-media-wrapper"><img src="{{ img_src | campaign_asset }}" loading="lazy" data-next-display="package.image" alt="" class="checkout__package-media"></div>
-        <div class="checkout__package-content">
-          <div data-next-bundle-display="hasDiscount" class="package-price--regular"><span data-next-bundle-display="originalPrice">$119.98</span></div>
-          <div class="package-price--sale"><span data-next-bundle-display="price">$59.99</span></div>
-          <div class="package-savings">You Save <span data-next-bundle-display="discountAmount">$59.99</span></div>
-        </div>
+	        <div class="checkout__package-media-wrapper"><img src="{{ img_src | campaign_asset }}" loading="lazy" data-next-display="package.image" alt="" class="checkout__package-media"></div>
+	        <div class="checkout__package-content">
+	          {% if price_variant == 'unit' %}
+	          <div data-next-bundle-display="hasDiscount" class="package-price--regular"><span data-next-bundle-display="originalUnitPrice">$119.98</span><span class="text-xl">/ea</span></div>
+	          <div class="package-price--sale"><span data-next-bundle-display="unitPrice">$59.99</span><span class="text-xl">/ea</span></div>
+	          <div class="package-savings">Total <span data-next-bundle-display="price">$59.99</span></div>
+	          {% else %}
+	          <div data-next-bundle-display="hasDiscount" class="package-price--regular"><span data-next-bundle-display="originalPrice">$119.98</span></div>
+	          <div class="package-price--sale"><span data-next-bundle-display="price">$59.99</span></div>
+	          <div class="package-savings">You Save <span data-next-bundle-display="discountAmount">$59.99</span></div>
+	          {% endif %}
+	        </div>
       </div>
     </div>
   </div>

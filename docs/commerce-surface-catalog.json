@@ -66,17 +66,20 @@
         "receipt": "receipt-skeleton"
       },
       "frontmatterInputsNeeded": [
-        "single_offer",
-        "price_display_variant",
         "timer"
       ],
       "frontmatterInputsObserved": [
+        "single_offer",
         "selector_id",
         "package_id",
         "shipping_id",
         "quantity_min",
         "quantity_max",
-        "items_json"
+        "items_json",
+        "price_display_variant",
+        "order_bump_variant",
+        "order_bump.check01",
+        "order_bump.switch01"
       ]
     },
     "demeter": {
@@ -99,14 +102,16 @@
         "receipt": "receipt-skeleton"
       },
       "frontmatterInputsNeeded": [
-        "cart_summary_variant",
-        "price_display_variant",
         "progress_steps"
       ],
       "frontmatterInputsObserved": [
         "bundles",
         "selector_id",
         "selection_mode",
+        "price_display_variant",
+        "order_bump_variant",
+        "order_bump.check01",
+        "order_bump.switch01",
         "cart_summary_variant",
         "cart_summary_heading",
         "cart_summary_subtitle",
@@ -133,13 +138,14 @@
       },
       "frontmatterInputsNeeded": [
         "cart_summary_variant",
-        "order_bump_variant",
-        "upsell_bundle_tiers",
-        "upsell_vouchers"
+        "order_bump_variant"
       ],
       "frontmatterInputsObserved": [
+        "receipt_summary",
         "swiper_slides",
-        "swiper_thumbs"
+        "swiper_thumbs",
+        "upsell_bundle_tiers",
+        "upsell_offer"
       ]
     },
     "olympus-mv-single-step": {
@@ -163,14 +169,16 @@
         "receipt": "receipt-skeleton"
       },
       "frontmatterInputsNeeded": [
-        "variant_slots",
-        "swiper_slides",
-        "swiper_thumbs",
         "cart_summary_variant"
       ],
       "frontmatterInputsObserved": [
+        "checkout_step",
         "selector_id",
-        "slot_template_id"
+        "slot_stage_id",
+        "slot_template_id",
+        "swiper_slides",
+        "swiper_thumbs",
+        "variant_slots"
       ]
     },
     "olympus-mv-two-step": {
@@ -194,15 +202,16 @@
         "receipt": "receipt-skeleton"
       },
       "frontmatterInputsNeeded": [
-        "variant_slots",
-        "select_step",
-        "checkout_step",
         "swiper_slides",
         "swiper_thumbs"
       ],
       "frontmatterInputsObserved": [
+        "checkout_step",
+        "select_step",
         "selector_id",
-        "slot_template_id"
+        "slot_stage_id",
+        "slot_template_id",
+        "variant_slots"
       ]
     }
   },

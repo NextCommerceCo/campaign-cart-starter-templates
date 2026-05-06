@@ -3,6 +3,37 @@ title: "Limos Checkout"
 page_type: checkout
 next_url: upsell-bundle-stepper.html
 promo_sale: "default"
+order_bump_variant: "check01+switch01"
+single_offer:
+  selector_id: "limos-card"
+  bundle_id: "limos-qty-1"
+  package_id: 1
+  shipping_id: 2
+  items_json: '[{"packageId":1,"quantity":1}]'
+  quantity: 1
+  quantity_min: 1
+  quantity_max: 5
+  show_quantity_stepper: true
+  image_src: "images/1x1_1.svg"
+  offer_label: "SPECIAL OFFER"
+  offer_suffix: " - LIMITED TIME"
+  price_display_variant: "line-total"
+order_bump:
+  check01:
+    package_id: 7
+    sync_quantity: 1
+    title: "Get Extended Warranty"
+    image_src: "images/1x1_1.svg"
+    features:
+      - "1 year with our replacement and protection"
+      - "Accidental Damage Protection"
+      - "Express Replacement Service"
+      - "24/7 Priority Customer Support"
+  switch01:
+    package_id: 9
+    title: "Shipping Insurance & Loss Prevention"
+    description_prefix: "Total shipping coverage and extended warranty. Breakage, loss, delays, porch pirates - even defects. 100% protected for just"
+    show_unit_price: true
 styles:
   - css/exit-intent-popup.css
 scripts:
@@ -219,8 +250,17 @@ scripts:
                         <div class="form-section form-section--last">
                           {% campaign_include 'payment-methods.html' show_paypal=true show_klarna=true show_apple_pay=true show_google_pay=true %}
                         </div>
+                        {% assign bump_variant = order_bump_variant | default: 'check01+switch01' %}
+                        {% case bump_variant %}
+                        {% when 'check01' %}
+                        {% campaign_include 'bump-check01.html' %}
+                        {% when 'switch01' %}
+                        {% campaign_include 'bump-switch01.html' %}
+                        {% when 'none', 'off', 'false' %}
+                        {% else %}
                         {% campaign_include 'bump-check01.html' %}
                         {% campaign_include 'bump-switch01.html' %}
+                        {% endcase %}
                         <div class="submit-section submit-section--no-margin-top">
                           <div class="submit-section__button">
                             <button os-checkout-payment="combo" data-action="submit" type="submit" class="submit-button submit-button--compact">

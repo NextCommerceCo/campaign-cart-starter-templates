@@ -1,17 +1,43 @@
-<!-- Prepurchase upsell: checkbox bump (check01) — SDK 0.4.x
-     Uses data-next-package-toggle / data-next-toggle-card / data-next-toggle-display
-     Option A (per-unit, stable): originalUnitPrice/ea + unitPrice/ea — does not scale with synced qty
-     Option B (line total, scales): originalPrice + price — multiplies with data-next-package-sync qty -->
+{% comment %}
+  next_component: order-bump-card
+  next_version: 1.1.0
+  next_sdk_min: 0.4.x
+  next_purpose: Checkbox-style pre-purchase order bump.
+  next_params:
+    order_bump.check01: optional frontmatter object for package_id, sync_quantity, title, image_src, and features.
+    package_id:         number, default 7.
+    sync_quantity:      number, default 1. data-next-package-sync value.
+    title:              string, default "Get Extended Warranty".
+    image_src:          string asset path, default "images/1x1_1.svg".
+    features:           array of bullet strings.
+  next_sdk_owns:
+    - data-next-package-toggle
+    - data-next-toggle-card
+    - data-next-is-upsell
+    - data-next-package-sync
+    - data-next-package-id
+    - data-next-toggle-display
+    - data-next-toggle-image
+  next_dont_touch:
+    - Keep data-next-package-id aligned to a Campaigns API package.
+    - Keep data-next-package-sync only when the bump should scale with main quantity.
+{% endcomment %}
+{% assign bump = order_bump.check01 -%}
+{% assign pkg_id = package_id | default: bump.package_id | default: 7 -%}
+{% assign sync_qty = sync_quantity | default: bump.sync_quantity | default: 1 -%}
+{% assign bump_title = title | default: bump.title | default: 'Get Extended Warranty' -%}
+{% assign bump_image = image_src | default: bump.image_src | default: 'images/1x1_1.svg' -%}
+{% assign feature_list = features | default: bump.features -%}
 <div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="check01" data-next-await="">
   <div data-next-package-toggle>
-    <div class="bump-card" data-next-toggle-card data-next-is-upsell="true" data-next-package-sync="1" data-next-package-id="7">
+    <div class="bump-card" data-next-toggle-card data-next-is-upsell="true" data-next-package-sync="{{ sync_qty }}" data-next-package-id="{{ pkg_id }}">
       <!-- Bump header — visual only, whole card is the toggle target -->
       <div class="bump__header-left">
         <div class="bump__header-content">
           <div class="bump__checkbox">
             <div os-component="check" class="checkbox__icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--fe" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m6 10l-2 2l6 6L20 8l-2-2l-8 8z"></path></svg></div>
           </div>
-          <div class="bump__title">Get Extended Warranty</div>
+          <div class="bump__title">{{ bump_title }}</div>
         </div>
       </div>
       <!-- Bump body: price, list, image -->
@@ -31,9 +57,17 @@
               </div>
             </div>
             
-            <div class="list-container cc-2xs">
-              <ul role="list" class="list w-list-unstyled">
-                <li class="list__item">
+	            <div class="list-container cc-2xs">
+	              <ul role="list" class="list w-list-unstyled">
+	                {% if feature_list %}
+	                {% for feature in feature_list %}
+	                <li class="list__item">
+	                  <div class="list_icon"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
+	                  <div>{{ feature }}</div>
+	                </li>
+	                {% endfor %}
+	                {% else %}
+	                <li class="list__item">
                   <div class="list_icon"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
                   <div>1 year with our replacement and protection</div>
                 </li>
@@ -45,14 +79,15 @@
                   <div class="list_icon"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
                   <div>Express Replacement Service</div>
                 </li>
-                <li class="list__item">
-                  <div class="list_icon"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
-                  <div>24/7 Priority Customer Support</div>
-                </li>
-              </ul>
-            </div>
+	                <li class="list__item">
+	                  <div class="list_icon"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
+	                  <div>24/7 Priority Customer Support</div>
+	                </li>
+	                {% endif %}
+	              </ul>
+	            </div>
           </div>
-          <img data-next-toggle-image loading="lazy" alt="" src="{{ 'images/1x1_1.svg' | campaign_asset }}" class="bump__image">
+          <img data-next-toggle-image loading="lazy" alt="" src="{{ bump_image | campaign_asset }}" class="bump__image">
         </div>
       </div>
     </div>

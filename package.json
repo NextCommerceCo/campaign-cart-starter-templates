@@ -17,6 +17,7 @@
     "lint:sdk:promoted": "node scripts/lint-sdk.mjs --scope=promoted --pages=checkout,select",
     "lint:sdk:promoted:source": "node scripts/lint-sdk.mjs --source --scope=promoted --pages=checkout,select",
     "lint:sdk:promoted:rendered": "node scripts/lint-sdk.mjs --rendered --scope=promoted --pages=checkout,select",
+    "lint:sdk:shop-single-step:all": "node scripts/lint-sdk.mjs --scope=shop-single-step --pages=all",
     "lint:sdk:ci": "CI=1 node scripts/lint-sdk.mjs --scope=all --pages=checkout,select"
   },
   "dependencies": {
