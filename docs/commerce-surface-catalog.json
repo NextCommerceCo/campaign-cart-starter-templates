@@ -113,6 +113,35 @@
         "cart_summary_feature_package"
       ]
     },
+    "shop-single-step": {
+      "description": "Highly used shop-style single-step checkout with compact cart summary, receipt, and three bundle upsell variants.",
+      "frontmatterStatus": "partial",
+      "strongSignals": [
+        "shop-single-step in spec, path, or export metadata",
+        "shop checkout with checkout.html plus upsell-bundle-stepper/tier-pills/tier-cards pages",
+        "cart-summary04 used on checkout",
+        "receipt order summary split into mobile and desktop order item templates",
+        "upsell bundle offers promoted to shop-single-step *_offer includes"
+      ],
+      "canonicalSurfaces": {
+        "checkoutSummary": "cart-summary04",
+        "payment": "payment-methods",
+        "expressCheckout": "express-checkout",
+        "orderBump": "bump-check02",
+        "receipt": "receipt-skeleton|receipt-order-summary-mobile|receipt-order-summary-desktop",
+        "upsell": "upsell-bundle-stepper-offer|upsell-bundle-tier-pills-offer|upsell-bundle-tier-cards-offer"
+      },
+      "frontmatterInputsNeeded": [
+        "cart_summary_variant",
+        "order_bump_variant",
+        "upsell_bundle_tiers",
+        "upsell_vouchers"
+      ],
+      "frontmatterInputsObserved": [
+        "swiper_slides",
+        "swiper_thumbs"
+      ]
+    },
     "olympus-mv-single-step": {
       "description": "Olympus-style single-step checkout with configurable multi-variant bundle slots in the checkout page.",
       "frontmatterStatus": "partial",
