@@ -4,7 +4,7 @@
   next_sdk_min: 0.4.18
   next_purpose: Demeter editorial/luxury tier selector. Customer picks a 1x/2x/3x bundle tier; SDK swaps the checkout cart and hydrates package image/name/pricing.
   next_params:
-    selector_id:        string, default "drone-packages". data-next-selector-id value.
+    selector_id:        string, default "main". data-next-selector-id value.
     await:              bool, default true. Renders skeleton while bundle prices hydrate.
     include_shipping:   bool, default true. Kept for parity with tier-specific data-next-shipping-id.
     selection_mode:     enum [swap, select], default "swap".
@@ -42,7 +42,7 @@
     - editorial-3-tier (default)
     - frontmatter-driven tiers
 {% endcomment %}
-{% assign sel_id = selector_id | default: 'drone-packages' -%}
+{% assign sel_id = selector_id | default: 'main' -%}
 {% assign sel_mode = selection_mode | default: 'swap' -%}
 {% assign selector_price_variant = price_display_variant | default: 'compare-unit-total' -%}
 {% if include_shipping == nil %}{% assign include_shipping = true %}{% endif -%}
@@ -106,7 +106,7 @@
     </div>
     {% endfor -%}
     {% else -%}
-    <div data-next-bundle-card data-next-bundle-id="drone-qty-1" data-next-shipping-id="2" data-next-bundle-items='[{"packageId":1,"quantity":1}]' data-next-selected="true" role="button" class="os-card">
+    <div data-next-bundle-card data-next-bundle-id="bundle-1x" data-next-shipping-id="2" data-next-bundle-items='[{"packageId":1,"quantity":1}]' data-next-selected="true" role="button" class="os-card">
       <div class="os-card__header-slot"></div>
       <div class="os-card__wrapper">
         <div class="os-card__content os--align-middle" data-next-package-id="1">
@@ -150,7 +150,7 @@
         </div>
       </div>
     </div>
-    <div data-next-bundle-card data-next-bundle-id="drone-qty-2" data-next-shipping-id="2" data-next-bundle-items='[{"packageId":1,"quantity":2}]' role="button" class="os-card">
+    <div data-next-bundle-card data-next-bundle-id="bundle-2x" data-next-shipping-id="2" data-next-bundle-items='[{"packageId":1,"quantity":2}]' role="button" class="os-card">
       <div class="os-card__header-slot"></div>
       <div class="os-card__wrapper">
         <div class="os-card__content os--align-middle" data-next-package-id="1">
@@ -190,7 +190,7 @@
       <div class="os-card__footer-slot"></div>
       <div class="os-card__label-slot"></div>
     </div>
-    <div data-next-bundle-card data-next-bundle-id="drone-qty-3" data-next-shipping-id="1" data-next-bundle-items='[{"packageId":1,"quantity":3}]' role="button" class="os-card">
+    <div data-next-bundle-card data-next-bundle-id="bundle-3x" data-next-shipping-id="1" data-next-bundle-items='[{"packageId":1,"quantity":3}]' role="button" class="os-card">
       <div class="os-card__header-slot"></div>
       <div class="os-card__wrapper">
         <div class="os-card__content os--align-middle" data-next-package-id="1">

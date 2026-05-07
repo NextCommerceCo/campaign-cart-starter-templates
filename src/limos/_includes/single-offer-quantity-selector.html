@@ -4,8 +4,8 @@
   next_sdk_min: 0.4.18
   next_purpose: Limos single-offer checkout selector. Renders one SDK bundle card plus the native bundle quantity stepper that targets the selector from outside the clickable card.
   next_params:
-    selector_id:           string, default "limos-card". data-next-selector-id and data-next-bundle-qty-for target.
-    bundle_id:             string, default "limos-qty-1". Stable data-next-bundle-id.
+    selector_id:           string, default "main". data-next-selector-id and data-next-bundle-qty-for target.
+    bundle_id:             string, default "bundle-main". Stable data-next-bundle-id.
     package_id:            number, default 1. Package shown and selected by the bundle.
     shipping_id:           number, default 2. data-next-shipping-id.
     items_json:            string, default '[{"packageId":1,"quantity":1}]'. data-next-bundle-items value.
@@ -51,8 +51,8 @@
     - fixed-quantity (show_quantity_stepper=false)
 {% endcomment %}
 {% assign offer = single_offer -%}
-{% assign sel_id = selector_id | default: offer.selector_id | default: 'limos-card' -%}
-{% assign b_id = bundle_id | default: offer.bundle_id | default: 'limos-qty-1' -%}
+{% assign sel_id = selector_id | default: offer.selector_id | default: 'main' -%}
+{% assign b_id = bundle_id | default: offer.bundle_id | default: 'bundle-main' -%}
 {% assign pkg_id = package_id | default: offer.package_id | default: 1 -%}
 {% assign ship_id = shipping_id | default: offer.shipping_id | default: 2 -%}
 {% assign items = items_json | default: offer.items_json | default: '[{"packageId":1,"quantity":1}]' -%}

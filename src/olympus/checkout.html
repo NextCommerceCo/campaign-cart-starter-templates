@@ -213,7 +213,7 @@ packages:
                               <h2 class="form-section__title">Step 1: Pick Your Bundle Deal</h2>
                               <!-- v0 catalog: bundle-selector partial. Canonical 3-tier defaults (1x/2x/3x package_id 1) embedded in partial; pass `bundles=[...]` to override.
                                    Reference variant (data-next-bundles= JSON config-driven) preserved below as commented reference. -->
-                              {% campaign_include 'bundle-selector.html' selector_id='drone-packages' packages=packages %}
+                              {% campaign_include 'bundle-selector.html' selector_id='main' packages=packages %}
                               {% comment %}
                               Reference only — optional config-driven variant.
                               Kept for experimentation; do not treat as the default for Olympus checkout.
@@ -221,8 +221,8 @@ packages:
                               SDK 0.4.18+: inline <template> inside selector is supported (no template id required).
                               <div
                                 data-next-bundle-selector
-                                data-next-selector-id="drone-packages"
-                                data-next-bundles='[{"id":"drone-qty-1","title":"1x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":2,"labelSlotClass":"","totalToneClass":"","badgeText":"Most Popular","badgePillClass":"os-card__label--pill-primary","items":[{"packageId":1,"quantity":1}],"selected":true},{"id":"drone-qty-2","title":"2x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":2,"labelSlotClass":"","totalToneClass":"","badgeText":"Best Deal","badgePillClass":"os-card__label--pill-secondary","items":[{"packageId":1,"quantity":2}]},{"id":"drone-qty-3","title":"3x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":1,"labelSlotClass":"hide","totalToneClass":"os-dark","badgeText":"","badgePillClass":"","items":[{"packageId":1,"quantity":3}]}]'
+                                data-next-selector-id="main"
+                                data-next-bundles='[{"id":"bundle-1x","title":"1x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":2,"labelSlotClass":"","totalToneClass":"","badgeText":"Most Popular","badgePillClass":"os-card__label--pill-primary","items":[{"packageId":1,"quantity":1}],"selected":true},{"id":"bundle-2x","title":"2x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":2,"labelSlotClass":"","totalToneClass":"","badgeText":"Best Deal","badgePillClass":"os-card__label--pill-secondary","items":[{"packageId":1,"quantity":2}]},{"id":"bundle-3x","title":"3x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":1,"labelSlotClass":"hide","totalToneClass":"os-dark","badgeText":"","badgePillClass":"","items":[{"packageId":1,"quantity":3}]}]'
                                 data-next-selection-mode="swap"
                                 data-next-include-shipping="true"
                                 class="os-option os-cards__vertical os--gap-xl"
