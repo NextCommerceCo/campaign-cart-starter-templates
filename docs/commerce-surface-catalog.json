@@ -54,7 +54,8 @@
         "single offer card with native quantity stepper",
         "checkout-bundle-offer",
         "next-bundle-qty--anchor-br",
-        "cart-summary02 accordion shape"
+        "cart-summary02 accordion shape",
+        "limos upsell offer includes with upsell_offer or upsell_bundle_tiers frontmatter"
       ],
       "canonicalSurfaces": {
         "mainSelector": "single-offer-quantity-selector",
@@ -62,8 +63,8 @@
         "payment": "payment-methods",
         "expressCheckout": "express-checkout|express-checkout-inline",
         "orderBump": "bump-check01|bump-check02|bump-switch01",
-        "upsell": "bundle-stepper|bundle-tier-pills|bundle-tier-cards",
-        "receipt": "receipt-skeleton"
+        "upsell": "upsell-bundle-stepper-offer|upsell-bundle-tier-pills-offer|upsell-bundle-tier-cards-offer",
+        "receipt": "receipt-skeleton|receipt-order-summary-mobile|receipt-order-summary-desktop"
       },
       "frontmatterInputsNeeded": [
         "timer"
@@ -79,7 +80,10 @@
         "price_display_variant",
         "order_bump_variant",
         "order_bump.check01",
-        "order_bump.switch01"
+        "order_bump.switch01",
+        "receipt_summary",
+        "upsell_bundle_tiers",
+        "upsell_offer"
       ]
     },
     "demeter": {
@@ -90,7 +94,8 @@
         "editorial 1/2/3 tier selector",
         "checkout-progress bar above bundle selection",
         "open side cart using cart-summary03",
-        "luxury/editorial spacing with serif display type"
+        "luxury/editorial spacing with serif display type",
+        "demeter upsell offer includes with upsell_offer or upsell_bundle_tiers frontmatter"
       ],
       "canonicalSurfaces": {
         "mainSelector": "editorial-tier-selector",
@@ -98,8 +103,8 @@
         "payment": "payment-methods",
         "expressCheckout": "express-checkout|express-checkout-inline",
         "orderBump": "bump-check01|bump-check02|bump-switch01",
-        "upsell": "bundle-stepper|bundle-tier-pills|bundle-tier-cards",
-        "receipt": "receipt-skeleton"
+        "upsell": "upsell-bundle-stepper-offer|upsell-bundle-tier-pills-offer|upsell-bundle-tier-cards-offer",
+        "receipt": "receipt-skeleton|receipt-order-summary-mobile|receipt-order-summary-desktop"
       },
       "frontmatterInputsNeeded": [
         "progress_steps"
@@ -115,7 +120,10 @@
         "cart_summary_variant",
         "cart_summary_heading",
         "cart_summary_subtitle",
-        "cart_summary_feature_package"
+        "cart_summary_feature_package",
+        "receipt_summary",
+        "upsell_bundle_tiers",
+        "upsell_offer"
       ]
     },
     "shop-single-step": {
