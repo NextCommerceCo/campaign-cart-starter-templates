@@ -25,7 +25,7 @@
 {% assign bump = order_bump.check01 -%}
 {% assign pkg_id = package_id | default: bump.package_id | default: 7 -%}
 {% assign sync_qty = sync_quantity | default: bump.sync_quantity | default: 1 -%}
-{% assign bump_title = title | default: bump.title | default: 'Get Extended Warranty' -%}
+{% assign bump_title = bump.title | default: 'Get Extended Warranty' -%}
 {% assign bump_image = image_src | default: bump.image_src | default: 'images/1x1_1.svg' -%}
 {% assign feature_list = features | default: bump.features -%}
 <div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="check01" data-next-await="">

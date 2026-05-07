@@ -9,7 +9,7 @@
   next_dont_touch: data-next-order-items and data-item-template-id must reference the same template id.
 -->
 {% assign summary = receipt_summary -%}
-{% assign summary_title = title | default: summary.title | default: 'Order Summary' -%}
+{% assign summary_title = summary.title | default: 'Order Summary' -%}
 {% assign scroll_hint = scroll_hint | default: summary.scroll_hint | default: 'Scroll for more items' -%}
 {% assign tpl_id = item_template_id | default: summary.desktop_item_template_id | default: 'order-item-template' -%}
                 <div data-next-catalog-component="shop-single-step-receipt-order-summary" class="checkout__summary">

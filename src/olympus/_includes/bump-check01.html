@@ -6,7 +6,7 @@
   next_params:
     packages:             object, optional. Dict with main_package, prepurchase_1, prepurchase_2 keys. Defaults for package_id and package_sync when not passed explicitly.
     package_id:           number, required. data-next-package-id (the bump's package).
-    title:                string, default "Get Extended Warranty". Bump headline.
+    bump_title:           string, default "Get Extended Warranty". Bump headline.
     bump_image:           string asset path, default "images/1x1_1.svg". Product imagery.
     bump_image_alt:       string, default "" (matches title when empty).
     package_sync:         number|false, default 1. data-next-package-sync (mirrors main bundle qty). Set to false to disable sync.
@@ -42,7 +42,7 @@
     - cart-summary (will list the bump as an additional line)
 {% endcomment %}
 {% assign pkg_id = package_id | default: packages.prepurchase_1 | default: 7 -%}
-{% assign t = title | default: 'Get Extended Warranty' -%}
+{% assign t = bump_title | default: 'Get Extended Warranty' -%}
 {% assign img_src = bump_image | default: 'images/1x1_1.svg' -%}
 {% assign img_alt = bump_image_alt | default: t -%}
 {% if package_sync == nil %}{% assign package_sync = packages.main_package | default: 1 %}{% endif -%}
