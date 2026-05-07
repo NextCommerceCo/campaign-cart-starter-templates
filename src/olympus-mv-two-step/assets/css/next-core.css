@@ -7352,6 +7352,9 @@ figcaption {
   margin-bottom: 2rem;
   display: flex;
 }
+.checkout-selectors [data-next-catalog-component] {
+  display: contents;
+}
 
 .divider-section__line-v2 {
   background-color: var(--brand--color--border);

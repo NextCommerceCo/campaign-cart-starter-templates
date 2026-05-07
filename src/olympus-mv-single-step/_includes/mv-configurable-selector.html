@@ -4,10 +4,9 @@
   next_sdk_min: 0.4.18
   next_purpose: Olympus MV single-step selector. Renders configurable bundle tier cards, the bundle slot target, and the SDK slot template used by checkout-olympus-mv-full.js.
   next_params:
-    checkout_step:     object. selector_id, slot_template_id, slot_stage_id, selector_heading, slot_heading.
+    checkout_step:     object. selector_id, selector_heading, slot_heading.
     variant_slots:     array. Bundle card ids, package item JSON, shipping ids, labels, and selected state.
     selector_id:       string, fallback "main". Override for data-next-selector-id and data-next-bundle-slots-for target.
-    slot_template_id:  string, fallback "mv-slot-template". Override for data-next-bundle-slot-template-id and template id.
   next_sdk_owns:
     - data-next-bundle-selector
     - data-next-selector-id
@@ -23,15 +22,15 @@
     - data-next-display (bundle.<selector_id>.*)
   next_dont_touch:
     - selector_id must match the data-next-bundle-slots-for target and remote bundle display path.
-    - slot_template_id must match the template id exactly.
+    - slot_template_id and slot_stage_id are internal SDK identifiers — hardcoded defaults, not developer-configurable.
     - Slot rows sit outside data-next-bundle-card; use data-next-display="bundle.<selector_id>.discountPercentage" instead of data-next-bundle-display inside slot rows.
   next_variants:
     - single-step-configurable-slots (this)
 {% endcomment %}
 {% assign step = checkout_step -%}
 {% assign sel_id = selector_id | default: step.selector_id | default: 'main' -%}
-{% assign tpl_id = slot_template_id | default: step.slot_template_id | default: 'mv-slot-template' -%}
-{% assign stage_id = slot_stage_id | default: step.slot_stage_id | default: 'bundle-slots-stage' -%}
+{% assign tpl_id = slot_template_id | default: 'mv-slot-template' -%}
+{% assign stage_id = slot_stage_id | default: 'bundle-slots-stage' -%}
 {% assign selector_title = selector_heading | default: step.selector_heading | default: 'Choose your package' -%}
 {% assign slot_title = slot_heading | default: step.slot_heading | default: 'Select your color and size' -%}
 {% assign cards = bundles | default: variant_slots -%}

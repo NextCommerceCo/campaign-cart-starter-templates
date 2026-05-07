@@ -4,10 +4,9 @@
   next_sdk_min: 0.4.18
   next_purpose: Olympus MV slot rendering target and slot template for the two-step select page.
   next_params:
-    checkout_step:     object. selector_id, slot_template_id, and slot_stage_id.
-    select_step:       object. Fallback selector_id and slot_template_id for select-page use.
+    checkout_step:     object. selector_id.
+    select_step:       object. Fallback selector_id for select-page use.
     selector_id:       string, fallback "main". Override for data-next-bundle-slots-for target.
-    slot_template_id:  string, fallback "mv-slot-template". Template id referenced by mv-selection-step.
   next_sdk_owns:
     - data-next-bundle-slots-for
     - data-next-variant-selectors
@@ -18,8 +17,8 @@
 {% endcomment %}
 {% assign step = checkout_step | default: select_step -%}
 {% assign sel_id = selector_id | default: step.selector_id | default: 'main' -%}
-{% assign tpl_id = slot_template_id | default: step.slot_template_id | default: 'mv-slot-template' -%}
-{% assign stage_id = slot_stage_id | default: step.slot_stage_id | default: 'bundle-slots-stage' -%}
+{% assign tpl_id = slot_template_id | default: 'mv-slot-template' -%}
+{% assign stage_id = slot_stage_id | default: 'bundle-slots-stage' -%}
 <div data-next-catalog-component="mv-slot-stage">
   <div data-next-bundle-slots-for="{{ sel_id }}" class="os-slots" id="{{ stage_id }}"></div>
   <template id="{{ tpl_id }}">

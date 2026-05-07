@@ -4,10 +4,9 @@
   next_sdk_min: 0.4.18
   next_purpose: Olympus MV two-step quantity selector used on select.html before the variant slot step.
   next_params:
-    select_step:       object. selector_id and slot_template_id.
+    select_step:       object. selector_id.
     variant_slots:     array. Bundle card ids, package item JSON, shipping ids, labels, and selected state.
     selector_id:       string, fallback "main". Override for data-next-selector-id and later data-next-bundle-slots-for target.
-    slot_template_id:  string, fallback "mv-slot-template". Override for data-next-bundle-slot-template-id.
   next_sdk_owns:
     - data-next-bundle-selector
     - data-next-selector-id
@@ -26,7 +25,7 @@
 {% endcomment %}
 {% assign step = select_step -%}
 {% assign sel_id = selector_id | default: step.selector_id | default: 'main' -%}
-{% assign tpl_id = slot_template_id | default: step.slot_template_id | default: 'mv-slot-template' -%}
+{% assign tpl_id = slot_template_id | default: 'mv-slot-template' -%}
 {% assign cards = bundles | default: variant_slots -%}
 <div data-next-catalog-component="mv-selection-step" data-next-bundle-selector data-next-selector-id="{{ sel_id }}" data-next-selection-mode="swap" data-next-bundle-slot-template-id="{{ tpl_id }}" class="os-option">
   <div class="os-cards__grid os--three">
