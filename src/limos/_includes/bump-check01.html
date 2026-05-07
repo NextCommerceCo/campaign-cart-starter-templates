@@ -4,6 +4,7 @@
   next_sdk_min: 0.4.x
   next_purpose: Checkbox-style pre-purchase order bump.
   next_params:
+    packages:           object, optional. Dict with main_package, prepurchase_1, prepurchase_2 keys. Defaults for package_id and package_sync when not passed explicitly.
     order_bump.check01: optional frontmatter object for package_id, sync_quantity, title, image_src, and features.
     package_id:         number, default 7.
     sync_quantity:      number, default 1. data-next-package-sync value.
@@ -23,8 +24,8 @@
     - Keep data-next-package-sync only when the bump should scale with main quantity.
 {% endcomment %}
 {% assign bump = order_bump.check01 -%}
-{% assign pkg_id = package_id | default: bump.package_id | default: 7 -%}
-{% assign sync_qty = sync_quantity | default: bump.sync_quantity | default: 1 -%}
+{% assign pkg_id = package_id | default: packages.prepurchase_1 | default: bump.package_id | default: 7 -%}
+{% assign sync_qty = sync_quantity | default: packages.main_package | default: bump.sync_quantity | default: 1 -%}
 {% assign bump_title = bump.title | default: 'Get Extended Warranty' -%}
 {% assign bump_image = image_src | default: bump.image_src | default: 'images/1x1_1.svg' -%}
 {% assign feature_list = features | default: bump.features -%}

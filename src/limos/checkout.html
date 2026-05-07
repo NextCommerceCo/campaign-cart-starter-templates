@@ -34,6 +34,10 @@ order_bump:
     title: "Shipping Insurance & Loss Prevention"
     description_prefix: "Total shipping coverage and extended warranty. Breakage, loss, delays, porch pirates - even defects. 100% protected for just"
     show_unit_price: true
+packages:
+  main_package: 1
+  prepurchase_1: 7
+  prepurchase_2: 9
 styles:
   - css/exit-intent-popup.css
 scripts:
@@ -253,13 +257,13 @@ scripts:
                         {% assign bump_variant = order_bump_variant | default: 'check01+switch01' %}
                         {% case bump_variant %}
                         {% when 'check01' %}
-                        {% campaign_include 'bump-check01.html' %}
+                        {% campaign_include 'bump-check01.html' packages=packages %}
                         {% when 'switch01' %}
-                        {% campaign_include 'bump-switch01.html' %}
+                        {% campaign_include 'bump-switch01.html' packages=packages %}
                         {% when 'none', 'off', 'false' %}
                         {% else %}
-                        {% campaign_include 'bump-check01.html' %}
-                        {% campaign_include 'bump-switch01.html' %}
+                        {% campaign_include 'bump-check01.html' packages=packages %}
+                        {% campaign_include 'bump-switch01.html' packages=packages %}
                         {% endcase %}
                         <div class="submit-section submit-section--no-margin-top">
                           <div class="submit-section__button">
