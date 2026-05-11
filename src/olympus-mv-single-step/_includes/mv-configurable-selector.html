@@ -5,7 +5,8 @@
   next_purpose: Olympus MV single-step selector. Renders configurable bundle tier cards, the bundle slot target, and the SDK slot template used by checkout-olympus-mv-full.js.
   next_params:
     checkout_step:     object. selector_id, selector_heading, slot_heading.
-    variant_slots:     array. Bundle card ids, package item JSON, shipping ids, labels, and selected state.
+    packages:          object, optional. Dict with main_package key used to synthesize bundle item JSON.
+    variant_slots:     array. Bundle card ids, quantity, optional package_id/items_json overrides, shipping ids, labels, and selected state.
     selector_id:       string, fallback "main". Override for data-next-selector-id and data-next-bundle-slots-for target.
   next_sdk_owns:
     - data-next-bundle-selector
@@ -41,7 +42,16 @@
       <div class="os-cards__grid os--three">
         {% for b in cards %}
           {% assign card_id = b.id | default: b.bundle_id -%}
-          {% assign card_items = b.items_json | default: b.items -%}
+          {% assign card_package_id = b.package_id | default: packages.main_package | default: 1 -%}
+          {% assign card_quantity = b.quantity | default: 1 -%}
+          {% if b.configurable == false %}{% assign card_configurable = false %}{% else %}{% assign card_configurable = true %}{% endif -%}
+          {% if b.items_json -%}
+            {% assign card_items = b.items_json -%}
+          {% elsif b.items -%}
+            {% assign card_items = b.items -%}
+          {% else -%}
+            {% capture card_items %}[{"packageId":{{ card_package_id }},"quantity":{{ card_quantity }},"configurable":{{ card_configurable }}}]{% endcapture -%}
+          {% endif -%}
           {% assign card_shipping_id = b.shipping_id | default: 1 -%}
           {% assign card_title = b.title | default: card_id -%}
           {% assign card_sup = b.card_sup | default: 'Next Commerce Shirts' -%}

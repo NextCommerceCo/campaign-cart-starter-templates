@@ -181,9 +181,8 @@
       ],
       "frontmatterInputsObserved": [
         "checkout_step",
+        "packages",
         "selector_id",
-        "slot_stage_id",
-        "slot_template_id",
         "swiper_slides",
         "swiper_thumbs",
         "variant_slots"
@@ -215,10 +214,9 @@
       ],
       "frontmatterInputsObserved": [
         "checkout_step",
+        "packages",
         "select_step",
         "selector_id",
-        "slot_stage_id",
-        "slot_template_id",
         "variant_slots"
       ]
     }
