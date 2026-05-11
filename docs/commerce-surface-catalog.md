@@ -2,7 +2,7 @@
 
 This catalog is a routing aid for agents and developers assembling Campaign Cart funnels from designed HTML. It should stay dry and predictable: use it to pick known template-family surfaces, not to make expensive visual guesses.
 
-Machine-readable companion: [`commerce-surface-catalog.json`](./commerce-surface-catalog.json).
+Machine-readable companion: [`commerce-surface-catalog.json`](./commerce-surface-catalog.json). The JSON catalog now includes an `agentContract` block for each first-class checkout family plus `sharedFrontmatterVocabulary` for cross-family fields such as `packages`, `shipping_methods`, `bundles`, `variant_slots`, `order_bump`, `upsell_offer`, `upsell_bundle_tiers`, `receipt_summary`, and payment flags.
 
 ## Confidence Policy
 
@@ -31,8 +31,39 @@ High confidence currently means `>= 0.85`, matching the JSON catalog. If the top
 | `limos` | Partial include/frontmatter API exists | Single offer card with native quantity stepper | `cart-summary02` accordion | Roadflare checkout plus upsell/receipt surfaces are include-owned; upsell exposes `upsell_offer` / `upsell_bundle_tiers`, receipt exposes `receipt_summary`. |
 | `demeter` | Partial include/frontmatter API exists | Editorial tier cards | `cart-summary03` side cart | Veyra checkout plus upsell/receipt surfaces are include-owned; upsell exposes `upsell_offer` / `upsell_bundle_tiers`, receipt exposes `receipt_summary`. |
 | `shop-single-step` | Partial include API exists | Shop checkout with single-step payment | `cart-summary04` checkout summary | Highly used shop flow; checkout, receipt, and upsell SDK surfaces are now include-owned and catalog-wrapped. |
+| `shop-three-step` | Partial contract exists | Information -> shipping -> billing checkout | `cart-summary04` checkout/review shape | Shipping methods are rendered dynamically from `sdk.getShippingMethods()`; do not add Olympus-style `shipping_methods` frontmatter for checkout shipping. |
 | `olympus-mv-single-step` | Partial frontmatter API exists | MV configurable selector in checkout | `cart-summary01/03/04` | First-class MV checkout selector promoted to `mv-configurable-selector.html`; `packages.main_package` now feeds MV bundle item JSON unless a slot overrides `items_json`. |
 | `olympus-mv-two-step` | Partial frontmatter API exists | Select step + checkout review/payment | `cart-summary03/04` | First-class select surface promoted to `mv-selection-step.html` + `mv-slot-stage.html`; `packages.main_package` now feeds MV bundle item JSON unless a slot overrides `items_json`. |
+
+## Agent Contract Layer
+
+The contract layer is intentionally lighter than a campaign readiness check. It does not validate a real CampaignSpec against a live Campaigns API; it documents how an agent should translate spec/API truth into starter-template frontmatter and partial choices.
+
+Use it in this order:
+
+1. Pick the family from cheap catalog signals and ask when ambiguous.
+2. Read `families[family].agentContract` in the JSON catalog.
+3. Replace all `frontmatter.demoOnlyValues` from the target CampaignSpec/API.
+4. Use the family fixture under `docs/fixtures/campaign-specs/` as an example of the mapping shape, not as live data.
+5. Run `npm run lint:agent-contracts` after catalog or fixture changes.
+
+The important boundary is: CampaignSpec/API owns package refs, shipping refs, vouchers, payment support, routing, tracking, footer links, and SEO. Starter templates own the stable SDK DOM shape and family-specific frontmatter vocabulary.
+
+## Fixture Specs
+
+Each first-class checkout family has a small CampaignSpec-shaped fixture:
+
+| Family | Fixture |
+| --- | --- |
+| `olympus` | `docs/fixtures/campaign-specs/olympus-tiered-standard-free.json` |
+| `limos` | `docs/fixtures/campaign-specs/limos-single-offer-quantity.json` |
+| `demeter` | `docs/fixtures/campaign-specs/demeter-editorial-tiered.json` |
+| `shop-single-step` | `docs/fixtures/campaign-specs/shop-single-step-upsell-receipt.json` |
+| `shop-three-step` | `docs/fixtures/campaign-specs/shop-three-step-dynamic-shipping.json` |
+| `olympus-mv-single-step` | `docs/fixtures/campaign-specs/olympus-mv-single-step-configurable.json` |
+| `olympus-mv-two-step` | `docs/fixtures/campaign-specs/olympus-mv-two-step-configurable.json` |
+
+These fixtures deliberately include `sdk_hints.frontmatter` so agents can see the intended mapping. They are not canonical Campaign Map Builder exports, and every numeric `ref_id` is illustrative.
 
 ## Gap Matrix
 
@@ -53,6 +84,8 @@ High confidence currently means `>= 0.85`, matching the JSON catalog. If the top
 | `shop-single-step` | Checkout summary/payment/bump | Includes: `cart-summary04.html`, `express-checkout.html`, `payment-methods.html`, and `bump-check02.html`; used from `src/shop-single-step/checkout.html`. | Partial: payment flags; summary/bump variants are fixed in the page. | Yes under global checkout CI lint and shop-single-step all-page source/rendered lint. | Add frontmatter selection for summary/bump variants if campaign variants need it. | P1 |
 | `shop-single-step` | Receipt/order confirmation | Includes: `receipt-skeleton.html`, `receipt-order-summary-mobile.html`, and `receipt-order-summary-desktop.html`; used from `src/shop-single-step/receipt.html`. | Yes: `receipt_summary` controls title, scroll hint, and separate mobile/desktop order item template IDs. | Yes under `npm run lint:sdk:shop-single-step:all`; global CI still covers checkout/select only. | Consider a shared receipt summary include across shop templates. | P2 |
 | `shop-single-step` | Upsell selectors/actions | Includes: `upsell-bundle-stepper-offer.html`, `upsell-bundle-tier-pills-offer.html`, and `upsell-bundle-tier-cards-offer.html`; used from the matching upsell pages. | Yes: `upsell_offer` controls package/selector/voucher ids and button copy; `upsell_bundle_tiers` controls tier ids, item JSON, vouchers, labels, and selected state. | Yes under `npm run lint:sdk:shop-single-step:all`; global CI still covers checkout/select only. | Mirror the contract into shop-three-step only after confirming matching markup. | P1 |
+| `shop-three-step` | Dynamic shipping step | `src/shop-three-step/assets/js/checkout-shop-three-shipping.js` renders shipping method radios from `sdk.getShippingMethods()`. | Runtime/API-driven rather than frontmatter-driven; fixture documents this as `runtime_shipping_source`. | Yes under global checkout CI lint for checkout/select pages. | Keep dynamic shipping separate from Olympus-style selector shipping. | P1 |
+| `shop-three-step` | Upsell and receipt surfaces | Upsell/receipt pages currently keep more inline SDK roots than `shop-single-step`. | Partial: catalog agent contract and fixture exist; family-local include promotion remains future work. | Outside promoted all-page lint today. | Promote to shop-single-step parity includes in a focused follow-up. | P1 |
 | `olympus-mv-single-step` | MV selector and variant slots | Include: `src/olympus-mv-single-step/_includes/mv-configurable-selector.html`; used from checkout. | Yes: `checkout_step` controls selector id and headings; `packages.main_package` supplies the package id; `shipping_methods` supplies starter standard/free refs; `variant_slots` controls bundle ids, quantity, optional per-slot `package_id` / `items_json` overrides, shipping method, labels, and selected state. | Yes under `npm run lint:sdk:promoted`. | Add campaign-specific examples after the next MV build. | P1 |
 | `olympus-mv-two-step` | Select step and variant slots | Includes: `mv-selection-step.html` and `mv-slot-stage.html`; used from `src/olympus-mv-two-step/select.html`. | Yes: `select_step` and `checkout_step` keep selector ids aligned; `packages.main_package` supplies the package id; `shipping_methods` supplies starter standard/free refs; `variant_slots` controls bundle ids, quantity, optional per-slot `package_id` / `items_json` overrides, shipping method, labels, and selected state. | Yes under `npm run lint:sdk:promoted`. | Add campaign-specific examples after the next MV two-step build. | P1 |
 | `olympus-mv-*` | Checkout payment and summary | Payment, express checkout, and summary includes have catalog wrappers in both MV families. | Partial/no MV-specific summary contract. | Yes under promoted checkout/select rendered scope. | Add summary variant contract and receipt/upsell scope. | P2 |
@@ -109,6 +142,7 @@ The goal is not a small fixed set of templates. The goal is a growing library of
 - `npm run lint:sdk:promoted` covers promoted checkout/select surfaces for `olympus`, `limos`, `demeter`, `olympus-mv-single-step`, and `olympus-mv-two-step`.
 - `npm run lint:sdk:ci` covers checkout/select pages across all template families.
 - `npm run lint:sdk:shop-single-step:all` covers checkout, upsell, and receipt pages for `shop-single-step`.
+- `npm run lint:agent-contracts` validates the JSON catalog agent contracts and fixture shape.
 - `node scripts/lint-sdk.mjs --scope=limos --pages=all` covers checkout, upsell, and receipt pages for `limos`.
 - `node scripts/lint-sdk.mjs --scope=demeter --pages=all` covers checkout, upsell, and receipt pages for `demeter`.
 

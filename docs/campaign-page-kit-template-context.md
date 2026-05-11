@@ -16,9 +16,10 @@
 
 2. **Look up the current `sdk_version`** — do not guess or use a version from your training data. Read `_data/campaigns.json` from the [campaign-cart-starter-templates repo](https://github.com/NextCommerceCo/campaign-cart-starter-templates) and copy the exact `sdk_version` string from there. It changes with every SDK release.
 
-3. **Fetch the commerce surface catalog** before touching any template-family commerce components. It documents the Liquid params for each family's partials (bundle selector, payment methods, bumps, upsells, receipt, etc.):
+3. **Fetch the commerce surface catalog** before touching any template-family commerce components. It documents the Liquid params for each family's partials (bundle selector, payment methods, bumps, upsells, receipt, etc.) and includes per-family `agentContract` blocks plus fixture specs for mapping CampaignSpec/API truth into starter frontmatter:
    - Human-readable: https://raw.githubusercontent.com/NextCommerceCo/campaign-cart-starter-templates/main/docs/commerce-surface-catalog.md
    - Machine-readable: https://raw.githubusercontent.com/NextCommerceCo/campaign-cart-starter-templates/main/docs/commerce-surface-catalog.json
+   - Fixture specs: https://github.com/NextCommerceCo/campaign-cart-starter-templates/tree/main/docs/fixtures/campaign-specs
 
 4. **Include `gtm_id` and `fb_pixel_id` keys on every `campaigns.json` entry** — set them intentionally:
    - **`""` (empty string)** — layout **does not** inject GTM / Meta snippets in these starter templates (`base.html` uses `{% if campaign.gtm_id != "" %}` / `{% if campaign.fb_pixel_id != "" %}`).
@@ -70,6 +71,16 @@ High confidence means `>= 0.85` in the commerce surface JSON catalog. If the fam
 Reference catalog: [commerce-surface-catalog.md](https://raw.githubusercontent.com/NextCommerceCo/campaign-cart-starter-templates/main/docs/commerce-surface-catalog.md) and [commerce-surface-catalog.json](https://raw.githubusercontent.com/NextCommerceCo/campaign-cart-starter-templates/main/docs/commerce-surface-catalog.json).
 
 Current first-class families include `olympus`, `limos`, `demeter`, `olympus-mv-single-step`, `olympus-mv-two-step`, `shop-single-step`, and `shop-three-step`. This list should grow as the commerce surface library grows.
+
+For each first-class family, read `families[family].agentContract` in the JSON catalog before patching checkout, upsell, or receipt frontmatter. Treat `sharedFrontmatterVocabulary` as the cross-family dictionary:
+
+- `packages.*` values come from CampaignSpec page packages and Campaigns API package `ref_id`s.
+- `shipping_methods.*` values come from CampaignSpec/API shipping method `ref_id`s and are checkout/cart behavior only.
+- `bundles` and `variant_slots` define selector rows; prefer `quantity` plus `packages.main_package` over hand-written item JSON unless the spec needs custom item sets.
+- `order_bump`, `upsell_offer`, and `upsell_bundle_tiers` must be removed or changed when the target campaign does not expose the referenced package/voucher.
+- `receipt_summary` preserves SDK order-item template ids; do not rewrite receipt item templates when frontmatter can express the change.
+
+The fixtures in `docs/fixtures/campaign-specs/` are examples, not live Campaigns App exports. Use their `sdk_hints.frontmatter` blocks to understand the mapping, then replace every numeric `ref_id` from the target CampaignSpec/API.
 
 ---
 
