@@ -8,8 +8,7 @@ single_offer:
   selector_id: "main"
   bundle_id: "bundle-main"
   package_id: 1
-  shipping_id: 2
-  items_json: '[{"packageId":1,"quantity":1}]'
+  shipping_method: "standard"
   quantity: 1
   quantity_min: 1
   quantity_max: 5
@@ -38,6 +37,10 @@ packages:
   main_package: 1
   prepurchase_1: 7
   prepurchase_2: 9
+shipping_methods:
+  # Starter/demo Campaigns App shipping method ref_id.
+  # Replace this from the target CampaignSpec/Campaigns App when cloning the Limos shape.
+  standard: 2
 styles:
   - css/exit-intent-popup.css
 scripts:
@@ -65,7 +68,7 @@ scripts:
                       </svg></div>
                     <div><span class="checkout-high-demand__highlight">High Demand:</span> 62 people are looking at this offer!</div>
                   </div>
-                  {% campaign_include 'single-offer-quantity-selector.html' %}
+                  {% campaign_include 'single-offer-quantity-selector.html' packages=packages shipping_methods=shipping_methods %}
                 </div>
                 <div class="show-tablet">
                   <div class="checkout-features__section">

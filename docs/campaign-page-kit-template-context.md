@@ -595,7 +595,7 @@ Sets the shipping method when a card is selected. Works on both `data-next-selec
 
 All cards in a selector should have `data-next-shipping-id` if any do — cards without it will not change the active shipping method when selected.
 
-Do not carry starter/demo shipping IDs between campaigns. `campaign-build` renders template frontmatter as-is; it does not validate a CampaignSpec or remap shipping refs. In `olympus`, use `shipping_methods.standard` / `shipping_methods.free` in checkout frontmatter, replacing the starter refs with target Campaigns App shipping method `ref_id`s. If the target campaign does not have tier-specific shipping, leave those values blank or remove `shipping_method` from the bundle rows.
+Do not carry starter/demo shipping IDs between campaigns. `campaign-build` renders template frontmatter as-is; it does not validate a CampaignSpec or remap shipping refs. In starter templates that expose selector shipping, use `shipping_methods.standard` / `shipping_methods.free` in checkout frontmatter, replacing the starter refs with target Campaigns App shipping method `ref_id`s. If the target campaign does not have tier-specific shipping, leave those values blank or remove `shipping_method` from the bundle rows.
 
 ### Add to cart button
 

@@ -18,23 +18,28 @@ checkout_step:
   slot_heading: "Select your color and size"
 packages:
   main_package: 1
+shipping_methods:
+  # Starter/demo Campaigns App shipping method ref_ids.
+  # Replace these from the target CampaignSpec/Campaigns App when cloning the Olympus MV shape.
+  standard: 2
+  free: 1
 variant_slots:
   - id: "buy1"
     quantity: 1
-    shipping_id: 2
+    shipping_method: "standard"
     selected: true
     title: "1x Unit"
     card_sup: "Next Commerce Shirts"
   - id: "buy2"
     quantity: 2
-    shipping_id: 2
+    shipping_method: "standard"
     title: "2x Units"
     card_sup: "Next Commerce Shirts"
     label_text: "Most Popular"
     label_class: "os-card__label-2 os-card__label--middle-center os-card__label--pill-primary"
   - id: "buy3"
     quantity: 3
-    shipping_id: 1
+    shipping_method: "free"
     title: "3x Units"
     card_sup: "Next Commerce Shirts"
     label_text: "Best Deal"
@@ -229,7 +234,7 @@ swiper_thumbs:
                     <promo-timer{% if promo_sale %} force-sale="{{ promo_sale }}"{% endif %}></promo-timer>
                     <div class="checkout-form">
                       <div class="checkout-selectors" data-next-await="">
-                        {% campaign_include 'mv-configurable-selector.html' %}
+                        {% campaign_include 'mv-configurable-selector.html' packages=packages shipping_methods=shipping_methods variant_slots=variant_slots %}
                         <div class="form-section form-section--first">
                           <div class="_2step__size-guide">
                             <div class="size_chart-wrapper">

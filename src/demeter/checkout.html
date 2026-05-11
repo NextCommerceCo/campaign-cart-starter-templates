@@ -26,6 +26,27 @@ packages:
   main_package: 1
   prepurchase_1: 7
   prepurchase_2: 9
+shipping_methods:
+  # Starter/demo Campaigns App shipping method ref_ids.
+  # Replace these from the target CampaignSpec/Campaigns App when cloning the Demeter shape.
+  standard: 2
+  free: 1
+bundles:
+  - id: "bundle-1x"
+    quantity: 1
+    shipping_method: "standard"
+    selected: true
+    title_prefix: "1x "
+    badge_text: "BEST DEAL"
+  - id: "bundle-2x"
+    quantity: 2
+    shipping_method: "standard"
+    title_prefix: "2x "
+  - id: "bundle-3x"
+    quantity: 3
+    shipping_method: "free"
+    title_prefix: "3x "
+    total_tone_class: "os-dark"
 scripts:
   - js/promo-banner.js
   - js/promo-timer.js
@@ -64,7 +85,7 @@ scripts:
                               <div class="form-sections">
                                 <div class="form-section form-section--first">
                                   <h2 class="form-section__title">Select Your Bundle</h2>
-                                  {% campaign_include 'editorial-tier-selector.html' %}
+                                  {% campaign_include 'editorial-tier-selector.html' packages=packages shipping_methods=shipping_methods bundles=bundles %}
                                   <!-- Canonical Demeter checkout pattern: manual inline bundle cards.
                                    This keeps data-next-display="package.*" bindings reliable for image/name in initial DOM. -->
                                   {% comment %}
@@ -75,7 +96,7 @@ scripts:
                                   <div
                                     data-next-bundle-selector
                                     data-next-selector-id="main"
-                                    data-next-bundles='[{"id":"bundle-1x","title":"1x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":2,"labelSlotClass":"","totalToneClass":"","badgeText":"Most Popular","badgePillClass":"os-card__label--pill-primary","items":[{"packageId":1,"quantity":1}],"selected":true},{"id":"bundle-2x","title":"2x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":2,"labelSlotClass":"","totalToneClass":"","badgeText":"Best Deal","badgePillClass":"os-card__label--pill-secondary","items":[{"packageId":1,"quantity":2}]},{"id":"bundle-3x","title":"3x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":1,"labelSlotClass":"hide","totalToneClass":"os-dark","badgeText":"","badgePillClass":"","items":[{"packageId":1,"quantity":3}]}]'
+                                    data-next-bundles='[{"id":"bundle-1x","title":"1x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":"SPEC_STANDARD_SHIPPING_REF","labelSlotClass":"","totalToneClass":"","badgeText":"Most Popular","badgePillClass":"os-card__label--pill-primary","items":[{"packageId":1,"quantity":1}],"selected":true},{"id":"bundle-2x","title":"2x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":"SPEC_STANDARD_SHIPPING_REF","labelSlotClass":"","totalToneClass":"","badgeText":"Best Deal","badgePillClass":"os-card__label--pill-secondary","items":[{"packageId":1,"quantity":2}]},{"id":"bundle-3x","title":"3x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":"SPEC_FREE_SHIPPING_REF","labelSlotClass":"hide","totalToneClass":"os-dark","badgeText":"","badgePillClass":"","items":[{"packageId":1,"quantity":3}]}]'
                                     data-next-selection-mode="swap"
                                     data-next-include-shipping="true"
                                     class="os-option os-cards__vertical os--gap-xl"

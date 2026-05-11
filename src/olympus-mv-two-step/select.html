@@ -17,23 +17,28 @@ checkout_step:
   selector_id: "main"
 packages:
   main_package: 1
+shipping_methods:
+  # Starter/demo Campaigns App shipping method ref_ids.
+  # Replace these from the target CampaignSpec/Campaigns App when cloning the Olympus MV shape.
+  standard: 2
+  free: 1
 variant_slots:
   - id: "buy1"
     quantity: 1
-    shipping_id: 2
+    shipping_method: "standard"
     selected: true
     title: "1x Unit"
     card_sup: "Next Commerce Shirts"
   - id: "buy2"
     quantity: 2
-    shipping_id: 2
+    shipping_method: "standard"
     title: "2x Units"
     card_sup: "Next Commerce Shirts"
     label_text: "Most Popular"
     label_class: "os-card__label-2 os-card__label--middle-center os-card__label--pill-primary"
   - id: "buy3"
     quantity: 3
-    shipping_id: 1
+    shipping_method: "free"
     title: "3x Units"
     card_sup: "Next Commerce Shirts"
     label_text: "Best Deal"
@@ -104,7 +109,7 @@ variant_slots:
                         </div>
                         <div class="_2step_form-selector-2 cc-qty">
                           <div class="selector__wrapper">
-                            {% campaign_include 'mv-selection-step.html' %}
+                            {% campaign_include 'mv-selection-step.html' packages=packages shipping_methods=shipping_methods variant_slots=variant_slots %}
                           <div data-next-component="quantity-cta" class="checkout_cta-sec">
                             <button data-next-action="select-variants" class="button cc-gold">
                               <div data-next-component="loader" class="submit-button__loader">

@@ -8,8 +8,10 @@
     await:              bool, default true. Renders skeleton while bundle prices hydrate.
     include_shipping:   bool, default true. Kept for parity with tier-specific data-next-shipping-id.
     selection_mode:     enum [swap, select], default "swap".
+    packages:           object, optional. Dict with main_package key used to synthesize bundle item JSON.
+    shipping_methods:   object, optional. Dict of Campaigns App shipping method ref_ids, e.g. standard/free.
 	    bundles:            array of card defs. Defaults to canonical Demeter 1x/2x/3x package_id 1 tiers.
-	                        Each card: { id, shipping_id, items_json, selected, title_prefix,
+	                        Each card: { id, quantity, shipping_method, shipping_id, items_json, selected, title_prefix,
 	                          package_id, subtitle_text, shipping_label, total_tone_class,
 	                          badge_text, badge_class, price_display_variant }
 	    price_display_variant: enum [compare-unit-total, total-only], default "compare-unit-total".
@@ -32,11 +34,12 @@
     css_vars_designer_owns: []
   next_dont_touch:
     - data-next-* attributes are SDK-owned; renaming breaks runtime.
-    - data-next-shipping-id values must be valid Campaigns API ref_ids.
+    - data-next-shipping-id values must be valid Campaigns API ref_ids; do not carry demo ref_ids between campaigns.
     - data-next-bundle-items packageId values must exist in the Campaigns API.
     - Single-brace display tokens are not used in this partial; package image/name bind through SDK data-next-display.
   next_gotchas:
     - Demeter currently preserves manual inline cards because data-next-display="package.*" is reliable in initial DOM.
+    - The Demeter starter page sets demo shipping_methods in frontmatter to demonstrate standard/free tier wiring. Replace those refs from the CampaignSpec/Campaigns App for each campaign.
     - `subtitle_text` and `shipping_label` are free text; validate offer/shipping truth outside this include.
   next_variants:
     - editorial-3-tier (default)
@@ -51,10 +54,22 @@
   <div class="os-cards__vertical os--gap-m">
     {% if bundles -%}
     {% for b in bundles -%}
-    <div data-next-bundle-card data-next-bundle-id="{{ b.id }}"{% if b.shipping_id %} data-next-shipping-id="{{ b.shipping_id }}"{% endif %} data-next-bundle-items='{{ b.items_json }}'{% if b.selected %} data-next-selected="true"{% endif %} role="button" class="os-card">
+    {% assign card_package_id = b.package_id | default: packages.main_package | default: 1 -%}
+    {% assign card_quantity = b.quantity | default: 1 -%}
+    {% assign shipping_key = b.shipping_method -%}
+    {% assign card_shipping_id = b.shipping_id -%}
+    {% if card_shipping_id == nil and shipping_key %}{% assign card_shipping_id = shipping_methods[shipping_key] %}{% endif -%}
+    {% if b.items_json -%}
+      {% assign card_items = b.items_json -%}
+    {% elsif b.items -%}
+      {% assign card_items = b.items -%}
+    {% else -%}
+      {% capture card_items %}[{"packageId":{{ card_package_id }},"quantity":{{ card_quantity }}}]{% endcapture -%}
+    {% endif -%}
+    <div data-next-bundle-card data-next-bundle-id="{{ b.id }}"{% if card_shipping_id %} data-next-shipping-id="{{ card_shipping_id }}"{% endif %} data-next-bundle-items='{{ card_items }}'{% if b.selected %} data-next-selected="true"{% endif %} role="button" class="os-card">
       <div class="os-card__header-slot"></div>
       <div class="os-card__wrapper">
-        <div class="os-card__content os--align-middle" data-next-package-id="{{ b.package_id | default: 1 }}">
+        <div class="os-card__content os--align-middle" data-next-package-id="{{ card_package_id }}">
           <div{% if b.selected %} data-selected="true"{% endif %} class="radio-style-1">
             <div class="radio-inner"></div>
           </div>
@@ -106,10 +121,13 @@
     </div>
     {% endfor -%}
     {% else -%}
-    <div data-next-bundle-card data-next-bundle-id="bundle-1x" data-next-shipping-id="2" data-next-bundle-items='[{"packageId":1,"quantity":1}]' data-next-selected="true" role="button" class="os-card">
+    {%- assign _pkg = packages.main_package | default: 1 -%}
+    {%- assign _standard_ship = shipping_methods.standard -%}
+    {%- assign _free_ship = shipping_methods.free -%}
+    <div data-next-bundle-card data-next-bundle-id="bundle-1x"{% if _standard_ship %} data-next-shipping-id="{{ _standard_ship }}"{% endif %} data-next-bundle-items='[{"packageId":{{ _pkg }},"quantity":1}]' data-next-selected="true" role="button" class="os-card">
       <div class="os-card__header-slot"></div>
       <div class="os-card__wrapper">
-        <div class="os-card__content os--align-middle" data-next-package-id="1">
+        <div class="os-card__content os--align-middle" data-next-package-id="{{ _pkg }}">
           <div data-selected="true" class="radio-style-1">
             <div class="radio-inner"></div>
           </div>
@@ -150,10 +168,10 @@
         </div>
       </div>
     </div>
-    <div data-next-bundle-card data-next-bundle-id="bundle-2x" data-next-shipping-id="2" data-next-bundle-items='[{"packageId":1,"quantity":2}]' role="button" class="os-card">
+    <div data-next-bundle-card data-next-bundle-id="bundle-2x"{% if _standard_ship %} data-next-shipping-id="{{ _standard_ship }}"{% endif %} data-next-bundle-items='[{"packageId":{{ _pkg }},"quantity":2}]' role="button" class="os-card">
       <div class="os-card__header-slot"></div>
       <div class="os-card__wrapper">
-        <div class="os-card__content os--align-middle" data-next-package-id="1">
+        <div class="os-card__content os--align-middle" data-next-package-id="{{ _pkg }}">
           <div class="radio-style-1">
             <div class="radio-inner"></div>
           </div>
@@ -190,10 +208,10 @@
       <div class="os-card__footer-slot"></div>
       <div class="os-card__label-slot"></div>
     </div>
-    <div data-next-bundle-card data-next-bundle-id="bundle-3x" data-next-shipping-id="1" data-next-bundle-items='[{"packageId":1,"quantity":3}]' role="button" class="os-card">
+    <div data-next-bundle-card data-next-bundle-id="bundle-3x"{% if _free_ship %} data-next-shipping-id="{{ _free_ship }}"{% endif %} data-next-bundle-items='[{"packageId":{{ _pkg }},"quantity":3}]' role="button" class="os-card">
       <div class="os-card__header-slot"></div>
       <div class="os-card__wrapper">
-        <div class="os-card__content os--align-middle" data-next-package-id="1">
+        <div class="os-card__content os--align-middle" data-next-package-id="{{ _pkg }}">
           <div class="radio-style-1">
             <div class="radio-inner"></div>
           </div>

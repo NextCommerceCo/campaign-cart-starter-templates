@@ -75,6 +75,8 @@
         "single_offer",
         "selector_id",
         "package_id",
+        "shipping_methods",
+        "shipping_method",
         "shipping_id",
         "quantity_min",
         "quantity_max",
@@ -113,6 +115,8 @@
       ],
       "frontmatterInputsObserved": [
         "bundles",
+        "packages",
+        "shipping_methods",
         "selector_id",
         "selection_mode",
         "price_display_variant",
@@ -184,6 +188,7 @@
       "frontmatterInputsObserved": [
         "checkout_step",
         "packages",
+        "shipping_methods",
         "selector_id",
         "swiper_slides",
         "swiper_thumbs",
@@ -217,6 +222,7 @@
       "frontmatterInputsObserved": [
         "checkout_step",
         "packages",
+        "shipping_methods",
         "select_step",
         "selector_id",
         "variant_slots"
