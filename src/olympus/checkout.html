@@ -41,6 +41,30 @@ packages:
   main_package: 1
   prepurchase_1: 7
   prepurchase_2: 9
+shipping_methods:
+  # Starter/demo Campaigns App shipping method ref_ids.
+  # Replace these from the target CampaignSpec/Campaigns App when cloning the Olympus shape.
+  standard: 2
+  free: 1
+bundles:
+  - id: "bundle-1x"
+    quantity: 1
+    shipping_method: "standard"
+    selected: true
+    title_prefix: "1x "
+    badge_text: "Most Popular"
+    badge_pill_class: "os-card__label--pill-primary"
+  - id: "bundle-2x"
+    quantity: 2
+    shipping_method: "standard"
+    title_prefix: "2x "
+    badge_text: "Best Deal"
+    badge_pill_class: "os-card__label--pill-secondary"
+  - id: "bundle-3x"
+    quantity: 3
+    shipping_method: "free"
+    title_prefix: "3x "
+    total_tone_class: "os-dark"
 ---
 <div class="page-wrapper">
       <div class="main-wrapper">
@@ -211,9 +235,9 @@ packages:
                           <div class="form-sections">
                             <div class="form-section grid-row-gap2 form-section--first">
                               <h2 class="form-section__title">Step 1: Pick Your Bundle Deal</h2>
-                              <!-- v0 catalog: bundle-selector partial. Canonical 3-tier defaults (1x/2x/3x package_id 1) embedded in partial; pass `bundles=[...]` to override.
+                              <!-- v0 catalog: bundle-selector partial. Canonical 3-tier defaults live in page frontmatter so CampaignSpec package/shipping ids stay visible.
                                    Reference variant (data-next-bundles= JSON config-driven) preserved below as commented reference. -->
-                              {% campaign_include 'bundle-selector.html' selector_id='main' packages=packages %}
+                              {% campaign_include 'bundle-selector.html' selector_id='main' packages=packages shipping_methods=shipping_methods bundles=bundles %}
                               {% comment %}
                               Reference only — optional config-driven variant.
                               Kept for experimentation; do not treat as the default for Olympus checkout.
@@ -222,7 +246,7 @@ packages:
                               <div
                                 data-next-bundle-selector
                                 data-next-selector-id="main"
-                                data-next-bundles='[{"id":"bundle-1x","title":"1x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":2,"labelSlotClass":"","totalToneClass":"","badgeText":"Most Popular","badgePillClass":"os-card__label--pill-primary","items":[{"packageId":1,"quantity":1}],"selected":true},{"id":"bundle-2x","title":"2x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":2,"labelSlotClass":"","totalToneClass":"","badgeText":"Best Deal","badgePillClass":"os-card__label--pill-secondary","items":[{"packageId":1,"quantity":2}]},{"id":"bundle-3x","title":"3x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":1,"labelSlotClass":"hide","totalToneClass":"os-dark","badgeText":"","badgePillClass":"","items":[{"packageId":1,"quantity":3}]}]'
+                                data-next-bundles='[{"id":"bundle-1x","title":"1x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":"SPEC_STANDARD_SHIPPING_REF","labelSlotClass":"","totalToneClass":"","badgeText":"Most Popular","badgePillClass":"os-card__label--pill-primary","items":[{"packageId":1,"quantity":1}],"selected":true},{"id":"bundle-2x","title":"2x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":"SPEC_STANDARD_SHIPPING_REF","labelSlotClass":"","totalToneClass":"","badgeText":"Best Deal","badgePillClass":"os-card__label--pill-secondary","items":[{"packageId":1,"quantity":2}]},{"id":"bundle-3x","title":"3x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":"SPEC_FREE_SHIPPING_REF","labelSlotClass":"hide","totalToneClass":"os-dark","badgeText":"","badgePillClass":"","items":[{"packageId":1,"quantity":3}]}]'
                                 data-next-selection-mode="swap"
                                 data-next-include-shipping="true"
                                 class="os-option os-cards__vertical os--gap-xl"

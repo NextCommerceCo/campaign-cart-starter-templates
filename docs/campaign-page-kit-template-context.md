@@ -589,11 +589,13 @@ Sets the shipping method when a card is selected. Works on both `data-next-selec
 
 ```html
 <!-- Bundle cards — functional from SDK 0.4.12 -->
-<div data-next-bundle-card data-next-bundle-id="buy1" data-next-shipping-id="2" ...>1x — $5 shipping</div>
-<div data-next-bundle-card data-next-bundle-id="buy3" data-next-shipping-id="1" ...>3x — Free shipping</div>
+<div data-next-bundle-card data-next-bundle-id="buy1" data-next-shipping-id="SPEC_STANDARD_SHIPPING_REF" ...>1x — $5 shipping</div>
+<div data-next-bundle-card data-next-bundle-id="buy3" data-next-shipping-id="SPEC_FREE_SHIPPING_REF" ...>3x — Free shipping</div>
 ```
 
 All cards in a selector should have `data-next-shipping-id` if any do — cards without it will not change the active shipping method when selected.
+
+Do not carry starter/demo shipping IDs between campaigns. `campaign-build` renders template frontmatter as-is; it does not validate a CampaignSpec or remap shipping refs. In `olympus`, use `shipping_methods.standard` / `shipping_methods.free` in checkout frontmatter, replacing the starter refs with target Campaigns App shipping method `ref_id`s. If the target campaign does not have tier-specific shipping, leave those values blank or remove `shipping_method` from the bundle rows.
 
 ### Add to cart button
 

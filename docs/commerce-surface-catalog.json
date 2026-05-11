@@ -42,6 +42,8 @@
       "frontmatterInputsObserved": [
         "bundles",
         "bump_features",
+        "packages",
+        "shipping_methods",
         "swiper_slides",
         "swiper_thumbs"
       ]

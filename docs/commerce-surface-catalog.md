@@ -27,7 +27,7 @@ High confidence currently means `>= 0.85`, matching the JSON catalog. If the top
 
 | Family | Status | Primary Checkout Surface | Summary | Notes |
 | --- | --- | --- | --- | --- |
-| `olympus` | Partial frontmatter API exists | Tiered bundle selector | `cart-summary01-04` | Reference model from Meridian `theduo-v2`; `bundles:` frontmatter feeds `bundle-selector.html`. |
+| `olympus` | Partial frontmatter API exists | Tiered bundle selector | `cart-summary01-04` | Reference model from Meridian `theduo-v2`; `bundles:` frontmatter feeds `bundle-selector.html`, and `shipping_methods` keeps Campaigns App shipping refs explicit. |
 | `limos` | Partial include/frontmatter API exists | Single offer card with native quantity stepper | `cart-summary02` accordion | Roadflare checkout plus upsell/receipt surfaces are include-owned; upsell exposes `upsell_offer` / `upsell_bundle_tiers`, receipt exposes `receipt_summary`. |
 | `demeter` | Partial include/frontmatter API exists | Editorial tier cards | `cart-summary03` side cart | Veyra checkout plus upsell/receipt surfaces are include-owned; upsell exposes `upsell_offer` / `upsell_bundle_tiers`, receipt exposes `receipt_summary`. |
 | `shop-single-step` | Partial include API exists | Shop checkout with single-step payment | `cart-summary04` checkout summary | Highly used shop flow; checkout, receipt, and upsell SDK surfaces are now include-owned and catalog-wrapped. |
@@ -38,7 +38,7 @@ High confidence currently means `>= 0.85`, matching the JSON catalog. If the top
 
 | Family | Surface | Current Implementation | Frontmatter Contract | Lint Coverage | Promotion Needed | Priority |
 | --- | --- | --- | --- | --- | --- | --- |
-| `olympus` | Tiered bundle selector | Include: `src/olympus/_includes/bundle-selector.html`; used from `src/olympus/checkout.html`. | Yes: `selector_id`, `await`, `include_shipping`, `selection_mode`, `bundles`. Meridian `theduo-v2` passes `bundles:` frontmatter. | Yes for default checkout source/rendered scope. | Finish parity for related variants and wrappers. | P1 |
+| `olympus` | Tiered bundle selector | Include: `src/olympus/_includes/bundle-selector.html`; used from `src/olympus/checkout.html`. | Yes: `selector_id`, `await`, `include_shipping`, `selection_mode`, `packages.main_package`, `shipping_methods`, and `bundles` with quantity-driven item JSON. Starter `shipping_methods` demonstrate standard/free tier wiring and must be replaced from the target CampaignSpec/Campaigns App. | Yes for default checkout source/rendered scope. | Finish parity for related variants and wrappers. | P1 |
 | `olympus` | Order summary | Includes: `cart-summary01.html` through `cart-summary04.html` have component headers/wrappers. | Partial: no summary frontmatter API yet. | Yes for default checkout source/rendered scope. | Expose `cart_summary_variant`. | P2 |
 | `olympus` | Payment shell | Include: `payment-methods.html`; express checkout has a matching component header. | Yes: `show_paypal`, `show_klarna`, `show_apple_pay`, `show_google_pay`. | Yes for default Olympus checkout/rendered wrapper path. | Keep as shared model for other families. | P2 |
 | `olympus` | Order bump | `bump-check01.html`, `bump-check02.html`, and `bump-switch01.html` have component headers/wrappers. | Partial: `package_id`, text/image/features, sync flags only on check01. | Yes for rendered wrapper scope when variants are used. | Add parameter parity across bump variants. | P1 |
