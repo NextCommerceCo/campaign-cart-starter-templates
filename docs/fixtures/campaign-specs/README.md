@@ -1,6 +1,6 @@
 # CampaignSpec Agent Fixtures
 
-These JSON files are small CampaignSpec-shaped examples for agent reasoning and Sam review. They are not live Campaigns App exports and should not be used as production campaign data.
+These JSON files are small CampaignSpec-shaped examples for agent reasoning and human review. They are not live Campaigns App exports and should not be used as production campaign data.
 
 What they are for:
 

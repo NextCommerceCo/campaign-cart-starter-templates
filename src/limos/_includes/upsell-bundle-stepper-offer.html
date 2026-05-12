@@ -1,5 +1,5 @@
 <!--
-  next_component: limos-upsell-bundle-stepper-offer
+  next_component: upsell-bundle-stepper-offer
   next_version: 1
   next_sdk_owns: bundle selector, bundle cards, quantity control, upsell add/skip actions
   next_sdk_surface: upsell offer
@@ -20,7 +20,7 @@
 {% assign bundle_price_path = 'bundle.' | append: selector_id | append: '.price' -%}
 {% assign bundle_original_price_path = 'bundle.' | append: selector_id | append: '.originalPrice' -%}
 {% assign bundle_discount_path = 'bundle.' | append: selector_id | append: '.discountPercentage' -%}
-<div data-next-catalog-component="limos-upsell-offer">
+<div data-next-catalog-component="upsell-bundle-stepper-offer">
       <section class="section upsell-box">
         <div class="container">
           <div class="upsell-wrapper" data-next-upsell="offer" data-next-await="">
