@@ -82,6 +82,8 @@ For each first-class family, read `families[family].agentContract` in the JSON c
 
 The fixtures in `docs/fixtures/campaign-specs/` are examples, not live Campaigns App exports. Use their `sdk_hints.frontmatter` blocks to understand the mapping, then replace every numeric `ref_id` from the target CampaignSpec/API.
 
+Market-sensitive starter copy is also a contract surface. If the campaign is country-specific or multi-market, or if the CampaignSpec declares additional currencies, non-US shipping countries, or `available_shipping_countries: "all"`, scan visible copy for US-only assumptions such as `USPS`, `ships from the USA`, `US warehouse`, `contiguous US`, `All US orders ship free`, `Made in USA`, `manufactured in the USA`, `State`, and `ZIP Code`. Treat matches as replace-or-confirm campaign copy. Warn and preserve only when the CampaignSpec, source design, or operator confirms the claim; do not remove them automatically.
+
 ---
 
 ## Read the SDK docs first

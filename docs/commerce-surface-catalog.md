@@ -51,6 +51,14 @@ The important boundary is: CampaignSpec/API owns package refs, shipping refs, vo
 
 Catalog component names should be generic by default. Use names like `upsell-bundle-stepper-offer`, `upsell-bundle-tier-pills-offer`, and `upsell-bundle-tier-cards-offer` when the SDK attributes and frontmatter contract are shared across families. Reserve family-specific names for surfaces with genuinely different SDK ownership or frontmatter contracts, such as MV configurable upsells.
 
+## Market-Sensitive Copy Review
+
+Starter templates include demo copy for shipping, carrier, warehouse, address, and manufacturing claims. Treat those claims as replace-or-confirm campaign copy when the CampaignSpec declares additional currencies, non-US shipping countries, `available_shipping_countries: "all"`, or the builder records the campaign as country-specific or multi-market.
+
+This is a warning contract, not an automatic removal rule. Some global campaigns really do ship from a US warehouse or manufacture in the USA. Preserve those claims only when the CampaignSpec, source design, or operator explicitly confirms them.
+
+Warn on obvious market-sensitive patterns such as `USPS`, `ships from the USA`, `US warehouse`, `contiguous US`, `All US orders ship free`, `Made in USA`, `manufactured in the USA`, `State`, and `ZIP Code`.
+
 ## Fixture Specs
 
 Each first-class checkout family has a small CampaignSpec-shaped fixture:
