@@ -6,7 +6,7 @@
 // the catalog and CampaignSpec-shaped fixtures stay coherent.
 
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
-import { join, relative } from 'node:path';
+import { extname, join, relative } from 'node:path';
 
 const repoRoot = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
 const catalogPath = join(repoRoot, 'docs/commerce-surface-catalog.json');
@@ -91,6 +91,7 @@ for (const family of expectedFamilies) {
 
   requireArray(contract.fixtures, `catalog.families.${family}.agentContract.fixtures`);
   requireArray(contract.surfaces, `catalog.families.${family}.agentContract.surfaces`);
+  validateFamilyAssetReferences(family, srcDir);
 
   for (const fixture of contract.fixtures || []) {
     const fixturePath = join(repoRoot, fixture);
@@ -101,6 +102,34 @@ for (const family of expectedFamilies) {
     const spec = readJson(fixturePath);
     if (!spec) continue;
     validateFixture(spec, fixturePath, family);
+  }
+}
+
+function walkFiles(dir, files = []) {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      walkFiles(path, files);
+    } else if (entry.isFile()) {
+      files.push(path);
+    }
+  }
+  return files;
+}
+
+function validateFamilyAssetReferences(family, srcDir) {
+  const assetPattern = /(['"])([^'"]+)\1\s*\|\s*campaign_asset/g;
+  for (const file of walkFiles(srcDir)) {
+    if (!['.html', '.css', '.js'].includes(extname(file))) continue;
+    const content = readFileSync(file, 'utf8');
+    for (const match of content.matchAll(assetPattern)) {
+      const assetPath = match[2];
+      if (/^(?:https?:)?\/\//.test(assetPath) || assetPath.startsWith('/')) continue;
+      const fullPath = join(srcDir, 'assets', assetPath);
+      if (!existsSync(fullPath)) {
+        errors.push(`${relative(repoRoot, file)}: campaign_asset reference "${assetPath}" does not exist under src/${family}/assets/`);
+      }
+    }
   }
 }
 
