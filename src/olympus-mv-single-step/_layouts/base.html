@@ -15,11 +15,17 @@
     <script src="{{ 'config.js' | campaign_asset }}"></script>
 
     <!-- NEXT Metatags -->
+    {% if meta_tags and meta_tags != empty %}
+    {% for tag in meta_tags %}
+    {% if tag[1] %}<meta name="{{ tag[0] }}" content="{{ tag[1] }}">{% endif %}
+    {% endfor %}
+    {% else %}
     <meta name="next-funnel" content="{{ campaign.name }}">
     {% if next_url %}<meta name="next-success-url" content="{{ next_url | campaign_link }}">{% endif %}
     {% if next_url %}<meta name="next-upsell-accept-url" content="{{ next_url | campaign_link }}">{% endif %}
     {% if decline_url %}<meta name="next-upsell-decline-url" content="{{ decline_url | campaign_link }}">{% endif %}
     <meta name="next-page-type" content="{{ page_type }}">
+    {% endif %}
     <!-- BS-013 / Known #8 diagnostic only: <meta name="next-clear-cart" content="true"> clears session cart every load (masks merge bugs; breaks persistence — do not ship). -->
 
     <!-- Campaign Cart SDK -->
