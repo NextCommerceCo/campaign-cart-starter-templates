@@ -14,9 +14,9 @@
     "lint:sdk": "node scripts/lint-sdk.mjs",
     "lint:sdk:source": "node scripts/lint-sdk.mjs --source",
     "lint:sdk:rendered": "node scripts/lint-sdk.mjs --rendered",
-    "lint:sdk:promoted": "node scripts/lint-sdk.mjs --scope=promoted --pages=checkout,select",
-    "lint:sdk:promoted:source": "node scripts/lint-sdk.mjs --source --scope=promoted --pages=checkout,select",
-    "lint:sdk:promoted:rendered": "node scripts/lint-sdk.mjs --rendered --scope=promoted --pages=checkout,select",
+    "lint:sdk:promoted": "node scripts/lint-sdk.mjs --scope=promoted --pages=checkout,select,upsell-bundle-stepper,upsell-bundle-tier-pills,upsell-bundle-tier-cards,upsell-mv",
+    "lint:sdk:promoted:source": "node scripts/lint-sdk.mjs --source --scope=promoted --pages=checkout,select,upsell-bundle-stepper,upsell-bundle-tier-pills,upsell-bundle-tier-cards,upsell-mv",
+    "lint:sdk:promoted:rendered": "node scripts/lint-sdk.mjs --rendered --scope=promoted --pages=checkout,select,upsell-bundle-stepper,upsell-bundle-tier-pills,upsell-bundle-tier-cards,upsell-mv",
     "lint:sdk:shop-single-step:all": "node scripts/lint-sdk.mjs --scope=shop-single-step --pages=all",
     "lint:sdk:ci": "CI=1 node scripts/lint-sdk.mjs --scope=all --pages=checkout,select",
     "lint:agent-contracts": "node scripts/lint-agent-contracts.mjs"

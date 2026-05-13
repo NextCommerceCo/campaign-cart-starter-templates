@@ -250,7 +250,7 @@
   "families": {
     "olympus": {
       "description": "Single-step checkout with tiered bundle cards and strong direct-response checkout framing.",
-      "frontmatterStatus": "partial",
+      "frontmatterStatus": "include-driven",
       "strongSignals": [
         "olympus in spec, path, or export metadata",
         "os-card tier bundle selector",
@@ -332,8 +332,7 @@
             "order_bump.*.package_id",
             "upsell_offer.*",
             "upsell_bundle_tiers[].items_json",
-            "upsell_bundle_tiers[].vouchers_json",
-            "matching inline upsell package/voucher refs until upsell includes are promoted"
+            "upsell_bundle_tiers[].vouchers_json"
           ],
           "removeWhenUnsupported": [
             "bundles[].shipping_method when no tier-specific shipping exists",
@@ -391,9 +390,9 @@
           {
             "name": "Olympus bundle upsell pages",
             "partials": [
-              "upsell-bundle-stepper.html",
-              "upsell-bundle-tier-pills.html",
-              "upsell-bundle-tier-cards.html"
+              "upsell-bundle-stepper-offer.html",
+              "upsell-bundle-tier-pills-offer.html",
+              "upsell-bundle-tier-cards-offer.html"
             ],
             "ownedInputs": [
               "upsell_offer",
@@ -411,7 +410,7 @@
         ],
         "agentNotes": [
           "Use this family only when the design really has the Olympus tiered checkout shape; do not default here from a generic checkout.",
-          "Olympus bundle upsell pages declare upsell frontmatter as mapping hints, but still render inline SDK package/voucher refs today; replace both until those pages are promoted to include-owned upsell partials."
+          "Olympus bundle upsell pages use include-owned offer partials; replace upsell_offer and upsell_bundle_tiers from the target CampaignSpec/API."
         ]
       }
     },
@@ -1202,7 +1201,7 @@
     },
     "shop-three-step": {
       "description": "Shop-style three-step checkout with separate information, shipping, and billing pages plus dynamic shipping options.",
-      "frontmatterStatus": "partial",
+      "frontmatterStatus": "include-driven",
       "strongSignals": [
         "shop-three-step in spec, path, or export metadata",
         "information.html -> shipping.html -> billing.html flow",
@@ -1227,7 +1226,7 @@
         "upsell_bundle_tiers"
       ],
       "agentContract": {
-        "status": "partial-needs-promotion",
+        "status": "upsell-include-driven",
         "templateRole": "Shop checkout split into information, shipping, and billing steps; shipping methods are runtime-derived, not frontmatter refs.",
         "sourceOfTruth": {
           "campaignSpec": [
@@ -1264,15 +1263,12 @@
           "demoOnlyValues": [
             "upsell_offer.package_id=3",
             "upsell_offer.vouchers_json=[\"UP50\"]",
-            "upsell_bundle_tiers packageId=3",
-            "inline upsell packageId=3",
-            "inline upsell vouchers=[\"UP50\"]"
+            "upsell_bundle_tiers packageId=3"
           ],
           "replaceFromSpecOrApi": [
             "upsell_offer.*",
             "upsell_bundle_tiers[].items_json",
             "upsell_bundle_tiers[].vouchers_json",
-            "matching inline upsell package/voucher refs until upsell includes are promoted",
             "payment method visibility",
             "receipt summary markup once promoted"
           ],
@@ -1308,18 +1304,20 @@
             ]
           },
           {
-            "name": "upsell and receipt surfaces",
+            "name": "upsell selectors/actions",
             "partials": [
-              "inline today; promote to shop-single-step parity includes next"
+              "upsell-bundle-stepper-offer.html",
+              "upsell-bundle-tier-pills-offer.html",
+              "upsell-bundle-tier-cards-offer.html"
             ],
             "ownedInputs": [
               "upsell_offer",
-              "upsell_bundle_tiers",
-              "receipt_summary"
+              "upsell_bundle_tiers"
             ],
             "sdkRoots": [
               "data-next-upsell",
-              "data-next-order-items"
+              "data-next-bundle-selector",
+              "data-next-bundle-card"
             ]
           }
         ],
@@ -1328,7 +1326,7 @@
         ],
         "agentNotes": [
           "Do not add shipping_methods frontmatter here for checkout methods. The shipping step renders from the live SDK/API method list.",
-          "Shop-three-step bundle upsell pages declare upsell frontmatter as mapping hints, but still render inline SDK package/voucher refs today; replace both until those pages are promoted to include-owned upsell partials."
+          "Shop-three-step bundle upsell pages use include-owned offer partials; replace upsell_offer and upsell_bundle_tiers from the target CampaignSpec/API."
         ]
       }
     }

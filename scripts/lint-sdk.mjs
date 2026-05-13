@@ -37,7 +37,15 @@ const pagesArg = [...args].find((a) => a.startsWith('--pages='));
 const pages = pagesArg ? pagesArg.split('=')[1].split(',') : ['checkout']; // v0 default: checkout only
 const allPages = pages.includes('all');
 const isCI = process.env.CI === '1' || process.env.CI === 'true';
-const PROMOTED_FAMILIES = ['olympus', 'limos', 'demeter', 'olympus-mv-single-step', 'olympus-mv-two-step'];
+const PROMOTED_FAMILIES = [
+  'olympus',
+  'limos',
+  'demeter',
+  'shop-single-step',
+  'shop-three-step',
+  'olympus-mv-single-step',
+  'olympus-mv-two-step',
+];
 
 // SDK attribute roots — anything containing these inside a non-partial source file is
 // an inlined SDK surface that should be replaced by a {% campaign_include %} call.
