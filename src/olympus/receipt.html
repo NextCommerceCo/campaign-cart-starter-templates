@@ -32,46 +32,7 @@ styles:
                         <div class="order-summary">
                           <h4 class="order-summary__title">Order Summary</h4>
                           <div class="order-summary__content">
-                            <div class="cart-items">
-                              <div data-next-component="scroll-hint" class="cart-items__scroll-hint cart-items__scroll-hint--active">
-                                <div>Scroll for more items</div>
-                                <div class="icon__view-more"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                    <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z"></path>
-                                  </svg></div>
-                              </div>
-                              <div data-next-hide="cart.isEmpty"><template id="order-item-template" class="item-template os-show">
-                                  <div data-order-line-id="{item.id}" class="cart-item">
-                                    <div class="cart-item__wrapper">
-                                      <div class="cart-item__image-container">
-                                        <div class="cart-item__quantity-badge">
-                                          <div class="cart-item__quantity">{item.quantity}</div>
-                                        </div><img src="{item.image}" class="cart-item__image">
-                                      </div>
-                                      <div class="cart-item__details">
-                                        <div class="cart-item__content">
-                                          <div class="cart-item__description">
-                                            <div class="cart-item__header">
-                                              <div pb-cart="line_item-title" class="cart-item__title">{item.name}</div>
-                                            </div>
-                                            <div class="quantity-controls hide">
-                                              <div id="quantity_-item.packageId" data-flavor="original" class="cart-quantity-controls__container">
-                                                <div data-package-id="{item.packageId}" data-next-quantity="decrease" role="button" class="quantity-controls__button quantity-controls__button--decrease">-</div>
-                                                <div pb-cart="line_item-quantity" class="quantity-controls__display">{item.quantity}</div>
-                                                <div data-package-id="{item.packageId}" data-next-quantity="increase" role="button" class="quantity-controls__button quantity-controls__button--increase">+</div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                          <div class="cart-item__pricing">
-                                            <div class="checkout__line-item__final-price">{item.lineTotal}</div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </template>
-                                <div data-item-template-id="order-item-template" data-next-order-items="" class="cart-items__list"></div>
-                              </div>
-                            </div>
+                            {% campaign_include 'receipt-orders.html' %}
                             <div data-next-content="">
                               <div class="order-totals">
                                 <div class="order-totals__line">
@@ -207,46 +168,7 @@ styles:
                         <div class="order-summary">
                           <h4 class="order-summary__title checkout">Order Summary</h4>
                           <div class="order-summary__content">
-                            <div class="cart-items">
-                              <div data-next-component="scroll-hint" class="cart-items__scroll-hint cart-items__scroll-hint--active">
-                                <div>Scroll for more items</div>
-                                <div class="icon__view-more"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                    <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z"></path>
-                                  </svg></div>
-                              </div>
-                              <div data-next-hide="cart.isEmpty"><template id="order-item-template" class="item-template os-show">
-                                  <div data-order-line-id="{item.id}" class="cart-item">
-                                    <div class="cart-item__wrapper">
-                                      <div class="cart-item__image-container">
-                                        <div class="cart-item__quantity-badge">
-                                          <div class="cart-item__quantity">{item.quantity}</div>
-                                        </div><img src="{item.image}" class="cart-item__image">
-                                      </div>
-                                      <div class="cart-item__details">
-                                        <div class="cart-item__content">
-                                          <div class="cart-item__description">
-                                            <div class="cart-item__header">
-                                              <div pb-cart="line_item-title" class="cart-item__title">{item.name}</div>
-                                            </div>
-                                            <div class="quantity-controls hide">
-                                              <div id="quantity_-item.packageId" data-flavor="original" class="cart-quantity-controls__container">
-                                                <div data-package-id="{item.packageId}" data-next-quantity="decrease" role="button" class="quantity-controls__button quantity-controls__button--decrease">-</div>
-                                                <div pb-cart="line_item-quantity" class="quantity-controls__display">{item.quantity}</div>
-                                                <div data-package-id="{item.packageId}" data-next-quantity="increase" role="button" class="quantity-controls__button quantity-controls__button--increase">+</div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                          <div class="cart-item__pricing">
-                                            <div class="checkout__line-item__final-price">{item.lineTotal}</div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </template>
-                                <div data-item-template-id="order-item-template" data-next-order-items="" class="cart-items__list"></div>
-                              </div>
-                            </div>
+                            {% campaign_include 'receipt-orders.html' %}
                             <div data-next-content="">
                               <div class="order-totals">
                                 <div class="order-totals__line">
