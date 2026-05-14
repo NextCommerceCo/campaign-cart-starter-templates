@@ -1270,7 +1270,7 @@
             "upsell_bundle_tiers[].items_json",
             "upsell_bundle_tiers[].vouchers_json",
             "payment method visibility",
-            "receipt summary markup once promoted"
+            "receipt summary copy and order evidence text"
           ],
           "removeWhenUnsupported": [
             "unsupported payment method rows",
