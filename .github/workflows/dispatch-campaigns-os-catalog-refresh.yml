@@ -1,0 +1,32 @@
+name: Dispatch Campaigns OS Catalog Refresh
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/commerce-surface-catalog.json"
+      - "docs/fixtures/campaign-specs/**"
+
+permissions: {}
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch Campaigns OS refresh workflow
+        env:
+          GH_TOKEN: ${{ secrets.CAMPAIGNS_OS_DISPATCH_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::error::Set CAMPAIGNS_OS_DISPATCH_TOKEN with permission to dispatch workflows in NextCommerceCo/campaigns-os."
+            exit 1
+          fi
+
+          gh api \
+            --method POST \
+            repos/NextCommerceCo/campaigns-os/dispatches \
+            -f event_type=starter-template-catalog-updated \
+            -F "client_payload[source_repo]=${GITHUB_REPOSITORY}" \
+            -F "client_payload[source_ref]=${GITHUB_REF_NAME}" \
+            -F "client_payload[source_sha]=${GITHUB_SHA}" \
+            -F "client_payload[source_catalog]=docs/commerce-surface-catalog.json"
