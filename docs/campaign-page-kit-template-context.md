@@ -146,7 +146,7 @@ Registers every campaign. The `campaign` object in Liquid templates comes from h
   "my-campaign": {
     "name": "My Campaign",
     "entry_url": "presell",
-    "sdk_version": "0.4.18",
+    "sdk_version": "0.4.19",
     "store_name": "Acme Store",
     "store_url": "https://acme.com",
     "store_phone": "1-800-555-0100",
@@ -156,8 +156,8 @@ Registers every campaign. The `campaign` object in Liquid templates comes from h
     "store_contact": "https://acme.com/contact",
     "store_returns": "https://acme.com/returns",
     "store_shipping": "https://acme.com/shipping",
-    "gtm_id": "GTM-XXXXXXX",
-    "fb_pixel_id": "123456789012345"
+    "gtm_id": "",
+    "fb_pixel_id": ""
   }
 }
 ```
@@ -166,7 +166,7 @@ The top-level key is the campaign slug. Add any additional key to a campaign ent
 
 **`entry_url`** — optional. The page slug `npm run dev` opens in the browser (e.g. `"presell"`). Omit to use the kit default.
 
-**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.18"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
+**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.19"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
 
 ### Build environment (`environment`)
 

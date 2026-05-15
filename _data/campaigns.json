@@ -3,7 +3,7 @@
     "name": "Limos",
     "description": "Limos checkout funnel",
     "entry_url": "presell",
-    "sdk_version": "0.4.18",
+    "sdk_version": "0.4.19",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",
@@ -13,14 +13,14 @@
     "store_shipping": "https://demo.29next.com/shipping/",
     "store_phone": "1 (888) 831-6810",
     "store_phone_tel": "tel:+18888316810",
-    "gtm_id": "GTM-XXXXXXX",
-    "fb_pixel_id": "123456789012345"
+    "gtm_id": "",
+    "fb_pixel_id": ""
   },
   "olympus": {
     "name": "Olympus",
     "description": "Olympus checkout funnel",
     "entry_url": "presell",
-    "sdk_version": "0.4.18",
+    "sdk_version": "0.4.19",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",
@@ -30,14 +30,14 @@
     "store_shipping": "https://demo.29next.com/shipping/",
     "store_phone": "1 (888) 831-6810",
     "store_phone_tel": "tel:+18888316810",
-    "gtm_id": "GTM-XXXXXXX",
-    "fb_pixel_id": "123456789012345"
+    "gtm_id": "",
+    "fb_pixel_id": ""
   },
   "demeter": {
     "name": "Demeter",
     "description": "Demeter checkout funnel",
     "entry_url": "presell",
-    "sdk_version": "0.4.18",
+    "sdk_version": "0.4.19",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",
@@ -47,14 +47,14 @@
     "store_shipping": "https://demo.29next.com/shipping/",
     "store_phone": "1 (888) 831-6810",
     "store_phone_tel": "tel:+18888316810",
-    "gtm_id": "GTM-XXXXXXX",
-    "fb_pixel_id": "123456789012345"
+    "gtm_id": "",
+    "fb_pixel_id": ""
   },
   "shop-single-step": {
     "name": "Shop Single Step",
     "description": "Shop single-step checkout funnel",
     "entry_url": "presell",
-    "sdk_version": "0.4.18",
+    "sdk_version": "0.4.19",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",
@@ -64,14 +64,14 @@
     "store_shipping": "https://demo.29next.com/shipping/",
     "store_phone": "1 (888) 831-6810",
     "store_phone_tel": "tel:+18888316810",
-    "gtm_id": "GTM-XXXXXXX",
-    "fb_pixel_id": "123456789012345"
+    "gtm_id": "",
+    "fb_pixel_id": ""
   },
   "shop-three-step": {
     "name": "Shop Three Step",
     "description": "Shop three-step checkout funnel (information → shipping → billing)",
     "entry_url": "presell",
-    "sdk_version": "0.4.18",
+    "sdk_version": "0.4.19",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",
@@ -81,14 +81,14 @@
     "store_shipping": "https://demo.29next.com/shipping/",
     "store_phone": "1 (888) 831-6810",
     "store_phone_tel": "tel:+18888316810",
-    "gtm_id": "GTM-XXXXXXX",
-    "fb_pixel_id": "123456789012345"
+    "gtm_id": "",
+    "fb_pixel_id": ""
   },
   "olympus-mv-single-step": {
     "name": "Olympus MV Single Step",
     "description": "Olympus multi-variant single-step checkout",
     "entry_url": "presell",
-    "sdk_version": "0.4.18",
+    "sdk_version": "0.4.19",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",
@@ -98,14 +98,14 @@
     "store_shipping": "https://demo.29next.com/shipping/",
     "store_phone": "1 (888) 831-6810",
     "store_phone_tel": "tel:+18888316810",
-    "gtm_id": "GTM-XXXXXXX",
-    "fb_pixel_id": "123456789012345"
+    "gtm_id": "",
+    "fb_pixel_id": ""
   },
   "olympus-mv-two-step": {
     "name": "Olympus MV Two Step",
     "description": "Olympus multi-variant two-step checkout (select → checkout)",
     "entry_url": "presell",
-    "sdk_version": "0.4.18",
+    "sdk_version": "0.4.19",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",
@@ -115,13 +115,13 @@
     "store_shipping": "https://demo.29next.com/shipping/",
     "store_phone": "1 (888) 831-6810",
     "store_phone_tel": "tel:+18888316810",
-    "gtm_id": "GTM-XXXXXXX",
-    "fb_pixel_id": "123456789012345"
+    "gtm_id": "",
+    "fb_pixel_id": ""
   },
   "landing": {
     "name": "Landing",
     "description": "Landing page component library — niche example pages (supplement-sleep, skincare-serum, fitness-program) built from modular _includes sections",
-    "sdk_version": "0.4.18",
+    "sdk_version": "0.4.19",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",
     "store_terms": "https://demo.29next.com/terms-conditions/",
