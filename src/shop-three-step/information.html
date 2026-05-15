@@ -2,6 +2,19 @@
 title: "Shop Three Step — Information"
 page_type: checkout
 next_url: shipping.html
+order_bump_variant: "check02"
+packages:
+  main_package: 1
+  prepurchase_1: 7
+  prepurchase_2: 9
+order_bump:
+  check02:
+    package_id: 9
+    sync_quantity: 1
+    title: "YES, &nbsp;I Will Take It"
+    image_src: "images/icon.svg"
+    description_prefix: "Get peace of mind with"
+    description_suffix: "in the event your delivery is damaged, stolen, or lost during transit for"
 scripts:
   - js/checkout.js
   - js/checkout-shop-three.js
@@ -52,7 +65,15 @@ scripts:
                     <div class="steps-text">Payment<br></div>
                   </div>
                   <div>
-                    {% campaign_include 'bump-check02.html' %}
+                    {% assign bump_variant = order_bump_variant | default: 'check02' %}
+                    {% if bump_variant == 'check01' %}
+                    {% campaign_include 'bump-check01.html' packages=packages %}
+                    {% elsif bump_variant == 'switch01' %}
+                    {% campaign_include 'bump-switch01.html' packages=packages %}
+                    {% elsif bump_variant == 'none' %}
+                    {% else %}
+                    {% campaign_include 'bump-check02.html' packages=packages %}
+                    {% endif %}
                   </div>
                   {% campaign_include 'express-checkout.html' %}
                   <div class="checkout-form">

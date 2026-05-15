@@ -268,7 +268,9 @@
       },
       "frontmatterInputsObserved": [
         "bundles",
-        "bump_features",
+        "cart_summary_variant",
+        "order_bump",
+        "order_bump_variant",
         "packages",
         "shipping_methods",
         "swiper_slides",
@@ -305,8 +307,10 @@
             "bundles[].shipping_method"
           ],
           "optionalWhenSupported": [
+            "cart_summary_variant",
             "shipping_methods.free",
             "order_bump_variant",
+            "order_bump",
             "packages.prepurchase_1",
             "packages.prepurchase_2",
             "swiper_slides",
@@ -744,10 +748,12 @@
         "upsell": "upsell-bundle-stepper-offer|upsell-bundle-tier-pills-offer|upsell-bundle-tier-cards-offer"
       },
       "frontmatterInputsNeeded": [
-        "cart_summary_variant",
-        "order_bump_variant"
+        "cart_summary_variant"
       ],
       "frontmatterInputsObserved": [
+        "order_bump",
+        "order_bump_variant",
+        "packages",
         "receipt_summary",
         "swiper_slides",
         "swiper_thumbs",
@@ -781,6 +787,10 @@
             "page_type=checkout"
           ],
           "optionalWhenSupported": [
+            "packages.prepurchase_1",
+            "packages.prepurchase_2",
+            "order_bump_variant",
+            "order_bump",
             "receipt_summary",
             "upsell_offer",
             "upsell_bundle_tiers",
@@ -789,11 +799,16 @@
             "payment_flags"
           ],
           "demoOnlyValues": [
+            "packages.prepurchase_1=7",
+            "packages.prepurchase_2=9",
+            "order_bump.check02.package_id=9",
             "upsell_offer.package_id=3",
             "upsell_offer.vouchers_json=[\"UP50\"]",
             "upsell_bundle_tiers packageId=3"
           ],
           "replaceFromSpecOrApi": [
+            "packages.*",
+            "order_bump.*.package_id",
             "upsell_offer.*",
             "upsell_bundle_tiers[].items_json",
             "upsell_bundle_tiers[].vouchers_json",
@@ -1219,6 +1234,9 @@
         "receipt_summary"
       ],
       "frontmatterInputsObserved": [
+        "order_bump",
+        "order_bump_variant",
+        "packages",
         "shipping_steps",
         "swiper_slides",
         "swiper_thumbs",
@@ -1254,6 +1272,10 @@
             "billing.next_url=upsell-bundle-stepper.html"
           ],
           "optionalWhenSupported": [
+            "packages.prepurchase_1",
+            "packages.prepurchase_2",
+            "order_bump_variant",
+            "order_bump",
             "receipt_summary",
             "upsell_offer",
             "upsell_bundle_tiers",
@@ -1261,11 +1283,16 @@
             "swiper_thumbs"
           ],
           "demoOnlyValues": [
+            "packages.prepurchase_1=7",
+            "packages.prepurchase_2=9",
+            "order_bump.check02.package_id=9",
             "upsell_offer.package_id=3",
             "upsell_offer.vouchers_json=[\"UP50\"]",
             "upsell_bundle_tiers packageId=3"
           ],
           "replaceFromSpecOrApi": [
+            "packages.*",
+            "order_bump.*.package_id",
             "upsell_offer.*",
             "upsell_bundle_tiers[].items_json",
             "upsell_bundle_tiers[].vouchers_json",
@@ -1273,6 +1300,7 @@
             "receipt summary copy and order evidence text"
           ],
           "removeWhenUnsupported": [
+            "order bump when no bump package exists",
             "unsupported payment method rows",
             "upsell pages not present in the funnel"
           ]

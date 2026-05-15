@@ -30,12 +30,12 @@
  *
  *   force-sale="default"       Force the generic default promo code.
  *
- * ─── URL PARAMS (testing only) ──────────────────────────────────────────────
+ * ─── URL PARAMS (preview overrides) ──────────────────────────────────────────────
  *
- *   ?sale=blackfriday          Same as force-sale attribute — useful for QA
+ *   ?sale=blackfriday          Same as force-sale attribute — useful for previews
  *   ?sale=default              Force the default promo code via URL
  *
- *   URL params always take priority over attributes (useful for QA overrides).
+ *   URL params always take priority over attributes for easy previews.
  *
  * ─── SALE NAMES (for force-sale / ?sale=) ───────────────────────────────────
  *
@@ -175,7 +175,7 @@ class PromoTimer extends HTMLElement {
   getCurrentSale() {
     const now = new Date();
 
-    // Attribute takes priority, then URL param (for testing)
+    // URL param takes priority, then attribute preview override
     const urlParams = new URLSearchParams(window.location.search);
     const forceSale = urlParams.get('sale') || this.getAttribute('force-sale');
 

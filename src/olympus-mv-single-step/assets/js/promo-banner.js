@@ -30,7 +30,7 @@
  * ─── HTML ATTRIBUTES ────────────────────────────────────────────────────────
  *
  *   force-sale="blackfriday"   Force a named sale regardless of the current date.
- *                              Useful for testing future/past sales or locking a
+ *                              Useful for previewing future/past sales or locking a
  *                              campaign to a specific promo year-round.
  *
  *   force-sale="default"       Force the generic non-seasonal banner, ignoring any
@@ -40,15 +40,15 @@
  *   show-topbar="false"        hidden (e.g. on the generic banner), or hide it
  *                              on a sale that normally shows it.
  *
- * ─── URL PARAMS (testing only) ──────────────────────────────────────────────
+ * ─── URL PARAMS (preview overrides) ──────────────────────────────────────────────
  *
- *   ?sale=blackfriday          Same as force-sale attribute — useful for QA
+ *   ?sale=blackfriday          Same as force-sale attribute — useful for previews
  *   ?sale=default              Force the generic banner via URL
  *   ?topbar=on                 Show the top bar via URL
  *   ?banner=n                  Hide the entire banner section (SDK-level,
  *                              set on the wrapper div, not this component)
  *
- *   URL params always take priority over attributes (useful for QA overrides).
+ *   URL params always take priority over attributes for easy previews.
  *
  * ─── SALE NAMES (for force-sale  / ?sale=) ───────────────────────────────────
  *
@@ -323,7 +323,7 @@ class PromoBanner extends HTMLElement {
   getCurrentSale() {
     const now = new Date();
 
-    // Attribute takes priority, then URL param (for testing)
+    // URL param takes priority, then attribute preview override
     const urlParams = new URLSearchParams(window.location.search);
     const forceSale = urlParams.get('sale') || this.getAttribute('force-sale');
 

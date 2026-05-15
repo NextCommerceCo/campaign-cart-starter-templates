@@ -9,7 +9,7 @@ Companion to **[Campaign Cart — AI Rules](./campaign-page-kit-template-context
 The `landing` slug is a **composable section library**, not a drop-in template.
 
 - Its `_includes/` folder contains reusable sections (heroes, benefits, reviews, UGC, etc.)
-- `index.html` is the full smoke test showing every section; `src/olympus/landing.html` is a ready-to-customise starting point already wired into a real funnel slug
+- `index.html` is the full component showcase showing every section; `src/olympus/landing.html` is a ready-to-customise starting point already wired into a real funnel slug
 - Create a new `.html` file in your funnel slug — frontmatter holds all content variables, the body lists sections in order:
 
 ```html
@@ -77,7 +77,7 @@ Landing and presell layouts load Tailwind via **CDN** — fine for development a
    ```html
    <link rel="stylesheet" href="{{ 'css/tailwind.css' | campaign_asset }}">
    ```
-   > **Netlify trap:** the build platform runs a smoke-check step before `npm run build`. Any generated file listed in frontmatter `styles:` will fail validation because it doesn't exist yet at smoke-check time. Hardcoding in the layout bypasses this.
+   > **Netlify trap:** the build platform validates referenced files before `npm run build`. Any generated file listed in frontmatter `styles:` will fail validation because it doesn't exist yet at validation time. Hardcoding in the layout bypasses this.
 6. Re-run step 4 any time you add new Tailwind utility classes before deploying
 
 > **CSS variable references:** `@theme inline` is required in `tailwind.input.css` if you use CSS custom properties as theme values. Without `inline`, Tailwind resolves values at build time and they come out blank.
@@ -130,7 +130,7 @@ See [Optional GTM and Meta Pixel](./campaign-page-kit-template-context.md#option
 | CTA | `cta-1`, `bottomcta-1`, `bottomcta-2` |
 | Footer | `footer-1` |
 
-`index.html` is the full smoke test with every section. `src/olympus/landing.html` shows a real-funnel example (supplement sleep niche).
+`index.html` is the full component showcase with every section. `src/olympus/landing.html` shows a real-funnel example (supplement sleep niche).
 
 ---
 

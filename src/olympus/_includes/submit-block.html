@@ -2,7 +2,7 @@
   next_component: submit-block
   next_version: 1.0.0
   next_sdk_min: 0.4.18
-  next_purpose: Final submit button + disclaimer/T&C. Lives inside <form data-next-checkout="form"> so SDK can intercept real and Playwright-driven submits.
+  next_purpose: Final submit button + disclaimer/T&C. Lives inside <form data-next-checkout="form"> so SDK can intercept real and browser-driven submits.
   next_params:
     cta_text:        string, default "COMPLETE PURCHASE →". Main button label.
     subtext:         string, default "TRY IT RISK FREE! - 30 DAY MONEY BACK GUARANTEE!". Smaller line under CTA.
@@ -22,7 +22,7 @@
     - Button must remain inside the canonical <form data-next-checkout="form"> element or SDK will not submit
     - data-action="submit" + os-checkout-payment combo together drive SDK submission flow
     - data-pb-element="checkout-button-spinner" and "checkout-button-info" are toggled by SDK during submit; keep both children
-    - Campaigns OS Playwright typed-card QA clicks this real submit button; keep it visible and scriptable from outside hosted payment iframes
+    - Automated browser checks click this real submit button; keep it visible and scriptable from outside hosted payment iframes
   next_gotchas:
     - If the disclaimer text needs links to Terms / Privacy / Returns, prefer the campaign.store_terms etc. Liquid filters; do not hardcode merchant URLs
     - The spinner and content divs are siblings inside the button; SDK shows one at a time via class toggles — don't restructure

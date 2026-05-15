@@ -3,6 +3,8 @@ title: "Olympus Checkout"
 page_type: checkout
 promo_sale: "default"
 next_url: upsell-bundle-stepper.html
+cart_summary_variant: "01"
+order_bump_variant: "check01+switch01"
 styles:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
 scripts:
@@ -41,6 +43,22 @@ packages:
   main_package: 1
   prepurchase_1: 7
   prepurchase_2: 9
+order_bump:
+  check01:
+    package_id: 7
+    sync_quantity: 1
+    title: "Get Extended Warranty"
+    image_src: "images/1x1_1.svg"
+    features:
+      - "1 year with our replacement and protection"
+      - "Accidental Damage Protection"
+      - "Express Replacement Service"
+      - "24/7 Priority Customer Support"
+  switch01:
+    package_id: 9
+    title: "Shipping Insurance & Loss Prevention"
+    description_prefix: "Total shipping coverage and extended warranty. Breakage, loss, delays, porch pirates - even defects. 100% protected for just"
+    show_unit_price: true
 shipping_methods:
   # Starter/demo Campaigns App shipping method ref_ids.
   # Replace these from the target CampaignSpec/Campaigns App when cloning the Olympus shape.
@@ -240,7 +258,7 @@ bundles:
                               {% campaign_include 'bundle-selector.html' selector_id='main' packages=packages shipping_methods=shipping_methods bundles=bundles %}
                               {% comment %}
                               Reference only — optional config-driven variant.
-                              Kept for experimentation; do not treat as the default for Olympus checkout.
+                              Kept as an optional implementation reference; do not treat as the default checkout pattern.
                               Auto-render cards should use {bundle.*} fields for title/image (not data-next-display="package.*").
                               SDK 0.4.18+: inline <template> inside selector is supported (no template id required).
                               <div
@@ -307,8 +325,18 @@ bundles:
                               {% campaign_include 'customer-info-form.html' %}
                               {% campaign_include 'shipping-address-form.html' %}
                             </div>
+                        {% assign bump_variant = order_bump_variant | default: 'check01+switch01' %}
+                        {% if bump_variant == 'check01' %}
+                        {% campaign_include 'bump-check01.html' packages=packages %}
+                        {% elsif bump_variant == 'check02' %}
+                        {% campaign_include 'bump-check02.html' packages=packages %}
+                        {% elsif bump_variant == 'switch01' %}
+                        {% campaign_include 'bump-switch01.html' packages=packages %}
+                        {% elsif bump_variant == 'none' %}
+                        {% else %}
                         {% campaign_include 'bump-check01.html' packages=packages %}
                         {% campaign_include 'bump-switch01.html' packages=packages %}
+                        {% endif %}
                             <div class="form-section form-section--last">
                               <div class="form-section__header">
                                 <h1 class="form-section__title">4. Payment Method</h1>
@@ -320,7 +348,16 @@ bundles:
                             </div>
                             <div class="form-section form-section--last">
                               <div class="cart-box cart-box--card">
+                                {% assign summary_variant = cart_summary_variant | default: '01' %}
+                                {% if summary_variant == '02' %}
+                                {% campaign_include 'cart-summary02.html' %}
+                                {% elsif summary_variant == '03' %}
+                                {% campaign_include 'cart-summary03.html' %}
+                                {% elsif summary_variant == '04' %}
+                                {% campaign_include 'cart-summary04.html' %}
+                                {% else %}
                                 {% campaign_include 'cart-summary01.html' %}
+                                {% endif %}
                               </div>
                             </div>
                             <!-- END SUMMARY V2 -->

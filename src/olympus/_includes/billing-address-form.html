@@ -20,7 +20,7 @@
     - "Same as shipping" toggle MUST hide the entire address block (CSS via os-checkout-element), not just collapse it
     - Field naming convention `use_shipping_address` for the checkbox is SDK-recognized
   next_gotchas:
-    - Meridian field notes (2026-05-01) flagged that custom checkout HTML can regress shipping/billing mounts. This component must restore canonical structure if templates were edited.
+    - Custom checkout HTML can regress shipping/billing mounts. This component keeps the canonical SDK-owned structure intact when templates are edited.
     - Country list inside the billing form follows the same Campaigns API contract as shipping-address-form
   next_variants:
     - inline (default; expands inline on uncheck)

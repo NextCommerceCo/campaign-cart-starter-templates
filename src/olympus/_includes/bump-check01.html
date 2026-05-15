@@ -5,6 +5,7 @@
   next_purpose: Pre-purchase add-on offer rendered as a checkbox-style card. Customer opts in with one click; SDK adds the package to cart at checkout.
   next_params:
     packages:             object, optional. Dict with main_package, prepurchase_1, prepurchase_2 keys. Defaults for package_id and package_sync when not passed explicitly.
+    order_bump.check01:   optional frontmatter object for package_id, sync_quantity, title, image_src, image_alt, and features.
     package_id:           number, required. data-next-package-id (the bump's package).
     bump_title:           string, default "Get Extended Warranty". Bump headline.
     bump_image:           string asset path, default "images/1x1_1.svg". Product imagery.
@@ -25,7 +26,7 @@
     classes_designer_owns: [.toggle-card, .toggle-card__*, .checkbox-style-1, .pb--bestseller, .bump-card, .bump__title, .bump__price, .bump__price-row, .bump__image, .list-container]
     css_vars_designer_owns: []
   next_dont_touch:
-    - data-next-package-sync mirrors main-bundle quantity; this is a PRODUCT decision, not just mechanical wiring (Meridian field notes 2026-05-01)
+    - data-next-package-sync mirrors main-bundle quantity; this is a product decision, not just mechanical wiring.
     - Default to data-next-package-sync OFF unless the campaign explicitly wants quantity-synced bumps
     - originalUnitPrice/ea is per-unit (stable); originalPrice is line total (scales with synced qty)
   next_gotchas:
@@ -41,11 +42,13 @@
     - bundle-selector (the "main" cart that this bump augments)
     - cart-summary (will list the bump as an additional line)
 {% endcomment %}
-{% assign pkg_id = package_id | default: packages.prepurchase_1 | default: 7 -%}
-{% assign t = bump_title | default: 'Get Extended Warranty' -%}
-{% assign img_src = bump_image | default: 'images/1x1_1.svg' -%}
-{% assign img_alt = bump_image_alt | default: t -%}
-{% if package_sync == nil %}{% assign package_sync = packages.main_package | default: 1 %}{% endif -%}
+{% assign bump = order_bump.check01 -%}
+{% assign pkg_id = package_id | default: bump.package_id | default: packages.prepurchase_1 | default: 7 -%}
+{% assign t = bump_title | default: bump.title | default: 'Get Extended Warranty' -%}
+{% assign img_src = bump_image | default: bump.image_src | default: 'images/1x1_1.svg' -%}
+{% assign img_alt = bump_image_alt | default: bump.image_alt | default: t -%}
+{% if package_sync == nil and bump.sync_quantity == nil %}{% assign package_sync = packages.main_package | default: 1 %}{% elsif package_sync == nil %}{% assign package_sync = bump.sync_quantity %}{% endif -%}
+{% assign feature_list = features | default: bump.features -%}
 {% if is_upsell == nil %}{% assign is_upsell = true %}{% endif -%}
 {% if show_per_unit_price == nil %}{% assign show_per_unit_price = true %}{% endif -%}
 {% if show_line_total_price == nil %}{% assign show_line_total_price = true %}{% endif -%}
@@ -88,8 +91,8 @@
 
             <div class="list-container cc-2xs">
               <ul role="list" class="list w-list-unstyled">
-                {% if features -%}
-                {% for feat in features -%}
+                {% if feature_list -%}
+                {% for feat in feature_list -%}
                 <li class="list__item">
                   <div class="list_icon"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
                   <div>{{ feat }}</div>

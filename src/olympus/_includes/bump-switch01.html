@@ -2,9 +2,14 @@
   next_component: order-bump-card
   next_version: 1.1.0
   next_sdk_min: 0.4.18
-  next_purpose: Pre-purchase add-on offer rendered as a toggle-switch bump (Olympus switch01 variant).
+  next_purpose: Toggle-switch pre-purchase order bump.
   next_params:
-    packages:           object, optional. Dict with main_package, prepurchase_1, prepurchase_2 keys. Defaults for package IDs when not set explicitly.
+    packages:            object, optional. Dict with main_package, prepurchase_1, prepurchase_2 keys. Defaults for package IDs when not set explicitly.
+    order_bump.switch01: optional frontmatter object for package_id, title, description_prefix, and show_unit_price.
+    package_id:          number, default 9.
+    title:               string, default "Shipping Insurance & Loss Prevention".
+    description_prefix:  string before the SDK price display.
+    show_unit_price:     bool, default true. Shows total + unit price when true.
   next_sdk_owns:
     - data-next-package-toggle
     - data-next-toggle-card
@@ -26,16 +31,17 @@
     - bundle-selector (the main cart this bump augments)
     - cart-summary (will list the bump as an additional line)
 {% endcomment %}
-{% assign _switch_pkg = packages.prepurchase_2 | default: 9 -%}
-<!-- Prepurchase upsell: toggle-switch bump (switch01) — SDK 0.4.x
-     Uses data-next-package-toggle / data-next-toggle-card / data-next-toggle-display
-     No data-next-package-sync: one line item, not per main-unit (contrast bump-check01). -->
+{% assign bump = order_bump.switch01 -%}
+{% assign pkg_id = package_id | default: bump.package_id | default: packages.prepurchase_2 | default: 9 -%}
+{% assign bump_title = title | default: bump.title | default: 'Shipping Insurance & Loss Prevention' -%}
+{% assign description_prefix = description_prefix | default: bump.description_prefix | default: 'Total shipping coverage and extended warranty. Breakage, loss, delays, porch pirates - even defects. 100% protected for just' -%}
+{% if show_unit_price == nil and bump.show_unit_price == nil %}{% assign show_unit = true %}{% elsif show_unit_price != nil %}{% assign show_unit = show_unit_price %}{% else %}{% assign show_unit = bump.show_unit_price %}{% endif -%}
 <div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="switch" data-next-await="">
   <div data-next-package-toggle>
-    <div class="bump-card bump-card--switch" data-next-toggle-card data-next-is-upsell="true" data-next-package-id="{{ _switch_pkg }}">
+    <div class="bump-card bump-card--switch" data-next-toggle-card data-next-is-upsell="true" data-next-package-id="{{ pkg_id }}">
       <div class="bump__header-left bump__head--switch">
         <div class="bump__header-content bump__head-inner">
-          <span class="bump__title">Shipping Insurance &amp; Loss Prevention</span>
+          <span class="bump__title">{{ bump_title }}</span>
           <span class="bump__switch" aria-hidden="true">
             <span class="bump__switch-slider"></span>
           </span>
@@ -44,9 +50,9 @@
       <div class="bump__body">
         <div class="bump__content">
           <p class="bump__description">
-            Total shipping coverage and extended warranty. Breakage, loss, delays, porch pirates — even defects. 100% protected for just
+            {{ description_prefix }}
             
-            <span data-next-toggle-display="price" class="display-visible bump__price-total">$9.99</span> total or <span data-next-toggle-display="unitPrice" class="display-visible">$9.99</span><span class="bump__price-ea">/ea</span>
+            <span data-next-toggle-display="price" class="display-visible bump__price-total">$9.99</span>{% if show_unit %} total or <span data-next-toggle-display="unitPrice" class="display-visible">$9.99</span><span class="bump__price-ea">/ea</span>{% endif %}
           </p>
         </div>
       </div>
