@@ -326,17 +326,21 @@ bundles:
                               {% campaign_include 'shipping-address-form.html' %}
                             </div>
                         {% assign bump_variant = order_bump_variant | default: 'check01+switch01' %}
-                        {% if bump_variant == 'check01' %}
-                        {% campaign_include 'bump-check01.html' packages=packages %}
-                        {% elsif bump_variant == 'check02' %}
-                        {% campaign_include 'bump-check02.html' packages=packages %}
-                        {% elsif bump_variant == 'switch01' %}
-                        {% campaign_include 'bump-switch01.html' packages=packages %}
-                        {% elsif bump_variant == 'none' %}
-                        {% else %}
-                        {% campaign_include 'bump-check01.html' packages=packages %}
-                        {% campaign_include 'bump-switch01.html' packages=packages %}
-                        {% endif %}
+                        {% unless bump_variant == 'none' %}
+                          {% if bump_variant == 'check01' %}
+                          {% campaign_include 'bump-check01.html' packages=packages %}
+                          {% elsif bump_variant == 'check02' %}
+                          {% campaign_include 'bump-check02.html' packages=packages %}
+                          {% elsif bump_variant == 'switch01' %}
+                          {% campaign_include 'bump-switch01.html' packages=packages %}
+                          {% elsif bump_variant == 'check01+switch01' %}
+                          {% campaign_include 'bump-check01.html' packages=packages %}
+                          {% campaign_include 'bump-switch01.html' packages=packages %}
+                          {% else %}
+                          {% campaign_include 'bump-check01.html' packages=packages %}
+                          {% campaign_include 'bump-switch01.html' packages=packages %}
+                          {% endif %}
+                        {% endunless %}
                             <div class="form-section form-section--last">
                               <div class="form-section__header">
                                 <h1 class="form-section__title">4. Payment Method</h1>

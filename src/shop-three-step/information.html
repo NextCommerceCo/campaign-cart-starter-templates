@@ -66,14 +66,15 @@ scripts:
                   </div>
                   <div>
                     {% assign bump_variant = order_bump_variant | default: 'check02' %}
-                    {% if bump_variant == 'check01' %}
-                    {% campaign_include 'bump-check01.html' packages=packages %}
-                    {% elsif bump_variant == 'switch01' %}
-                    {% campaign_include 'bump-switch01.html' packages=packages %}
-                    {% elsif bump_variant == 'none' %}
-                    {% else %}
-                    {% campaign_include 'bump-check02.html' packages=packages %}
-                    {% endif %}
+                    {% unless bump_variant == 'none' %}
+                      {% if bump_variant == 'check01' %}
+                      {% campaign_include 'bump-check01.html' packages=packages %}
+                      {% elsif bump_variant == 'switch01' %}
+                      {% campaign_include 'bump-switch01.html' packages=packages %}
+                      {% else %}
+                      {% campaign_include 'bump-check02.html' packages=packages %}
+                      {% endif %}
+                    {% endunless %}
                   </div>
                   {% campaign_include 'express-checkout.html' %}
                   <div class="checkout-form">
