@@ -7,7 +7,9 @@ on:
       - "docs/commerce-surface-catalog.json"
       - "docs/fixtures/campaign-specs/**"
 
-permissions: {}
+# The repository_dispatch call uses CAMPAIGNS_OS_DISPATCH_TOKEN, not GITHUB_TOKEN.
+permissions:
+  contents: read
 
 jobs:
   dispatch:
