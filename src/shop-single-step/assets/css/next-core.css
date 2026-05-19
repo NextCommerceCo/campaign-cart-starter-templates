@@ -14334,6 +14334,7 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   align-items: center;
   font-weight: 600;
   display: flex;
+  min-width: 0;
 }
 
 .upsell-offer__quantity-row,
@@ -14347,7 +14348,7 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .upsell-offer__qty-btn,
@@ -14890,3 +14891,46 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 .iti:not(.iti--allow-dropdown) input,
 .iti:not(.iti--allow-dropdown) input[type=text],
 .iti:not(.iti--allow-dropdown) input[type=tel] { padding-right: 52px !important; }
+
+/* Bundle-slot variant picker layout — display:contents lets each .next-slot-variant-field
+   flex directly inside .os-card__variant-grid.cc-horiz (JS wraps in .os-card__variant-group) */
+#bundle-slots-stage .os-card__variant-grid.cc-horiz > [data-next-variant-selectors] {
+  display: contents;
+}
+
+#bundle-slots-stage .os-card__variant-grid.cc-horiz > [data-next-variant-selectors] > .next-slot-variant-field {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Bundle-slot variant picker: keep menus anchored inside #bundle-slots-stage on mobile
+   (global rule above sets position:fixed which breaks staged pickers) */
+@media screen and (max-width: 640px) {
+  #bundle-slots-stage os-dropdown {
+    z-index: 1;
+  }
+
+  #bundle-slots-stage os-dropdown[open] {
+    z-index: 10000;
+  }
+
+  #bundle-slots-stage [os-element="dropdown-menu"].os-card__variant-dropdown-menu-v2 {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: 52vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+}
+
+@media screen and (max-width: 767px) {
+  .os-card__variant-label-items {
+    display: none;
+  }
+}

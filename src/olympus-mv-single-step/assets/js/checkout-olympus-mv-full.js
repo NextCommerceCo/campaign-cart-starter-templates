@@ -211,6 +211,9 @@ function setupBundleSlotVariantDropdowns() {
       t.classList.remove('active');
       t.setAttribute('aria-expanded', 'false');
     });
+    stage.querySelectorAll('os-dropdown.os-variant-dropdown[open]').forEach(function (dd) {
+      dd.removeAttribute('open');
+    });
   }
 
   stage.addEventListener('change', function (e) {
@@ -223,6 +226,8 @@ function setupBundleSlotVariantDropdowns() {
   stage.addEventListener('click', function (e) {
     var toggle = e.target.closest('.os-card__variant-dropdown-toggle');
     if (toggle) {
+      e.preventDefault();
+      e.stopPropagation();
       var dropdown = toggle.closest('os-dropdown');
       if (!dropdown) return;
       var menu = dropdown.querySelector('[os-element="dropdown-menu"]');
@@ -233,12 +238,15 @@ function setupBundleSlotVariantDropdowns() {
         menu.classList.add('show');
         toggle.classList.add('active');
         toggle.setAttribute('aria-expanded', 'true');
+        dropdown.setAttribute('open', '');
       }
       return;
     }
 
     var menuItem = e.target.closest('os-dropdown-item.os-card__variant-dropdown-item');
     if (menuItem && !menuItem.hasAttribute('disabled')) {
+      e.preventDefault();
+      e.stopPropagation();
       var dropdown = menuItem.closest('os-dropdown');
       if (!dropdown) return;
       var field = dropdown.closest('.next-slot-variant-field');
@@ -255,6 +263,7 @@ function setupBundleSlotVariantDropdowns() {
         toggleEl.classList.remove('active');
         toggleEl.setAttribute('aria-expanded', 'false');
       }
+      dropdown.removeAttribute('open');
     }
   });
 
