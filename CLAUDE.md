@@ -99,9 +99,7 @@ repo-root/
 │   └── base.html               ← layout shell with Liquid variables
 ├── assets/
 │   ├── css/
-│   │   ├── next-core.css       ← core styles (loaded directly in base.html)
-│   │   ├── checkout.css        ← checkout-specific styles
-│   │   └── upsells.css         ← upsell-specific styles
+│   │   └── next-core.css       ← core styles (loaded directly in base.html)
 │   ├── js/
 │   │   └── [only needed JS]    ← trimmed per template (see JS map below)
 │   ├── images/
