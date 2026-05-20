@@ -146,7 +146,7 @@ Registers every campaign. The `campaign` object in Liquid templates comes from h
   "my-campaign": {
     "name": "My Campaign",
     "entry_url": "presell",
-    "sdk_version": "0.4.19",
+    "sdk_version": "0.4.20",
     "store_name": "Acme Store",
     "store_url": "https://acme.com",
     "store_phone": "1-800-555-0100",
@@ -166,7 +166,7 @@ The top-level key is the campaign slug. Add any additional key to a campaign ent
 
 **`entry_url`** — optional. The page slug `npm run dev` opens in the browser (e.g. `"presell"`). Omit to use the kit default.
 
-**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.19"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
+**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.20"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
 
 ### Build environment (`environment`)
 
@@ -458,7 +458,11 @@ Reads from the **active bundle selection**. Use inside `data-next-bundle-card` t
 ```html
 <div data-next-show="cart.hasDiscounts">You save: <span data-next-display="cart.totalDiscount"></span></div>
 <div data-next-hide="cart.isEmpty"><!-- shown when cart has items --></div>
+<div data-next-show="cart.hasCoupon()"><!-- shown when any coupon is applied (SDK 0.4.20+) --></div>
+<div data-next-show='cart.hasCoupon("FREESHIP")'><!-- shown when a specific coupon code is applied --></div>
 ```
+
+`cart.hasCoupon()` (SDK 0.4.20+): truthy when any coupon is applied. `cart.hasCoupon("CODE")` matches a specific code (case-insensitive, quotes stripped). Use to show banners or messaging only when a coupon is active.
 
 ### Cart item list
 
@@ -537,7 +541,7 @@ Key token semantics (0.4.11+): `{item.price}` / `{item.originalPrice}` = **line 
 </div>
 ```
 
-CSS required for checkbox state (already in `checkout.css` — only add if using a custom stylesheet):
+CSS required for checkbox state (already in `next-core.css` — only add if using a custom stylesheet):
 ```css
 [data-next-bump] [os-component="check"] { display: none; }
 [data-next-bump][class*="next-active"] [os-component="check"] { display: flex; }
