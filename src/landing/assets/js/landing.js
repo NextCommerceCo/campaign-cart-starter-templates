@@ -410,6 +410,38 @@
 
 
   /* ─────────────────────────────────────────────────────────────────────
+   * 7. INLINE VIDEO
+   *
+   * Markup contract on [data-video-inline]:
+   *   data-video-src="https://..."  — MP4 URL to play in-place
+   *
+   * On click, replaces the container's contents with an autoplaying
+   * <video> that fills the same space. Use this when you want the video
+   * to play inside the thumbnail slot rather than opening a modal.
+   * ───────────────────────────────────────────────────────────────────── */
+
+(function () {
+  document.querySelectorAll('[data-video-inline]').forEach(function (root) {
+    var src = root.getAttribute('data-video-src');
+    if (!src) return;
+
+    root.addEventListener('click', function () {
+      var vid = document.createElement('video');
+      vid.src = src;
+      vid.controls = true;
+      vid.autoplay = true;
+      vid.playsInline = true;
+      vid.className = 'w-full h-full object-cover';
+      root.innerHTML = '';
+      root.appendChild(vid);
+      var p = vid.play();
+      if (p && p.catch) p.catch(function () {});
+    }, { once: true });
+  });
+}());
+
+
+  /* ─────────────────────────────────────────────────────────────────────
    * 6. VIDEO AUTOPLAY ON SCROLL
    *
    * All <video> elements play when ~35% visible, pause when not.
