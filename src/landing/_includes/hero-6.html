@@ -45,15 +45,16 @@
 
         <!-- VIDEO — mobile/tablet only (sits between subtitle and bullets) -->
         <div class="lg:hidden relative rounded-[12px] md:rounded-[14px] overflow-hidden w-full aspect-video">
-          {% if video_url %}
-          <a href="{{ hero_6_video_url }}">
-          {% endif %}
-            <img src="{{ hero_6_video_thumbnail | campaign_asset }}" alt="{{ hero_6_video_thumbnail_alt }}" class="w-full h-full object-cover">
-            <div class="absolute inset-0 flex items-center justify-center">
-              <img src="{{ 'images/hero-6/play-button.svg' | campaign_asset }}" alt="Play video" class="w-[50px] h-[50px] md:w-[64px] md:h-[64px] shrink-0">
-            </div>
-          {% if video_url %}
-          </a>
+          <img src="{{ hero_6_video_thumbnail | campaign_asset }}" alt="{{ hero_6_video_thumbnail_alt }}" class="w-full h-full object-cover">
+          {% if hero_6_video_url %}
+          <button data-modal-trigger data-modal-type="video" data-modal-src="{{ hero_6_video_url }}"
+                  class="absolute inset-0 flex items-center justify-center w-full bg-transparent border-0 cursor-pointer p-0">
+            <img src="{{ 'images/hero-6/play-button.svg' | campaign_asset }}" alt="Play video" class="w-[50px] h-[50px] md:w-[64px] md:h-[64px] shrink-0">
+          </button>
+          {% else %}
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <img src="{{ 'images/hero-6/play-button.svg' | campaign_asset }}" alt="" class="w-[50px] h-[50px] md:w-[64px] md:h-[64px] shrink-0">
+          </div>
           {% endif %}
         </div>
 
@@ -91,15 +92,16 @@
 
         <!-- Video thumbnail -->
         <div class="relative rounded-[16px] overflow-hidden">
-          {% if video_url %}
-          <a href="{{ hero_6_video_url }}">
-          {% endif %}
-            <img src="{{ hero_6_video_thumbnail | campaign_asset }}" alt="{{ hero_6_video_thumbnail_alt }}" class="w-full h-auto object-cover block">
-            <div class="absolute inset-0 flex items-center justify-center">
-              <img src="{{ 'images/hero-6/play-button.svg' | campaign_asset }}" alt="Play video" class="w-[64px] h-[64px] shrink-0">
-            </div>
-          {% if video_url %}
-          </a>
+          <img src="{{ hero_6_video_thumbnail | campaign_asset }}" alt="{{ hero_6_video_thumbnail_alt }}" class="w-full h-auto object-cover block">
+          {% if hero_6_video_url %}
+          <button data-modal-trigger data-modal-type="video" data-modal-src="{{ hero_6_video_url }}"
+                  class="absolute inset-0 flex items-center justify-center w-full bg-transparent border-0 cursor-pointer p-0">
+            <img src="{{ 'images/hero-6/play-button.svg' | campaign_asset }}" alt="Play video" class="w-[64px] h-[64px] shrink-0">
+          </button>
+          {% else %}
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <img src="{{ 'images/hero-6/play-button.svg' | campaign_asset }}" alt="" class="w-[64px] h-[64px] shrink-0">
+          </div>
           {% endif %}
         </div>
 

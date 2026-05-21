@@ -276,6 +276,93 @@
 
 
   /* ─────────────────────────────────────────────────────────────────────
+   * 4. MODAL
+   *
+   * Markup contract on triggers:
+   *   data-modal-trigger             — any clickable element opens the modal
+   *   data-modal-type="video"        — plays an MP4 URL in a <video> element
+   *   data-modal-type="image"        — displays an image
+   *   data-modal-type="html"         — clones inner HTML of data-modal-target selector
+   *   data-modal-src="https://..."   — URL for video or image types
+   *   data-modal-target="#selector"  — CSS selector for html type
+   * ───────────────────────────────────────────────────────────────────── */
+
+  (function () {
+    var triggers = document.querySelectorAll('[data-modal-trigger]');
+    if (!triggers.length) return;
+
+    var overlay = document.createElement('div');
+    overlay.setAttribute('data-modal-overlay', '');
+    overlay.className = 'fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80';
+    overlay.style.cssText = 'opacity:0;pointer-events:none;transition:opacity 0.2s ease;';
+    overlay.innerHTML = [
+      '<div class="relative w-full max-w-4xl">',
+        '<button data-modal-close',
+        '        class="absolute -top-10 right-0 flex items-center justify-center w-10 h-10 text-white text-3xl leading-none bg-transparent border-0 cursor-pointer rounded-full hover:bg-white/20">',
+        '  &times;',
+        '</button>',
+        '<div data-modal-content class="w-full rounded-xl overflow-hidden bg-black"></div>',
+      '</div>',
+    ].join('');
+    document.body.appendChild(overlay);
+
+    var content = overlay.querySelector('[data-modal-content]');
+
+    function openModal(type, src, target) {
+      content.innerHTML = '';
+      if (type === 'video') {
+        var vid = document.createElement('video');
+        vid.src = src;
+        vid.controls = true;
+        vid.autoplay = true;
+        vid.playsInline = true;
+        vid.className = 'w-full max-h-[80vh]';
+        content.appendChild(vid);
+      } else if (type === 'image') {
+        var img = document.createElement('img');
+        img.src = src;
+        img.className = 'w-full h-auto block';
+        content.appendChild(img);
+      } else if (type === 'html') {
+        var el = target ? document.querySelector(target) : null;
+        if (el) content.innerHTML = el.innerHTML;
+      }
+      overlay.style.opacity = '1';
+      overlay.style.pointerEvents = 'auto';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      overlay.style.opacity = '0';
+      overlay.style.pointerEvents = 'none';
+      document.body.style.overflow = '';
+      setTimeout(function () {
+        if (overlay.style.opacity === '0') content.innerHTML = '';
+      }, 200);
+    }
+
+    triggers.forEach(function (trigger) {
+      trigger.addEventListener('click', function (e) {
+        e.preventDefault();
+        openModal(
+          trigger.getAttribute('data-modal-type') || 'video',
+          trigger.getAttribute('data-modal-src')  || '',
+          trigger.getAttribute('data-modal-target') || ''
+        );
+      });
+    });
+
+    overlay.querySelector('[data-modal-close]').addEventListener('click', closeModal);
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) closeModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeModal();
+    });
+  }());
+
+
+  /* ─────────────────────────────────────────────────────────────────────
    * 5. COUNTDOWN TIMER
    *
    * Markup contract:
