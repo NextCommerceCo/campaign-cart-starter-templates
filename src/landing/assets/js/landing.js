@@ -1,12 +1,17 @@
 /**
  * landing.js — Unified section behaviors for composed landing pages.
  *
- * Covers three behaviors — all driven purely by data attributes,
- * no section-specific selectors or class names.
+ * All behaviors are driven purely by data attributes — no section-specific
+ * selectors or class names. Sections run in order at script execution time
+ * (script is loaded at the bottom of <body>, so DOM is ready).
  *
  * 1. ACCORDION
  * 2. SWIPER SLIDERS
- * 3. COUNTDOWN TIMER
+ * 3. EXPANDABLE SECTIONS
+ * 4. MODAL
+ * 5. INLINE VIDEO
+ * 6. COUNTDOWN TIMER
+ * 7. VIDEO AUTOPLAY ON SCROLL
  */
 
 (function () {
@@ -242,7 +247,161 @@
 
 
   /* ─────────────────────────────────────────────────────────────────────
-   * 3. COUNTDOWN TIMER
+   * 3. EXPANDABLE SECTIONS
+   *
+   * Markup contract on [data-expandable]:
+   *   [data-expandable-panel]    — the collapsible content block
+   *   [data-expandable-toggle]   — the button that opens/closes it
+   *   [data-expandable-label]    — optional; text node swapped on toggle
+   *     data-label-open="..."      text when closed
+   *     data-label-close="..."     text when open
+   *   [data-expandable-chevron]  — optional; gets rotate(180deg) when open
+   * ───────────────────────────────────────────────────────────────────── */
+
+  document.querySelectorAll('[data-expandable]').forEach(function (root) {
+    var toggle  = root.querySelector('[data-expandable-toggle]');
+    var panel   = root.querySelector('[data-expandable-panel]');
+    if (!toggle || !panel) return;
+
+    var label   = root.querySelector('[data-expandable-label]');
+    var chevron = root.querySelector('[data-expandable-chevron]');
+    var open    = false;
+
+    toggle.addEventListener('click', function () {
+      open = !open;
+      panel.style.maxHeight = open ? panel.scrollHeight + 'px' : '0';
+      if (chevron) chevron.style.transform = open ? 'rotate(180deg)' : '';
+      if (label) {
+        label.textContent = open
+          ? (label.dataset.labelClose || label.textContent)
+          : (label.dataset.labelOpen  || label.textContent);
+      }
+    });
+  });
+
+
+  /* ─────────────────────────────────────────────────────────────────────
+   * 4. MODAL
+   *
+   * Markup contract on triggers:
+   *   data-modal-trigger             — any clickable element opens the modal
+   *   data-modal-type="video"        — plays an MP4 URL in a <video> element
+   *   data-modal-type="image"        — displays an image
+   *   data-modal-type="html"         — clones inner HTML of data-modal-target selector
+   *   data-modal-src="https://..."   — URL for video or image types
+   *   data-modal-target="#selector"  — CSS selector for html type
+   * ───────────────────────────────────────────────────────────────────── */
+
+  var modalTriggers = document.querySelectorAll('[data-modal-trigger]');
+  if (modalTriggers.length) {
+    var overlay = document.createElement('div');
+    overlay.setAttribute('data-modal-overlay', '');
+    overlay.className = 'fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80';
+    overlay.style.cssText = 'opacity:0;pointer-events:none;transition:opacity 0.2s ease;';
+    overlay.innerHTML = [
+      '<div role="dialog" aria-modal="true" aria-label="Media viewer" class="relative w-full max-w-4xl">',
+        '<button data-modal-close class="absolute -top-10 right-0 flex items-center justify-center w-10 h-10 bg-transparent border-0 cursor-pointer rounded-full hover:bg-white/20">',
+        '  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+        '</button>',
+        '<div data-modal-content class="w-full rounded-xl overflow-hidden bg-black"></div>',
+      '</div>',
+    ].join('');
+    document.body.appendChild(overlay);
+
+    var modalContent = overlay.querySelector('[data-modal-content]');
+
+    function openModal(type, src, target) {
+      modalContent.innerHTML = '';
+      if (type === 'video') {
+        var vid = document.createElement('video');
+        vid.src = src;
+        vid.controls = true;
+        vid.autoplay = true;
+        vid.playsInline = true;
+        vid.className = 'w-full max-h-[80vh]';
+        modalContent.appendChild(vid);
+      } else if (type === 'image') {
+        var img = document.createElement('img');
+        img.src = src;
+        img.className = 'w-full h-auto block';
+        modalContent.appendChild(img);
+      } else if (type === 'html') {
+        var el = target ? document.querySelector(target) : null;
+        if (el) modalContent.innerHTML = el.innerHTML;
+      }
+      overlay.style.opacity = '1';
+      overlay.style.pointerEvents = 'auto';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      overlay.style.opacity = '0';
+      overlay.style.pointerEvents = 'none';
+      document.body.style.overflow = '';
+      setTimeout(function () {
+        if (overlay.style.opacity === '0') modalContent.innerHTML = '';
+      }, 200);
+    }
+
+    modalTriggers.forEach(function (trigger) {
+      trigger.addEventListener('click', function (e) {
+        e.preventDefault();
+        openModal(
+          trigger.getAttribute('data-modal-type') || 'video',
+          trigger.getAttribute('data-modal-src')  || '',
+          trigger.getAttribute('data-modal-target') || ''
+        );
+      });
+    });
+
+    overlay.querySelector('[data-modal-close]').addEventListener('click', closeModal);
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) closeModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeModal();
+    });
+  }
+
+
+  /* ─────────────────────────────────────────────────────────────────────
+   * 5. INLINE VIDEO
+   *
+   * Markup contract on [data-video-inline]:
+   *   data-video-src="https://..."  — MP4 URL to play in-place
+   *
+   * On click, replaces the container's contents with an autoplaying
+   * <video> that fills the same space. Use when the video should play
+   * inside the thumbnail slot rather than opening a modal.
+   * ───────────────────────────────────────────────────────────────────── */
+
+  document.querySelectorAll('[data-video-inline]').forEach(function (root) {
+    var src = root.getAttribute('data-video-src');
+    if (!src) return;
+
+    root.addEventListener('click', function handler() {
+      var original = root.innerHTML;
+      function restore() {
+        root.innerHTML = original;
+        root.addEventListener('click', handler, { once: true });
+      }
+      var vid = document.createElement('video');
+      vid.src = src;
+      vid.controls = true;
+      vid.autoplay = true;
+      vid.playsInline = true;
+      vid.className = 'w-full h-full object-cover';
+      vid.addEventListener('error', restore, { once: true });
+      root.innerHTML = '';
+      root.appendChild(vid);
+      var p = vid.play();
+      if (p && p.catch) p.catch(restore);
+    }, { once: true });
+  });
+
+
+  /* ─────────────────────────────────────────────────────────────────────
+   * 6. COUNTDOWN TIMER
    *
    * Markup contract:
    *   [data-countdown]           — wrapper; data-duration-minutes="15" (default: 15)
@@ -286,41 +445,43 @@
     tick();
   });
 
-}());
-
 
   /* ─────────────────────────────────────────────────────────────────────
-   * 4. VIDEO AUTOPLAY ON SCROLL
+   * 7. VIDEO AUTOPLAY ON SCROLL
    *
-   * All <video> elements play when ~35% visible, pause when not.
+   * Handles ambient <video> elements that exist in the DOM at page load
+   * (e.g. background/loop videos in sections). Plays when ~35% visible,
+   * pauses when not. Does NOT affect videos created dynamically by the
+   * modal (section 4) or inline video (section 5) handlers.
+   *
    * Add loading="lazy" to <video> tags to defer network download.
    * ───────────────────────────────────────────────────────────────────── */
 
-(function () {
-  var videos = document.querySelectorAll('video');
-  if (!videos.length || !('IntersectionObserver' in window)) return;
-
-  videos.forEach(function (v) {
-    v.pause();
-    v.muted = true;
-    v.playsInline = true;
-    v.autoplay = false;
-  });
-
-  var observer = new IntersectionObserver(function (entries) {
-    entries.forEach(function (entry) {
-      if (entry.isIntersecting) {
-        var p = entry.target.play();
-        if (p && p.catch) p.catch(function () {});
-      } else {
-        entry.target.pause();
-      }
+  var ambientVideos = document.querySelectorAll('video');
+  if (ambientVideos.length && ('IntersectionObserver' in window)) {
+    ambientVideos.forEach(function (v) {
+      v.pause();
+      v.muted = true;
+      v.playsInline = true;
+      v.autoplay = false;
     });
-  }, { threshold: 0.35 });
 
-  videos.forEach(function (v) { observer.observe(v); });
+    var videoObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var p = entry.target.play();
+          if (p && p.catch) p.catch(function () {});
+        } else {
+          entry.target.pause();
+        }
+      });
+    }, { threshold: 0.35 });
 
-  document.addEventListener('visibilitychange', function () {
-    if (document.hidden) videos.forEach(function (v) { v.pause(); });
-  });
+    ambientVideos.forEach(function (v) { videoObserver.observe(v); });
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) ambientVideos.forEach(function (v) { v.pause(); });
+    });
+  }
+
 }());
