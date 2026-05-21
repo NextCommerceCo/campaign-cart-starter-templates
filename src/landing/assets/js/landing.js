@@ -297,9 +297,8 @@
     overlay.style.cssText = 'opacity:0;pointer-events:none;transition:opacity 0.2s ease;';
     overlay.innerHTML = [
       '<div class="relative w-full max-w-4xl">',
-        '<button data-modal-close',
-        '        class="absolute -top-10 right-0 flex items-center justify-center w-10 h-10 text-white text-3xl leading-none bg-transparent border-0 cursor-pointer rounded-full hover:bg-white/20">',
-        '  &times;',
+        '<button data-modal-close class="absolute -top-10 right-0 flex items-center justify-center w-10 h-10 bg-transparent border-0 cursor-pointer rounded-full hover:bg-white/20">',
+        '  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
         '</button>',
         '<div data-modal-content class="w-full rounded-xl overflow-hidden bg-black"></div>',
       '</div>',
