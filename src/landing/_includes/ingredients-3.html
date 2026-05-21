@@ -1,5 +1,5 @@
 <style>
-  .ingredients3-extra {
+  [data-expandable-panel] {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.4s ease;
@@ -18,7 +18,7 @@
         </p>
       </div>
 
-      <div class="w-full flex flex-col items-center gap-[24px] md:gap-[32px] lg:gap-[40px]">
+      <div class="w-full flex flex-col items-center gap-[24px] md:gap-[32px] lg:gap-[40px]" data-expandable>
         <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[12px] md:gap-[16px] lg:gap-[20px]">
           <div class="relative border-2 border-[var(--brand-primary)] rounded-[10px] bg-white px-[12px] py-[24px] md:px-[16px] md:py-[32px] lg:px-[20px] lg:py-[40px]">
             <img src="{{ ingredients_3_card_1_image | campaign_asset }}" alt="{{ ingredients_3_card_1_title }}" class="absolute top-[20px] right-[10px] w-[80px] h-[64px] object-contain md:static md:w-[150px] md:h-[80px] md:mx-auto md:mb-[12px] lg:mb-[12px]">
@@ -77,7 +77,7 @@
           </div>
         </div>  
 
-        <div class="ingredients3-extra w-full" data-ingredients3-extra>
+        <div class="w-full" data-expandable-panel>
           <div class="pt-[12px] md:pt-[16px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[12px] md:gap-[16px] lg:gap-[20px]">
             <div class="relative border-2 border-[var(--brand-primary)] rounded-[10px] bg-white px-[12px] py-[24px] md:px-[16px] md:py-[32px] lg:px-[20px] lg:py-[40px]">
               <img src="{{ ingredients_3_card_5_image | campaign_asset }}" alt="{{ ingredients_3_card_5_title }}" class="absolute top-[20px] right-[10px] w-[80px] h-[64px] object-contain md:static md:w-[150px] md:h-[80px] md:mx-auto md:mb-[12px] lg:mb-[12px]">
@@ -138,11 +138,11 @@
         </div>
 
         <button
-          data-ingredients3-toggle
+          data-expandable-toggle
           class="font-medium text-[18px] md:text-[20px] leading-[1.5] tracking-[-0.09px] md:tracking-[-0.1px] text-[var(--text-primary)] underline bg-transparent border-0 p-0 cursor-pointer"
         >
           <span
-            data-ingredients3-label
+            data-expandable-label
             data-label-open="{{ ingredients_3_ingredients_link_text }}"
             data-label-close="{{ ingredients_3_ingredients_link_text_close }}"
           >{{ ingredients_3_ingredients_link_text }}</span>
@@ -230,24 +230,3 @@
   </div>
 </section>
 
-<script>
-  (function () {
-    var toggle = document.querySelector("[data-ingredients3-toggle]");
-    var extra = document.querySelector("[data-ingredients3-extra]");
-    if (!toggle || !extra) return;
-
-    var label = toggle.querySelector("[data-ingredients3-label]");
-    var open = false;
-
-    toggle.addEventListener("click", function () {
-      open = !open;
-      extra.style.maxHeight = open ? extra.scrollHeight + "px" : "0";
-
-      if (label) {
-        label.textContent = open
-          ? (label.dataset.labelClose || "Hide the Full Ingredients List")
-          : (label.dataset.labelOpen || "View the Full Ingredients List");
-      }
-    });
-  })();
-</script>

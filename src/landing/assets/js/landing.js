@@ -242,7 +242,41 @@
 
 
   /* ─────────────────────────────────────────────────────────────────────
-   * 3. COUNTDOWN TIMER
+   * 3. EXPANDABLE SECTIONS
+   *
+   * Markup contract on [data-expandable]:
+   *   [data-expandable-panel]    — the collapsible content block
+   *   [data-expandable-toggle]   — the button that opens/closes it
+   *   [data-expandable-label]    — optional; text node swapped on toggle
+   *     data-label-open="..."      text when closed
+   *     data-label-close="..."     text when open
+   *   [data-expandable-chevron]  — optional; gets rotate(180deg) when open
+   * ───────────────────────────────────────────────────────────────────── */
+
+  document.querySelectorAll('[data-expandable]').forEach(function (root) {
+    var toggle  = root.querySelector('[data-expandable-toggle]');
+    var panel   = root.querySelector('[data-expandable-panel]');
+    if (!toggle || !panel) return;
+
+    var label   = root.querySelector('[data-expandable-label]');
+    var chevron = root.querySelector('[data-expandable-chevron]');
+    var open    = false;
+
+    toggle.addEventListener('click', function () {
+      open = !open;
+      panel.style.maxHeight = open ? panel.scrollHeight + 'px' : '0';
+      if (chevron) chevron.style.transform = open ? 'rotate(180deg)' : '';
+      if (label) {
+        label.textContent = open
+          ? (label.dataset.labelClose || label.textContent)
+          : (label.dataset.labelOpen  || label.textContent);
+      }
+    });
+  });
+
+
+  /* ─────────────────────────────────────────────────────────────────────
+   * 5. COUNTDOWN TIMER
    *
    * Markup contract:
    *   [data-countdown]           — wrapper; data-duration-minutes="15" (default: 15)
@@ -290,7 +324,7 @@
 
 
   /* ─────────────────────────────────────────────────────────────────────
-   * 4. VIDEO AUTOPLAY ON SCROLL
+   * 6. VIDEO AUTOPLAY ON SCROLL
    *
    * All <video> elements play when ~35% visible, pause when not.
    * Add loading="lazy" to <video> tags to defer network download.

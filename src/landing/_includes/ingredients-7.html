@@ -1,5 +1,5 @@
 <style>
-  .ingredients7-extra {
+  [data-expandable-panel] {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.4s ease;
@@ -8,7 +8,7 @@
 
 <section class="bg-white py-[40px] md:py-[48px] lg:py-[60px]">
   <div class="max-w-[1440px] mx-auto px-[15px] md:px-[26px] lg:px-[60px] xl:px-[120px]">
-    <div class="max-w-[960px] mx-auto flex flex-col items-center gap-[32px] md:gap-[40px] lg:gap-[48px]">
+    <div class="max-w-[960px] mx-auto flex flex-col items-center gap-[32px] md:gap-[40px] lg:gap-[48px]" data-expandable>
       <div class="w-full text-center flex flex-col gap-[12px] md:gap-[16px] lg:gap-[20px]">
         <h2 class="font-bold text-[28px] md:text-[32px] lg:text-[40px] leading-[1.2] tracking-[-0.14px] md:tracking-[-0.16px] lg:tracking-[-0.2px] text-[var(--text-primary)]">
           {{ ingredients_7_heading }}
@@ -59,7 +59,7 @@
           </div>
         </div>
 
-        <div class="ingredients7-extra w-full md:col-span-2" data-ingredients7-extra>
+        <div class="w-full md:col-span-2" data-expandable-panel>
           <div class="pt-[12px] grid grid-cols-1 md:grid-cols-2 gap-[12px] md:gap-[16px] lg:gap-[20px]">
             <div class="bg-white border border-[var(--border-default)] rounded-[16px] px-[12px] py-[24px] md:px-[16px] md:py-[32px] lg:px-[20px] lg:py-[40px] flex items-start gap-[12px] md:gap-[16px] lg:gap-[20px]">
               <div class="flex-1 flex flex-col gap-[8px] md:gap-[10px] lg:gap-[12px]">
@@ -85,11 +85,11 @@
       </div>
 
       <button
-        data-ingredients7-toggle
+        data-expandable-toggle
         class="font-normal text-[18px] md:text-[20px] leading-[1.5] tracking-[-0.09px] md:tracking-[-0.1px] text-[var(--text-primary)] underline text-center bg-transparent border-0 p-0 cursor-pointer"
       >
         <span
-          data-ingredients7-label
+          data-expandable-label
           data-label-open="{{ ingredients_7_ingredients_link_text }}"
           data-label-close="{{ ingredients_7_ingredients_link_text_close }}"
         >{{ ingredients_7_ingredients_link_text }}</span>
@@ -98,24 +98,3 @@
   </div>
 </section>
 
-<script>
-  (function () {
-    var toggle = document.querySelector("[data-ingredients7-toggle]");
-    var extra = document.querySelector("[data-ingredients7-extra]");
-    if (!toggle || !extra) return;
-
-    var label = toggle.querySelector("[data-ingredients7-label]");
-    var open = false;
-
-    toggle.addEventListener("click", function () {
-      open = !open;
-      extra.style.maxHeight = open ? extra.scrollHeight + "px" : "0";
-
-      if (label) {
-        label.textContent = open
-          ? (label.dataset.labelClose || "Hide Ingredients & Nutrition Facts")
-          : (label.dataset.labelOpen || "View Ingredients & Nutrition Facts");
-      }
-    });
-  })();
-</script>

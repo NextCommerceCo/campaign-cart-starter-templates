@@ -1,17 +1,17 @@
 <style>
-  .ingredients1-extra {
+  [data-expandable-panel] {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.4s ease;
   }
-  .ingredients1-chevron {
+  [data-expandable-chevron] {
     transition: transform 0.3s ease;
   }
 </style>
 
 <section class="bg-white py-10 md:py-12 lg:py-[60px]">
   <div class="max-w-[1440px] mx-auto px-[15px] md:px-[26px] lg:px-[80px] xl:px-[160px]">
-    <div class="flex flex-col gap-8 md:gap-10 lg:gap-12 items-center">
+    <div class="flex flex-col gap-8 md:gap-10 lg:gap-12 items-center" data-expandable>
 
       <!-- Header -->
       <div class="flex flex-col gap-3 md:gap-4 items-center text-center w-full lg:max-w-[800px]">
@@ -62,7 +62,7 @@
         <hr class="border-0 border-t border-[color:var(--border-default)] w-full m-0">
 
         <!-- Rows 4–6 — expandable -->
-        <div class="ingredients1-extra" data-ingredients-extra>
+        <div data-expandable-panel>
           <div class="flex flex-col gap-3 md:gap-4 lg:gap-5">
 
             <!-- Row 4 -->
@@ -110,12 +110,12 @@
       </div>
 
       <!-- Toggle button -->
-      <button data-ingredients-toggle class="flex items-center gap-4 cursor-pointer bg-transparent border-0 p-0">
-        <span data-ingredients-label
+      <button data-expandable-toggle class="flex items-center gap-4 cursor-pointer bg-transparent border-0 p-0">
+        <span data-expandable-label
               data-label-open="{{ ingredients_1_toggle_label }}"
               data-label-close="{{ ingredients_1_toggle_label_close }}"
               class="font-semibold text-[16px] md:text-[18px] text-[color:var(--brand-primary)] uppercase tracking-[-0.08px] md:tracking-[-0.09px] leading-[1.5] whitespace-nowrap">{{ ingredients_1_toggle_label }}</span>
-        <svg data-ingredients-chevron class="ingredients1-chevron shrink-0" width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg data-expandable-chevron class="shrink-0" width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M1 1L5 6L9 1" stroke="var(--brand-primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
@@ -124,21 +124,3 @@
   </div>
 </section>
 
-<script>
-(function() {
-  var toggle = document.querySelector('[data-ingredients-toggle]');
-  var extra = document.querySelector('[data-ingredients-extra]');
-  if (!toggle || !extra) return;
-  var chevron = toggle.querySelector('[data-ingredients-chevron]');
-  var label = toggle.querySelector('[data-ingredients-label]');
-  var open = false;
-  toggle.addEventListener('click', function() {
-    open = !open;
-    extra.style.maxHeight = open ? extra.scrollHeight + 'px' : '0';
-    if (chevron) chevron.style.transform = open ? 'rotate(180deg)' : '';
-    if (label) label.textContent = open
-      ? (label.dataset.labelClose || 'Hide Ingredients List')
-      : (label.dataset.labelOpen || 'View the Full Ingredients List');
-  });
-})();
-</script>
