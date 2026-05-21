@@ -1,12 +1,17 @@
 /**
  * landing.js — Unified section behaviors for composed landing pages.
  *
- * Covers three behaviors — all driven purely by data attributes,
- * no section-specific selectors or class names.
+ * All behaviors are driven purely by data attributes — no section-specific
+ * selectors or class names. Sections run in order at script execution time
+ * (script is loaded at the bottom of <body>, so DOM is ready).
  *
  * 1. ACCORDION
  * 2. SWIPER SLIDERS
- * 3. COUNTDOWN TIMER
+ * 3. EXPANDABLE SECTIONS
+ * 4. MODAL
+ * 5. INLINE VIDEO
+ * 6. COUNTDOWN TIMER
+ * 7. VIDEO AUTOPLAY ON SCROLL
  */
 
 (function () {
@@ -287,10 +292,8 @@
    *   data-modal-target="#selector"  — CSS selector for html type
    * ───────────────────────────────────────────────────────────────────── */
 
-  (function () {
-    var triggers = document.querySelectorAll('[data-modal-trigger]');
-    if (!triggers.length) return;
-
+  var modalTriggers = document.querySelectorAll('[data-modal-trigger]');
+  if (modalTriggers.length) {
     var overlay = document.createElement('div');
     overlay.setAttribute('data-modal-overlay', '');
     overlay.className = 'fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80';
@@ -305,10 +308,10 @@
     ].join('');
     document.body.appendChild(overlay);
 
-    var content = overlay.querySelector('[data-modal-content]');
+    var modalContent = overlay.querySelector('[data-modal-content]');
 
     function openModal(type, src, target) {
-      content.innerHTML = '';
+      modalContent.innerHTML = '';
       if (type === 'video') {
         var vid = document.createElement('video');
         vid.src = src;
@@ -316,15 +319,15 @@
         vid.autoplay = true;
         vid.playsInline = true;
         vid.className = 'w-full max-h-[80vh]';
-        content.appendChild(vid);
+        modalContent.appendChild(vid);
       } else if (type === 'image') {
         var img = document.createElement('img');
         img.src = src;
         img.className = 'w-full h-auto block';
-        content.appendChild(img);
+        modalContent.appendChild(img);
       } else if (type === 'html') {
         var el = target ? document.querySelector(target) : null;
-        if (el) content.innerHTML = el.innerHTML;
+        if (el) modalContent.innerHTML = el.innerHTML;
       }
       overlay.style.opacity = '1';
       overlay.style.pointerEvents = 'auto';
@@ -336,11 +339,11 @@
       overlay.style.pointerEvents = 'none';
       document.body.style.overflow = '';
       setTimeout(function () {
-        if (overlay.style.opacity === '0') content.innerHTML = '';
+        if (overlay.style.opacity === '0') modalContent.innerHTML = '';
       }, 200);
     }
 
-    triggers.forEach(function (trigger) {
+    modalTriggers.forEach(function (trigger) {
       trigger.addEventListener('click', function (e) {
         e.preventDefault();
         openModal(
@@ -358,11 +361,41 @@
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') closeModal();
     });
-  }());
+  }
 
 
   /* ─────────────────────────────────────────────────────────────────────
-   * 5. COUNTDOWN TIMER
+   * 5. INLINE VIDEO
+   *
+   * Markup contract on [data-video-inline]:
+   *   data-video-src="https://..."  — MP4 URL to play in-place
+   *
+   * On click, replaces the container's contents with an autoplaying
+   * <video> that fills the same space. Use when the video should play
+   * inside the thumbnail slot rather than opening a modal.
+   * ───────────────────────────────────────────────────────────────────── */
+
+  document.querySelectorAll('[data-video-inline]').forEach(function (root) {
+    var src = root.getAttribute('data-video-src');
+    if (!src) return;
+
+    root.addEventListener('click', function () {
+      var vid = document.createElement('video');
+      vid.src = src;
+      vid.controls = true;
+      vid.autoplay = true;
+      vid.playsInline = true;
+      vid.className = 'w-full h-full object-cover';
+      root.innerHTML = '';
+      root.appendChild(vid);
+      var p = vid.play();
+      if (p && p.catch) p.catch(function () {});
+    }, { once: true });
+  });
+
+
+  /* ─────────────────────────────────────────────────────────────────────
+   * 6. COUNTDOWN TIMER
    *
    * Markup contract:
    *   [data-countdown]           — wrapper; data-duration-minutes="15" (default: 15)
@@ -406,73 +439,43 @@
     tick();
   });
 
-}());
-
 
   /* ─────────────────────────────────────────────────────────────────────
-   * 7. INLINE VIDEO
+   * 7. VIDEO AUTOPLAY ON SCROLL
    *
-   * Markup contract on [data-video-inline]:
-   *   data-video-src="https://..."  — MP4 URL to play in-place
+   * Handles ambient <video> elements that exist in the DOM at page load
+   * (e.g. background/loop videos in sections). Plays when ~35% visible,
+   * pauses when not. Does NOT affect videos created dynamically by the
+   * modal (section 4) or inline video (section 5) handlers.
    *
-   * On click, replaces the container's contents with an autoplaying
-   * <video> that fills the same space. Use this when you want the video
-   * to play inside the thumbnail slot rather than opening a modal.
-   * ───────────────────────────────────────────────────────────────────── */
-
-(function () {
-  document.querySelectorAll('[data-video-inline]').forEach(function (root) {
-    var src = root.getAttribute('data-video-src');
-    if (!src) return;
-
-    root.addEventListener('click', function () {
-      var vid = document.createElement('video');
-      vid.src = src;
-      vid.controls = true;
-      vid.autoplay = true;
-      vid.playsInline = true;
-      vid.className = 'w-full h-full object-cover';
-      root.innerHTML = '';
-      root.appendChild(vid);
-      var p = vid.play();
-      if (p && p.catch) p.catch(function () {});
-    }, { once: true });
-  });
-}());
-
-
-  /* ─────────────────────────────────────────────────────────────────────
-   * 6. VIDEO AUTOPLAY ON SCROLL
-   *
-   * All <video> elements play when ~35% visible, pause when not.
    * Add loading="lazy" to <video> tags to defer network download.
    * ───────────────────────────────────────────────────────────────────── */
 
-(function () {
-  var videos = document.querySelectorAll('video');
-  if (!videos.length || !('IntersectionObserver' in window)) return;
-
-  videos.forEach(function (v) {
-    v.pause();
-    v.muted = true;
-    v.playsInline = true;
-    v.autoplay = false;
-  });
-
-  var observer = new IntersectionObserver(function (entries) {
-    entries.forEach(function (entry) {
-      if (entry.isIntersecting) {
-        var p = entry.target.play();
-        if (p && p.catch) p.catch(function () {});
-      } else {
-        entry.target.pause();
-      }
+  var ambientVideos = document.querySelectorAll('video');
+  if (ambientVideos.length && ('IntersectionObserver' in window)) {
+    ambientVideos.forEach(function (v) {
+      v.pause();
+      v.muted = true;
+      v.playsInline = true;
+      v.autoplay = false;
     });
-  }, { threshold: 0.35 });
 
-  videos.forEach(function (v) { observer.observe(v); });
+    var videoObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var p = entry.target.play();
+          if (p && p.catch) p.catch(function () {});
+        } else {
+          entry.target.pause();
+        }
+      });
+    }, { threshold: 0.35 });
 
-  document.addEventListener('visibilitychange', function () {
-    if (document.hidden) videos.forEach(function (v) { v.pause(); });
-  });
+    ambientVideos.forEach(function (v) { videoObserver.observe(v); });
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) ambientVideos.forEach(function (v) { v.pause(); });
+    });
+  }
+
 }());
