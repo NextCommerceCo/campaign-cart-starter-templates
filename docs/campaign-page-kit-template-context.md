@@ -417,6 +417,31 @@ The SDK is controlled entirely through HTML attributes. Do not write JavaScript 
 </form>
 ```
 
+### Prospect cart (abandoned cart capture)
+
+`CheckoutFormEnhancer` wires `ProspectCartEnhancer` automatically on the checkout form — there is no separate `data-next-prospect-cart` element. Configure trigger mode with `data-trigger-on` on the **form itself**:
+
+| `data-trigger-on` | Fires when… | fname/lname required | Email required | Phone required |
+|---|---|---|---|---|
+| `emailEntry` *(default)* | Valid email entered (blur/change) | yes | yes | no |
+| `phoneEntry` | Valid phone entered (blur/change) | yes | no | yes |
+| `emailAndPhone` | Both valid — fires once both filled | yes | yes | yes |
+| `formStart` | Shopper first interacts with the form | yes | yes | no |
+| `manual` | Never auto — `window.next.createProspectCart()` only | yes | yes | no |
+
+```html
+<!-- default — fires on valid email (no attribute needed) -->
+<form data-next-checkout="form">
+
+<!-- phone-first funnel — fires when phone is valid; email optional -->
+<form data-next-checkout="form" data-trigger-on="phoneEntry">
+
+<!-- require both before firing -->
+<form data-next-checkout="form" data-trigger-on="emailAndPhone">
+```
+
+Phone field is discovered via `data-next-checkout-field="phone"` → `input[name="phone"]` → `input[type="tel"]`. Use `data-next-required="true"` (+ native `required`) on the phone input when using `phoneEntry` so the checkout form also blocks submit on empty phone.
+
 ### Multi-step navigation
 
 ```html

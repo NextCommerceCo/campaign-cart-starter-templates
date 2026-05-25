@@ -322,7 +322,7 @@ bundles:
 
           
                             <div data-next-component="shipping-form" class="form-sections">
-                              {% campaign_include 'customer-info-form.html' %}
+                              {% campaign_include 'customer-info-form.html' phone_required=true %}
                               {% campaign_include 'shipping-address-form.html' %}
                             </div>
                         {% assign bump_variant = order_bump_variant | default: 'check01+switch01' %}
