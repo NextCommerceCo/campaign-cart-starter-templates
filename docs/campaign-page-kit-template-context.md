@@ -146,7 +146,7 @@ Registers every campaign. The `campaign` object in Liquid templates comes from h
   "my-campaign": {
     "name": "My Campaign",
     "entry_url": "presell",
-    "sdk_version": "0.4.20",
+    "sdk_version": "0.4.22",
     "store_name": "Acme Store",
     "store_url": "https://acme.com",
     "store_phone": "1-800-555-0100",
@@ -166,7 +166,7 @@ The top-level key is the campaign slug. Add any additional key to a campaign ent
 
 **`entry_url`** — optional. The page slug `npm run dev` opens in the browser (e.g. `"presell"`). Omit to use the kit default.
 
-**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.20"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
+**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.22"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
 
 ### Build environment (`environment`)
 
@@ -417,6 +417,31 @@ The SDK is controlled entirely through HTML attributes. Do not write JavaScript 
 </form>
 ```
 
+### Prospect cart (abandoned cart capture)
+
+`CheckoutFormEnhancer` wires `ProspectCartEnhancer` automatically on the checkout form — there is no separate `data-next-prospect-cart` element. Configure trigger mode with `data-trigger-on` on the **form itself**:
+
+| `data-trigger-on` | Fires when… | fname/lname required | Email required | Phone required |
+|---|---|---|---|---|
+| `emailEntry` *(default)* | Valid email entered (blur/change) | yes | yes | no |
+| `phoneEntry` | Valid phone entered (blur/change) | yes | no | yes |
+| `emailAndPhone` | Both valid — fires once both filled | yes | yes | yes |
+| `formStart` | Shopper first interacts with the form | yes | yes | no |
+| `manual` | Never auto — `window.next.createProspectCart()` only | yes | yes | no |
+
+```html
+<!-- default — fires on valid email (no attribute needed) -->
+<form data-next-checkout="form">
+
+<!-- phone-first funnel — fires when phone is valid; email optional -->
+<form data-next-checkout="form" data-trigger-on="phoneEntry">
+
+<!-- require both before firing -->
+<form data-next-checkout="form" data-trigger-on="emailAndPhone">
+```
+
+Phone field is discovered via `data-next-checkout-field="phone"` → `input[name="phone"]` → `input[type="tel"]`. Use `data-next-required="true"` (+ native `required`) on the phone input when using `phoneEntry` so the checkout form also blocks submit on empty phone.
+
 ### Multi-step navigation
 
 ```html
@@ -596,6 +621,17 @@ One package, multiple quantity tiers. `data-next-bundle-items` is JSON: `package
   </div>
 </div>
 ```
+
+### Deep-linking a bundle tier (`forceBundleId`)
+
+Pass `?forceBundleId=<bundleId>` in the URL to pre-select and immediately apply a specific bundle on page load — useful for ads, emails, or affiliate links that should land on a specific tier.
+
+Three formats:
+- `?forceBundleId=buy3` — unscoped, matches any selector on the page
+- `?forceBundleId=main:buy3` — scoped to `data-next-selector-id="main"`
+- `?forceBundleId=main:buy3,gift:luxury` — multiple selectors at once
+
+Precedence: `forceBundleId` → `data-next-selected="true"` → first card. If the ID doesn't match any card, the selector falls back to standard default-selection rules. Available from SDK 0.4.22+.
 
 ### Package swap selector (legacy / 0.3.x pattern)
 

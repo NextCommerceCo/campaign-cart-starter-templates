@@ -38,7 +38,7 @@
       <div data-next-component="shipping-field-row" class="form-grid__row">
         <div class="form-group">
           <div class="form-input"><label for="shipping_country" class="label-checkout">Country</label>
-            <div class="select-form-wrapper"><select autocomplete="country-name" os-checkout-validate="required" data-next-checkout-field="country" class="input-flds select-field">
+            <div class="select-form-wrapper"><select autocomplete="country-name" data-next-checkout-field="country" class="input-flds select-field">
                 <option value="">Select Country</option>
               </select>
               <div class="caret-down">
@@ -52,7 +52,7 @@
       </div>
       <div data-next-component="shipping-field-row" class="form-grid__row">
         <div class="form-group">
-          <div class="form-input"><label for="shipping_address1" class="label-checkout">Address</label><input autocomplete="address-line1" os-checkout-validate="required" placeholder="Address*" data-next-checkout-field="address1" class="input-flds"></div>
+          <div class="form-input"><label for="shipping_address1" class="label-checkout">Address</label><input autocomplete="address-line1" placeholder="Address*" data-next-checkout-field="address1" class="input-flds"></div>
         </div>
       </div>
       <div data-next-component="shipping-field-row" class="form-grid__row">
@@ -63,11 +63,11 @@
       <div data-next-component="location" class="next-hidden">
         <div data-next-component="shipping-field-row" class="form-grid__row">
           <div class="form-group">
-            <div class="form-input"><label for="shipping_city" class="label-checkout">City</label><input autocomplete="address-level2" os-checkout-validate="required" placeholder="City*" maxlength="256" name="shipping_city" data-name="Shipping City" type="text" id="shipping_city" pattern="^[A-Za-z\s]+$" data-next-checkout-field="city" class="input-flds"></div>
+            <div class="form-input"><label for="shipping_city" class="label-checkout">City</label><input autocomplete="address-level2" placeholder="City*" maxlength="256" name="shipping_city" data-name="Shipping City" type="text" id="shipping_city" pattern="^[A-Za-z\s]+$" data-next-checkout-field="city" class="input-flds"></div>
           </div>
           <div class="form-group">
             <div class="form-input"><label for="shipping_province" class="label-checkout">State</label>
-              <div class="select-form-wrapper"><select autocomplete="address-level1" os-checkout-validate="required" name="shipping_province" data-name="Shipping Province" type="select" id="shipping_province" data-next-checkout-field="province" class="input-flds select-field">
+              <div class="select-form-wrapper"><select autocomplete="address-level1" name="shipping_province" data-name="Shipping Province" type="select" id="shipping_province" data-next-checkout-field="province" class="input-flds select-field">
                   <option value="">Select State</option>
                 </select>
                 <div class="caret-down">
@@ -79,7 +79,7 @@
             </div>
           </div>
           <div class="form-group">
-            <div class="form-input"><label for="shipping_postal_code" class="label-checkout">ZIP Code</label><input autocomplete="postal-code" os-checkout-validate="required" placeholder="ZIP Code*" maxlength="10" name="shipping_postal_code" data-name="Shipping Postal Code" type="text" id="shipping_postal_code" inputmode="numeric" pattern="(^\d{5}$)|(^\d{5}-\d{4}$)" data-next-checkout-field="postal" class="input-flds"></div>
+            <div class="form-input"><label for="shipping_postal_code" class="label-checkout">ZIP Code</label><input autocomplete="postal-code" placeholder="ZIP Code*" maxlength="10" name="shipping_postal_code" data-name="Shipping Postal Code" type="text" id="shipping_postal_code" inputmode="numeric" pattern="(^\d{5}$)|(^\d{5}-\d{4}$)" data-next-checkout-field="postal" class="input-flds"></div>
           </div>
         </div>
       </div>
