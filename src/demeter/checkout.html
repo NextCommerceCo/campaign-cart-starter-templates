@@ -47,6 +47,7 @@ bundles:
     shipping_method: "free"
     title_prefix: "3x "
     total_tone_class: "os-dark"
+    shipping_label: "+ Free Shipping"
 scripts:
   - js/promo-banner.js
   - js/promo-timer.js
@@ -114,12 +115,18 @@ scripts:
                                               <div class="os-card__title-section">
                                                 <div class="os-card__title-wrapper">
                                                   <div class="os-card__title">{bundle.title}</div>
-                                                  <div data-next-bundle-display="hasDiscount" class="os-card__title-badge pb--bestseller">
-                                                    <div>SAVE <span data-next-bundle-display="discountPercentage">-</span></div>
+                                                  <div class="flex-col gap-xs">
+                                                    <div data-next-discounts="offer" data-next-bundle-display="hasDiscount" class="os-card__title-badge pb--bestseller">
+                                                      <template><span>SAVE {discount.percentage}</span></template>
+                                                    </div>
+                                                    <div data-next-discounts="voucher" data-next-show="cart.hasCoupon()" class="os-card__title-badge pb--bestseller" style="display:none">
+                                                      <template><span>+{discount.percentage} extra</span></template>
+                                                    </div>
                                                   </div>
                                                 </div>
                                                 <div class="os-card__subtitle-wrapper">
-                                                  <div data-next-bundle-display="hasDiscount" class="os-card__subtitle-text">Save <span data-next-bundle-display="discountAmount">-</span><span data-next-show="shipping.isFree"> + Free Shipping</span></div>
+                                                  <div data-next-bundle-display="hasDiscount" class="os-card__subtitle-text">Save <span data-next-bundle-display="discountAmount">-</span></div>
+                                                  <!-- Note: config-driven variant has no per-card shipping label; switch to partial variant for shipping_label support -->
                                                 </div>
                                               </div>
                                             </div>

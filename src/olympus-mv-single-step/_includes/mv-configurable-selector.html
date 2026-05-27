@@ -68,7 +68,19 @@
               </div>
               <div os-slot="bottom" class="os-card__bottom-slot cc-gap">
                 <div class="card-sup">{{ card_sup }}</div>
-                <div class="os-card__subtitle-text-2">Save <span data-next-bundle-display="discountPercentage">XX%</span> OFF</div>
+                {% comment %} <div class="os-card__subtitle-text-2">Save <span data-next-bundle-display="discountPercentage">XX%</span> OFF</div> {% endcomment %}                
+                <div data-next-discounts="offer" class="os-card__subtitle-text-2">
+                  <template><span>Save {discount.percentage} OFF</span></template>
+                </div>
+              
+                <div
+                  data-next-discounts="voucher"
+                  data-next-show="cart.hasCoupon()"
+                  class="os-card__subtitle-text-2"
+                  style="display:none"
+                >
+                  <template><span>+{discount.percentage} extra</span></template>
+                </div>
               </div>
             </div>
             <div os-slot="footer" class="os-card__footer-slot"></div>
@@ -98,7 +110,15 @@
             <div class="os-card__price-container os--stacked">
               <div class="os-card__price diagonal-strike">{item.originalUnitPrice}</div>
               <div class="os-card__price os--current">{item.unitPrice}/ea</div>
-              <div class="os-card__subtitle-text-2">Save <span data-next-display="bundle.{{ sel_id }}.discountPercentage">-</span> OFF</div>
+              {% comment %} <div class="os-card__subtitle-text-2">SAVE {item.discountAmount}</div> {% endcomment %}
+              {% comment %} <div class="os-card__subtitle-text-2">Save <span data-next-display="bundle.{{ sel_id }}.discountPercentage">-</span> OFF</div> {% endcomment %}
+              {% comment %} <div class="os-card__subtitle-text-2" data-next-discounts="offer" data-next-show="item.hasDiscount">
+                <template><div>Save {discount.percentage} OFF</div></template>
+              </div> {% endcomment %}
+              {% comment %} <div class="mv-slot-discount-lines" data-next-show="item.hasDiscount">
+                <div class="os-card__subtitle-text-2 mv-slot-offer-line"></div>
+                <div class="os-card__subtitle-text-2 mv-slot-voucher-line" data-next-show="cart.hasCoupon()"></div>
+              </div> {% endcomment %}
             </div>
           </div>
         </div>
