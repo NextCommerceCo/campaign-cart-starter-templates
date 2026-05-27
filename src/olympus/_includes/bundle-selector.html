@@ -54,10 +54,11 @@
     - hasDiscount tokens resolve to a CSS class string ('hide' when no discount); use as classname, not boolean.
     - subtitle_text and shipping_label are FREE TEXT — the build skill cannot validate
       stated copy against actual offer/shipping data. Design carries the opinion;
-      build renders faithfully; ad-hoc visual review is the gate. The SDK has no
-      per-bundle shipping resolution tokens (cart-level shipping.isFree only flips
-      for the currently-selected card), so SDK-driven gating of these labels is
-      not viable today.
+      build renders faithfully; ad-hoc visual review is the gate.
+    - NEVER use data-next-show="shipping.isFree" inside bundle cards to gate a
+      shipping label. It is cart-level state that only reflects the currently
+      selected card — on all other cards it is always hidden. Use shipping_label
+      static text on the specific bundle card instead.
   next_variants:
     - manual-cards (this partial; canonical for olympus)
     - config-driven (data-next-bundles= JSON; see commented reference in olympus/checkout.html)

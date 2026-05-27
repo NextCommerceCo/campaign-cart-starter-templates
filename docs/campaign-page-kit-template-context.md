@@ -461,15 +461,9 @@ Phone field is discovered via `data-next-checkout-field="phone"` → `input[name
 
 ### Bundle tier display (`data-next-bundle-display`)
 
-Reads from the **active bundle selection**. Use inside `data-next-bundle-card` to show that card's tier values, or on the `data-next-bundle-selector` container to reflect the selected tier.
+Reads from the **active bundle selection**. Use inside `data-next-bundle-card` to show that card’s tier values, or on the `data-next-bundle-selector` container to reflect the selected tier.
 
 ```html
-<!-- On a bundle card — shows this card's tier values -->
-<div data-next-bundle-card data-next-bundle-id="buy2" ...>
-  Save <span data-next-bundle-display="discountPercentage">XX%</span> OFF
-  <span data-next-bundle-display="total"></span>
-</div>
-
 <!-- Outside cards — reflects the currently selected tier -->
 <span data-next-bundle-display="price"></span>
 <span data-next-bundle-display="total"></span>
@@ -477,6 +471,34 @@ Reads from the **active bundle selection**. Use inside `data-next-bundle-card` t
 ```
 
 `data-next-bundle-display` is separate from `data-next-display` — do not mix them. Allowed keys follow the SDK’s bundle display resolver — confirm against current [Campaign Cart](https://github.com/NextCommerceCo/campaign-cart) bundle/upsell enhancer docs rather than guessing paths.
+
+**⚠️ Do not use `data-next-bundle-display="discountPercentage"` inside bundle cards for the discount badge.** It reflects the **combined** offer + coupon total — when a shopper applies an exit-intent coupon, the headline % jumps (e.g. "SAVE 50%" → "SAVE 55%"), removing the visual distinction between the base offer and the extra coupon saving (see [campaign-cart#22](https://github.com/NextCommerceCo/campaign-cart/issues/22)).
+
+**Correct pattern — separate offer and voucher badges inside each card (SDK 0.4.23+):**
+
+```html
+<div data-next-bundle-card data-next-bundle-id="buy2" ...>
+  <!-- Offer badge: shows base offer % only, independent of applied coupons -->
+  <div data-next-discounts="offer" class="os-card__title-badge pb--bestseller">
+    <template><span>SAVE {discount.percentage}</span></template>
+  </div>
+  <!-- Voucher badge: only appears when a coupon is active, additive -->
+  <div data-next-discounts="voucher" class="os-card__title-badge">
+    <template><span>+{discount.percentage} extra</span></template>
+  </div>
+</div>
+```
+
+`{discount.percentage}` (SDK 0.4.23+) is supported inside `data-next-discounts` templates on `BundleSelectorEnhancer`. Requires offer names to be customer-facing copy in the Campaigns App (e.g. `"SAVE 50%"` not `"3x Bundle Offer"`) — the name renders verbatim.
+
+**⚠️ `data-next-show="shipping.isFree"` must not be used inside bundle cards for per-card shipping labels.** It is a cart-level token that only reflects the *currently selected* card’s shipping state — on unselected cards it is always hidden regardless of their configured shipping method. Use static `shipping_label` frontmatter on the specific bundle card instead:
+
+```yaml
+bundles:
+  - id: "bundle-3x"
+    shipping_method: "free"
+    shipping_label: "+ Free Shipping"  # rendered unconditionally when set
+```
 
 ### Conditional visibility
 
@@ -524,10 +546,12 @@ Live summary panel — updates on tier change, coupon apply, and bump toggle. Us
     </template>
   </div>
   <div data-next-discounts="offer">
-    <template><div>{discount.name}: −{discount.amount}</div></template>
+    <!-- {discount.percentage} available SDK 0.4.23+ -->
+    <template><div>{discount.name} ({discount.percentage} off): −{discount.amount}</div></template>
   </div>
   <div data-next-discounts="voucher">
-    <template><div>{discount.description}: −{discount.amount}</div></template>
+    <!-- {discount.percentage} available SDK 0.4.23+ -->
+    <template><div>{discount.name} ({discount.percentage} off): −{discount.amount}</div></template>
   </div>
   <span data-next-display="cart.total"></span>
 </div>
