@@ -58,7 +58,12 @@
           </div>
           <div os-slot="bottom" class="os-card__bottom-slot cc-gap">
             <div class="card-sup">{{ card_sup }}</div>
-            <div class="os-card__subtitle-text-2">Save <span data-next-bundle-display="discountPercentage">XX%</span> OFF</div>
+            <div data-next-discounts="offer" class="os-card__subtitle-text-2">
+              <template><span>Save {discount.percentage} OFF</span></template>
+            </div>
+            <div data-next-discounts="voucher" data-next-show="cart.hasCoupon()" class="os-card__subtitle-text-2" style="display:none">
+              <template><span>+{discount.percentage} extra</span></template>
+            </div>
           </div>
         </div>
         <div os-slot="footer" class="os-card__footer-slot"></div>
