@@ -1114,6 +1114,13 @@ figcaption {
   }
 }
 
+/* Flex/grid gap utilities */
+.gap-xs { gap: 0.25rem; }
+.gap-sm { gap: 0.5rem; }
+.gap-md { gap: 0.75rem; }
+.gap-lg { gap: 1rem; }
+.gap-xl { gap: 1.5rem; }
+
 /* Grid gap utilities */
 .grid-row-gap1 {
   grid-row-gap: 1rem;
@@ -5016,11 +5023,12 @@ figcaption {
 }
 
 .os-card__title-wrapper {
-  grid-column-gap: 7px;
-  grid-row-gap: 7px;
+  grid-column-gap: 4px;
+  grid-row-gap: 4px;
   justify-content: flex-start;
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
   position: relative;
 }
 
@@ -5045,6 +5053,7 @@ figcaption {
   padding: 4px .5rem;
   font-size: var(--font-size--xs);
   font-weight: 700;
+  width: fit-content;
 }
 
 .os-card__title-badge.pb--bestseller {
@@ -5058,6 +5067,7 @@ figcaption {
   justify-content: flex-start;
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
 }
 
 .os-card__subtitle-text {
