@@ -78,16 +78,20 @@
             <div class="os-card__title-section">
               <div class="os-card__title-wrapper">
                 <div class="os-card__title">{{ b.title_prefix }}<span data-next-display="package.name">Package Title</span></div>
-                <div data-next-bundle-display="hasDiscount" class="os-card__title-badge pb--bestseller">
-                  <div>SAVE <span data-next-bundle-display="discountPercentage">-</span></div>
+                <div data-next-discounts="offer" data-next-bundle-display="hasDiscount" class="os-card__title-badge pb--bestseller">
+                  <template><span>SAVE {discount.percentage}</span></template>
+                </div>
+                <div data-next-discounts="voucher" data-next-show="cart.hasCoupon()" class="os-card__title-badge pb--bestseller" style="display:none">
+                  <template><span>+{discount.percentage}</span></template>
                 </div>
               </div>
               <div class="os-card__subtitle-wrapper">
                 {%- if b.subtitle_text %}
-                <div class="os-card__subtitle-text">{{ b.subtitle_text }}{% if b.shipping_label %} {{ b.shipping_label }}{% endif %}</div>
+                <div class="os-card__subtitle-text">{{ b.subtitle_text }}</div>
                 {%- else %}
-                <div data-next-bundle-display="hasDiscount" class="os-card__subtitle-text">Save <span data-next-bundle-display="discountAmount">-</span>{% if b.shipping_label %} {{ b.shipping_label }}{% endif %}</div>
+                <div data-next-bundle-display="hasDiscount" class="os-card__subtitle-text">Save <span data-next-bundle-display="discountAmount">-</span></div>
                 {%- endif %}
+                {%- if b.shipping_label %}<div class="os-card__subtitle-text">{{ b.shipping_label }}</div>{%- endif %}
               </div>
             </div>
           </div>
@@ -136,8 +140,11 @@
             <div class="os-card__title-section">
               <div class="os-card__title-wrapper">
                 <div class="os-card__title">1x <span data-next-display="package.name">Package Title</span></div>
-                <div data-next-bundle-display="hasDiscount" class="os-card__title-badge pb--bestseller">
-                  <div>SAVE <span data-next-bundle-display="discountPercentage">-</span></div>
+                <div data-next-discounts="offer" data-next-bundle-display="hasDiscount" class="os-card__title-badge pb--bestseller">
+                  <template><span>SAVE {discount.percentage}</span></template>
+                </div>
+                <div data-next-discounts="voucher" data-next-show="cart.hasCoupon()" class="os-card__title-badge pb--bestseller" style="display:none">
+                  <template><span>+{discount.percentage}</span></template>
                 </div>
               </div>
               <div class="os-card__subtitle-wrapper">
@@ -180,8 +187,11 @@
             <div class="os-card__title-section">
               <div class="os-card__title-wrapper">
                 <div class="os-card__title">2x <span data-next-display="package.name">Package Title</span></div>
-                <div data-next-bundle-display="hasDiscount" class="os-card__title-badge pb--bestseller">
-                  <div>SAVE <span data-next-bundle-display="discountPercentage">-</span></div>
+                <div data-next-discounts="offer" data-next-bundle-display="hasDiscount" class="os-card__title-badge pb--bestseller">
+                  <template><span>SAVE {discount.percentage}</span></template>
+                </div>
+                <div data-next-discounts="voucher" data-next-show="cart.hasCoupon()" class="os-card__title-badge pb--bestseller" style="display:none">
+                  <template><span>+{discount.percentage}</span></template>
                 </div>
               </div>
               <div class="os-card__subtitle-wrapper">
@@ -220,12 +230,16 @@
             <div class="os-card__title-section">
               <div class="os-card__title-wrapper">
                 <div class="os-card__title">3x <span data-next-display="package.name">Package Title</span></div>
-                <div data-next-bundle-display="hasDiscount" class="os-card__title-badge pb--bestseller">
-                  <div>SAVE <span data-next-bundle-display="discountPercentage">-</span></div>
+                <div data-next-discounts="offer" data-next-bundle-display="hasDiscount" class="os-card__title-badge pb--bestseller">
+                  <template><span>SAVE {discount.percentage}</span></template>
+                </div>
+                <div data-next-discounts="voucher" data-next-show="cart.hasCoupon()" class="os-card__title-badge pb--bestseller" style="display:none">
+                  <template><span>+{discount.percentage}</span></template>
                 </div>
               </div>
               <div class="os-card__subtitle-wrapper">
-                <div data-next-bundle-display="hasDiscount" class="os-card__subtitle-text">Save <span data-next-bundle-display="discountAmount">-</span><span data-next-show="shipping.isFree"> + Free Shipping</span></div>
+                <div data-next-bundle-display="hasDiscount" class="os-card__subtitle-text">Save <span data-next-bundle-display="discountAmount">-</span></div>
+                {% if _free_ship %}<div class="os-card__subtitle-text"> + Free Shipping</div>{% endif %}
               </div>
             </div>
           </div>
