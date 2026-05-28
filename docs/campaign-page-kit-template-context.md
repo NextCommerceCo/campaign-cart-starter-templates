@@ -146,7 +146,7 @@ Registers every campaign. The `campaign` object in Liquid templates comes from h
   "my-campaign": {
     "name": "My Campaign",
     "entry_url": "presell",
-    "sdk_version": "0.4.22",
+    "sdk_version": "0.4.24",
     "store_name": "Acme Store",
     "store_url": "https://acme.com",
     "store_phone": "1-800-555-0100",
@@ -166,7 +166,7 @@ The top-level key is the campaign slug. Add any additional key to a campaign ent
 
 **`entry_url`** — optional. The page slug `npm run dev` opens in the browser (e.g. `"presell"`). Omit to use the kit default.
 
-**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.22"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
+**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.24"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
 
 ### Build environment (`environment`)
 
@@ -489,7 +489,16 @@ Reads from the **active bundle selection**. Use inside `data-next-bundle-card` t
 </div>
 ```
 
-`{discount.percentage}` (SDK 0.4.23+) is supported inside `data-next-discounts` templates on `BundleSelectorEnhancer`. Requires offer names to be customer-facing copy in the Campaigns App (e.g. `"SAVE 50%"` not `"3x Bundle Offer"`) — the name renders verbatim.
+**`{discount.*}` tokens** available inside `data-next-discounts` `<template>` children:
+
+| Token | Value |
+|---|---|
+| `{discount.percentage}` | Formatted percentage e.g. `"50%"` (SDK 0.4.23+) |
+| `{discount.name}` | Display label set in the Campaigns App — renders verbatim, so use customer-facing copy |
+| `{discount.description}` | Coupon code string (useful for voucher rows, e.g. `"SP10D"`) |
+| `{discount.amount}` | Formatted currency saving e.g. `"−$10.00"` |
+
+These tokens work inside `data-next-bundle-card` (SDK 0.4.23+) and inside bundle slot `<template>` elements (SDK 0.4.24+).
 
 **⚠️ `data-next-show="shipping.isFree"` must not be used inside bundle cards for per-card shipping labels.** It is a cart-level token that only reflects the *currently selected* card’s shipping state — on unselected cards it is always hidden regardless of their configured shipping method. Use static `shipping_label` frontmatter on the specific bundle card instead:
 

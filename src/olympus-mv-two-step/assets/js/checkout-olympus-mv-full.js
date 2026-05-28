@@ -299,23 +299,6 @@ function setupBundleSlotVariantDropdowns() {
   }
 }
 
-// syncMvSlotDiscountLines — activate when SDK fix lands and slot placeholders are uncommented in mv-slot-stage.html
-// function syncMvSlotDiscountLines() {
-//   const card = document.querySelector('[data-next-bundle-card][data-next-selected="true"]');
-//   if (!card) return;
-//   const offerSrc = card.querySelector('[data-next-discounts="offer"]');
-//   const voucherSrc = card.querySelector('[data-next-discounts="voucher"]');
-//   const renderedChildren = (src) => src ? [...src.children].filter((el) => el.tagName !== 'TEMPLATE') : [];
-//   const offerHtml = renderedChildren(offerSrc).map((el) => el.outerHTML).join('');
-//   const voucherHtml = renderedChildren(voucherSrc).map((el) => el.outerHTML).join('');
-//   document.querySelectorAll('.mv-slot-offer-line').forEach((el) => { el.innerHTML = offerHtml; });
-//   document.querySelectorAll('.mv-slot-voucher-line').forEach((el) => {
-//     el.innerHTML = voucherHtml;
-//     const show = voucherSrc?.classList.contains('next-discounts-has-items') ?? false;
-//     el.style.display = show ? '' : 'none';
-//   });
-// }
-// document.addEventListener('bundle:price-updated', syncMvSlotDiscountLines);
 
 window.addEventListener('next:initialized', function () {
   initFomo();
