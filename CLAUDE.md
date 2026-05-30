@@ -172,6 +172,11 @@ scripts:
 | `data-next-coupon="input"` | Coupon input component |
 | `data-next-quantity="increase/decrease"` | Quantity controls |
 
+### Known limitation — `data-next-package-sync` on MV / configurable products
+A quantity-synced order bump (`data-next-package-sync`) matches cart lines by **packageId**. On MV / configurable selectors each variant (color/size) is a distinct package, and swapping a unit's variant rebuilds its cart line under the new variant's packageId (`originalPackageId: undefined`). So syncing to a single id under-counts the moment the customer mixes variants.
+- **Workaround (current, applied on `olympus-mv-single-step` + `olympus-mv-two-step` `bump-check01.html`):** list **every** variant ref_id of the synced product in `data-next-package-sync` (the SDK sums quantity across all listed ids). This is **fine for MV templates today** — it's variant-safe and verified working. Brittle by design: the ids are campaign-specific and must be updated when cloning to another product.
+- **Needed: a more robust SDK fix** — product-level sync (`data-next-product-sync="<productId>"`, matched on `item.productId` which every variant shares, summed via `filter`+`reduce`). Not in SDK 0.4.24. Once it ships + a version bump, the bump partials should emit `data-next-product-sync` by default for MV/configurable products and drop the per-variant id list.
+
 Inside `<template>` elements the SDK uses single-brace tokens (not Liquid):
 ```html
 <template id="cart-item-template">

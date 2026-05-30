@@ -164,6 +164,10 @@ scripts:
                                   <div class="text-xs-2"><strong>90 Day Money-Back Guarantee:</strong> Feel safe knowing you are protected with a 90 day guarantee. Simply send the item(s) back in the original packaging to receive a full refund or replacement, less S&amp;H.</div>
                                 </div>
                               </div>
+                              <!-- Quantity-synced order bump — see bump-check01.html for the MV variant sync workaround. -->
+                              <div class="form-section form-section--last">
+                                {% campaign_include 'bump-check01.html' packages=packages %}
+                              </div>
                               <div class="form-section form-section--last">
                                 <div class="form-section__header">
                                   <h1 class="form-section__title">Payment</h1>
