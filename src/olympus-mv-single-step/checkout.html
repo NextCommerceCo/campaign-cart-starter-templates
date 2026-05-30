@@ -361,6 +361,12 @@ swiper_thumbs:
                               <div class="text-xs-2"><strong>90 Day Money-Back Guarantee:</strong> Feel safe knowing you are protected with a 90 day guarantee. Simply send the item(s) back in the original packaging to receive a full refund or replacement, less S&amp;H.</div>
                               </div>
                             </div>
+                            <!-- Quantity-synced order bump (TEST): data-next-package-sync="1" mirrors the
+                                 main MV bundle (package id 1) quantity. Verifies whether the bump qty tracks
+                                 the configurable bundle tier (1x/2x/3x) selection on MV templates. -->
+                            <div class="form-section form-section--last">
+                              {% campaign_include 'bump-check01.html' packages=packages %}
+                            </div>
                             <div class="form-section form-section--last">
                               <div class="form-section__header">
                                 <h1 class="form-section__title">Payment</h1>
