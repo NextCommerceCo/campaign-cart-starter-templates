@@ -11,10 +11,11 @@
     <!-- QTY SYNC ON MV / CONFIGURABLE PRODUCTS — data-next-product-sync (SDK 0.4.25+).
          data-next-package-sync matches cart lines by packageId, which under-counts on a configurable
          MV bundle: each variant (color/size) is its own package, and on variant swap the SDK rebuilds
-         the line under the new variant's packageId. data-next-product-sync matches by productId instead,
+         the line under the new variant's packageId. data-next-product-sync matches by product_id instead,
          which every variant of a product shares, so one id sums quantity across all variants — present
-         and future. 400 is this demo campaign's "T Shirt" product. Replace with your product's id when
-         cloning — find it under packages[].product_id in the campaign API response (same for every variant). -->
+         and future. 400 is this demo campaign's "T Shirt" product_id (verified: variant ref_ids 1-9 and
+         66-74 all return product_id 400). Replace with your product's id when cloning — find it under
+         packages[].product_id in the campaign API response (same value for every variant). -->
     <div class="bump-card" data-next-toggle-card data-next-is-upsell="true" data-next-product-sync="400" data-next-package-id="77">
       <!-- Bump header — visual only, whole card is the toggle target -->
       <div class="bump__header-left">

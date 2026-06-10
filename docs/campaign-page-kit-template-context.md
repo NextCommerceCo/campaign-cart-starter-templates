@@ -578,10 +578,11 @@ Key token semantics (0.4.11+): `{item.price}` / `{item.originalPrice}` = **line 
        data-next-package-sync: main package ID(s) — syncs bump quantity to match.
          0.4.x one-package model: typically a single ID (e.g. "123").
          Legacy multi-package model: comma-separated list per tier (e.g. "123,124,125").
-       data-next-product-sync="<productId>" (SDK 0.4.25+): sync by productId instead.
+       data-next-product-sync="<product_id>" (SDK 0.4.25+): sync by product_id instead.
          Use for configurable / multi-variant products — one id covers every variant
          (each variant is a distinct package, so package-sync under-counts on variant
-         swap). Find it under packages[].product_id in the campaign API response. -->
+         swap). Find it under packages[].product_id in the campaign API response
+         (the same value for every variant of a product). -->
   <div data-next-bump=""
        data-next-package-id="456"
        data-next-package-sync="123"
@@ -914,7 +915,7 @@ Use these when implementing or verifying a specific task. Work through each item
 
 - [ ] Outer wrapper has `data-next-await=""` (hides until SDK ready)
 - [ ] Toggle container has `data-next-bump=""` and `data-next-package-id` set to the bump package
-- [ ] `data-next-package-sync` on the toggle container lists all main package IDs (if quantity should sync) — or, for a configurable / multi-variant main product, use `data-next-product-sync="<productId>"` (SDK 0.4.25+) so one id covers every variant
+- [ ] `data-next-package-sync` on the toggle container lists all main package IDs (if quantity should sync) — or, for a configurable / multi-variant main product, use `data-next-product-sync="<product_id>"` (SDK 0.4.25+) so one id covers every variant
 - [ ] Clickable header has `data-next-toggle="toggle"`
 - [ ] `os-component="check"` element exists inside the header for the checkmark
 - [ ] CSS for `[data-next-bump][class*="next-active"] [os-component="check"]` is present in the stylesheet

@@ -172,11 +172,11 @@ scripts:
 | `data-next-coupon="input"` | Coupon input component |
 | `data-next-quantity="increase/decrease"` | Quantity controls |
 | `data-next-package-sync` | Order-bump quantity sync, matched by **packageId** (sums across a comma-separated id list). Correct for single-package products. |
-| `data-next-product-sync="<productId>"` | Order-bump quantity sync, matched by **productId** (SDK 0.4.25+). Covers every variant of a configurable/MV product with one id — the correct attribute for MV bumps. |
+| `data-next-product-sync="<product_id>"` | Order-bump quantity sync, matched by **`product_id`** (SDK 0.4.25+). Covers every variant of a configurable/MV product with one id — the correct attribute for MV bumps. |
 
 ### MV / configurable order-bump sync — use `data-next-product-sync` (SDK 0.4.25+)
 A quantity-synced order bump matched by **packageId** (`data-next-package-sync`) under-counts on MV / configurable selectors: each variant (color/size) is a distinct package, and swapping a unit's variant rebuilds its cart line under the new variant's packageId (`originalPackageId: undefined`).
-- **Current fix (SDK 0.4.25+, applied on `olympus-mv-single-step` + `olympus-mv-two-step` `bump-check01.html`):** use **`data-next-product-sync="<productId>"`** — matched on `item.productId`, which every variant of the same product shares, so the SDK sums quantity across all variants with one id. Find the value in the campaign API response under `packages[].product_id` (identical for every variant of a product). Update the id when cloning to another product.
+- **Current fix (SDK 0.4.25+, applied on `olympus-mv-single-step` + `olympus-mv-two-step` `bump-check01.html`):** use **`data-next-product-sync="<product_id>"`** — matched on the product's `product_id`, which every variant of the same product shares, so the SDK sums quantity across all variants with one id. Find the value in the campaign API response under `packages[].product_id` (identical for every variant of a product — verified for the demo's "T Shirt": ref_ids 1–9 and 66–74 all return `product_id` 400). Update the id when cloning to another product.
 - `data-next-package-sync` still works unchanged for single-package products. Both attributes may be set on the same card — items already counted by `data-next-package-sync` are excluded from the `data-next-product-sync` pass, so there is no double-counting.
 - **Prior workaround (pre-0.4.25, now retired):** hand-listing every variant ref_id in `data-next-package-sync`. Brittle — the list had to be updated whenever variants changed and broke silently if an id was missed.
 
