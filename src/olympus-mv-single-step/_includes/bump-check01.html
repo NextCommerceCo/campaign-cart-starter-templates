@@ -8,16 +8,14 @@
        To switch: pass show_per_unit_price=false show_line_total_price=true to {% campaign_include %} -->
 <div data-component="prepurchase-upsell" data-variant="check01" data-next-await="">
   <div data-next-package-toggle>
-    <!-- QTY SYNC ON MV / CONFIGURABLE PRODUCTS — interim front-end workaround (no SDK change).
-         data-next-package-sync matches cart lines by packageId. On a configurable MV bundle each variant
-         (color/size) is its own package, and on variant swap the SDK rebuilds the line under the variant's
-         packageId (originalPackageId:undefined). Syncing to a single id under-counts the moment a unit is
-         swapped. Because the SDK sums quantity across EVERY id listed, list every variant ref_id of the
-         synced product so the bump tracks total qty regardless of which variants are chosen.
-         These ids are this demo campaign's product 400 ("T Shirt") variants (ref_ids 1-9 = checkout set,
-         66-74 = parallel "T Shirt Upsell" set a swap can resolve to). Replace with your product's ref_ids
-         when cloning. (Brittle by design — the durable fix is a product-level data-next-product-sync in the SDK.) -->
-    <div class="bump-card" data-next-toggle-card data-next-is-upsell="true" data-next-package-sync="1,2,3,4,5,6,7,8,9,66,67,68,69,70,71,72,73,74" data-next-package-id="77">
+    <!-- QTY SYNC ON MV / CONFIGURABLE PRODUCTS — data-next-product-sync (SDK 0.4.25+).
+         data-next-package-sync matches cart lines by packageId, which under-counts on a configurable
+         MV bundle: each variant (color/size) is its own package, and on variant swap the SDK rebuilds
+         the line under the new variant's packageId. data-next-product-sync matches by productId instead,
+         which every variant of a product shares, so one id sums quantity across all variants — present
+         and future. 400 is this demo campaign's "T Shirt" product. Replace with your product's id when
+         cloning — find it under packages[].product_id in the campaign API response (same for every variant). -->
+    <div class="bump-card" data-next-toggle-card data-next-is-upsell="true" data-next-product-sync="400" data-next-package-id="77">
       <!-- Bump header — visual only, whole card is the toggle target -->
       <div class="bump__header-left">
         <div class="bump__header-content">

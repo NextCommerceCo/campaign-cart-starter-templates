@@ -146,7 +146,7 @@ Registers every campaign. The `campaign` object in Liquid templates comes from h
   "my-campaign": {
     "name": "My Campaign",
     "entry_url": "presell",
-    "sdk_version": "0.4.24",
+    "sdk_version": "0.4.25",
     "store_name": "Acme Store",
     "store_url": "https://acme.com",
     "store_phone": "1-800-555-0100",
@@ -166,7 +166,7 @@ The top-level key is the campaign slug. Add any additional key to a campaign ent
 
 **`entry_url`** — optional. The page slug `npm run dev` opens in the browser (e.g. `"presell"`). Omit to use the kit default.
 
-**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.24"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
+**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.25"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
 
 ### Build environment (`environment`)
 
@@ -577,7 +577,11 @@ Key token semantics (0.4.11+): `{item.price}` / `{item.originalPrice}` = **line 
        data-next-package-id: package to add/remove when toggled
        data-next-package-sync: main package ID(s) — syncs bump quantity to match.
          0.4.x one-package model: typically a single ID (e.g. "123").
-         Legacy multi-package model: comma-separated list per tier (e.g. "123,124,125"). -->
+         Legacy multi-package model: comma-separated list per tier (e.g. "123,124,125").
+       data-next-product-sync="<productId>" (SDK 0.4.25+): sync by productId instead.
+         Use for configurable / multi-variant products — one id covers every variant
+         (each variant is a distinct package, so package-sync under-counts on variant
+         swap). Find it under packages[].product_id in the campaign API response. -->
   <div data-next-bump=""
        data-next-package-id="456"
        data-next-package-sync="123"
@@ -910,7 +914,7 @@ Use these when implementing or verifying a specific task. Work through each item
 
 - [ ] Outer wrapper has `data-next-await=""` (hides until SDK ready)
 - [ ] Toggle container has `data-next-bump=""` and `data-next-package-id` set to the bump package
-- [ ] `data-next-package-sync` on the toggle container lists all main package IDs (if quantity should sync)
+- [ ] `data-next-package-sync` on the toggle container lists all main package IDs (if quantity should sync) — or, for a configurable / multi-variant main product, use `data-next-product-sync="<productId>"` (SDK 0.4.25+) so one id covers every variant
 - [ ] Clickable header has `data-next-toggle="toggle"`
 - [ ] `os-component="check"` element exists inside the header for the checkmark
 - [ ] CSS for `[data-next-bump][class*="next-active"] [os-component="check"]` is present in the stylesheet
