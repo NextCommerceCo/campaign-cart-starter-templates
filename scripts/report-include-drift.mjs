@@ -31,16 +31,23 @@ const SECTIONS = [
 ];
 
 const COMMENT_RE = /{%-?\s*comment\s*-?%}[\s\S]*?{%-?\s*endcomment\s*-?%}/g;
+const INLINE_COMMENT_RE = /{#-?[\s\S]*?-?#}/g;
 const CATALOG_ATTR_RE = /\s*data-next-catalog-component="[^"]*"/g;
+// Annotation = a next_component: key inside a comment header (not any stray
+// occurrence of the literal anywhere in the file). Two syntaxes exist in the
+// repo today: Liquid {% comment %} blocks (most includes) and HTML <!-- -->
+// blocks (the upsell-*-offer includes).
+const ANNOTATION_RE =
+  /(?:{%-?\s*comment\s*-?%}[\s\S]*?^\s*next_component:[\s\S]*?{%-?\s*endcomment\s*-?%}|<!--[\s\S]*?^\s*next_component:[\s\S]*?-->)/m;
+// HTML comments that carry an annotation header are stripped during
+// normalization, same as Liquid comment blocks.
+const HTML_ANNOTATION_RE = /<!--(?:(?!-->)[\s\S])*?^\s*next_component:[\s\S]*?-->/gm;
 
+// Missing family/section directories must fail loudly: this script is meant
+// to run as a release gate, and a silently-skipped family would produce a
+// clean-looking but incomplete report.
 function walk(dir, exts, out = []) {
-  let entries;
-  try {
-    entries = readdirSync(dir);
-  } catch {
-    return out;
-  }
-  for (const e of entries) {
+  for (const e of readdirSync(dir)) {
     const p = join(dir, e);
     if (statSync(p).isDirectory()) walk(p, exts, out);
     else if (exts.some((x) => e.endsWith(x))) out.push(p);
@@ -51,6 +58,8 @@ function walk(dir, exts, out = []) {
 function normalize(text) {
   return text
     .replace(COMMENT_RE, '')
+    .replace(INLINE_COMMENT_RE, '')
+    .replace(HTML_ANNOTATION_RE, '')
     .replace(CATALOG_ATTR_RE, '')
     .split('\n')
     .map((l) => l.trimEnd())
@@ -62,7 +71,12 @@ function md5(s) {
   return createHash('md5').update(s).digest('hex');
 }
 
-// Cheap changed-line metric: lines unique to a or b (multiset symmetric difference).
+// Cheap changed-line metric: lines unique to a or b (multiset symmetric
+// difference). Known false negatives: reordered blocks and moved duplicate
+// lines count as unchanged. Acceptable here because the metric only grades
+// *already-different* files into minor/moderate/divergent buckets — identity
+// is decided by content hash, not by this. The 15%/40% class thresholds
+// below are calibrated to this metric; re-tune them if the metric changes.
 function changedLines(a, b) {
   const count = (arr) => {
     const m = new Map();
@@ -79,11 +93,25 @@ function changedLines(a, b) {
   return { changed, total: Math.max(la.length, lb.length) };
 }
 
+function readFileChecked(p) {
+  try {
+    return readFileSync(p, 'utf8');
+  } catch (err) {
+    throw new Error(`failed to read ${p}: ${err.message}`);
+  }
+}
+
 function analyzeSection({ name, dir, exts }) {
   const matrix = new Map(); // rel -> { family: absPath }
   for (const fam of FAMILIES) {
     const base = join(ROOT, fam, dir);
-    for (const p of walk(base, exts)) {
+    let files;
+    try {
+      files = walk(base, exts);
+    } catch (err) {
+      throw new Error(`cannot scan ${fam}/${dir} — family layout changed or repo incomplete: ${err.message}`);
+    }
+    for (const p of files) {
       const rel = relative(base, p);
       if (!matrix.has(rel)) matrix.set(rel, {});
       matrix.get(rel)[fam] = p;
@@ -92,8 +120,8 @@ function analyzeSection({ name, dir, exts }) {
   const rows = [];
   for (const [rel, fams] of [...matrix.entries()].sort()) {
     const names = Object.keys(fams);
-    const raw = Object.fromEntries(names.map((f) => [f, readFileSync(fams[f], 'utf8')]));
-    const annotated = names.filter((f) => raw[f].includes('next_component:'));
+    const raw = Object.fromEntries(names.map((f) => [f, readFileChecked(fams[f])]));
+    const annotated = names.filter((f) => ANNOTATION_RE.test(raw[f]));
     if (names.length < 2) {
       rows.push({ section: name, file: rel, class: 'single-family', families: names, annotated });
       continue;

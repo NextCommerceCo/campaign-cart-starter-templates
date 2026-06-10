@@ -12,23 +12,26 @@ separate library, not a cloned family).
 
 ## Headline
 
-The self-contained duplication model is in better shape than its file counts
-suggest. Of 41 shared include names, **30 of 51 compared files are
-functionally identical** across every family that carries them once contract
-annotations are normalized out. Real drift concentrates in three specific,
+53 files are shared by two or more families (41 includes, 8 JS, 4 CSS).
+Once contract-annotation comments and catalog marker attributes are
+normalized out, **32 of those 53 are functionally identical** across every
+family that carries them — the self-contained duplication model is in better
+shape than raw diffs suggest. Real drift concentrates in three specific,
 fixable places:
 
 1. **Component contract annotations rolled out unevenly.** `olympus` has 19
-   annotated includes; the other six families have 6–10. Most apparent "drift"
-   in the raw diff is just missing `{% comment %} next_component: ... %}`
-   headers, not code.
+   annotated includes; the other six families have 6–10. Most apparent
+   "drift" in raw diffs is just missing `next_component:` headers, not code.
+   Bonus inconsistency: most annotations use `{% comment %}` blocks, but the
+   three `upsell-*-offer` includes use HTML `<!-- -->` headers — two
+   syntaxes for the same contract.
 2. **Four real improvements landed in one family and never propagated** (see
    Tier B). These are the actual bugs of the duplication model.
 3. **Intentional design variants are real but unnamed.** Five surfaces
    (`bump-check01`, `bump-switch01`, `checkout-header`, `cart-summary04`,
-   `checkout-footer-links`) legitimately differ by family lineage, but nothing
-   in the catalog records that they are different *on purpose* — so neither an
-   agent nor a reviewer can tell intent from accident.
+   `checkout-footer-links`) legitimately differ by family lineage, but
+   nothing in the catalog records that they are different *on purpose* — so
+   neither an agent nor a reviewer can tell intent from accident.
 
 Plus one housekeeping fact: **18.3 MB of the 21.3 MB of checkout-family image
 assets are redundant copies** (120 images duplicated across families;
@@ -42,11 +45,16 @@ These are decisions, not a backlog. Each is small and self-contained.
 PRs; ~1–2 hours total. Includes a customer-facing typo ("Use shiping
 address") that today requires 7 edits to fix — it appears in all 7 families.
 
-**D2 — Bring annotation coverage to olympus parity.** 8 includes are
-annotated in olympus but not in their siblings (exact list in Tier D). Since
-the annotated bodies are functionally identical to the unannotated ones in
-most cases, this is mostly copy-the-header work. This is the prerequisite for
-the catalog/portal rendering per-family component contracts.
+**D2 — Bring annotation coverage to olympus parity, on one syntax.** Eight
+includes are annotated in olympus but missing annotations in some or all
+siblings: `payment-methods`, `express-checkout`, `receipt-skeleton`,
+`cart-summary01`, `cart-summary02`, `cart-summary03`, `cart-summary04`, and
+`bump-check01` (mv-pair + shop-pair). Since the annotated bodies are
+functionally identical to the unannotated ones in most cases, this is mostly
+copy-the-header work. While doing it, standardize on `{% comment %}` headers
+(the three `upsell-*-offer` includes use HTML comments today). This is the
+prerequisite for the catalog/portal rendering per-family component
+contracts.
 
 **D3 — Name the intentional variants in the commerce-surface catalog.**
 Record variant lineage per surface (e.g. `bump-check01` has four design
@@ -56,38 +64,41 @@ stops agents and reviewers from "reconciling" deliberate differences.
 **D4 — Adopt the drift report as a release gate.** Run
 `report-include-drift.mjs` in CI or pre-release and flag any file that moves
 *out* of `functionally-identical`. Cheap tripwire; catches the next Tier B
-case the week it happens instead of at the next audit.
+case the week it happens instead of at the next audit. The script fails
+loudly on missing family/section directories so a layout change can't
+produce a quietly-incomplete clean report.
 
-**D5 (park, decide later) — Shared-source compilation for Tier A.** 30
-files are byte-equivalent everywhere; a `core/_includes/` source layer
-compiled into each family at build time would keep the atomic-clone developer
-contract while making fixes single-edit. This is an architecture change that
-interacts with CPK and the agent contracts — it should be its own proposal,
-informed by D2/D3. Image dedup (18.3 MB) rides along with whatever D5
-decides.
+**D5 (park, decide later) — Shared-source compilation for Tier A.** 32
+files are functionally equivalent everywhere; a `core/_includes/` source
+layer compiled into each family at build time would keep the atomic-clone
+developer contract while making fixes single-edit. This is an architecture
+change that interacts with CPK and the agent contracts — it should be its
+own proposal, informed by D2/D3. Image dedup (18.3 MB) rides along with
+whatever D5 decides.
 
-## Tier A — Functionally identical everywhere (30 files)
+## Tier A — Functionally identical everywhere (32 files)
 
-Identical across all carrying families once `{% comment %}` blocks and
-`data-next-catalog-component` markers are stripped. These are de facto shared
-components maintained by hand-sync today; candidates for D5.
+Identical across all carrying families once comment headers
+(`{% comment %}`, annotation-bearing `<!-- -->`, `{# #}`) and
+`data-next-catalog-component` markers are stripped. These are de facto
+shared components maintained by hand-sync today; candidates for D5.
 
 Includes (22): `bump-check02`, `cart-summary01`, `cart-summary02`,
-`checkout-progress`, `express-checkout-inline`*, `receipt-orders`,
-`swiper-gallery`, `upsell-bundle-stepper-offer`,
-`upsell-bundle-tier-cards-offer`, `upsell-bundle-tier-pills-offer`,
-`upsell-header-bar`, `upsell-mv-offer`, `upsell-payment-logos`, and the
-shared landing sections (`benefits-2`, `footer-1`, `guarantee-1`, `icons-5`,
-`reviews-3`, `science-1`, plus near-identical CTA variants noted in Tier B).
+`checkout-progress`, `express-checkout`, `express-checkout-inline`,
+`receipt-orders`, `receipt-order-summary-desktop`,
+`receipt-order-summary-mobile`, `swiper-gallery`,
+`upsell-bundle-stepper-offer`, `upsell-bundle-tier-cards-offer`,
+`upsell-bundle-tier-pills-offer`, `upsell-header-bar`, `upsell-mv-offer`,
+`upsell-payment-logos`, `landing/benefits-2`, `landing/footer-1`,
+`landing/guarantee-1`, `landing/icons-5`, `landing/reviews-3`,
+`landing/science-1`.
 
-JS (6): `landing/landing.js`, `presell/countdown.js`, `promo-banner.js`,
-`promo-timer.js`, `upsells.js`, `upsells-mv.js`.
+JS (7): `checkout-olympus-mv-full.js`, `landing/landing.js`,
+`presell/countdown.js`, `promo-banner.js`, `promo-timer.js`, `upsells.js`,
+`upsells-mv.js`.
 
-CSS (2 + 1 near): `exit-intent-popup.css`, `landing/tokens.css`,
-`presell/tokens.css`; `next-core.css` differs only by the position of one
-`width: fit-content` line (olympus vs the other six — reconcile with D1).
-
-*Full machine-readable list: `node scripts/report-include-drift.mjs --json`.*
+CSS (3): `exit-intent-popup.css`, `landing/tokens.css`,
+`presell/tokens.css`.
 
 ## Tier B — Unpropagated improvements (fix now, D1)
 
@@ -98,6 +109,7 @@ CSS (2 + 1 near): `exit-intent-popup.css`, `landing/tokens.css`,
 | `{{ cta_params }}` passthrough on landing-section CTA links (`hero-1`, `cta-1`, `bottomcta-1`, `faq-1`, `nav-1`, `ingredients-3`, `problemsolution-1`, `results-4`, `testimonials-2`) | shop-single-step, shop-three-step | the other 5 families |
 | `checkout.js` exit-intent `initialDelay: 5000` active vs commented-out | commented in 5 families | active in demeter + limos — pick one and align |
 | `exit-intent-popup.html` default coupon code `EXIT5` vs `SAVE10` | olympus + demeter say EXIT5 | limos, mv-pair, shop-single-step say SAVE10 — demo value; pick one default |
+| `next-core.css` one `width: fit-content` line in a different rule | olympus vs the other six | reconcile to one body |
 | `receipt-skeleton.html` two variants (3% diff) | olympus/mv-pair/shop-three-step vs demeter/limos/shop-single-step | reconcile — likely one improvement that half-propagated |
 | `cart-summary03.html` olympus and demeter each slightly off the main group | — | reconcile to one body |
 
@@ -110,7 +122,7 @@ CSS (2 + 1 near): `exit-intent-popup.css`, `landing/tokens.css`,
 | `checkout-header.html` | 4: olympus+mv / demeter / limos / shop-pair |
 | `cart-summary04.html` | 2: shop-pair (full rewrite, 125% diff) vs the rest |
 | `checkout-footer-links.html` | 2: limos vs shop-pair (only 3 families carry it) |
-| `footer.html` | demeter adds `cc-medium` width class (2-line deliberate variant) |
+| `footer.html` | demeter adds `cc-medium` width class (deliberate width variant) |
 
 Single-family components (by design): `bundle-selector`,
 `customer-info-form`, `shipping/billing-address-form`, `submit-block`
@@ -124,15 +136,22 @@ per-family `checkout-<family>.js`.
 olympus **19/42** · olympus-mv-two-step 9/40 · demeter 10/39 · limos 9/39 ·
 olympus-mv-single-step 8/39 · shop-single-step 7/38 · shop-three-step 6/35.
 
-Annotated in olympus, missing in siblings: `payment-methods`,
-`express-checkout`, `receipt-skeleton`, `cart-summary01–04`,
-`bump-check01` (mv-pair + shop-pair only). The `data-next-catalog-component`
-marker attribute is also olympus-only today (e.g. `cart-summary01`).
+The eight olympus-annotated includes missing annotations in siblings are
+listed in D2 above. The `data-next-catalog-component` marker attribute is
+also olympus-only today (e.g. `cart-summary01`).
 
 ## Method
 
-Files compared by content hash after stripping Liquid comment blocks and
-catalog marker attributes, then by changed-line ratio against olympus (or the
-first carrying family). Thresholds: ≤15% minor, ≤40% moderate, else
-divergent. Numbers in this report were generated from `main` @ `038f340`
-(2026-06-10). Regenerate: `node scripts/report-include-drift.mjs`.
+Files are compared by content hash after stripping Liquid `{% comment %}`
+blocks, `{# #}` inline comments, annotation-bearing HTML comments, and
+`data-next-catalog-component` markers — identity is decided by hash. Files
+that differ are then graded by a changed-line ratio (multiset symmetric
+difference; reordered/moved lines count as unchanged, which is acceptable
+because the metric only buckets already-different files) against olympus or
+the first carrying family: ≤15% minor, ≤40% moderate, else divergent. The
+class thresholds are calibrated to this metric.
+
+The numbers in this report were generated on 2026-06-10 from a working tree
+based on `main` @ `038f340` (this report and the script are the only
+additions; no template files were modified). To verify or refresh:
+`node scripts/report-include-drift.mjs` on any checkout of `main`.
