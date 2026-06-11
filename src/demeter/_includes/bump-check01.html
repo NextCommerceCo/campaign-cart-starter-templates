@@ -13,9 +13,12 @@
     features:           array of bullet strings.
     pricing_mode:       enum [full_price, discounted, compare_at, unit_total, unit_only], default "full_price"
                         (template-brand-contract.demeter.v0 pricing_surfaces.bump). Include arg wins over
-                        order_bump.check01.pricing_mode. Controls which price rows render:
+                        order_bump.check01.pricing_mode, and over the legacy show_* bools below. Controls
+                        which price rows render:
                         full_price/unit_only = unitPrice/ea only (one visible price);
-                        discounted/compare_at = struck originalUnitPrice + unitPrice/ea;
+                        discounted/compare_at = struck originalUnitPrice + unitPrice/ea — IDENTICAL on this
+                        surface by design: data-next-toggle-display has no hasDiscount gating, so the struck
+                        original is always shown either way (compare_at semantics);
                         unit_total = unitPrice/ea + line total (scales with synced qty).
                         Pick the mode here — campaign CSS must never display:none price rows.
     show_per_unit_price:  bool, LEGACY. Render Option A row (originalUnitPrice/ea + unitPrice/ea).
@@ -39,6 +42,9 @@
 {% assign bump_title = bump.title | default: 'Get Extended Warranty' -%}
 {% assign bump_image = image_src | default: bump.image_src | default: 'images/1x1_1.svg' -%}
 {% assign feature_list = features | default: bump.features -%}
+{% comment %} Precedence: pricing_mode (include arg, then bump.pricing_mode) wins; legacy show_per_unit_price /
+   show_line_total_price are honored ONLY when no pricing_mode is set anywhere — if both are passed, the
+   legacy bools are ignored. {% endcomment -%}
 {% assign bump_pricing_mode = pricing_mode | default: bump.pricing_mode -%}
 {% assign legacy_price_rows = false -%}
 {% if bump_pricing_mode == nil -%}
@@ -90,12 +96,9 @@
               {% else %}
               <!-- pricing_mode-driven price rows — never hide rows with campaign CSS; pick the mode instead -->
               {% case bump_pricing_mode %}
-              {% when 'discounted' %}
-              <div class="bump__price-row">
-                <div class="bump__price-unit"><span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span></div>
-                <div class="bump__price-unit"><span data-next-toggle-display="unitPrice" class="bump__price-sale">--</span><span class="text-xl">/ea</span></div>
-              </div>
-              {% when 'compare_at' %}
+              {% when 'discounted', 'compare_at' %}
+              <!-- One shared branch by design: toggle-display has no hasDiscount gating, so the struck
+                   originalUnitPrice is always shown — both modes resolve to compare_at semantics here. -->
               <div class="bump__price-row">
                 <div class="bump__price-unit"><span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span></div>
                 <div class="bump__price-unit"><span data-next-toggle-display="unitPrice" class="bump__price-sale">--</span><span class="text-xl">/ea</span></div>

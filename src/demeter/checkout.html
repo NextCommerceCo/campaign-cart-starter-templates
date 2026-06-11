@@ -241,6 +241,9 @@ scripts:
                                 </div>
 
                                 {% assign bump_variant = order_bump_variant | default: 'check01+switch01' %}
+                                <!-- DEMO-ONLY override: pricing_mode='discounted' keeps the showcase's struck-price look.
+                                     The contract default for bumps is full_price (single unitPrice/ea row) — when cloning
+                                     this page for a real campaign, drop the arg unless the bump has a genuine discount. -->
                                 {% case bump_variant %}
                                 {% when 'check01' %}
                                 {% campaign_include 'bump-check01.html' packages=packages pricing_mode='discounted' %}

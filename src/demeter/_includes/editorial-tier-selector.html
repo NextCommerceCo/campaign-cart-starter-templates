@@ -106,7 +106,10 @@
           </div>
               {% assign card_price_variant = b.price_display_variant | default: selector_price_variant -%}
               {% assign card_pricing_mode = b.pricing_mode | default: selector_pricing_mode -%}
-              {%- comment %} pricing_mode picks the rows — never hide price rows with campaign CSS {% endcomment %}
+              {%- comment %} pricing_mode picks the rows — never hide price rows with campaign CSS.
+                 Unit-row precedence: hidden for full_price/compare_at modes, AND independently by the
+                 legacy price_display_variant=total-only axis — a card with pricing_mode=unit_total but
+                 variant total-only still suppresses the unit row (legacy wins on its own axis). {% endcomment %}
               {% assign show_unit_row = true -%}
               {% if card_pricing_mode == 'full_price' or card_pricing_mode == 'compare_at' or card_price_variant == 'total-only' %}{% assign show_unit_row = false %}{% endif -%}
               <div class="os-card__secondary-slot">
@@ -141,6 +144,8 @@
     </div>
     {% endfor -%}
     {% else -%}
+    {%- comment %} Canonical 1x/2x/3x fallback cards: only the include-level selector_pricing_mode applies —
+       per-card pricing_mode overrides require passing an explicit `bundles` array. {% endcomment -%}
     {%- assign _pkg = packages.main_package | default: 1 -%}
     {%- assign _standard_ship = shipping_methods.standard -%}
     {%- assign _free_ship = shipping_methods.free -%}

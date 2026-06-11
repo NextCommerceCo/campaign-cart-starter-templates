@@ -112,7 +112,9 @@
                         </div>
                       </div>
 
-                      <!-- pricing_mode-driven price rows — never hide rows with campaign CSS; pick the mode instead -->
+                      <!-- pricing_mode-driven price rows — never hide rows with campaign CSS; pick the mode instead.
+                           $ amounts are SSR placeholders: the offer wrapper is [data-next-await]-skeletoned until the
+                           SDK hydrates bundle.{{ selector_id }}.* — configure the bundle selector so those paths resolve. -->
                       {% case pricing_mode %}
                       {% when 'discounted' %}
                       <div class="prices-text-wrapper">
