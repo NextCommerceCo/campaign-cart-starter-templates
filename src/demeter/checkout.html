@@ -243,12 +243,12 @@ scripts:
                                 {% assign bump_variant = order_bump_variant | default: 'check01+switch01' %}
                                 {% case bump_variant %}
                                 {% when 'check01' %}
-                                {% campaign_include 'bump-check01.html' packages=packages %}
+                                {% campaign_include 'bump-check01.html' packages=packages pricing_mode='discounted' %}
                                 {% when 'switch01' %}
                                 {% campaign_include 'bump-switch01.html' packages=packages %}
                                 {% when 'none', 'off', 'false' %}
                                 {% else %}
-                                {% campaign_include 'bump-check01.html' packages=packages %}
+                                {% campaign_include 'bump-check01.html' packages=packages pricing_mode='discounted' %}
                                 {% campaign_include 'bump-switch01.html' packages=packages %}
                                 {% endcase %}
                                 <div class="form-section form-section--last">

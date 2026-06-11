@@ -4,7 +4,12 @@
   next_sdk_owns: bundle selector, bundle cards, quantity control, upsell add/skip actions
   next_sdk_surface: upsell offer
   next_params:
-    upsell_offer: object. package_id, selector_id, bundle_id, items_json, vouchers_json, quantity bounds, accept/decline text.
+    upsell_offer: object. package_id, selector_id, bundle_id, items_json, vouchers_json, quantity bounds, accept/decline text, pricing_mode.
+    pricing_mode: enum [full_price, discounted, compare_at, unit_total, unit_only], default "full_price".
+                  Include arg wins over upsell_offer.pricing_mode. Controls which .price-wrapper rows render
+                  (template-brand-contract.demeter.v0 pricing_surfaces.upsell): full_price/unit_only render
+                  exactly 1 visible price row adjacent to the accept control; discounted/compare_at/unit_total render 2.
+                  Pick the mode here — campaign CSS must never display:none a .price-wrapper/.prices-text-wrapper row.
   next_dont_touch: data-next-bundle-*, data-next-quantity-*, data-next-upsell-*
 -->
 {% assign offer = upsell_offer -%}
@@ -20,6 +25,8 @@
 {% assign bundle_price_path = 'bundle.' | append: selector_id | append: '.price' -%}
 {% assign bundle_original_price_path = 'bundle.' | append: selector_id | append: '.originalPrice' -%}
 {% assign bundle_discount_path = 'bundle.' | append: selector_id | append: '.discountPercentage' -%}
+{% assign bundle_unit_price_path = 'bundle.' | append: selector_id | append: '.unitPrice' -%}
+{% assign pricing_mode = pricing_mode | default: offer.pricing_mode | default: 'full_price' -%}
 <div data-next-catalog-component="upsell-bundle-stepper-offer">
       <section class="section upsell-box">
         <div class="container">
@@ -105,6 +112,9 @@
                         </div>
                       </div>
 
+                      <!-- pricing_mode-driven price rows — never hide rows with campaign CSS; pick the mode instead -->
+                      {% case pricing_mode %}
+                      {% when 'discounted' %}
                       <div class="prices-text-wrapper">
                         <div class="price-wrapper">
                           <div class="text-sm tw-600">Retail Price</div>
@@ -131,6 +141,70 @@
                           <div class="text-xs font-bold color-primary">+ FREE SHIPPING</div>
                         </div>
                       </div>
+                      {% when 'compare_at' %}
+                      <div class="prices-text-wrapper">
+                        <div class="price-wrapper">
+                          <div class="text-sm tw-600">Regular Price</div>
+                          <div
+                            class="upsell-offer__price diagonal-strike color-muted"
+                            data-next-display="{{ bundle_original_price_path }}"
+                            data-next-format="currency"
+                          >$49.99</div>
+                        </div>
+                        <div class="upsell-offer__divider"></div>
+                        <div class="price-wrapper">
+                          <div class="text-sm tw-600">Today's Price</div>
+                          <div
+                            class="upsell-offer__price"
+                            data-next-display="{{ bundle_price_path }}"
+                            data-next-format="currency"
+                          >$24.95</div>
+                        </div>
+                      </div>
+                      {% when 'unit_total' %}
+                      <div class="prices-text-wrapper">
+                        <div class="price-wrapper">
+                          <div class="text-sm tw-600">Price Per Unit</div>
+                          <div
+                            class="upsell-offer__price"
+                            data-next-display="{{ bundle_unit_price_path }}"
+                            data-next-format="currency"
+                          >$24.95</div>
+                        </div>
+                        <div class="upsell-offer__divider"></div>
+                        <div class="price-wrapper">
+                          <div class="text-sm tw-600">Total</div>
+                          <div
+                            class="upsell-offer__price"
+                            data-next-display="{{ bundle_price_path }}"
+                            data-next-format="currency"
+                          >$24.95</div>
+                        </div>
+                      </div>
+                      {% when 'unit_only' %}
+                      <div class="prices-text-wrapper">
+                        <div class="price-wrapper">
+                          <div class="text-sm tw-600">Price Per Unit</div>
+                          <div
+                            class="upsell-offer__price"
+                            data-next-display="{{ bundle_unit_price_path }}"
+                            data-next-format="currency"
+                          >$24.95</div>
+                        </div>
+                      </div>
+                      {% else %}
+                      <!-- full_price (default): exactly one visible price row adjacent to the accept control -->
+                      <div class="prices-text-wrapper">
+                        <div class="price-wrapper">
+                          <div class="text-sm tw-600">Price</div>
+                          <div
+                            class="upsell-offer__price"
+                            data-next-display="{{ bundle_price_path }}"
+                            data-next-format="currency"
+                          >$24.95</div>
+                        </div>
+                      </div>
+                      {% endcase %}
 
                       <a
                         data-next-upsell-action="add"
