@@ -19,7 +19,7 @@
 <div class="cta-1-sticky bg-white shadow-[0_-4px_16px_rgba(0,0,0,0.12)]" data-cta-1-sticky>
   <div class="px-[15px] py-[12px] flex flex-col items-center gap-[8px]">
     <a
-      href="{{ next_url }}"
+      href="{{ next_url | campaign_link }}{{ cta_params }}"
       class="w-full max-w-[345px] bg-[var(--brand-primary)] rounded-[6px] px-[24px] py-[16px] flex items-center justify-center gap-[16px] no-underline"
     >
       <span class="font-bold text-[18px] leading-[1.5] tracking-[-0.09px] text-white text-center whitespace-nowrap">{{ cta_text }}</span>

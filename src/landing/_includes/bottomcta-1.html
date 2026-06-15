@@ -44,7 +44,7 @@
         </div>
 
         <div class="w-full max-w-none md:max-w-[440px] flex flex-col items-center gap-[8px] md:gap-[10px] lg:gap-[12px]">
-          <a href="{{ next_url }}" class="w-full rounded-[6px] bg-[var(--brand-primary)] px-[24px] py-[20px] flex items-center justify-center gap-[20px]">
+          <a href="{{ next_url | campaign_link }}{{ cta_params }}" class="w-full rounded-[6px] bg-[var(--brand-primary)] px-[24px] py-[20px] flex items-center justify-center gap-[20px]">
             <span class="text-[20px] leading-[1.5] tracking-[-0.1px] font-bold text-white text-center">
               {{ cta_text }}
             </span>

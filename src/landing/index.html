@@ -7,6 +7,11 @@ page_type: product
 
 # SHARED (component-level)
 next_url: "checkout.html"
+# cta_params is appended to every section CTA href (after the campaign_link filter).
+# Use it to preselect a package/bundle on the destination page, e.g. "?forcePackageId=1:1"
+# (the shop templates do this for selector-less checkouts). Empty by default — selector-based
+# checkouts let the shopper choose on-page, so nothing needs to be forced through the URL.
+cta_params: ""
 cta_text: "Order Now & Save  60%"
 guarantee_text: "30 Day Money Back Guarantee"
 nav_logo_image: "images/nav-2/logo-next.svg"
