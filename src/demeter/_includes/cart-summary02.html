@@ -1,4 +1,44 @@
-<div data-initial-state="closed" data-next-accordion="order-summary" data-open-text="Hide Order Summary" data-close-text="Show Order Summary" data-toggle-class="next-expanded" class="order-summary__accordion">
+{% comment %}
+  next_component: order-summary
+  next_version: 1.0.0
+  next_sdk_min: 0.4.18
+  next_purpose: Accordion-style order summary panel showing line items, discounts, shipping, taxes, and grand total. Customer can toggle visibility on small screens.
+  next_params: (none today; full parameterization deferred to v1)
+  next_sdk_owns:
+    - data-next-accordion (order-summary)
+    - data-next-accordion-trigger
+    - data-next-accordion-text
+    - data-next-accordion-panel
+    - data-next-cart-summary
+    - data-summary-lines (with single-brace tokens: {item.*}, {subtotal}, {shipping}, {discounts}, {currency}, {total})
+    - data-next-discounts (offer / voucher)
+    - data-next-display (cart.totalDiscountPercentage)
+    - data-next-show (cart.hasDiscounts)
+    - data-next-show / data-next-hide (item.isRecurring)
+    - data-next-component="scroll-hint"
+  next_theming:
+    classes_designer_owns: [.order-summary__accordion, .order-summary__accordion-trigger, .order-summary__accordion-panel, .summary-toggle__text, .cart-items, .cart-item, .order-totals, .order-totals__line, .order-totals__label, .order-totals__value, .badge, .summary-total__coin]
+    css_vars_designer_owns: []
+  next_dont_touch:
+    - Single-brace tokens inside <template> are SDK syntax, not Liquid; do not change to {{ }}
+    - {item.price} is line total AFTER discounts; {item.originalPrice} is pre-discount; {item.unitPrice} is per-unit
+    - {item.hasDiscount} resolves to a CSS class string (e.g. "hide" when no discount), not a boolean
+    - {tax} token is intentionally hidden (BS-017: not wired in CartSummaryEnhancer); do NOT enable
+    - Discount row uses data-next-show="cart.hasDiscounts" — auto-hides when zero
+  next_gotchas:
+    - Two <template> levels: outer holds the line-item structure, inner is per-item
+    - Voucher row {discount.name} expects vouchers from Campaign Offers, not fake package IDs
+    - cart.totalDiscountPercentage rounds to nearest integer for display
+  next_variants:
+    - 01 (default-stacked)
+    - 02 (this; accordion with scroll-hint)
+    - 03 (compact)
+    - 04 (large)
+  next_related:
+    - bundle-selector (drives cart contents this summary renders)
+    - submit-block (acts on the totals shown here)
+{% endcomment %}
+<div data-next-catalog-component="order-summary" data-initial-state="closed" data-next-accordion="order-summary" data-open-text="Hide Order Summary" data-close-text="Show Order Summary" data-toggle-class="next-expanded" class="order-summary__accordion">
   <div data-next-accordion-trigger="order-summary" class="order-summary__accordion-trigger">
     <div class="order-summary__accordion-inner">
       <div class="order-summary__accordion-head">

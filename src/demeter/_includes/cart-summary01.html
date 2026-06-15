@@ -1,4 +1,36 @@
-<div class="summary-wrapper" data-next-cart-summary>
+{% comment %}
+  next_component: order-summary
+  next_version: 1.0.0
+  next_sdk_min: 0.4.18
+  next_purpose: Stacked order summary panel showing line items, discounts, shipping, totals. Default Olympus checkout summary (variant 01).
+  next_params: (none today; parameterization deferred to v1)
+  next_sdk_owns:
+    - data-next-cart-summary
+    - data-summary-lines (single-brace tokens: {item.*}, {subtotal}, {shipping}, {discounts}, {currency}, {total})
+    - data-next-discounts (offer / voucher)
+    - data-next-display (cart.totalDiscountPercentage, etc)
+    - data-next-show / data-next-hide (cart.hasDiscounts, item.isRecurring)
+    - data-next-component="scroll-hint"
+  next_theming:
+    classes_designer_owns: [.summary-wrapper, .order-summary, .order-summary__content, .cart-items, .cart-item, .order-totals]
+    css_vars_designer_owns: []
+  next_dont_touch:
+    - Single-brace tokens inside <template> are SDK syntax, not Liquid; do not change to {{ }}
+    - {item.price} is line total AFTER discounts; {item.originalPrice} is pre-discount
+    - {item.hasDiscount} resolves to CSS class string ("hide" or empty), not boolean
+  next_gotchas:
+    - cart.totalDiscountPercentage rounds to nearest integer for display
+    - Tax token {tax} is intentionally not rendered — not wired in CartSummaryEnhancer (BS-017)
+  next_variants:
+    - 01 (this; stacked default for Olympus)
+    - 02 (accordion variant)
+    - 03 (compact)
+    - 04 (large)
+  next_related:
+    - bundle-selector (drives cart contents)
+    - submit-block (acts on the totals)
+{% endcomment %}
+<div data-next-catalog-component="order-summary" class="summary-wrapper" data-next-cart-summary>
   <template>
     <div class="order-summary">
       <div class="order-summary__content">
@@ -57,6 +89,7 @@
                   <div class="order-totals__label text-muted">{discount.name} - Save {discount.percentage}</div>
                   <div class="order-totals__value text-muted">−{discount.amount}</div>
                 </li>
+                
               </template>
             </ul>
             <ul class="order-totals__discount-list" data-next-discounts="voucher" aria-label="Coupon discounts">
