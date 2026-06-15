@@ -105,6 +105,48 @@ for (const family of expectedFamilies) {
   }
 }
 
+validateIntentionalVariants();
+
+function validateIntentionalVariants() {
+  const iv = catalog.intentionalVariants;
+  if (!iv || typeof iv !== 'object') {
+    errors.push('catalog.intentionalVariants: missing intentionalVariants block');
+    return;
+  }
+  for (const key of ['purpose', 'verified', 'regenerate', 'doNotReconcile', 'includes']) {
+    if (!(key in iv)) errors.push(`catalog.intentionalVariants.${key}: missing`);
+  }
+  const allowedSurfaces = ['orderBump', 'orderSummary', 'checkoutHeader', 'footer', 'footerLinks'];
+  if (!iv.includes || typeof iv.includes !== 'object') {
+    errors.push('catalog.intentionalVariants.includes: expected an object');
+    return;
+  }
+  for (const [inc, spec] of Object.entries(iv.includes)) {
+    const label = `catalog.intentionalVariants.includes.${inc}`;
+    if (!allowedSurfaces.includes(spec.surface)) {
+      errors.push(`${label}.surface: "${spec.surface}" not in [${allowedSurfaces.join(', ')}]`);
+    }
+    if (!Array.isArray(spec.lineages) || spec.lineages.length === 0) {
+      errors.push(`${label}.lineages: expected a non-empty array`);
+      continue;
+    }
+    for (const [i, lineage] of spec.lineages.entries()) {
+      if (!Array.isArray(lineage.families) || lineage.families.length === 0) {
+        errors.push(`${label}.lineages[${i}].families: expected a non-empty array`);
+      } else {
+        for (const fam of lineage.families) {
+          if (!expectedFamilies.includes(fam)) {
+            errors.push(`${label}.lineages[${i}].families: unknown family "${fam}"`);
+          }
+        }
+      }
+      if (typeof lineage.note !== 'string' || !lineage.note) {
+        errors.push(`${label}.lineages[${i}].note: expected a non-empty string`);
+      }
+    }
+  }
+}
+
 function walkFiles(dir, files = []) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     const path = join(dir, entry.name);

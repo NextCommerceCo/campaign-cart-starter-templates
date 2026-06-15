@@ -1403,11 +1403,11 @@
         "surface": "orderSummary",
         "lineages": [
           { "families": ["olympus", "demeter", "limos", "olympus-mv-single-step", "olympus-mv-two-step"], "note": "Large/image-line order summary (annotated in #73)." },
-          { "families": ["shop-single-step", "shop-three-step"], "note": "Shop rewrite of cart-summary04 (~133-line structural difference)." }
+          { "families": ["shop-single-step", "shop-three-step"], "note": "Shop structural rewrite of cart-summary04 (188 lines vs olympus's 143)." }
         ]
       },
       "checkout-footer-links.html": {
-        "surface": "footer",
+        "surface": "footerLinks",
         "lineages": [
           { "families": ["shop-single-step", "shop-three-step"], "note": "Shop footer links." },
           { "families": ["limos"], "note": "Limos footer links." }

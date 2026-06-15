@@ -172,6 +172,6 @@ Some shared includes legitimately differ across families by design. These lineag
 | `bump-switch01.html` | **demeter + limos** · **rest** (olympus, mv-pair, shop-pair) |
 | `checkout-header.html` | **olympus + mv-pair** · **demeter** · **limos** · **shop-pair** (`checkout-header--lg` top bar) |
 | `cart-summary03.html` | **olympus** (reference) · **limos + mv-pair + shop-pair** (shared body) · **demeter** (parameterized: heading/subtitle/feature_package) |
-| `cart-summary04.html` | **olympus + demeter + limos + mv-pair** · **shop-pair** (~133-line shop rewrite) |
+| `cart-summary04.html` | **olympus + demeter + limos + mv-pair** · **shop-pair** (shop structural rewrite, 188 vs 143 lines) |
 | `checkout-footer-links.html` | **shop-pair** · **limos** (only these 3 families ship it) |
 | `footer.html` | **rest** (olympus, limos, mv-pair, shop-pair) · **demeter** (`cc-medium` variant) |
