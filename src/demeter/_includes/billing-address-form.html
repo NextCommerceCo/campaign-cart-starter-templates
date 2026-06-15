@@ -1,0 +1,42 @@
+{% comment %}
+  next_component: billing-address-form
+  next_version: 1.0.0
+  next_sdk_min: 0.4.18
+  next_purpose: "Same as shipping" toggle plus an SDK-populated billing form container. Used inside payment-methods.html (credit card form section).
+  next_params:
+    default_same_as_shipping: bool, default true. Controls initial state of the use-shipping-address checkbox.
+    toggle_label:             string, default "Use shipping address as billing address".
+    section_title:            string, default "Billing Address". Heading shown when toggle is unchecked.
+  next_sdk_owns:
+    - os-input-field="use-shipping-address" (toggle checkbox container)
+    - os-checkout-element="different-billing-address" (form container, expanded on uncheck)
+    - os-checkout-component="billing-form" (empty container the SDK populates with input fields)
+    - data-next-checkout-field (when SDK injects fields: billing_address1, billing_address2, billing_city, billing_province, billing_postal, billing_country, etc.)
+  next_theming:
+    classes_designer_owns: [.billing-address, .billing-address__form, .checkbox-wrapper, .checkout__checkbox, .checkbox__input, .checkbox__label, .form-section__title, .cc-billing, .form-grid]
+    css_vars_designer_owns: []
+  next_dont_touch:
+    - The empty <div os-checkout-component="billing-form"> is the mount point — SDK populates fields at runtime, do NOT prefill markup
+    - "Same as shipping" toggle MUST hide the entire address block (CSS via os-checkout-element), not just collapse it
+    - Field naming convention `use_shipping_address` for the checkbox is SDK-recognized
+  next_gotchas:
+    - Custom checkout HTML can regress shipping/billing mounts. This component keeps the canonical SDK-owned structure intact when templates are edited.
+    - Country list inside the billing form follows the same Campaigns API contract as shipping-address-form
+  next_variants:
+    - inline (default; expands inline on uncheck)
+  next_related:
+    - shipping-address-form (provides the address that populates this when toggle is checked)
+    - payment-methods.html (this partial lives inside the credit card form section there)
+{% endcomment %}
+{% if default_same_as_shipping == nil %}{% assign default_same_as_shipping = true %}{% endif -%}
+{% assign toggle = toggle_label | default: 'Use shipping address as billing address' -%}
+{% assign sec_title = section_title | default: 'Billing Address' -%}
+<div data-next-catalog-component="billing-address-form" class="billing-address">
+  <div os-input-field="use-shipping-address" class="checkbox-wrapper"><label class="checkout__checkbox"><input type="checkbox" name="use_shipping_address" id="use_shipping_address" data-name="Use Shipping Address" class="checkbox__input"{% if default_same_as_shipping %} checked=""{% endif %}>
+      <div class="checkbox__label">{{ toggle }}</div>
+    </label></div>
+  <div os-checkout-element="different-billing-address" class="billing-address__form">
+    <h1 class="form-section__title cc-billing">{{ sec_title }}</h1>
+    <div os-checkout-component="billing-form" class="form-grid"></div>
+  </div>
+</div>
