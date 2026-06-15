@@ -161,3 +161,17 @@ The goal is not a small fixed set of templates. The goal is a growing library of
 - `node scripts/lint-sdk.mjs --scope=demeter --pages=all` covers checkout, upsell, and receipt pages for `demeter`.
 
 Use `npm run lint:sdk:promoted:all` for a promoted-family all-page check during focused catalog work; CI already runs the full all-family all-page SDK lint.
+
+## Intentional Variants (not drift)
+
+Some shared includes legitimately differ across families by design. These lineages are **deliberate** — do **not** flag or auto-reconcile them in cross-family include-drift audits. (Machine-readable copy lives under `intentionalVariants` in `commerce-surface-catalog.json`.) Families not listed for an include do not ship that include. Verified 2026-06-15; regenerate by hashing each include body across families with the `next_component`/HTML-comment header and whitespace stripped — matching hashes share a lineage.
+
+| Include | Lineages (families that share one body) |
+|---|---|
+| `bump-check01.html` | **olympus** · **mv-pair** (mv-single + mv-two; uses `data-next-product-sync` for variant-safe qty sync) · **shop-pair** (shop-single + shop-three) · **demeter + limos** |
+| `bump-switch01.html` | **demeter + limos** · **rest** (olympus, mv-pair, shop-pair) |
+| `checkout-header.html` | **olympus + mv-pair** · **demeter** · **limos** · **shop-pair** (`checkout-header--lg` top bar) |
+| `cart-summary03.html` | **olympus** (reference) · **limos + mv-pair + shop-pair** (shared body) · **demeter** (parameterized: heading/subtitle/feature_package) |
+| `cart-summary04.html` | **olympus + demeter + limos + mv-pair** · **shop-pair** (~133-line shop rewrite) |
+| `checkout-footer-links.html` | **shop-pair** · **limos** (only these 3 families ship it) |
+| `footer.html` | **rest** (olympus, limos, mv-pair, shop-pair) · **demeter** (`cc-medium` variant) |
