@@ -23,11 +23,11 @@
 {% assign pkg_id = package_id | default: bump.package_id | default: packages.prepurchase_2 | default: 9 -%}
 {% if package_sync == nil and bump.sync_quantity == nil %}{% assign sync_qty = packages.main_package | default: 1 %}{% elsif package_sync != nil %}{% assign sync_qty = package_sync %}{% else %}{% assign sync_qty = bump.sync_quantity %}{% endif -%}
 {% if is_upsell == nil %}{% assign is_upsell = true %}{% endif -%}
-{% assign bump_title = bump.title | default: 'YES, &nbsp;I Will Take It' -%}
+{% assign bump_title = bump.title | default: 'Order Bump Title' -%}
 {% assign image_src = bump.image_src | default: 'images/icon.svg' -%}
 {% assign image_alt = bump.image_alt | default: '' -%}
-{% assign description_prefix = bump.description_prefix | default: 'Get peace of mind with' -%}
-{% assign description_suffix = bump.description_suffix | default: 'in the event your delivery is damaged, stolen, or lost during transit for' -%}
+{% assign description_prefix = bump.description_prefix | default: 'Order bump description before price' -%}
+{% assign description_suffix = bump.description_suffix | default: 'order bump description after price' -%}
 <div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="check02" data-next-await="">
   <div data-next-package-toggle>
     <div data-next-toggle-card{% if is_upsell %} data-next-is-upsell="true"{% endif %}{% if sync_qty %} data-next-package-sync="{{ sync_qty }}"{% endif %} data-next-package-id="{{ pkg_id }}" class="next-active">
