@@ -1,4 +1,4 @@
-<!--
+{% comment %}
   next_component: mv-configurable-upsell-offer
   next_version: 1
   next_sdk_owns: bundle selector, bundle cards, bundle slots, upsell add/skip actions
@@ -7,7 +7,7 @@
     upsell_offer: object. package_id, selector_id, display_selector_id, display_bundle_id, accept/decline text.
     upsell_mv_tiers: array. Bundle card ids, quantity, vouchers, selected state.
   next_dont_touch: data-next-bundle-*, data-next-bundle-slots-for, data-next-upsell-*
--->
+{% endcomment %}
 {% assign offer = upsell_offer -%}
 {% assign package_id = offer.package_id | default: 1 -%}
 {% assign selector_id = offer.selector_id | default: 'upsell-bundle' -%}

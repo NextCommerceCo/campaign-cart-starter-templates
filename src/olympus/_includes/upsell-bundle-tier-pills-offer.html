@@ -1,4 +1,4 @@
-<!--
+{% comment %}
   next_component: upsell-bundle-tier-pills-offer
   next_version: 1
   next_sdk_owns: bundle selector, bundle cards, quantity control, upsell add/skip actions
@@ -7,7 +7,7 @@
     upsell_offer: object. package_id, selector_id, display selector ids, accept/decline text.
     upsell_bundle_tiers: array. Bundle card ids, item JSON, vouchers, quantity button value, selected state.
   next_dont_touch: data-next-bundle-*, data-next-quantity-*, data-next-upsell-*
--->
+{% endcomment %}
 {% assign offer = upsell_offer -%}
 {% assign package_id = offer.package_id | default: 3 -%}
 {% assign selector_id = offer.selector_id | default: 'upsell-bundle' -%}
