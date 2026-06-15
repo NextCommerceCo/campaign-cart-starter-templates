@@ -60,7 +60,7 @@
           <a href="{{ nav_1_nav_3_url }}" class="nav1-link relative font-bold text-[14px] lg:text-[16px] leading-none tracking-[-0.07px] lg:tracking-[-0.08px] text-[var(--text-primary)] pb-[8px]" data-nav1-link>{{ nav_1_nav_3_text }}<span class="nav1-link-indicator absolute left-0 right-0 -bottom-[4px] h-[4px] bg-[var(--brand-primary)]"></span></a>
         </nav>
 
-        <a href="{{ next_url }}" class="flex items-center gap-[12px]">
+        <a href="{{ next_url | campaign_link }}{{ cta_params }}" class="flex items-center gap-[12px]">
           <span class="font-extrabold text-[18px] leading-none tracking-[-0.09px] text-[var(--text-primary)] underline">{{ nav_1_cta_text }}</span>
           <img src="{{ nav_1_cta_flag | campaign_asset }}" alt="{{ nav_1_cta_flag_alt }}" class="w-[28px] h-[16px] lg:w-[32px] lg:h-[18px] object-cover">
         </a>
