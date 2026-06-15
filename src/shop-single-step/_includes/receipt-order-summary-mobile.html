@@ -1,4 +1,4 @@
-<!--
+{% comment %}
   next_component: shop-single-step-receipt-order-summary-mobile
   next_version: 1
   next_sdk_owns: receipt order item template and data-next-order-items target
@@ -7,7 +7,7 @@
     receipt_summary: object. title, scroll_hint, mobile_item_template_id.
     item_template_id: string override for the SDK order-line template id.
   next_dont_touch: data-next-order-items and data-item-template-id must reference the same template id.
--->
+{% endcomment %}
 {% assign summary = receipt_summary -%}
 {% assign summary_title = summary.title | default: 'Order Summary' -%}
 {% assign scroll_hint = scroll_hint | default: summary.scroll_hint | default: 'Scroll for more items' -%}
