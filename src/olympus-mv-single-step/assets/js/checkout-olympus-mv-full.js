@@ -304,7 +304,7 @@ window.addEventListener('next:initialized', function () {
   setupBundleSlotVariantDropdowns(); // comment out to use barebones native <select> UI instead
 
   // Image-only exit intent — replace with your own image URL
-  // Coupon must exist on the campaign (Campaigns app → discount code offer, e.g. EXIT5)
+  // Coupon must exist on the campaign (Campaigns app → discount code offer, e.g. EXIT10)
   initExitIntentImage('https://placehold.co/600x400', async () => {
     await next.applyCoupon('EXIT10');
   });
