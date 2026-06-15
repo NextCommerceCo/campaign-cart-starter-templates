@@ -1,4 +1,34 @@
-<div class="summary-wrapper" data-next-cart-summary>
+{% comment %}
+  next_component: order-summary
+  next_version: 1.0.0
+  next_sdk_min: 0.4.18
+  next_purpose: Large image-line order summary panel showing variant imagery, line items, discounts, shipping, and totals (Olympus variant 04).
+  next_params: (none today; parameterization deferred to v1)
+  next_sdk_owns:
+    - data-next-cart-summary
+    - data-summary-lines (single-brace tokens: {item.*}, {subtotal}, {shipping}, {discounts}, {currency}, {total})
+    - data-next-discounts (offer / voucher)
+    - data-next-display (cart and package display values)
+    - data-next-show / data-next-hide (cart.hasDiscounts, item.isRecurring)
+  next_theming:
+    classes_designer_owns: [.summary-wrapper, .order-summary, .order-summary__content, .cart-items, .cart-item, .order-totals]
+    css_vars_designer_owns: []
+  next_dont_touch:
+    - Single-brace tokens inside <template> are SDK syntax, not Liquid; do not change to {{ }}
+    - {item.variantName} is intentional for multi-variant carts; use {item.name} only for single-variant summaries
+    - {item.hasDiscount} resolves to CSS class string ("hide" or empty), not boolean
+  next_gotchas:
+    - Tax token {tax} is intentionally not rendered — not wired in CartSummaryEnhancer (BS-017)
+  next_variants:
+    - 01 (stacked default)
+    - 02 (accordion variant)
+    - 03 (compact featured product)
+    - 04 (this; large/image-line variant)
+  next_related:
+    - bundle-selector (drives cart contents)
+    - submit-block (acts on the totals)
+{% endcomment %}
+<div data-next-catalog-component="order-summary" class="summary-wrapper" data-next-cart-summary>
   <template>
     <div class="order-summary">
       <div class="order-summary__content">
