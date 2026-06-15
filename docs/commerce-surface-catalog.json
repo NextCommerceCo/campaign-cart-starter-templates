@@ -1359,5 +1359,67 @@
       }
     }
   },
-  "askUserPromptTemplate": "I can map this design to more than one commerce template family: {candidates}. The ambiguous surfaces are {surfaces}. Which family should I use before wiring SDK components?"
+  "askUserPromptTemplate": "I can map this design to more than one commerce template family: {candidates}. The ambiguous surfaces are {surfaces}. Which family should I use before wiring SDK components?",
+  "intentionalVariants": {
+    "purpose": "Shared includes that legitimately differ across families. These lineages are DELIBERATE design/structure differences, not drift — do NOT flag or auto-reconcile them in cross-family include-drift audits. Families omitted from an include's lineages do not ship that include.",
+    "verified": "2026-06-15",
+    "regenerate": "For each include, hash the body across families with the next_component/HTML-comment header and whitespace stripped; families with the same hash share a lineage.",
+    "doNotReconcile": true,
+    "includes": {
+      "bump-check01.html": {
+        "surface": "orderBump",
+        "lineages": [
+          { "families": ["olympus"], "note": "Olympus single-package check-style bump." },
+          { "families": ["olympus-mv-single-step", "olympus-mv-two-step"], "note": "MV/configurable bump: quantity sync via data-next-product-sync (product_id), so it sums across variant swaps (SDK 0.4.25+). See CLAUDE.md." },
+          { "families": ["shop-single-step", "shop-three-step"], "note": "Shop bump layout for selector-less checkouts." },
+          { "families": ["demeter", "limos"], "note": "Editorial/Limos bump styling." }
+        ]
+      },
+      "bump-switch01.html": {
+        "surface": "orderBump",
+        "lineages": [
+          { "families": ["demeter", "limos"], "note": "Switch-style bump with demeter/limos styling." },
+          { "families": ["olympus", "olympus-mv-single-step", "olympus-mv-two-step", "shop-single-step", "shop-three-step"], "note": "Shared switch-style bump." }
+        ]
+      },
+      "checkout-header.html": {
+        "surface": "checkoutHeader",
+        "lineages": [
+          { "families": ["olympus", "olympus-mv-single-step", "olympus-mv-two-step"], "note": "Olympus/MV header." },
+          { "families": ["demeter"], "note": "Demeter header." },
+          { "families": ["limos"], "note": "Limos header." },
+          { "families": ["shop-single-step", "shop-three-step"], "note": "Shop top-bar header (checkout-header--lg). See CLAUDE.md shop checkout top-bar notes." }
+        ]
+      },
+      "cart-summary03.html": {
+        "surface": "orderSummary",
+        "lineages": [
+          { "families": ["olympus"], "note": "Olympus featured-product order summary (annotated reference)." },
+          { "families": ["limos", "olympus-mv-single-step", "olympus-mv-two-step", "shop-single-step", "shop-three-step"], "note": "Shared featured-product summary body." },
+          { "families": ["demeter"], "note": "Demeter side-cart summary, parameterized (heading/subtitle/feature_package)." }
+        ]
+      },
+      "cart-summary04.html": {
+        "surface": "orderSummary",
+        "lineages": [
+          { "families": ["olympus", "demeter", "limos", "olympus-mv-single-step", "olympus-mv-two-step"], "note": "Large/image-line order summary (annotated in #73)." },
+          { "families": ["shop-single-step", "shop-three-step"], "note": "Shop structural rewrite of cart-summary04 (188 lines vs olympus's 143)." }
+        ]
+      },
+      "checkout-footer-links.html": {
+        "surface": "footerLinks",
+        "lineages": [
+          { "families": ["shop-single-step", "shop-three-step"], "note": "Shop footer links." },
+          { "families": ["limos"], "note": "Limos footer links." }
+        ]
+      },
+      "footer.html": {
+        "surface": "footer",
+        "lineages": [
+          { "families": ["olympus", "limos", "olympus-mv-single-step", "olympus-mv-two-step", "shop-single-step", "shop-three-step"], "note": "Shared footer." },
+          { "families": ["demeter"], "note": "Demeter footer (cc-medium variant)." }
+        ]
+      }
+    }
+  }
 }
