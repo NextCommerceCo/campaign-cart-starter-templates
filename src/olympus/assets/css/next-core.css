@@ -5046,6 +5046,7 @@ figcaption {
 }
 
 .os-card__title-badge {
+  width: fit-content;
   color: #000;
   text-transform: uppercase;
   background-color: #e2e2e2;
@@ -5053,7 +5054,6 @@ figcaption {
   padding: 4px .5rem;
   font-size: var(--font-size--xs);
   font-weight: 700;
-  width: fit-content;
 }
 
 .os-card__title-badge.pb--bestseller {
