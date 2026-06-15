@@ -4,7 +4,7 @@
   next_sdk_min: 0.4.18
   next_purpose: "Same as shipping" toggle plus an SDK-populated billing form container. Used inside payment-methods.html (credit card form section).
   next_params:
-    default_same_as_shipping: bool, default true. Controls initial state of the use-shipping-address checkbox.
+    default_same_as_shipping: bool, default true. Pass true/false literals only — in Liquid, strings/numbers/empty values are truthy. Controls initial state of the use-shipping-address checkbox.
     toggle_label:             string, default "Use shipping address as billing address".
     section_title:            string, default "Billing Address". Heading shown when toggle is unchecked.
   next_sdk_owns:
@@ -33,10 +33,10 @@
 {% assign sec_title = section_title | default: 'Billing Address' -%}
 <div data-next-catalog-component="billing-address-form" class="billing-address">
   <div os-input-field="use-shipping-address" class="checkbox-wrapper"><label class="checkout__checkbox"><input type="checkbox" name="use_shipping_address" id="use_shipping_address" data-name="Use Shipping Address" class="checkbox__input"{% if default_same_as_shipping %} checked=""{% endif %}>
-      <div class="checkbox__label">{{ toggle }}</div>
+      <div class="checkbox__label">{{ toggle | escape }}</div>
     </label></div>
   <div os-checkout-element="different-billing-address" class="billing-address__form">
-    <h1 class="form-section__title cc-billing">{{ sec_title }}</h1>
+    <h2 class="form-section__title cc-billing">{{ sec_title }}</h2>
     <div os-checkout-component="billing-form" class="form-grid"></div>
   </div>
 </div>
