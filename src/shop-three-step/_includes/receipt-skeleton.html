@@ -1,3 +1,24 @@
+{% comment %}
+  next_component: receipt-skeleton
+  next_version: 1.0.0
+  next_sdk_min: 0.4.18
+  next_purpose: Loading skeleton for the receipt page. Renders before SDK hydrates order data; SDK swaps for real content once next-display-ready fires.
+  next_params: (none today)
+  next_sdk_owns:
+    - data-next-skeleton
+    - next-display-ready (class added to <html> when SDK is ready)
+  next_theming:
+    classes_designer_owns: [.skeleton-wrapper, .skeleton-line, .skeleton-block]
+    css_vars_designer_owns: []
+  next_dont_touch:
+    - SDK hides this wrapper once order data renders; do not animate transitions in CSS that conflict with SDK display swap
+  next_gotchas:
+    - Skeleton dimensions should approximate real receipt layout to prevent CLS (cumulative layout shift)
+  next_variants:
+    - default (this)
+  next_related:
+    - data-next-order-items (real receipt content this skeleton precedes)
+{% endcomment %}
 <div data-next-catalog-component="receipt-skeleton" data-next-skeleton="" class="skeleton-wrapper">
   <div class="checkout-content">
     <div class="checkout__content">
