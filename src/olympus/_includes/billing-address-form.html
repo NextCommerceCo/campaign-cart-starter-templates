@@ -29,7 +29,7 @@
     - payment-methods.html (this partial lives inside the credit card form section there)
 {% endcomment %}
 {% if default_same_as_shipping == nil %}{% assign default_same_as_shipping = true %}{% endif -%}
-{% assign toggle = toggle_label | default: 'Use shiping address as billing address' -%}
+{% assign toggle = toggle_label | default: 'Use shipping address as billing address' -%}
 {% assign sec_title = section_title | default: 'Billing Address' -%}
 <div data-next-catalog-component="billing-address-form" class="billing-address">
   <div os-input-field="use-shipping-address" class="checkbox-wrapper"><label class="checkout__checkbox"><input type="checkbox" name="use_shipping_address" id="use_shipping_address" data-name="Use Shipping Address" class="checkbox__input"{% if default_same_as_shipping %} checked=""{% endif %}>
