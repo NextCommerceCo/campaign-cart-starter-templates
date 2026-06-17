@@ -215,6 +215,21 @@ scripts:
 - `next_url` / `decline_url` are required on upsell pages
 - `styles` / `scripts` are page-specific; `next-core.css` and `config.js` are loaded by `base.html` for every page
 
+### Build validation and warnings (CPK 0.2.0+)
+
+`campaign-build` succeeds even when a page is misconfigured — it emits **non-fatal warnings** to stderr instead of failing. They never change the exit code (the build only exits non-zero on a render error). Run `campaign-build --json` for a per-page summary that attaches each warning to its source file — useful in CI or when an AI agent is checking its own output. Watch for:
+
+| Code | Meaning |
+|------|---------|
+| `INVALID_PAGE_TYPE` | `page_type` is not one of `product`, `checkout`, `upsell`, `receipt` |
+| `MISSING_FRONTMATTER` | `title` or `page_type` is missing (both required) |
+| `LAYOUT_NOT_FOUND` | the `page_layout` name has no file in `src/<slug>/_layouts/` — page rendered with no layout |
+| `NESTED_NO_PERMALINK` | a page in a subdirectory has no `permalink`; routing drops the intermediate dirs (uses only slug + filename) |
+| `DUPLICATE_OUTPUT` | two source files resolve to the same output file; the last one silently wins |
+| `NO_CAMPAIGN` | the page's slug has no `_data/campaigns.json` entry, so it was skipped |
+
+A clean build reports zero warnings — treat any warning as a bug to fix, not noise.
+
 ---
 
 ## Liquid template filters

@@ -14,15 +14,18 @@ A **complete, working campaign-kit project** that serves two purposes:
 Templates follow SDK **0.4.x** patterns (`olympus`, `limos`, `demeter`, `olympus-mv-single-step`, `olympus-mv-two-step`, `shop-single-step`, `shop-three-step` today).
 
 ## Developer Workflow (end users of this repo)
-1. `npx campaign-init` in their own project → creates empty `_data/campaigns.json` + npm scripts
-2. Copy `src/[slug]/` → their project's `src/[slug]/`
-3. Copy the matching entry from `_data/campaigns.json` into their project's `campaigns.json`, update slug + store URLs
-4. `npm run dev` → interactive campaign picker
-5. To clone a variant: `npm run clone` → picks existing campaign → new slug → auto-updates `campaigns.json`
+As of CPK **0.2.0**, `npx campaign-init` is a full scaffolder. In the developer's own project (which must already have a `package.json` — it warns to run `npm init -y` first), picking a template — via the interactive picker or `--template`/`--slug` flags — it:
+1. Adds the kit npm scripts to `package.json`
+2. Materializes the chosen template into `src/<slug>/` (renamed to the slug)
+3. Seeds `_data/campaigns.json` with a full entry keyed by the slug
+4. Writes the API key into `assets/config.js` when `--api-key` is passed
+5. Optionally installs the AI-context doc with `--ai-context claude|codex|cursor|copilot` (see the rules-file note below)
 
-Note: `npx campaign-init` does NOT create any src/ folders — it only creates `_data/campaigns.json` and adds npm scripts to `package.json`.
+It is conflict-safe: re-running for an existing slug errors unless `--overwrite` is passed. It can run fully non-interactively (`--non-interactive` / `--json`) for agents and CI. After scaffolding: `npm run dev` → interactive campaign picker; `npm run clone` → duplicate a campaign to a new slug.
 
-Note: when copying a template, the developer renames the folder to their product/campaign name (e.g. `wintergloves`), NOT the template name (e.g. `olympus`). The folder name becomes the slug and drives the URL: `campaign-domain.com/wintergloves/checkout`.
+Manual copy (template-library path, when not using the picker/flags): copy `src/[slug]/` into the project and copy the matching `_data/campaigns.json` entry by hand, updating slug + store URLs.
+
+Note: the developer renames the folder to their product/campaign name (e.g. `wintergloves`), NOT the template name (e.g. `olympus`). The folder name becomes the slug and drives the URL: `campaign-domain.com/wintergloves/checkout`.
 
 ---
 
@@ -240,6 +243,6 @@ Design decisions:
 - **Checklists over how-to recipes** — checklists are AI-useful; prose how-tos are not worth the file bloat
 - **`docs/recipes/` was created then deleted** — content absorbed into checklists in the main rules file
 - **Analytics docs not included** — main SDK docs URL is sufficient; AI fetches specific pages when needed
-- **Long-term goal**: wire into `npx campaign-init` so it's auto-delivered to developer projects
+- **Auto-delivery shipped in CPK 0.2.0**: `campaign-init --ai-context claude|codex|cursor|copilot` now installs this doc verbatim into developer projects (with a sentinel header, overwritten on re-run unless `--keep-ai-context`). This file is the upstream source — keeping it correct now directly shapes downstream AI context.
 
 README has an "AI development rules" section pointing developers to copy `docs/campaign-page-kit-template-context.md` into their project.
