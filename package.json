@@ -23,7 +23,7 @@
     "lint:agent-contracts": "node scripts/lint-agent-contracts.mjs"
   },
   "dependencies": {
-    "next-campaign-page-kit": "^0.1.0"
+    "next-campaign-page-kit": "^0.2.0"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.2.4",

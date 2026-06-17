@@ -1087,7 +1087,7 @@ If `window.nextDebug` is undefined, debug mode is not enabled — add the meta t
 2. **Use `campaign_link` for all inter-page URLs.** Never hardcode `/slug/page/` paths.
 3. **Only use documented `data-next-*` attributes.** Do not invent attribute names.
 4. **Do not write JavaScript that duplicates SDK behaviour.** The SDK handles cart state, field binding, form submission, upsell accept/decline, and dynamic display. Write JS only for UI behaviour the SDK doesn't cover (e.g. Swiper sliders, modals, custom animations).
-5. **page_type must match the page's role.** `checkout` for payment collection, `upsell` for post-purchase offers, `receipt` for order confirmation. The SDK behaves differently on each.
+5. **page_type must match the page's role.** `product` for presell/landing pages, `checkout` for payment collection, `upsell` for post-purchase offers, `receipt` for order confirmation. The SDK behaves differently on each, and `campaign-build` warns (`INVALID_PAGE_TYPE`) on any other value.
 6. **Keep each campaign self-contained.** Do not reference assets from another campaign's directory.
 7. **`config.js` must load before the SDK.** This is already handled by `base.html` — do not reorder these script tags.
 8. **SDK version is set in campaigns.json**, not in `base.html` directly. To upgrade, update `sdk_version` in the campaign's entry.
