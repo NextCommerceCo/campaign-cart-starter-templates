@@ -215,6 +215,21 @@ scripts:
 - `next_url` / `decline_url` are required on upsell pages
 - `styles` / `scripts` are page-specific; `next-core.css` and `config.js` are loaded by `base.html` for every page
 
+### Build validation and warnings (CPK 0.2.0+)
+
+`campaign-build` succeeds even when a page is misconfigured — it emits **non-fatal warnings** to stderr instead of failing. They never change the exit code (the build only exits non-zero on a render error). Run `campaign-build --json` for a per-page summary that attaches each warning to its source file — useful in CI or when an AI agent is checking its own output. Watch for:
+
+| Code | Meaning |
+|------|---------|
+| `INVALID_PAGE_TYPE` | `page_type` is not one of `product`, `checkout`, `upsell`, `receipt` |
+| `MISSING_FRONTMATTER` | `title` or `page_type` is missing (both required) |
+| `LAYOUT_NOT_FOUND` | the `page_layout` name has no file in `src/<slug>/_layouts/` — page rendered with no layout |
+| `NESTED_NO_PERMALINK` | a page in a subdirectory has no `permalink`; routing drops the intermediate dirs (uses only slug + filename) |
+| `DUPLICATE_OUTPUT` | two source files resolve to the same output file; the last one silently wins |
+| `NO_CAMPAIGN` | the page's slug has no `_data/campaigns.json` entry, so it was skipped |
+
+A clean build reports zero warnings — treat any warning as a bug to fix, not noise.
+
 ---
 
 ## Liquid template filters
@@ -1087,7 +1102,7 @@ If `window.nextDebug` is undefined, debug mode is not enabled — add the meta t
 2. **Use `campaign_link` for all inter-page URLs.** Never hardcode `/slug/page/` paths.
 3. **Only use documented `data-next-*` attributes.** Do not invent attribute names.
 4. **Do not write JavaScript that duplicates SDK behaviour.** The SDK handles cart state, field binding, form submission, upsell accept/decline, and dynamic display. Write JS only for UI behaviour the SDK doesn't cover (e.g. Swiper sliders, modals, custom animations).
-5. **page_type must match the page's role.** `checkout` for payment collection, `upsell` for post-purchase offers, `receipt` for order confirmation. The SDK behaves differently on each.
+5. **page_type must match the page's role.** `product` for presell/landing pages, `checkout` for payment collection, `upsell` for post-purchase offers, `receipt` for order confirmation. The SDK behaves differently on each, and `campaign-build` warns (`INVALID_PAGE_TYPE`) on any other value.
 6. **Keep each campaign self-contained.** Do not reference assets from another campaign's directory.
 7. **`config.js` must load before the SDK.** This is already handled by `base.html` — do not reorder these script tags.
 8. **SDK version is set in campaigns.json**, not in `base.html` directly. To upgrade, update `sdk_version` in the campaign's entry.
