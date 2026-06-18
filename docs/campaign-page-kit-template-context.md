@@ -186,6 +186,8 @@ These starter templates inject **Google Tag Manager** and **Meta Pixel** from ea
 
 The layout snippet and SDK provider work together: layout injection initialises GTM/Pixel, the SDK provider forwards ecommerce events into it. Enable both — set `gtm_id` / `fb_pixel_id` in `campaigns.json` **and** enable the matching provider in `config.js`.
 
+**Meta Pixel — the layout bootstraps, the SDK tracks.** The `base.html` Meta Pixel block only loads `fbevents.js`, calls `fbq('init', …)`, and keeps the `<noscript>` `PageView` fallback. It does **not** call `fbq('track', 'PageView')` — when `analytics.providers.facebook.enabled` is `true`, the SDK's Facebook adapter sends `PageView` (and `AddToCart`, `Purchase`, etc.) on init via `dl_user_data`. Adding a manual `fbq('track', 'PageView')` to the layout double-fires the PageView, because the adapter does not dedupe it. If a campaign disables the SDK Facebook provider and relies on template-only tracking, add the manual `fbq('track', 'PageView')` back to that campaign's `base.html`.
+
 ---
 
 ## Page frontmatter

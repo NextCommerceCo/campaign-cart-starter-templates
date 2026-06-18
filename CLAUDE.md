@@ -116,6 +116,7 @@ repo-root/
 - `next-core.css` loaded **directly in base.html** — always needed, not in page frontmatter
 - Per-page CSS/JS injected via frontmatter `styles:` / `scripts:` loops using `campaign_asset`
 - Optional **GTM / Meta Pixel** in reference templates: injected from `campaign.gtm_id` / `campaign.fb_pixel_id` when Liquid `environment != "development"` **and** the value is **non-empty** (`{% if campaign.gtm_id != "" %}` / `{% if campaign.fb_pixel_id != "" %}`). Use **`""`** in `campaigns.json` to disable layout injection; **placeholders like `GTM-XXXXXXX` still load snippets** on non-dev builds (not “off”). Do **not** use bare `{% if campaign.gtm_id %}` — Liquid can treat `""` as truthy.
+- **Meta Pixel — layout bootstraps, SDK tracks (issue #79):** the `base.html` Meta Pixel block loads `fbevents.js`, calls `fbq('init', …)`, and keeps the `<noscript>` PageView fallback only. It does **not** call `fbq('track', 'PageView')` — the SDK's Facebook adapter sends PageView (and ecommerce events) on init via `dl_user_data` when `analytics.providers.facebook.enabled` is `true`, and does not dedupe PageView, so a manual layout call double-fires. Add the manual `fbq('track', 'PageView')` back only for a campaign that disables the SDK Facebook provider. GTM is unaffected — keep its layout snippet as-is.
 - Liquid conditionals for optional metatags:
   - `{% if next_url %}` → checkout pages only
   - `{% if next_url %}` / `{% if decline_url %}` → upsell pages only
