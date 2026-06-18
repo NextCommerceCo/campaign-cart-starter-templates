@@ -58,8 +58,9 @@
     <script src="https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v{{ campaign.sdk_version }}/dist/loader.js" type="module"></script>
 
     4. Optional GTM / Meta Pixel — copy the production-only (non-development) GTM / Meta
-       Pixel blocks from base.html (head snippets + the <body> noscript fallbacks). The SDK
-       forwards PageView/ecommerce events to the Pixel, so do NOT add a manual fbq PageView.
+       Pixel blocks from any template's base.html (e.g. src/olympus/_layouts/base.html) —
+       both the <head> snippets and the <body> noscript fallbacks. The SDK forwards
+       PageView/ecommerce events to the Pixel, so do NOT add a manual fbq PageView.
 
     See docs/pre-checkout-pages.md for full guidance.
   -->
