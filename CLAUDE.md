@@ -183,6 +183,13 @@ A quantity-synced order bump matched by **packageId** (`data-next-package-sync`)
 - `data-next-package-sync` still works unchanged for single-package products. Both attributes may be set on the same card — items already counted by `data-next-package-sync` are excluded from the `data-next-product-sync` pass, so there is no double-counting.
 - **Prior workaround (pre-0.4.25, now retired):** hand-listing every variant ref_id in `data-next-package-sync`. Brittle — the list had to be updated whenever variants changed and broke silently if an id was missed.
 
+### Declarative pricing modes — Demeter (campaigns-os template-brand-contract.demeter.v0)
+Demeter pricing surfaces render price rows from a `pricing_mode` partial argument — campaigns must never hide `.price-wrapper` / `.prices-text-wrapper` / `.price-display` rows with CSS (Campaigns OS browser QA blocks upsells with zero visible price rows; a `display:none` on the only row caused the recovery-relief-stack-v1 dogfood blocker).
+- Modes: `full_price | discounted | compare_at | unit_total | unit_only`.
+- Surfaces + partial defaults (per contract): upsell offers (`upsell-bundle-stepper-offer.html`, `upsell-bundle-tier-pills-offer.html`, `upsell-bundle-tier-cards-offer.html`) default **full_price** — exactly one visible price row adjacent to the accept control; `bump-check01.html` defaults **full_price** (one `unitPrice`/ea row); `editorial-tier-selector.html` defaults **discounted** (current compare-unit-total render), with per-card override via `bundles[].pricing_mode`.
+- Pass the mode as an include arg (`pricing_mode='discounted'`) or via `upsell_offer.pricing_mode` / `order_bump.check01.pricing_mode` frontmatter; include arg wins. Visible-row counts on upsells: full_price/unit_only = 1, discounted/compare_at/unit_total = 2.
+- Demo pages opt into `discounted` explicitly to keep the showcase visuals; legacy `show_per_unit_price`/`show_line_total_price` (bump) and `price_display_variant` (tier selector) still work when passed explicitly without `pricing_mode`.
+
 Inside `<template>` elements the SDK uses single-brace tokens (not Liquid):
 ```html
 <template id="cart-item-template">

@@ -11,8 +11,19 @@
     title:              string, default "Order Bump Title".
     image_src:          string asset path, default "images/1x1_1.svg".
     features:           array of bullet strings.
-    show_per_unit_price:  bool, default true. Render Option A row (originalUnitPrice/ea + unitPrice/ea).
-    show_line_total_price:bool, default false. Render Option B row (originalPrice + price). Pick A or B, not both — defaults to A (per-unit) because it's stable across tier changes.
+    pricing_mode:       enum [full_price, discounted, compare_at, unit_total, unit_only], default "full_price"
+                        (template-brand-contract.demeter.v0 pricing_surfaces.bump). Include arg wins over
+                        order_bump.check01.pricing_mode, and over the legacy show_* bools below. Controls
+                        which price rows render:
+                        full_price/unit_only = unitPrice/ea only (one visible price);
+                        discounted/compare_at = struck originalUnitPrice + unitPrice/ea — IDENTICAL on this
+                        surface by design: data-next-toggle-display has no hasDiscount gating, so the struck
+                        original is always shown either way (compare_at semantics);
+                        unit_total = unitPrice/ea + line total (scales with synced qty).
+                        Pick the mode here — campaign CSS must never display:none price rows.
+    show_per_unit_price:  bool, LEGACY. Render Option A row (originalUnitPrice/ea + unitPrice/ea).
+    show_line_total_price:bool, LEGACY. Render Option B row (originalPrice + price). Only honored when
+                        pricing_mode is not set and at least one legacy bool is passed explicitly.
   next_sdk_owns:
     - data-next-package-toggle
     - data-next-toggle-card
@@ -31,13 +42,25 @@
 {% assign bump_title = bump.title | default: 'Order Bump Title' -%}
 {% assign bump_image = image_src | default: bump.image_src | default: 'images/1x1_1.svg' -%}
 {% assign feature_list = features | default: bump.features -%}
+{% comment %} Precedence: pricing_mode (include arg, then bump.pricing_mode) wins; legacy show_per_unit_price /
+   show_line_total_price are honored ONLY when no pricing_mode is set anywhere — if both are passed, the
+   legacy bools are ignored. {% endcomment -%}
+{% assign bump_pricing_mode = pricing_mode | default: bump.pricing_mode -%}
+{% assign legacy_price_rows = false -%}
+{% if bump_pricing_mode == nil -%}
+  {% if show_per_unit_price != nil or show_line_total_price != nil -%}
+    {% assign legacy_price_rows = true -%}
+  {% else -%}
+    {% assign bump_pricing_mode = 'full_price' -%}
+  {% endif -%}
+{% endif -%}
 {% if show_per_unit_price == nil %}{% assign show_per_unit_price = true %}{% endif -%}
 {% if show_line_total_price == nil %}{% assign show_line_total_price = false %}{% endif -%}
 <!-- Prepurchase upsell: checkbox bump (check01) — SDK 0.4.x
-     Pick ONE pricing row — rendering both confuses the customer.
-     Option A (per-unit, stable, DEFAULT): originalUnitPrice/ea + unitPrice/ea — does not scale with synced qty
-     Option B (line total, scales, opt-in): originalPrice + price — multiplies with data-next-package-sync qty
-       To switch: pass show_per_unit_price=false show_line_total_price=true to {% campaign_include %} -->
+     Pricing rows are pricing_mode-driven (default full_price = one visible unitPrice/ea row).
+     Legacy show_per_unit_price / show_line_total_price still work when passed explicitly without pricing_mode:
+     Option A (per-unit, stable): originalUnitPrice/ea + unitPrice/ea — does not scale with synced qty
+     Option B (line total, scales): originalPrice + price — multiplies with data-next-package-sync qty -->
 <div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="check01" data-next-await="">
   <div data-next-package-toggle>
     <div class="bump-card" data-next-toggle-card data-next-is-upsell="true" data-next-package-sync="{{ sync_qty }}" data-next-package-id="{{ pkg_id }}">
@@ -55,19 +78,42 @@
         <div class="bump__content">
           <div class="bump__content-wrap">
             <div class="bump__price">
+              {% if legacy_price_rows %}
               {% if show_per_unit_price %}
-              <!-- Option A: per-unit pricing — stable across tier changes (SDK 0.4.14+) -->
+              <!-- Legacy Option A: per-unit pricing — stable across tier changes (SDK 0.4.14+) -->
               <div class="bump__price-row">
                 <div class="bump__price-unit"><span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span></div>
                 <div class="bump__price-unit"><span data-next-toggle-display="unitPrice" class="bump__price-sale">--</span><span class="text-xl">/ea</span></div>
               </div>
               {% endif %}
               {% if show_line_total_price %}
-              <!-- Option B: line total pricing — scales with synced qty -->
+              <!-- Legacy Option B: line total pricing — scales with synced qty -->
               <div class="bump__price-row">
                 <div data-next-toggle-display="originalPrice" class="bump__price-reg">--</div>
                 <div data-next-toggle-display="price" class="bump__price-total">--</div>
               </div>
+              {% endif %}
+              {% else %}
+              <!-- pricing_mode-driven price rows — never hide rows with campaign CSS; pick the mode instead -->
+              {% case bump_pricing_mode %}
+              {% when 'discounted', 'compare_at' %}
+              <!-- One shared branch by design: toggle-display has no hasDiscount gating, so the struck
+                   originalUnitPrice is always shown — both modes resolve to compare_at semantics here. -->
+              <div class="bump__price-row">
+                <div class="bump__price-unit"><span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span></div>
+                <div class="bump__price-unit"><span data-next-toggle-display="unitPrice" class="bump__price-sale">--</span><span class="text-xl">/ea</span></div>
+              </div>
+              {% when 'unit_total' %}
+              <div class="bump__price-row">
+                <div class="bump__price-unit"><span data-next-toggle-display="unitPrice" class="bump__price-sale">--</span><span class="text-xl">/ea</span></div>
+                <div data-next-toggle-display="price" class="bump__price-total">--</div>
+              </div>
+              {% else %}
+              <!-- full_price / unit_only (default full_price): one visible price row -->
+              <div class="bump__price-row">
+                <div class="bump__price-unit"><span data-next-toggle-display="unitPrice" class="bump__price-sale">--</span><span class="text-xl">/ea</span></div>
+              </div>
+              {% endcase %}
               {% endif %}
             </div>
             

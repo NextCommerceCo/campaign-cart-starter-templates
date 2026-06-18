@@ -14,7 +14,15 @@
 	                        Each card: { id, quantity, shipping_method, shipping_id, items_json, selected, title_prefix,
 	                          package_id, subtitle_text, shipping_label, total_tone_class,
 	                          badge_text, badge_class, price_display_variant }
-	    price_display_variant: enum [compare-unit-total, total-only], default "compare-unit-total".
+	    price_display_variant: enum [compare-unit-total, total-only], default "compare-unit-total". LEGACY axis;
+	                        total-only still suppresses the per-unit row. Prefer pricing_mode for new campaigns.
+	    pricing_mode:       enum [full_price, discounted, compare_at, unit_total, unit_only], default "discounted"
+	                        (template-brand-contract.demeter.v0 pricing_surfaces.checkout_bundle). Per-card override
+	                        via bundles[].pricing_mode. Controls which price rows render:
+	                        discounted = hasDiscount-gated struck compares + unitPrice/ea + total (current default);
+	                        compare_at = always-shown struck compare total + total; full_price = total only;
+	                        unit_total = unitPrice/ea + total, no compares; unit_only = unitPrice/ea only.
+	                        Pick the mode here — campaign CSS must never display:none price rows.
   next_sdk_owns:
     - data-next-bundle-selector
     - data-next-selector-id
@@ -48,6 +56,7 @@
 {% assign sel_id = selector_id | default: 'main' -%}
 {% assign sel_mode = selection_mode | default: 'swap' -%}
 {% assign selector_price_variant = price_display_variant | default: 'compare-unit-total' -%}
+{% assign selector_pricing_mode = pricing_mode | default: 'discounted' -%}
 {% if include_shipping == nil %}{% assign include_shipping = true %}{% endif -%}
 {% if await == nil %}{% assign await = true %}{% endif -%}
 <div data-next-catalog-component="editorial-tier-selector" data-next-bundle-selector data-next-selector-id="{{ sel_id }}" data-next-selection-mode="{{ sel_mode }}"{% if include_shipping %} data-next-include-shipping="true"{% endif %} class="os-option"{% if await %} data-next-await=""{% endif %}>
@@ -96,19 +105,29 @@
             </div>
           </div>
               {% assign card_price_variant = b.price_display_variant | default: selector_price_variant -%}
+              {% assign card_pricing_mode = b.pricing_mode | default: selector_pricing_mode -%}
+              {%- comment %} pricing_mode picks the rows — never hide price rows with campaign CSS.
+                 Unit-row precedence: hidden for full_price/compare_at modes, AND independently by the
+                 legacy price_display_variant=total-only axis — a card with pricing_mode=unit_total but
+                 variant total-only still suppresses the unit row (legacy wins on its own axis). {% endcomment %}
+              {% assign show_unit_row = true -%}
+              {% if card_pricing_mode == 'full_price' or card_pricing_mode == 'compare_at' or card_price_variant == 'total-only' %}{% assign show_unit_row = false %}{% endif -%}
               <div class="os-card__secondary-slot">
 	            <div class="os-card__pricing">
-	              {% unless card_price_variant == 'total-only' %}
+	              {% if show_unit_row %}
 	              <div class="os-card__price-container">
-	                <div data-next-bundle-display="hasDiscount" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>
+	                {% if card_pricing_mode == 'discounted' %}<div data-next-bundle-display="hasDiscount" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>{% endif %}
 	                <div class="os-card__price os--current"><span data-next-bundle-display="unitPrice">-</span>/ea</div>
 	              </div>
-	              {% endunless %}
+	              {% endif %}
+	              {% unless card_pricing_mode == 'unit_only' %}
 	              <div class="os-card__total-container">
 	                <div class="os-card__total-label">Total:</div>
-                <div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-display="originalPrice">-</span></div>
+                {% if card_pricing_mode == 'discounted' %}<div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-display="originalPrice">-</span></div>
+                {% elsif card_pricing_mode == 'compare_at' %}<div class="os-card__total-compare"><span data-next-bundle-display="originalPrice">-</span></div>{% endif %}
                 <div class="os-card__total-current{% if b.total_tone_class %} {{ b.total_tone_class }}{% endif %}"><span data-next-bundle-display="price">-</span></div>
               </div>
+              {% endunless %}
             </div>
           </div>
         </div>
@@ -125,6 +144,8 @@
     </div>
     {% endfor -%}
     {% else -%}
+    {%- comment %} Canonical 1x/2x/3x fallback cards: only the include-level selector_pricing_mode applies —
+       per-card pricing_mode overrides require passing an explicit `bundles` array. {% endcomment -%}
     {%- assign _pkg = packages.main_package | default: 1 -%}
     {%- assign _standard_ship = shipping_methods.standard -%}
     {%- assign _free_ship = shipping_methods.free -%}
@@ -154,15 +175,20 @@
           </div>
           <div class="os-card__secondary-slot">
             <div class="os-card__pricing">
+              {% unless selector_pricing_mode == 'full_price' or selector_pricing_mode == 'compare_at' %}
               <div class="os-card__price-container">
-                <div data-next-bundle-display="hasDiscount" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>
+                {% if selector_pricing_mode == 'discounted' %}<div data-next-bundle-display="hasDiscount" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>{% endif %}
                 <div class="os-card__price os--current"><span data-next-bundle-display="unitPrice">-</span>/ea</div>
               </div>
+              {% endunless %}
+              {% unless selector_pricing_mode == 'unit_only' %}
               <div class="os-card__total-container">
                 <div class="os-card__total-label">Total:</div>
-                <div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-display="originalPrice">-</span></div>
+                {% if selector_pricing_mode == 'discounted' %}<div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-display="originalPrice">-</span></div>
+                {% elsif selector_pricing_mode == 'compare_at' %}<div class="os-card__total-compare"><span data-next-bundle-display="originalPrice">-</span></div>{% endif %}
                 <div class="os-card__total-current"><span data-next-bundle-display="price">-</span></div>
               </div>
+              {% endunless %}
             </div>
           </div>
         </div>
@@ -201,15 +227,20 @@
           </div>
           <div class="os-card__secondary-slot">
             <div class="os-card__pricing">
+              {% unless selector_pricing_mode == 'full_price' or selector_pricing_mode == 'compare_at' %}
               <div class="os-card__price-container">
-                <div data-next-bundle-display="hasDiscount" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>
+                {% if selector_pricing_mode == 'discounted' %}<div data-next-bundle-display="hasDiscount" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>{% endif %}
                 <div class="os-card__price os--current"><span data-next-bundle-display="unitPrice">-</span>/ea</div>
               </div>
+              {% endunless %}
+              {% unless selector_pricing_mode == 'unit_only' %}
               <div class="os-card__total-container">
                 <div class="os-card__total-label">Total:</div>
-                <div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-display="originalPrice">-</span></div>
+                {% if selector_pricing_mode == 'discounted' %}<div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-display="originalPrice">-</span></div>
+                {% elsif selector_pricing_mode == 'compare_at' %}<div class="os-card__total-compare"><span data-next-bundle-display="originalPrice">-</span></div>{% endif %}
                 <div class="os-card__total-current"><span data-next-bundle-display="price">-</span></div>
               </div>
+              {% endunless %}
             </div>
           </div>
         </div>
@@ -245,15 +276,20 @@
           </div>
           <div class="os-card__secondary-slot">
             <div class="os-card__pricing">
+              {% unless selector_pricing_mode == 'full_price' or selector_pricing_mode == 'compare_at' %}
               <div class="os-card__price-container">
-                <div data-next-bundle-display="hasDiscount" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>
+                {% if selector_pricing_mode == 'discounted' %}<div data-next-bundle-display="hasDiscount" class="os-card__price os--compare os-style"><span data-next-bundle-display="originalUnitPrice">-</span></div>{% endif %}
                 <div class="os-card__price os--current"><span data-next-bundle-display="unitPrice">-</span>/ea</div>
               </div>
+              {% endunless %}
+              {% unless selector_pricing_mode == 'unit_only' %}
               <div class="os-card__total-container">
                 <div class="os-card__total-label">Total:</div>
-                <div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-display="originalPrice">-</span></div>
+                {% if selector_pricing_mode == 'discounted' %}<div data-next-bundle-display="hasDiscount" class="os-card__total-compare"><span data-next-bundle-display="originalPrice">-</span></div>
+                {% elsif selector_pricing_mode == 'compare_at' %}<div class="os-card__total-compare"><span data-next-bundle-display="originalPrice">-</span></div>{% endif %}
                 <div class="os-card__total-current os-dark"><span data-next-bundle-display="price">-</span></div>
               </div>
+              {% endunless %}
             </div>
           </div>
         </div>
