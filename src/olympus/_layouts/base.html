@@ -54,7 +54,9 @@
       s.parentNode.insertBefore(t,s)}(window, document,'script',
       'https://connect.facebook.net/en_US/fbevents.js');
       fbq('init', '{{ campaign.fb_pixel_id }}');
-      fbq('track', 'PageView');
+      // PageView and ecommerce events are sent by the Campaign Cart SDK when
+      // analytics.providers.facebook.enabled is true in config.js. Do not add
+      // a manual fbq('track', 'PageView') here — it double-fires the PageView.
     </script>
     {% endif %}
     {% endunless %}
