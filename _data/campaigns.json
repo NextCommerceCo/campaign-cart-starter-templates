@@ -14,7 +14,8 @@
     "store_phone": "1 (888) 831-6810",
     "store_phone_tel": "tel:+18888316810",
     "gtm_id": "",
-    "fb_pixel_id": ""
+    "fb_pixel_id": "",
+    "og_image": ""
   },
   "olympus": {
     "name": "Olympus",
@@ -31,7 +32,8 @@
     "store_phone": "1 (888) 831-6810",
     "store_phone_tel": "tel:+18888316810",
     "gtm_id": "",
-    "fb_pixel_id": ""
+    "fb_pixel_id": "",
+    "og_image": ""
   },
   "demeter": {
     "name": "Demeter",
@@ -48,7 +50,8 @@
     "store_phone": "1 (888) 831-6810",
     "store_phone_tel": "tel:+18888316810",
     "gtm_id": "",
-    "fb_pixel_id": ""
+    "fb_pixel_id": "",
+    "og_image": ""
   },
   "shop-single-step": {
     "name": "Shop Single Step",
@@ -65,7 +68,8 @@
     "store_phone": "1 (888) 831-6810",
     "store_phone_tel": "tel:+18888316810",
     "gtm_id": "",
-    "fb_pixel_id": ""
+    "fb_pixel_id": "",
+    "og_image": ""
   },
   "shop-three-step": {
     "name": "Shop Three Step",
@@ -82,7 +86,8 @@
     "store_phone": "1 (888) 831-6810",
     "store_phone_tel": "tel:+18888316810",
     "gtm_id": "",
-    "fb_pixel_id": ""
+    "fb_pixel_id": "",
+    "og_image": ""
   },
   "olympus-mv-single-step": {
     "name": "Olympus MV Single Step",
@@ -99,7 +104,8 @@
     "store_phone": "1 (888) 831-6810",
     "store_phone_tel": "tel:+18888316810",
     "gtm_id": "",
-    "fb_pixel_id": ""
+    "fb_pixel_id": "",
+    "og_image": ""
   },
   "olympus-mv-two-step": {
     "name": "Olympus MV Two Step",
@@ -116,7 +122,8 @@
     "store_phone": "1 (888) 831-6810",
     "store_phone_tel": "tel:+18888316810",
     "gtm_id": "",
-    "fb_pixel_id": ""
+    "fb_pixel_id": "",
+    "og_image": ""
   },
   "landing": {
     "name": "Landing",
@@ -132,6 +139,7 @@
     "store_phone": "1 (888) 831-6810",
     "store_phone_tel": "tel:+18888316810",
     "gtm_id": "",
-    "fb_pixel_id": ""
+    "fb_pixel_id": "",
+    "og_image": ""
   }
 }

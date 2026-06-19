@@ -3,13 +3,14 @@
   <head>
     <meta charset="utf-8">
     <title>{{ title }}</title>
-    <meta content="{{ title }}" property="og:title">
-    <meta content="{{ title }}" property="twitter:title">
-    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <!-- Social share meta -->
+    {% campaign_include 'meta-social.html' %}
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
+    <!-- Resource hints: SDK CDN + campaign API -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="dns-prefetch" href="//campaigns.apps.29next.com">
     <link rel="dns-prefetch" href="//cdn-countries.muddy-wind-c7ca.workers.dev">
-    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
 
     <!-- Campaign Configuration -->
     <script src="{{ 'config.js' | campaign_asset }}"></script>
@@ -68,8 +69,6 @@
 
     <link href="{{ 'images/favicon.png' | campaign_asset }}" rel="shortcut icon" type="image/x-icon">
     <link href="{{ 'images/webclip.png' | campaign_asset }}" rel="apple-touch-icon">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   </head>
   <body>
     {% unless environment == "development" %}

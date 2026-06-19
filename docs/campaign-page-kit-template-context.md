@@ -156,8 +156,10 @@ Registers every campaign. The `campaign` object in Liquid templates comes from h
     "store_contact": "https://acme.com/contact",
     "store_returns": "https://acme.com/returns",
     "store_shipping": "https://acme.com/shipping",
+    "description": "One-line funnel description — also the default social share description",
     "gtm_id": "",
-    "fb_pixel_id": ""
+    "fb_pixel_id": "",
+    "og_image": ""
   }
 }
 ```
@@ -187,6 +189,18 @@ These starter templates inject **Google Tag Manager** and **Meta Pixel** from ea
 The layout snippet and SDK provider work together: layout injection initialises GTM/Pixel, the SDK provider forwards ecommerce events into it. Enable both — set `gtm_id` / `fb_pixel_id` in `campaigns.json` **and** enable the matching provider in `config.js`.
 
 **Meta Pixel — the layout bootstraps, the SDK tracks.** The GTM + Meta Pixel blocks live in every shared layout that loads `config.js` — `base.html` (checkout/upsell/receipt) and `base-landing.html` / `base-presell.html` (landing/presell). The Meta Pixel block only loads `fbevents.js`, calls `fbq('init', …)`, and keeps the `<noscript>` `PageView` fallback. It does **not** call `fbq('track', 'PageView')` — when `analytics.providers.facebook.enabled` is `true`, the SDK's Facebook adapter sends `PageView` (and `AddToCart`, `Purchase`, etc.) on init via `dl_user_data`. Adding a manual `fbq('track', 'PageView')` to the layout double-fires the PageView, because the adapter does not dedupe it. If a campaign disables the SDK Facebook provider and relies on template-only tracking, add the manual `fbq('track', 'PageView')` back to that layout.
+
+### Social share meta (`og_image`) and resource hints
+
+Open Graph + Twitter Card tags live in one per-template partial, `_includes/meta-social.html`, included by all three shared layouts (`base.html`, `base-presell.html`, `base-landing.html`) via `{% campaign_include 'meta-social.html' %}` — edit the partial once and every page stays in sync. Unlike the analytics blocks, social tags render in **all** environments (not gated on `environment`).
+
+- **Title** — `og:title` / `twitter:title` use the page `title`.
+- **Description** — falls back: page frontmatter `og_description` → `campaign.description`. Omitted if both are empty.
+- **Image** — falls back: page frontmatter `og_image` → `campaign.og_image`. **Default `""` omits the image tags** (same empty-string convention as `gtm_id`/`fb_pixel_id`); set a full absolute URL to a ~1200×630 image to enable rich link previews. `twitter:card` is `summary_large_image`.
+
+Per-page override example (frontmatter): `og_description: "Sleep better in 7 nights"` and `og_image: "https://acme.com/share/sleep.jpg"`.
+
+**Resource hints.** The same three layouts carry a uniform hint block: `preconnect` to `cdn.jsdelivr.net` (the SDK loader — and Swiper on landing — load immediately) plus `dns-prefetch` for `campaigns.apps.29next.com` and the country-list worker (the SDK calls these at runtime). These warm the connections the Campaign Cart stack needs on every page type, including landing/presell.
 
 ---
 
@@ -285,6 +299,7 @@ Includes a file from the campaign's `_includes/` directory.
 | `{{ campaign.store_shipping }}` | campaigns.json |
 | `{{ campaign.gtm_id }}` | campaigns.json (optional) |
 | `{{ campaign.fb_pixel_id }}` | campaigns.json (optional) |
+| `{{ campaign.og_image }}` | campaigns.json (optional; social share image URL) |
 | `{{ environment }}` | kit: `development` / `production` (override with `CPK_ENV`) |
 | `{{ title }}` | page frontmatter |
 | `{{ page_type }}` | page frontmatter |
