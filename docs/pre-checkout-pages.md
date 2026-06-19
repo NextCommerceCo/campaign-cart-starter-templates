@@ -88,11 +88,13 @@ Landing and presell layouts load Tailwind via **CDN** — fine for development a
 
 The `olympus` layouts (`base-landing.html`, `base-presell.html`) are fully wired for production out of the box — no extra steps needed when you copy the `olympus` slug.
 
-Presell and landing pages **must** load the SDK wiring to participate in session tracking and analytics. All three are active in the `olympus` layouts by default:
+Presell and landing pages **must** load the SDK wiring to participate in session tracking and analytics. These are active in the `olympus` layouts by default:
 
 - **`config.js`** — must load before the SDK. Contains `apiKey`, `storeName`, and `analytics` providers. Shared with checkout — no duplication needed.
 - **SDK meta tags** — required by the SDK loader for session and analytics context. Layouts render page-level `meta_tags` when present, otherwise they fall back to `next-funnel` / `next-page-type`.
 - **SDK loader script** — loads the Campaign Cart runtime at the same pinned version as your checkout pages (`campaign.sdk_version` from `campaigns.json`)
+- **Social share meta** — `{% campaign_include 'meta-social.html' %}` renders Open Graph + Twitter Card tags (shared with `base.html` so all layouts stay in sync). Set `campaign.og_image` (or per-page `og_image`) for rich link previews — landing/presell are the pages most likely to be shared. See [Social share meta and resource hints](./campaign-page-kit-template-context.md#social-share-meta-og_image-and-resource-hints).
+- **Resource hints** — `preconnect` to the SDK CDN (`cdn.jsdelivr.net`) plus `dns-prefetch` for the campaign API and countries worker, so these pages warm the same connections as checkout.
 
 **Analytics alignment checklist:**
 
