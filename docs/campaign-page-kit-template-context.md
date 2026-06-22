@@ -176,7 +176,7 @@ The top-level key is the campaign slug. Add any additional key to a campaign ent
 
 ### Optional GTM and Meta Pixel (`gtm_id`, `fb_pixel_id`)
 
-These starter templates inject **Google Tag Manager** and **Meta Pixel** from each campaign’s `_layouts/base.html` when:
+These starter templates inject **Google Tag Manager** and **Meta Pixel** from two shared per-template partials — `_includes/analytics-head.html` (head loaders) and `_includes/analytics-body.html` (`<noscript>` fallbacks) — pulled into all three base layouts (`base.html`, `base-presell.html`, `base-landing.html`) via `{% campaign_include %}`, the same DRY pattern as `meta-social.html` (so the layouts never drift; edit the partial once, not every layout). The snippets render when:
 
 - `environment` is not `development`, and  
 - `gtm_id` and/or `fb_pixel_id` are **non-empty strings** in `_data/campaigns.json` (checked with `{% if campaign.gtm_id != "" %}` / `{% if campaign.fb_pixel_id != "" %}`).
@@ -188,7 +188,7 @@ These starter templates inject **Google Tag Manager** and **Meta Pixel** from ea
 
 The layout snippet and SDK provider work together: layout injection initialises GTM/Pixel, the SDK provider forwards ecommerce events into it. Enable both — set `gtm_id` / `fb_pixel_id` in `campaigns.json` **and** enable the matching provider in `config.js`.
 
-**Meta Pixel — the layout bootstraps, the SDK tracks.** The GTM + Meta Pixel blocks live in every shared layout that loads `config.js` — `base.html` (checkout/upsell/receipt) and `base-landing.html` / `base-presell.html` (landing/presell). The Meta Pixel block only loads `fbevents.js`, calls `fbq('init', …)`, and keeps the `<noscript>` `PageView` fallback. It does **not** call `fbq('track', 'PageView')` — when `analytics.providers.facebook.enabled` is `true`, the SDK's Facebook adapter sends `PageView` (and `AddToCart`, `Purchase`, etc.) on init via `dl_user_data`. Adding a manual `fbq('track', 'PageView')` to the layout double-fires the PageView, because the adapter does not dedupe it. If a campaign disables the SDK Facebook provider and relies on template-only tracking, add the manual `fbq('track', 'PageView')` back to that layout.
+**Meta Pixel — the layout bootstraps, the SDK tracks.** The GTM + Meta Pixel blocks (in `_includes/analytics-head.html` / `analytics-body.html`) are loaded by every layout that loads `config.js` — `base.html` (checkout/upsell/receipt) and `base-landing.html` / `base-presell.html` (landing/presell). The Meta Pixel block only loads `fbevents.js`, calls `fbq('init', …)`, and keeps the `<noscript>` `PageView` fallback. It does **not** call `fbq('track', 'PageView')` — when `analytics.providers.facebook.enabled` is `true`, the SDK's Facebook adapter sends `PageView` (and `AddToCart`, `Purchase`, etc.) on init via `dl_user_data`. Adding a manual `fbq('track', 'PageView')` to the layout double-fires the PageView, because the adapter does not dedupe it. If a campaign disables the SDK Facebook provider and relies on template-only tracking, add the manual `fbq('track', 'PageView')` back to that layout.
 
 ### Social share meta (`og_image`) and resource hints
 
@@ -320,7 +320,8 @@ It always:
 - Loads `next-core.css` directly (not via frontmatter)
 - Injects per-page `styles` and `scripts` from frontmatter
 - Renders per-page `meta_tags` verbatim when present; otherwise falls back to legacy `page_type`, `next_url`, and `decline_url` frontmatter
-- In these starter templates: may inject GTM / Meta Pixel from `campaign.gtm_id` / `campaign.fb_pixel_id` when not in `development` (see above)
+- In these starter templates: includes the shared `_includes/analytics-head.html` / `analytics-body.html` partials, which inject GTM / Meta Pixel from `campaign.gtm_id` / `campaign.fb_pixel_id` when not in `development` (see above)
+- Includes the shared `_includes/meta-social.html` partial for Open Graph / Twitter Card tags
 
 When CampaignSpec supplies `sdk_hints.meta_tags`, copy that object into page frontmatter as `meta_tags`. These values are runtime-rooted and are not passed through `campaign_link`:
 
