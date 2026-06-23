@@ -22,7 +22,7 @@
                         unit_total = unitPrice/ea + line total (scales with synced qty).
                         Pick the mode here — campaign CSS must never display:none price rows.
     show_compare_price:   bool, LEGACY. Explicitly include the struck originalUnitPrice in Option A.
-    show_per_unit_price:  bool, LEGACY. Render Option A row (unitPrice/ea, plus originalUnitPrice/ea only when show_compare_price=true or SDK hasDiscount).
+    show_per_unit_price:  bool, LEGACY. Render Option A row (unitPrice/ea, plus originalUnitPrice/ea only when show_compare_price=true).
     show_line_total_price:bool, LEGACY. Render Option B row (originalPrice + price). Only honored when
                         pricing_mode is not set and at least one legacy bool is passed explicitly.
   next_sdk_owns:
@@ -61,7 +61,7 @@
 <!-- Prepurchase upsell: checkbox bump (check01) — SDK 0.4.x
      Pricing rows are pricing_mode-driven (default full_price = one visible unitPrice/ea row).
      Legacy show_per_unit_price / show_line_total_price still work when passed explicitly without pricing_mode:
-     Option A (per-unit, stable): unitPrice/ea, with originalUnitPrice/ea only when show_compare_price=true or SDK hasDiscount
+     Option A (per-unit, stable): unitPrice/ea, with originalUnitPrice/ea only when show_compare_price=true
      Option B (line total, scales): originalPrice + price — multiplies with data-next-package-sync qty -->
 <div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="check01" data-next-await="">
   <div data-next-package-toggle>
@@ -84,7 +84,7 @@
               {% if show_per_unit_price %}
               <!-- Legacy Option A: per-unit pricing — stable across tier changes (SDK 0.4.14+) -->
               <div class="bump__price-row">
-                {% if show_compare_price %}<div class="bump__price-unit"><span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span></div>{% else %}<div data-next-bundle-display="hasDiscount" class="bump__price-unit"><span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span></div>{% endif %}
+                {% if show_compare_price %}<div class="bump__price-unit"><span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span></div>{% endif %}
                 <div class="bump__price-unit"><span data-next-toggle-display="unitPrice" class="bump__price-sale">--</span><span class="text-xl">/ea</span></div>
               </div>
               {% endif %}
