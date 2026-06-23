@@ -636,6 +636,11 @@ Key token semantics (0.4.11+): `{item.price}` / `{item.originalPrice}` = **line 
 </div>
 ```
 
+Starter `bump-check01.html` partials expose three pricing args:
+- `show_per_unit_price` defaults to `true` and renders the stable `unitPrice`/ea row.
+- `show_line_total_price` defaults to `false` and opts into the line-total `originalPrice + price` row.
+- `show_compare_price` defaults to `false`; set it to `true` only when the campaign deliberately wants a struck `originalUnitPrice` visible even before the SDK reports `hasDiscount`. The starter demos intentionally do not pass it, so non-discounted bump previews show a single sale price.
+
 CSS required for checkbox state (already in `next-core.css` — only add if using a custom stylesheet):
 ```css
 [data-next-bump] [os-component="check"] { display: none; }

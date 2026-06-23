@@ -192,6 +192,7 @@ Demeter pricing surfaces render price rows from a `pricing_mode` partial argumen
 - Surfaces + partial defaults (per contract): upsell offers (`upsell-bundle-stepper-offer.html`, `upsell-bundle-tier-pills-offer.html`, `upsell-bundle-tier-cards-offer.html`) default **full_price** — exactly one visible price row adjacent to the accept control; `bump-check01.html` defaults **full_price** (one `unitPrice`/ea row); `editorial-tier-selector.html` defaults **discounted** (current compare-unit-total render), with per-card override via `bundles[].pricing_mode`.
 - Pass the mode as an include arg (`pricing_mode='discounted'`) or via `upsell_offer.pricing_mode` / `order_bump.check01.pricing_mode` frontmatter; include arg wins. Visible-row counts on upsells: full_price/unit_only = 1, discounted/compare_at/unit_total = 2.
 - Demo pages opt into `discounted` explicitly to keep the showcase visuals; legacy `show_per_unit_price`/`show_line_total_price` (bump) and `price_display_variant` (tier selector) still work when passed explicitly without `pricing_mode`.
+- `bump-check01.html` also accepts legacy `show_compare_price=false` by default. Leave demo pages unset so non-discounted bump previews show one sale price; pass `show_compare_price=true` only when the campaign intentionally wants the struck `originalUnitPrice` before SDK `hasDiscount` is true.
 
 Inside `<template>` elements the SDK uses single-brace tokens (not Liquid):
 ```html

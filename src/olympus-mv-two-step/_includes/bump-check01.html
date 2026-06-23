@@ -1,3 +1,10 @@
+{% comment %}
+  next_component: order-bump-card
+  next_params:
+    show_compare_price: bool, default false. Explicitly render struck originalUnitPrice in Option A; otherwise SDK hasDiscount gates it.
+    show_per_unit_price: bool, default true. Render Option A row (unitPrice/ea).
+    show_line_total_price: bool, default false. Render Option B row (originalPrice + price).
+{% endcomment %}
 {% if show_per_unit_price == nil %}{% assign show_per_unit_price = true %}{% endif -%}
 {% if show_compare_price == nil %}{% assign show_compare_price = false %}{% endif -%}
 {% if show_line_total_price == nil %}{% assign show_line_total_price = false %}{% endif -%}
@@ -7,7 +14,7 @@
 <!-- Prepurchase upsell: checkbox bump (check01) — SDK 0.4.x
      Uses data-next-package-toggle / data-next-toggle-card / data-next-toggle-display
      Pick ONE pricing row — rendering both confuses the customer.
-     Option A (per-unit, stable, DEFAULT): unitPrice/ea, with originalUnitPrice/ea only when show_compare_price=true — does not scale with synced qty
+     Option A (per-unit, stable, DEFAULT): unitPrice/ea, with originalUnitPrice/ea only when show_compare_price=true or SDK hasDiscount — does not scale with synced qty
      Option B (line total, scales, opt-in): originalPrice + price — multiplies with data-next-package-sync qty
        To switch: pass show_per_unit_price=false show_line_total_price=true to {% campaign_include %} -->
 <div data-component="prepurchase-upsell" data-variant="check01" data-next-await="">
@@ -38,7 +45,7 @@
               {% if show_per_unit_price %}
               <!-- Option A: per-unit pricing — stable across tier changes (SDK 0.4.14+) -->
               <div class="bump__price-row">
-                {% if show_compare_price %}<div class="bump__price-unit"><span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span></div>{% endif %}
+                {% if show_compare_price %}<div class="bump__price-unit"><span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span></div>{% else %}<div data-next-bundle-display="hasDiscount" class="bump__price-unit"><span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span></div>{% endif %}
                 <div class="bump__price-unit"><span data-next-toggle-display="unitPrice" class="bump__price-sale">--</span><span class="text-xl">/ea</span></div>
               </div>
               {% endif %}
