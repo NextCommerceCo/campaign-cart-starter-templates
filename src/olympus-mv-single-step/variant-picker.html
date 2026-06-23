@@ -1,0 +1,69 @@
+---
+title: "Olympus MV Single — Variant Picker (reference)"
+page_type: checkout
+styles:
+  - css/variant-picker.css
+scripts:
+  - js/variant-picker-fixture.js
+  - js/variant-picker.js
+variant_picker:
+  selector_id: "vp-main"
+  selector_heading: "Select Bundle Discount"
+  slot_heading: "Select your color"
+  variant_label: "Color:"
+  card_sup: "Next Commerce Shirts"
+  tiers:
+    - id: "buy1"
+      quantity: 1
+      title: "1x Unit"
+      selected: true
+    - id: "buy2"
+      quantity: 2
+      title: "2x Units"
+      label_text: "Most Popular"
+      label_class: "os-card__label-2 os-card__label--middle-center os-card__label--pill-primary"
+    - id: "buy3"
+      quantity: 3
+      title: "3x Units"
+      label_text: "Best Deal"
+      label_class: "os-card__label-2 os-card__label--middle-center os-card__label--pill-secondary"
+  # ONE declared variant source — feeds the template swatches AND the JS image/package map.
+  # Replace value/package_id/image with the target CampaignSpec per-variant package images.
+  variants:
+    - value: "black"
+      label: "Black"
+      package_id: 1
+      image: "images/1x1_1.svg"
+    - value: "white"
+      label: "White"
+      package_id: 2
+      image: "images/1x1_2.svg"
+---
+<!--
+  REFERENCE / QA PAGE — demonstrates the B1-remediated MV variant-picker in isolation.
+  - window.NEXT_VP_FIXTURE = true enables variant-picker-fixture.js so the picker renders
+    fully OFFLINE (mock SDK package data) for visual QA — no live API required.
+  - In a live campaign you would include 'variant-picker.html' inside checkout.html instead,
+    omit the fixture script, and let the real SDK drive prices + images.
+  - Image precedence: live API getPackageImage() > declared variants[].image (template swatch).
+-->
+<script>window.NEXT_VP_FIXTURE = true;</script>
+<div class="page-wrapper">
+  <div class="main-wrapper">
+    {% campaign_include 'checkout-header.html' %}
+    <section class="section-checkout cc-gray">
+      <div class="container cc-medium">
+        <div class="vp-reference-note text-sm" style="margin:1rem 0;padding:0.75rem 1rem;border:1px dashed #c9c9c9;border-radius:6px;background:#fafafa;">
+          <strong>Reference component.</strong> Quantity tier cards + per-unit variant dropdowns.
+          Swatches and the JS image map are driven from one declared <code>variants</code> source
+          (no placeholders); slots render offline via the fixture. See
+          <code>_includes/variant-picker.html</code>.
+        </div>
+        <div class="checkout-form-wrapper">
+          {% campaign_include 'variant-picker.html' %}
+        </div>
+      </div>
+    </section>
+    {% campaign_include 'footer.html' %}
+  </div>
+</div>
