@@ -602,6 +602,38 @@ Live summary panel — updates on tier change, coupon apply, and bump toggle. Us
 
 Key token semantics (0.4.11+): `{item.price}` / `{item.originalPrice}` = **line totals** (qty × price); `{item.unitPrice}` / `{item.originalUnitPrice}` = **per-unit**. `{item.hasDiscount}` returns `"show"` or `"hide"` as a CSS class value. Cross-check any additional `{item.*}` / `{line.*}` names against the SDK version you pin in `campaigns.json` — the [official docs](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) track supported summary tokens.
 
+### Line-item properties — personalization (SDK 0.4.26+)
+
+Let a customer attach custom text to a product (monogram, name-on-jersey, gift message). Two units of the **same product with different text stay as separate cart lines and separate order lines** — they don't merge into one line with a higher quantity. Properties flow through the whole order lifecycle automatically (`/calculate`, create-cart, create-order, express checkout); no config needed.
+
+```html
+<!-- Per-slot: bind an input INSIDE a bundle slot. Each slot's value rides on that slot's line item.
+     This is the half that produces UNIQUE line items — needs a multi-slot bundle. -->
+<input data-next-property-key="back_text" placeholder="Back text" />
+
+<!-- Order-wide default: an input OUTSIDE the bundle. Applies one value to every line item.
+     A per-slot data-next-property-key value overrides the default for that slot. -->
+<input data-next-default-property-key="gift_message" placeholder="Gift message" />
+```
+
+Render the captured values back to the customer inside the cart-summary line `<template>` — one row per property, no hardcoding:
+
+```html
+<div data-next-item-properties>
+  <template>
+    <div class="cart-item__property"><span>{property.key}</span>: <span>{property.value}</span></div>
+  </template>
+</div>
+```
+
+The container gets `next-summary-empty` when the item has no properties and `next-summary-has-items` otherwise — use those for CSS show/hide. Values are captured on `input` and the cart syncs on `blur`, so the total updates live as the customer types.
+
+**Rules:** opt-in and additive — pages without these attributes behave exactly as before. Property keys become line-item attribute names sent to the order API — keep them stable and snake_case.
+
+**Per-line *distinct* values need a variant-configurable (MV) selector — there is no shortcut.** `data-next-property-key` is read **only inside bundle slots**, so it does nothing on a plain page or inside a tier-*swap* selector (which has no slots — use `data-next-default-property-key` there for one shared value). The slot system splits an item into per-unit slots only when its bundle item is `configurable: true` **and** `quantity > 1`, and each configurable slot then **blocks checkout until its variant is selected**. A plain product with no variants never satisfies that gate, so do **not** mark a non-variant product `configurable` just to get personalization slots — it will brick the checkout. Use a genuinely variant-configurable product (the MV pattern), or fall back to `data-next-default-property-key` for an order-wide value.
+
+**Not supported on post-purchase upsells (as of 0.4.26).** The one-click upsell accept (`POST /orders/{ref}/upsells/`) sends only `package_id` + `quantity` — a `data-next-property-key` placed on an upsell offer is silently ignored. Properties attach at checkout / order creation only (plus `/calculate`, create-cart, express checkout, test orders). Capture any personalization on the checkout page, not on upsell offers.
+
 ### Order bump
 
 ```html
