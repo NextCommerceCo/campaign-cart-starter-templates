@@ -361,7 +361,7 @@
     });
   }
 
-  // First paint — offline-safe, does not wait for the SDK.
+  // First paint — offline-safe, does not wait for the SDK. Idempotent (booted guard).
   function boot() {
     if (booted) return;
     booted = true;
@@ -375,7 +375,17 @@
     cachePrices();
     renderSlots();
     updateBundleAttrs();
-    if (window.next) applyCart().then(updateAllSlotPrices);
+    if (window.next) applyCart();
+  }
+
+  // Layer live (or fixture) SDK data onto the already-painted slots. applyCart()
+  // refreshes prices + images internally once the cart resolves, so there is no
+  // trailing updateAllSlotPrices() to re-run the same loop.
+  function layerInitData() {
+    cachePrices();
+    updateAllSlotPrices();
+    updateAllSlotImages();
+    if (window.next) applyCart();
   }
 
   if (document.readyState === 'loading') {
@@ -384,12 +394,12 @@
     boot();
   }
 
-  // Live (or fixture) data layered on once the SDK initialises.
+  // next:initialized can fire before OR after boot(): boot() first guarantees the
+  // slots exist (no-op once painted), then layerInitData() applies the live data
+  // regardless of ordering. The listener is attached at IIFE-eval (before
+  // DOMContentLoaded), so a fixture/SDK dispatch on DOMContentLoaded is not missed.
   window.addEventListener('next:initialized', function () {
     boot();
-    cachePrices();
-    updateAllSlotPrices();
-    updateAllSlotImages();
-    applyCart().then(updateAllSlotPrices);
+    layerInitData();
   });
 })();

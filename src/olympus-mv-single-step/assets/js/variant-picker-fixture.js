@@ -73,7 +73,17 @@
       getCartData: function () { return { cartLines: cartLines, items: cartLines }; },
       swapCart: function (items) { rebuildCart(items); return Promise.resolve(); },
       clearCart: function () { cartLines = []; return Promise.resolve(); },
-      addItem: function (item) { rebuildCart(cartLines.concat([item])); return Promise.resolve(); }
+      // Merge by packageId so the fixture cart mirrors the real SDK shape (one
+      // line per package). variant-picker.js uses swapCart by default; addItem is
+      // the no-swapCart fallback path.
+      addItem: function (item) {
+        var merged = cartLines.map(function (l) { return { packageId: l.packageId, quantity: l.quantity }; });
+        var existing = merged.filter(function (l) { return l.packageId === item.packageId; })[0];
+        if (existing) { existing.quantity += item.quantity; }
+        else { merged.push({ packageId: item.packageId, quantity: item.quantity }); }
+        rebuildCart(merged);
+        return Promise.resolve();
+      }
     };
 
     // Seed package.<id>.price reference spans the SDK would normally fill.

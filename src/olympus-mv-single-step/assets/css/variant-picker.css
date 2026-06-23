@@ -43,7 +43,9 @@
   z-index: 1;
   flex: 1 1 auto;
   min-width: 0;
-  width: auto;
+  /* width: 100% keeps the dropdown full-width even outside a flex .cc-row parent
+     (standalone render); inside .cc-row, flex-grow still fills the row. */
+  width: 100%;
 }
 
 #vp-slot-stage .os-variant-dropdown[open],
