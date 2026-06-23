@@ -269,6 +269,8 @@ Generates a clean URL for inter-page navigation. Strips `.html`, adds trailing s
 <meta name="next-success-url" content="{{ next_url | campaign_link }}">
 ```
 
+> **In-page anchors are plain hrefs — never `campaign_link`.** For a same-page jump use `href="#features"`, not `{{ '#features' | campaign_link }}`. The filter is anchor-safe (it returns a `#`-prefixed input unchanged), so the wrapped form still *works* — but it's redundant and reads as an inter-page link, which is confusing. When you add an anchor link, confirm the target section carries the matching `id` (`id="features"`): an `href="#x"` with no `id="x"` anywhere on the page silently does nothing — no build error, no runtime error.
+
 ### `campaign_include`
 Includes a file from the campaign's `_includes/` directory.
 
@@ -942,6 +944,7 @@ Use these when implementing or verifying a specific task. Work through each item
 - [ ] The final upsell's accept and decline both point to `receipt.html`
 - [ ] All local asset paths use `campaign_asset`, not hardcoded relative paths
 - [ ] All inter-page links use `campaign_link`, not hardcoded paths
+- [ ] In-page anchor links are plain `href="#id"` (no `campaign_link`), and every `#id` target has a matching element with that `id`
 
 ### Adding an order bump
 
@@ -1116,7 +1119,7 @@ If `window.nextDebug` is undefined, debug mode is not enabled — add the meta t
 ## Rules
 
 1. **Use `campaign_asset` for all local asset paths.** Never write hardcoded relative paths like `../../css/checkout.css`.
-2. **Use `campaign_link` for all inter-page URLs.** Never hardcode `/slug/page/` paths.
+2. **Use `campaign_link` for all inter-page URLs.** Never hardcode `/slug/page/` paths. **In-page anchors are the exception** — use a plain `href="#section"` (the filter passes `#`-anchors through unchanged, so wrapping one is redundant and misleading), and make sure the target element carries the matching `id`.
 3. **Only use documented `data-next-*` attributes.** Do not invent attribute names.
 4. **Do not write JavaScript that duplicates SDK behaviour.** The SDK handles cart state, field binding, form submission, upsell accept/decline, and dynamic display. Write JS only for UI behaviour the SDK doesn't cover (e.g. Swiper sliders, modals, custom animations).
 5. **page_type must match the page's role.** `product` for presell/landing pages, `checkout` for payment collection, `upsell` for post-purchase offers, `receipt` for order confirmation. The SDK behaves differently on each, and `campaign-build` warns (`INVALID_PAGE_TYPE`) on any other value.
