@@ -636,10 +636,14 @@ Key token semantics (0.4.11+): `{item.price}` / `{item.originalPrice}` = **line 
 </div>
 ```
 
+#### Order-bump pricing args
+
 Starter `bump-check01.html` partials expose three pricing args:
 - `show_per_unit_price` defaults to `true` and renders the stable `unitPrice`/ea row.
 - `show_line_total_price` defaults to `false` and opts into the line-total `originalPrice + price` row.
 - `show_compare_price` defaults to `false`; set it to `true` only when the campaign deliberately wants a struck `originalUnitPrice` visible. The starter demos intentionally do not pass it, so bump previews show a single sale price.
+
+Migration note for existing cloned campaigns: starter bumps now default to a single visible sale price row. Pass `show_compare_price=true` to restore the struck `originalUnitPrice` row for bumps that should visibly compare against a prior price.
 
 CSS required for checkbox state (already in `next-core.css` — only add if using a custom stylesheet):
 ```css
