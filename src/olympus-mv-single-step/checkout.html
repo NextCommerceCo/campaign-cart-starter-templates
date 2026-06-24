@@ -252,6 +252,10 @@ swiper_thumbs:
                     <promo-timer{% if promo_sale %} force-sale="{{ promo_sale }}"{% endif %}></promo-timer>
                     <div class="checkout-form">
                       <div class="checkout-selectors" data-next-await="">
+                        <!-- Alternative MV selector: variant-picker.html — custom-JS slot rendering with
+                             per-variant swatch thumbnails + an offline render fixture. Drop-in (supports
+                             per-tier shipping via variant_picker.tiers[].shipping_method). See
+                             _includes/variant-picker.html and the standalone /variant-picker/ reference page. -->
                         {% campaign_include 'mv-configurable-selector.html' packages=packages shipping_methods=shipping_methods variant_slots=variant_slots slot_personalization=slot_personalization %}
                         <div class="form-section form-section--first">
                           <div class="_2step__size-guide">

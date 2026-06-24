@@ -58,6 +58,8 @@ Each checkout template includes presell + landing pages, all upsell variants, an
 | `shop-single-step` | Shop-style single-step | [preview](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/checkout/?forcePackageId=1:1) |
 | `shop-three-step` | Shop-style three-step (info → shipping → billing) | [preview](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/information/?forcePackageId=1:1) |
 
+> **MV variant-picker (alternative selector).** `olympus-mv-single-step` and `olympus-mv-two-step` also ship a reference **variant-picker** — quantity tier cards + per-unit variant (colorway) dropdowns with custom per-variant swatch thumbnails and an offline render fixture, an additive alternative to the default `mv-configurable-selector`. Preview: [single-step](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/variant-picker/) · [two-step](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/variant-picker/).
+
 **Upsells**
 
 | Variant | Description | Preview |
@@ -82,6 +84,10 @@ Every checkout template includes `presell.html` and `landing.html` — a full pr
 | `[any slug]` · presell | Advertorial "10 reasons" article | [olympus example](https://nextcommerce-campaign-templates.netlify.app/olympus/presell/) |
 | `[any slug]` · landing | Composable landing page | [olympus example](https://nextcommerce-campaign-templates.netlify.app/olympus/landing/) |
 | `landing` | Full section showcase (every component) | [preview](https://nextcommerce-campaign-templates.netlify.app/landing/index/) |
+
+## Migration notes
+
+Starter `bump-check01.html` order bumps now default to a single visible sale price row. Existing cloned campaigns that want the struck `originalUnitPrice` row should pass `show_compare_price=true`; leave it unset when the bump should render only the current `unitPrice`/ea price.
 
 ## npm scripts
 

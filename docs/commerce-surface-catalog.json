@@ -943,6 +943,7 @@
         "swiper_thumbs",
         "variant_slots",
         "slot_personalization",
+        "variant_picker",
         "upsell_offer",
         "upsell_mv_tiers",
         "upsell_bundle_tiers"
@@ -1028,6 +1029,21 @@
             ]
           },
           {
+            "name": "MV variant-picker (alternative selector)",
+            "partials": [
+              "variant-picker.html"
+            ],
+            "ownedInputs": [
+              "variant_picker",
+              "shipping_methods"
+            ],
+            "sdkRoots": [
+              "data-next-bundle-selector",
+              "data-next-bundle-slots-for"
+            ],
+            "note": "Additive alternative to mv-configurable-selector: custom-JS slot rendering (variant-picker.js) with per-variant swatch thumbnails driven from one declared variant_picker.variants source, plus an offline render fixture. Supports per-tier data-next-shipping-id via variant_picker.tiers[].shipping_method/shipping_id. Demoed on the standalone variant-picker.html page; not wired into checkout.html by default."
+          },
+          {
             "name": "MV payment and summary",
             "partials": [
               "payment-methods.html",
@@ -1105,6 +1121,7 @@
         "selector_id",
         "variant_slots",
         "slot_personalization",
+        "variant_picker",
         "upsell_offer",
         "upsell_mv_tiers",
         "upsell_bundle_tiers"
@@ -1204,6 +1221,21 @@
               "data-next-bundle-slots-for",
               "data-next-bundle-slot-template-id"
             ]
+          },
+          {
+            "name": "MV variant-picker (alternative selector)",
+            "partials": [
+              "variant-picker.html"
+            ],
+            "ownedInputs": [
+              "variant_picker",
+              "shipping_methods"
+            ],
+            "sdkRoots": [
+              "data-next-bundle-selector",
+              "data-next-bundle-slots-for"
+            ],
+            "note": "Additive alternative to mv-selection-step + mv-slot-stage: custom-JS slot rendering (variant-picker.js) with per-variant swatch thumbnails driven from one declared variant_picker.variants source, plus an offline render fixture. Supports per-tier data-next-shipping-id via variant_picker.tiers[].shipping_method/shipping_id. Demoed on the standalone variant-picker.html page; not wired into select.html by default."
           },
           {
             "name": "MV payment and summary",

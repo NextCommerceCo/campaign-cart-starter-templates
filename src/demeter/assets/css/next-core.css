@@ -6964,6 +6964,28 @@ figcaption {
   flex: 1;
 }
 
+/* Variant-group ROW layout hook (B1 — documented, not per-campaign rediscovery).
+   .os-card__variant-group defaults to flex-flow: column (label stacked above the
+   control). Add .cc-row for an inline "Label: [dropdown]" row — e.g. the
+   variant-picker slot dropdowns. Without this the label stacks above the dropdown
+   (the "Lens:" label bug from the Shield build). */
+.os-card__variant-group.cc-row {
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.os-card__variant-group.cc-row > .os-card__variant-label {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.os-card__variant-group.cc-row > os-dropdown,
+.os-card__variant-group.cc-row > .os-variant-dropdown {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 .os-card__variant-label {
   font-size: .938rem;
   font-weight: 700;

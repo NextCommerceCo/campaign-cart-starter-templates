@@ -1,0 +1,217 @@
+{% comment %}
+  next_component: variant-picker
+  next_version: 1.0.0
+  next_sdk_min: 0.4.18
+  next_purpose: >
+    Reference MV bundle picker — quantity tier cards + per-slot variant (colorway) dropdowns,
+    rendered by variant-picker.js into the SDK data-next-bundle-slots-for stage. Standalone
+    alternative to mv-configurable-selector (which uses SDK-injected native <select>s). Use this
+    when a campaign needs custom per-variant swatch thumbnails and an offline-renderable picker.
+
+  B1 REMEDIATION (Shield build retro). This component fixes the three things that made the
+  hand-built Shield variant-picker the highest-cost area:
+    1. NO placeholder swatches. Every dropdown swatch `src` AND the JS variant->image map are
+       driven from ONE declared source: the `variant_picker.variants` frontmatter list below
+       (emitted once into #vp-config). There is no second, hand-maintained map to drift out of
+       sync. Replace the demo image paths with the CampaignSpec per-variant package images.
+    2. Renders OFFLINE. variant-picker.js paints slots on DOMContentLoaded from these declared
+       images/prices — it does NOT wait for the live SDK — so the picker is never blank in a
+       no-network QA env. variant-picker-fixture.js can stub the SDK for fuller offline QA.
+    3. Layout hook is documented, not rediscovered. The "Label: [dropdown]" row uses
+       .os-card__variant-group.cc-row (next-core), which overrides next-core's default
+       flex-flow: column so the label does not stack above the control.
+
+  IMAGE PRECEDENCE (documented): live API `getPackageImage(packageId)` > template swatch
+  (the declared `variants[].image`). variant-picker.js prefers the API image when the SDK has a
+  package/cart-line image, and falls back to the declared swatch otherwise. The declared swatch
+  is therefore the offline/no-API source of truth, not a throwaway placeholder.
+
+  RELATIONSHIP TO mv-configurable-selector (kept as TWO partials on purpose):
+    Both share the tier-card skeleton but use different slot-rendering strategies —
+    mv-configurable-selector is SDK-template-driven (data-next-bundle-slot-template-id +
+    data-next-variant-selectors); variant-picker is custom-JS-driven (variant-picker.js paints the
+    stage and rebuilds data-next-bundle-items). They carry different data-next-catalog-component
+    identities and different input contracts, so they are deliberately NOT merged into one
+    mode-switched partial. Per-tier shipping (data-next-shipping-id) IS supported here too via
+    tiers[].shipping_method / shipping_id (mirrors mv-configurable-selector), so this is a full
+    drop-in alternative selector, not only a variant-selection demo.
+
+  next_params:
+    variant_picker: object.
+      selector_id:      string, fallback "vp-main". data-next-selector-id + slots-for target + bundle.<id>.* path.
+      selector_heading: string. Heading above the quantity tier cards.
+      slot_heading:     string. Heading above the per-unit variant rows.
+      variant_label:    string, fallback "Color:". Inline label on each slot dropdown.
+      card_sup:         string. Small product line shown under each tier card title.
+      tiers:            array. { id, quantity, selected, label_text, label_class, card_sup,
+                        shipping_label, shipping_method, shipping_id }.
+                        Shipping: shipping_id (raw ref) takes PRECEDENCE over shipping_method (a key
+                        into shipping_methods) — set at most one. shipping_label is optional static
+                        text (e.g. "Free Shipping") rendered on the card; it is visual only and
+                        independent of the SDK data-next-shipping-id wiring.
+      variants:         array. { value, label, package_id, image } — the ONE declared source.
+    shipping_methods:   object, optional. Campaigns App shipping method ref_ids (e.g. standard/free);
+                        tiers[].shipping_method resolves through this into data-next-shipping-id per card.
+  next_sdk_owns:
+    - data-next-shipping-id (per-tier shipping method, when configured)
+    - data-next-bundle-selector / data-next-selector-id / data-next-selection-mode
+    - data-next-bundle-card / data-next-bundle-id / data-next-bundle-items / data-next-selected
+    - data-next-bundle-display / data-next-display (package.<id>.* and bundle.<selector_id>.*)
+    - data-next-bundle-slots-for
+  next_dont_touch:
+    - selector_id must match data-next-bundle-slots-for and the bundle.<selector_id>.* display path.
+    - variant-picker.js rebuilds data-next-bundle-items on every dropdown/qty change — do not hand-edit.
+{% endcomment %}
+{% assign vp = variant_picker -%}
+{% assign sel_id = vp.selector_id | default: 'vp-main' -%}
+{% assign selector_title = vp.selector_heading | default: 'Select Bundle Discount' -%}
+{% assign slot_title = vp.slot_heading | default: 'Select your color' -%}
+{% assign variant_label = vp.variant_label | default: 'Color:' -%}
+{% assign default_card_sup = vp.card_sup | default: 'Next Commerce Shirts' -%}
+{% assign tiers = vp.tiers -%}
+{% assign variants = vp.variants -%}
+{% assign default_variant = variants | first -%}
+
+<div data-next-catalog-component="variant-picker" data-vp-selector="{{ sel_id }}">
+
+  <!--
+    vp-config — the single declared variant source. variant-picker.js reads this for BOTH the
+    value->packageId map and the value->image (template swatch) map. No hand-maintained JS map.
+  -->
+  <script type="application/json" id="vp-config">
+  {
+    "selectorId": "{{ sel_id }}",
+    "defaultVariant": "{{ default_variant.value }}",
+    "packages": { {% for v in variants %}"{{ v.value }}": {{ v.package_id }}{% unless forloop.last %}, {% endunless %}{% endfor %} },
+    "images": { {% for v in variants %}"{{ v.value }}": "{{ v.image | campaign_asset }}"{% unless forloop.last %}, {% endunless %}{% endfor %} }
+  }
+  </script>
+
+  <!--
+    Per-variant price reference — SDK fills package.<id>.price; variant-picker.js reads it for slot
+    pricing. One hidden span per variant package. Offline these stay "—" and slot prices fall back.
+  -->
+  {% for v in variants %}
+  <span class="vp-price-ref" data-vp-price-for="{{ v.value }}"
+        data-next-display="package.{{ v.package_id }}.price" data-next-package-id="{{ v.package_id }}" hidden></span>
+  {% endfor %}
+
+  <!-- ── Quantity tier cards ─────────────────────────────────────────── -->
+  <div class="form-section form-section--first">
+    <h2 class="form-section__title">{{ selector_title }}</h2>
+    <div data-next-bundle-selector data-next-selector-id="{{ sel_id }}" data-next-selection-mode="swap" class="os-option">
+      <div class="os-cards__grid os--three">
+        {% for tier in tiers %}
+          {% assign card_id = tier.id | default: 'buy1' -%}
+          {% assign card_sup = tier.card_sup | default: default_card_sup -%}
+          {% assign card_title = tier.title | default: card_id -%}
+          {% assign shipping_key = tier.shipping_method -%}
+          {% assign card_shipping_id = tier.shipping_id -%}
+          {% if card_shipping_id == nil and shipping_key %}{% assign card_shipping_id = shipping_methods[shipping_key] %}{% endif -%}
+          {% capture init_items %}[{"packageId":{{ default_variant.package_id }},"quantity":{{ tier.quantity | default: 1 }}}]{% endcapture -%}
+          <div data-next-bundle-card data-next-bundle-id="{{ card_id }}"
+               data-next-bundle-items='{{ init_items }}'{% if tier.selected %} data-next-selected="true"{% endif %} role="button" class="os-card vp-tier-card"{% if card_shipping_id != nil and card_shipping_id != "" %} data-next-shipping-id="{{ card_shipping_id }}"{% endif %}>
+            <!-- Non-first tiers expose os-slot="header" (matches the mv-configurable-selector
+                 convention); the SDK uses it as the top-of-card spacing/label anchor on the
+                 2nd/3rd cards. The first card omits it intentionally. -->
+            <div{% unless forloop.first %} os-slot="header"{% endunless %} class="os-card__header-slot"></div>
+            <div class="os-card__wrapper cc-sm">
+              <div class="os-card__content os-wrap vp-tier-card__row">
+                <div class="os-card__radio"><div{% if tier.selected %} data-selected="true"{% endif %} class="radio-style-1"><div class="radio-inner"></div></div></div>
+                <div class="os-card__main-slot">
+                  <div class="os-card__title-section">
+                    <div class="os-card__title-wrapper"><div class="os-card__title-2 os-bold">{{ card_title }}</div></div>
+                  </div>
+                </div>
+              </div>
+              <div os-slot="bottom" class="os-card__bottom-slot cc-gap vp-tier-card__bottom">
+                <div class="card-sup">{{ card_sup }}</div>
+                {% if tier.shipping_label and tier.shipping_label != "" %}<div class="card-sup vp-tier-card__shipping">{{ tier.shipping_label }}</div>{% endif %}
+                <div class="os-card__subtitle-text-2">Save <span data-next-bundle-display="discountPercentage" data-next-format="percentage">—</span> OFF</div>
+              </div>
+            </div>
+            <div os-slot="footer" class="os-card__footer-slot"></div>
+            {% if tier.label_text %}
+              <div class="os-card__label-slot">
+                <div os-label-position="top-right" class="{{ tier.label_class | default: 'os-card__label-2 os-card__label--middle-center os-card__label--pill-primary' }}">
+                  <div class="os-card__label-text-2">{{ tier.label_text }}</div>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Slot stage (populated by variant-picker.js) ────────────────── -->
+  <div class="form-section form-section--first">
+    <h2 class="form-section__title" id="vp-slot-heading">{{ slot_title }}</h2>
+    <div data-next-bundle-slots-for="{{ sel_id }}" class="os-slots" id="vp-slot-stage"></div>
+  </div>
+
+  <!--
+    Slot HTML template — variant-picker.js clones one per unit and replaces {UNIT} with the slot
+    number. Dropdown swatch <img> src values come from `variant_picker.variants[].image` (same
+    source as #vp-config) — NEVER a hardcoded hero/compare image. variant-picker.js overrides the
+    slot <img> with the live API image when available (precedence: API > template swatch).
+  -->
+  <template id="vp-slot-tpl">
+    <div class="next-slot vp-slot">
+      <div class="next-slot__step"><div># {UNIT}</div></div>
+      <div class="slot__right">
+        <div class="step__wrap">
+          <div class="next-slot__image">
+            <img loading="lazy" alt="" src="{{ default_variant.image | campaign_asset }}" class="vp-slot__img">
+          </div>
+          <div class="os-card__pricing">
+            <div class="os-card__price-container os--stacked">
+              <div class="os-card__price os--compare diagonal-strike"><span class="vp-slot__price-original">—</span>/ea</div>
+              <div class="os-card__price os--current"><span class="vp-slot__price-discount">—</span>/ea</div>
+              <div class="os-card__subtitle-text-2">
+                Save <span data-next-display="bundle.{{ sel_id }}.discountPercentage">–</span> OFF
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="os-slot__selection cc-big">
+          <div class="os-card__variant-options">
+            <div class="os-card__variant-grid cc-horiz">
+
+              <!-- Variant (colorway) dropdown. .cc-row keeps "Label: [dropdown]" on one row
+                   (overrides next-core's default flex-flow: column on .os-card__variant-group). -->
+              <div class="next-slot-variant-field os-card__variant-group cc-full cc-row">
+                <div class="os-card__variant-label">{{ variant_label }}</div>
+                <os-dropdown class="os-variant-dropdown" data-vp-dropdown="cs" value="{{ default_variant.value }}">
+                  <button type="button" class="os-card__variant-dropdown-toggle" aria-expanded="false" aria-haspopup="listbox">
+                    <div class="os-card__toggle-option">
+                      <img class="vp-color-swatch" src="{{ default_variant.image | campaign_asset }}" alt="">
+                      <div class="os-card__variant-toggle-info">
+                        <div class="os-card__variant-toggle-name">{{ default_variant.label }}</div>
+                      </div>
+                    </div>
+                    <div class="os-card__variant-dropdown-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M11.9999 13.1714L16.9497 8.22168L18.3639 9.63589L11.9999 15.9999L5.63599 9.63589L7.0502 8.22168L11.9999 13.1714Z"></path>
+                      </svg>
+                    </div>
+                  </button>
+                  <os-dropdown-menu os-element="dropdown-menu" class="os-card__variant-dropdown-menu-v2">
+                    {% for v in variants %}
+                    <os-dropdown-item value="{{ v.value }}" class="os-card__variant-dropdown-item{% if forloop.first %} selected{% endif %}">
+                      <div class="os-card__toggle-option"><img class="vp-color-swatch" src="{{ v.image | campaign_asset }}" alt=""><div class="os-card__variant-toggle-info"><div class="os-card__variant-toggle-name">{{ v.label }}</div></div></div>
+                    </os-dropdown-item>
+                    {% endfor %}
+                  </os-dropdown-menu>
+                </os-dropdown>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+</div>
