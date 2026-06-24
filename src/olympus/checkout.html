@@ -328,6 +328,7 @@ bundles:
                             </div>
                         {% assign bump_variant = order_bump_variant | default: 'check01+switch01' %}
                         {% unless bump_variant == 'none' %}
+                          <div class="order-bumps">
                           {% if bump_variant == 'check01' %}
                           {% campaign_include 'bump-check01.html' packages=packages %}
                           {% elsif bump_variant == 'check02' %}
@@ -341,6 +342,7 @@ bundles:
                           {% campaign_include 'bump-check01.html' packages=packages %}
                           {% campaign_include 'bump-switch01.html' packages=packages %}
                           {% endif %}
+                          </div>
                         {% endunless %}
                             <div class="form-section form-section--last">
                               <div class="form-section__header">
