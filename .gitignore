@@ -12,3 +12,6 @@ _site/
 # Claude Code — ignore all .claude directories (settings, worktrees, etc.)
 **/.claude/
 .gstack/
+
+# Local-only agent handoff doc (not for the remote)
+HANDOFF.md
