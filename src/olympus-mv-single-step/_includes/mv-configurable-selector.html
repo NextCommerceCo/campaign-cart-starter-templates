@@ -98,6 +98,21 @@
   </div>
   <div class="form-section form-section--first">
     <h2 class="form-section__title">{{ slot_title }}</h2>
+    {% comment %} SDK 0.4.27 — order-wide line-item personalization, rendered ABOVE the per-unit slots.
+         data-next-default-property is collected page-wide and merged onto EVERY cart line the bundle writes
+         (and kept off the check03 order bump via data-next-exclude-property). Uses a DISTINCT key from the per-slot field
+         below, so the shared value and the per-unit value never collide. Opt in via order_personalization
+         passed from the page frontmatter; renders nothing unless enabled. {% endcomment %}
+    {%- if order_personalization and order_personalization.enabled -%}
+    {%- assign op_key = order_personalization.property_key | default: 'custom_text' -%}
+    {%- assign op_label = order_personalization.label | default: 'Custom Text (applied to all items)' -%}
+    {%- assign op_placeholder = order_personalization.placeholder | default: '' -%}
+    {%- assign op_maxlength = order_personalization.maxlength | default: 120 -%}
+    <div class="os-slot__personalization">
+      <label class="os-card__variant-label">{{ op_label }}{% if order_personalization.optional %} <span class="text-muted text-weight-normal">(optional)</span>{% endif %}</label>
+      <input data-next-default-property="{{ op_key }}" name="{{ op_key }}" type="text" maxlength="{{ op_maxlength }}"{% if op_placeholder != "" %} placeholder="{{ op_placeholder }}"{% endif %} class="input-flds">
+    </div>
+    {%- endif -%}
     <div data-next-bundle-slots-for="{{ sel_id }}" class="os-slots" id="{{ stage_id }}"></div>
   </div>
   <template id="{{ tpl_id }}">
@@ -143,9 +158,9 @@
               <div data-next-variant-selectors></div>
             </div>
           </div>
-          {% comment %} SDK 0.4.26 — per-slot line-item personalization (issue #47 / PR #56).
+          {% comment %} SDK 0.4.27 — per-slot line-item personalization (issue #47 / PR #56).
                This input lives INSIDE the slot template, which the SDK clones once per unit, so each
-               unit gets its own data-next-property-key field → two units of the same package with
+               unit gets its own data-next-property field → two units of the same package with
                different text become SEPARATE cart + order lines. Captured on input; cart syncs on blur.
                Toggle + configure via the `slot_personalization` frontmatter object passed as an include
                arg; renders only when slot_personalization.enabled is true. {% endcomment %}
@@ -156,7 +171,7 @@
           {%- assign sp_maxlength = slot_personalization.maxlength | default: 24 -%}
           <div class="os-slot__personalization">
             <label class="os-card__variant-label">{{ sp_label }}{% if slot_personalization.optional %} <span class="text-muted text-weight-normal">(optional)</span>{% endif %}</label>
-            <input data-next-property-key="{{ sp_key }}" type="text" maxlength="{{ sp_maxlength }}"{% if sp_placeholder != "" %} placeholder="{{ sp_placeholder }}"{% endif %} class="input-flds">
+            <input data-next-property="{{ sp_key }}" type="text" maxlength="{{ sp_maxlength }}"{% if sp_placeholder != "" %} placeholder="{{ sp_placeholder }}"{% endif %} class="input-flds">
           </div>
           {%- endif -%}
         </div>

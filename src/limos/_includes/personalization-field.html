@@ -1,9 +1,9 @@
 {% comment %}
   next_component: personalization-field
   next_version: 1.1.0
-  next_sdk_min: 0.4.26
+  next_sdk_min: 0.4.27
   next_purpose: Order-wide line-item personalization (issue #47 / PR #56). Renders a single
-    data-next-default-property-key input whose value applies to EVERY line the active bundle writes
+    data-next-default-property input whose value applies to EVERY line the active bundle writes
     (forwarded to the order API: /calculate, create-cart, create-order, express checkout). Works on
     any checkout — no slots required. Shipped in every template's _includes for consistency; NOT
     wired into any page by default — opt in with the order_personalization frontmatter object + a
@@ -12,16 +12,16 @@
     order_personalization: object. { enabled, property_key, label, optional, placeholder, maxlength }.
                            Renders nothing unless enabled is true. Defaults applied per field below.
   next_sdk_owns:
-    - data-next-default-property-key
+    - data-next-default-property
   next_gotchas:
     - Best for "same value on every unit." For DIFFERENT text per unit use the MV slot picker
-      (per-slot data-next-property-key) — the eng-confirmed pattern for customized products.
+      (per-slot data-next-property) — the eng-confirmed pattern for customized products.
     - Do NOT pair this with slots and override only some (leaving others on the default): for repeats
       of the same package the lone override is dropped (setItemProperties is packageId-keyed).
     - Applies to ALL cart lines, including order-bump lines.
     - property_key becomes the order line-item attribute name — keep it stable and snake_case.
     - Render captured values back with the [data-next-item-properties] block in the cart summary.
-    - Not supported on post-purchase upsells (0.4.26): the upsell accept sends only package_id + quantity.
+    - Post-purchase upsells now carry properties (SDK 0.4.27): the upsell accept POST includes a properties object per line.
 {% endcomment %}
 {%- if order_personalization and order_personalization.enabled -%}
 {%- assign op_key = order_personalization.property_key | default: 'gift_message' -%}
@@ -34,7 +34,7 @@
     <div class="form-grid__row">
       <div class="form-group">
         <div class="form-input">
-          <input data-next-default-property-key="{{ op_key }}" name="{{ op_key }}" type="text" id="{{ op_key }}" maxlength="{{ op_maxlength }}"{% if op_placeholder != "" %} placeholder="{{ op_placeholder }}"{% endif %} class="input-flds">
+          <input data-next-default-property="{{ op_key }}" name="{{ op_key }}" type="text" id="{{ op_key }}" maxlength="{{ op_maxlength }}"{% if op_placeholder != "" %} placeholder="{{ op_placeholder }}"{% endif %} class="input-flds">
         </div>
       </div>
     </div>

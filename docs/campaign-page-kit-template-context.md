@@ -146,7 +146,7 @@ Registers every campaign. The `campaign` object in Liquid templates comes from h
   "my-campaign": {
     "name": "My Campaign",
     "entry_url": "presell",
-    "sdk_version": "0.4.26",
+    "sdk_version": "0.4.27",
     "store_name": "Acme Store",
     "store_url": "https://acme.com",
     "store_phone": "1-800-555-0100",
@@ -168,7 +168,7 @@ The top-level key is the campaign slug. Add any additional key to a campaign ent
 
 **`entry_url`** — optional. The page slug `npm run dev` opens in the browser (e.g. `"presell"`). Omit to use the kit default.
 
-**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.26"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
+**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.27"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
 
 ### Build environment (`environment`)
 
@@ -612,29 +612,31 @@ Live summary panel — updates on tier change, coupon apply, and bump toggle. Us
 
 Key token semantics (0.4.11+): `{item.price}` / `{item.originalPrice}` = **line totals** (qty × price); `{item.unitPrice}` / `{item.originalUnitPrice}` = **per-unit**. `{item.hasDiscount}` returns `"show"` or `"hide"` as a CSS class value. Cross-check any additional `{item.*}` / `{line.*}` names against the SDK version you pin in `campaigns.json` — the [official docs](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) track supported summary tokens.
 
-### Line-item properties — personalization (SDK 0.4.26+)
+### Line-item properties — personalization (SDK 0.4.26+; attributes renamed in 0.4.27)
 
 Let a customer attach custom text to a product (monogram, name-on-jersey, gift message). The **same product with different text can stay as separate cart/order lines** instead of merging by quantity. Properties flow through the whole order lifecycle automatically (`/calculate`, create-cart, create-order, express checkout); no config needed.
 
+> **SDK 0.4.27 renamed the binding attributes** (breaking): `data-next-property-key` → `data-next-property`, `data-next-default-property-key` → `data-next-default-property`. `data-next-item-properties` and `data-next-property-container` are unchanged. 0.4.27 also sends properties on post-purchase upsells, adds property support to PackageToggle cards, and adds `data-next-exclude-property="<keys>"` (`"team"` / `"team, number"` / `"*"`) to drop specific keys from the API payload without removing the input. Pin `"0.4.27"` (or newer) in `campaigns.json` when using these attribute names.
+
 **The model: shared default + per-slot override** — a global fallback with optional per-line flexibility. **Per engineering, a customized product is expected to use a slot-style picker — that's the intended way to get per-line values.**
 
-- **Default (fallback)** — `data-next-default-property-key` on any input applies one value to **every** line the active bundle writes. Works on **any selector, including a plain non-MV tier-swap** — the simple "one input, propagate everywhere" path (no slot picker needed).
-- **Per-line customization needs a slot-style picker** — `data-next-bundle-slots-for` + a slot `<template>` with a `data-next-property-key` input per slot. A plain tier-swap renders **no slots**, so it can only carry the shared default. The slot structure does **not** need a variant product — a standalone product works by listing its packageId N times with `configurable:false`.
+- **Default (fallback)** — `data-next-default-property` on any input applies one value to **every** line the active bundle writes or upsell accept sends. Works on **any selector, including a plain non-MV tier-swap** — the simple "one input, propagate everywhere" path (no slot picker needed). On a single non-variant / non-slot upsell, that means the one accepted line gets the value.
+- **Per-line customization needs a slot-style picker** — `data-next-bundle-slots-for` + a slot `<template>` with a `data-next-property` input per slot. A plain tier-swap renders **no slots**, so it can only carry the shared default. The slot structure does **not** need a variant product — a standalone product works by listing its packageId N times with `configurable:false`.
   - **Fill every slot explicitly** (the natural slot-picker UX). `[DAD, MOM, DAD]` → 2×DAD + 1×MOM works. Do **not** rely on "set a default, override only some slots, leave the rest empty" for repeats of the same package — the lone override gets dropped (cart keeps the default for all units), because the live sync (`setItemProperties`) is keyed by packageId.
 
 ```html
 <!-- Default: one input, propagated to every line (gift message on the whole order/bundle). -->
-<input data-next-default-property-key="gift_message" placeholder="Gift message" />
+<input data-next-default-property="gift_message" placeholder="Gift message" />
 
 <!-- Override: inside a bundle slot — replaces the default for that line only (per-unit text). -->
-<input data-next-property-key="back_text" placeholder="Back text" />
+<input data-next-property="back_text" placeholder="Back text" />
 ```
 
 A third path covers single-SKU / select-mode flows with **no bundle selector** — collect fields in a container and point an AddToCart button at it; all keys land on the single line that click adds:
 
 ```html
 <div id="engraving">
-  <input data-next-property-key="engraving_text" placeholder="Engraving" />
+  <input data-next-property="engraving_text" placeholder="Engraving" />
 </div>
 <button data-next-action="add-to-cart" data-next-package-id="1" data-next-property-container="#engraving">Add</button>
 ```
@@ -653,13 +655,24 @@ The container gets `next-summary-empty` when the item has no properties and `nex
 
 **Rules:** opt-in and additive — pages without these attributes behave exactly as before. Property keys become order line-item attribute names — keep them stable and snake_case.
 
-**Implementation caveats (0.4.26):**
-- **The per-slot override needs slots to actually render.** A tier-*swap* selector has one active card and no slots, so `data-next-property-key` is never scanned there — it can only carry the shared default. The override requires the configurable-slot / slot-template selector (the MV pattern).
+**Possibilities by surface (checkout and upsell mirror each other):**
+
+| Surface type | Per-line distinct text (`data-next-property`) | Same value on all lines (`data-next-default-property`) |
+|---|---|---|
+| Standard / tier-swap selector, or bundle upsell offer (stepper / tier-pills / tier-cards) | ✗ no slots — not possible | ✓ general `order_personalization` (a single non-slot upsell = the one accepted line) |
+| MV / variant slot picker — MV checkout/select **or** MV upsell | ✓ per-slot `slot_personalization` | ✓ general `order_personalization` |
+| Standalone product wanting per-line text | ✓ only via an MV-style slot picker (list the packageId ×N) | ✓ general `order_personalization` |
+
+Live examples are wired only on the MV templates (`olympus-mv-*`): per-slot `slot_personalization` on `checkout.html` and the single-step `upsell-mv.html`; general `order_personalization` is present but disabled (keyed distinctly from the per-slot field). Every other family ships the `personalization-field.html` partial (general field) plus the shared offer/selector partials **unwired** — opt in per the rules above. `bump-check03.html` (product-card order bump) ships in all checkout families with a togglable `data-next-property` field, demoed enabled on `olympus-mv-single-step`. Same key-collision rule everywhere: a per-slot value overrides the general default on a shared key, so use distinct keys when running both.
+
+**Implementation caveats (0.4.26+):**
+- **The per-slot override needs slots to actually render.** A tier-*swap* selector has one active card and no slots, so `data-next-property` is never scanned there — it can only carry the shared default. The override requires the configurable-slot / slot-template selector (the MV pattern).
 - **Same-package multi-quantity per-unit slots are variant-gated.** `configurable: true` + qty>1 blocks checkout until each slot's variant is selected, so you can't mark a plain (non-variant) product `configurable` just to get per-unit slots — it bricks the checkout.
 - **Configurable + qty 1 with a quantity stepper** → one slot × multiplier, not per-unit.
 - **Per-package live-sync (`setItemProperties`) matches packageId only** — unreliable when several lines share a package with different properties.
 - **The order-wide default is not auto-applied to order-bump lines** — a bump carries properties only when added/synced via its own AddToCart.
-- **Not on post-purchase upsells.** The upsell accept (`POST /orders/{ref}/upsells/`) sends only `package_id` + `quantity`; a property-key on an upsell offer is silently ignored. Personalize at checkout, not on upsell offers.
+- **Post-purchase upsells carry properties as of SDK 0.4.27.** The upsell accept (`POST /orders/{ref}/upsells/`) now includes a `properties` object per line, matching order creation. On 0.4.26 and earlier it sent only `package_id` + `quantity` and any property on an upsell offer was silently dropped — so personalize on upsells only when pinned to 0.4.27+.
+- **MV upsell per-slot fields are wired via `slot_personalization`** — the same frontmatter contract name as the MV checkout selector. `upsell-mv-offer.html` renders the configured `data-next-property` field inside the upsell slot template, so each accepted upsell unit can carry distinct text. It ships enabled as a **single live reference on `olympus-mv-single-step/upsell-mv.html`** (disabled on `olympus-mv-two-step`). **To turn it on for another MV upsell page, just set `slot_personalization.enabled: true` in that page's frontmatter** — the shared `upsell-mv-offer.html` partial renders the field from the same contract, so there's nothing to copy within an MV family. `order_personalization` remains available for the one-value-for-all fallback (rendered as a full-width field above the slot stage), and is the discoverable path for non-slot upsells (which have no slot stage to render per-slot fields); the MV upsell demo keeps it disabled because the reference uses per-slot fields. **If you enable both at once, give them distinct `property_key`s.** The accept merge is `{ ...default, ...slot }`, so a per-slot value overrides the page default on a shared key — the demo keys `order_personalization` `gift_message` to stay clear of the per-slot `upsell_message`.
 
 ### Order bump
 
@@ -705,6 +718,15 @@ Starter `bump-check01.html` partials expose three pricing args:
 - `show_compare_price` defaults to `false`; set it to `true` only when the campaign deliberately wants a struck `originalUnitPrice` visible. The starter demos intentionally do not pass it, so bump previews show a single sale price.
 
 Migration note for existing cloned campaigns: starter bumps now default to a single visible sale price row. Pass `show_compare_price=true` to restore the struck `originalUnitPrice` row for bumps that should visibly compare against a prior price.
+
+Shared checkout templates also include `bump-check03.html`, an unsynced product-card bump for a single add-on offer. Select it with `order_bump_variant: "check03"` on templates that dispatch bump variants, or include it directly beside an existing bump when a checkout should show more than one bump. It intentionally omits `data-next-product-sync` / `data-next-package-sync`, so it adds one standalone upsell product rather than mirroring bundle quantity.
+
+Configure it with `order_bump.check03`:
+- `package_id`, `title`, `subtitle`, `image_src`, `image_alt`, `badge_text`, and `savings_text` control the visible card.
+- `badge_text` acts as fallback text and also keeps the badge rendered; SDK 0.4.27 fills `discountPercentage` when the package offer is available.
+- `savings_text` labels the SDK-owned `discountAmount` money value.
+- `exclude_property` maps to `data-next-exclude-property` when the bump should not inherit a checkout-level property.
+- `personalization.enabled` toggles the line-item text field; `property_key`, `label`, `placeholder`, `maxlength`, and `optional` configure the field.
 
 CSS required for checkbox state (already in `next-core.css` — only add if using a custom stylesheet):
 ```css
@@ -1019,6 +1041,7 @@ Use these when implementing or verifying a specific task. Work through each item
 - [ ] Outer wrapper has `data-next-await=""` (hides until SDK ready)
 - [ ] Toggle container has `data-next-bump=""` and `data-next-package-id` set to the bump package
 - [ ] `data-next-package-sync` on the toggle container lists all main package IDs (if quantity should sync) — or, for a configurable / multi-variant main product, use `data-next-product-sync="<product_id>"` (SDK 0.4.25+) so one id covers every variant
+- [ ] For an unsynced product-card bump, use `bump-check03.html` / `order_bump_variant: "check03"` and set `order_bump.check03.package_id` to an offer-backed package
 - [ ] Clickable header has `data-next-toggle="toggle"`
 - [ ] `os-component="check"` element exists inside the header for the checkmark
 - [ ] CSS for `[data-next-bump][class*="next-active"] [os-component="check"]` is present in the stylesheet

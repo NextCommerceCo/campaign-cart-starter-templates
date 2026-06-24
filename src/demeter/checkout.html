@@ -247,6 +247,8 @@ scripts:
                                 {% case bump_variant %}
                                 {% when 'check01' %}
                                 {% campaign_include 'bump-check01.html' packages=packages pricing_mode='discounted' %}
+                                {% when 'check03' %}
+                                {% campaign_include 'bump-check03.html' packages=packages %}
                                 {% when 'switch01' %}
                                 {% campaign_include 'bump-switch01.html' packages=packages %}
                                 {% when 'none', 'off', 'false' %}

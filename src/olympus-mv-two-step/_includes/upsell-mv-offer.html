@@ -6,6 +6,8 @@
   next_params:
     upsell_offer: object. package_id, selector_id, display_selector_id, display_bundle_id, accept/decline text.
     upsell_mv_tiers: array. Bundle card ids, quantity, vouchers, selected state.
+    slot_personalization: optional object. Renders a per-slot data-next-property input inside each upsell slot (same contract name as the MV checkout selector).
+    order_personalization: optional object. Renders one data-next-default-property input applied to every accepted upsell line.
   next_dont_touch: data-next-bundle-*, data-next-bundle-slots-for, data-next-upsell-*
 {% endcomment %}
 {% assign offer = upsell_offer -%}
@@ -73,7 +75,22 @@
           <div class="os-card__variant-number os-option grid-cell">
             <div data-next-bind="slot-number">#{slot.unitNumber}</div>
           </div>
-          <div data-next-variant-selectors></div>
+          <div>
+            <div data-next-variant-selectors></div>
+            {% comment %} SDK 0.4.27 — per-slot post-purchase upsell personalization.
+                 This input lives inside the slot template, so the SDK clones one field per upsell
+                 unit and stores its value on that slot's bundleItem.properties before accept. {% endcomment %}
+            {%- if slot_personalization and slot_personalization.enabled -%}
+            {%- assign usp_key = slot_personalization.property_key | default: 'custom_text' -%}
+            {%- assign usp_label = slot_personalization.label | default: 'Custom text' -%}
+            {%- assign usp_placeholder = slot_personalization.placeholder | default: '' -%}
+            {%- assign usp_maxlength = slot_personalization.maxlength | default: 24 -%}
+            <div class="os-slot__personalization">
+              <label class="os-card__variant-label">{{ usp_label }}{% if slot_personalization.optional %} <span class="text-muted text-weight-normal">(optional)</span>{% endif %}</label>
+              <input data-next-property="{{ usp_key }}" type="text" maxlength="{{ usp_maxlength }}"{% if usp_placeholder != "" %} placeholder="{{ usp_placeholder }}"{% endif %} class="input-flds">
+            </div>
+            {%- endif -%}
+          </div>
         </div>
       </template>
 
@@ -138,6 +155,22 @@
                     {% endfor %}
                   </div>
                 </div>
+                {% comment %} SDK 0.4.27 — order-wide post-purchase upsell personalization, rendered ABOVE the
+                     per-unit slots. UpsellEnhancer collects page-wide data-next-default-property inputs and merges
+                     them onto every accepted upsell line, so the value rides along on the accept POST. Opt in via
+                     order_personalization (passed from the page frontmatter); renders nothing unless enabled. {% endcomment %}
+                {%- if order_personalization and order_personalization.enabled -%}
+                {%- assign up_key = order_personalization.property_key | default: 'custom_text' -%}
+                {%- assign up_label = order_personalization.label | default: 'Custom Text (applied to all items)' -%}
+                {%- assign up_placeholder = order_personalization.placeholder | default: '' -%}
+                {%- assign up_maxlength = order_personalization.maxlength | default: 120 -%}
+                <div class="grid-full" style="margin-bottom: 1rem;">
+                  <div class="os-slot__personalization">
+                    <label class="os-card__variant-label">{{ up_label }}{% if order_personalization.optional %} <span class="text-muted text-weight-normal">(optional)</span>{% endif %}</label>
+                    <input data-next-default-property="{{ up_key }}" name="{{ up_key }}" type="text" maxlength="{{ up_maxlength }}"{% if up_placeholder != "" %} placeholder="{{ up_placeholder }}"{% endif %} class="input-flds">
+                  </div>
+                </div>
+                {%- endif -%}
                 <!--
                   Variant slot rows rendered here by SDK via data-next-bundle-slots-for.
                   One slot per configurable item in the selected tier card.

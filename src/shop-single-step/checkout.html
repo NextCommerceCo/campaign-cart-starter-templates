@@ -55,6 +55,8 @@ scripts:
                   {% unless bump_variant == 'none' %}
                     {% if bump_variant == 'check01' %}
                     {% campaign_include 'bump-check01.html' packages=packages %}
+                    {% elsif bump_variant == 'check03' %}
+                    {% campaign_include 'bump-check03.html' packages=packages %}
                     {% elsif bump_variant == 'switch01' %}
                     {% campaign_include 'bump-switch01.html' packages=packages %}
                     {% else %}

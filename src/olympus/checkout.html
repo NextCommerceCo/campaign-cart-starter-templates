@@ -331,6 +331,8 @@ bundles:
                           {% campaign_include 'bump-check01.html' packages=packages %}
                           {% elsif bump_variant == 'check02' %}
                           {% campaign_include 'bump-check02.html' packages=packages %}
+                          {% elsif bump_variant == 'check03' %}
+                          {% campaign_include 'bump-check03.html' packages=packages %}
                           {% elsif bump_variant == 'switch01' %}
                           {% campaign_include 'bump-switch01.html' packages=packages %}
                           {% elsif bump_variant == 'check01+switch01' %}

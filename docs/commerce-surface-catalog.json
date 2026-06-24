@@ -231,7 +231,7 @@
       "agentRule": "Payment config, CampaignSpec/API support, and visible rows must agree."
     },
     "slot_personalization": {
-      "purpose": "MV slot-picker line-item personalization (SDK 0.4.26+). Adds a data-next-property-key input to each rendered bundle slot so units can carry distinct text and become separate order lines.",
+      "purpose": "MV slot-picker line-item personalization (SDK 0.4.27+). Adds a data-next-property input to each rendered bundle slot — on the checkout/select selector AND the post-purchase upsell offer — so units carry distinct text and become separate order lines. Same contract name across both surfaces.",
       "canonicalKeys": [
         "enabled",
         "property_key",
@@ -242,12 +242,12 @@
       ],
       "sourceOfTruth": [
         "Campaign personalization requirement (per-line custom text)",
-        "Template slot partials: mv-configurable-selector.html / mv-slot-stage.html"
+        "Template slot partials: mv-configurable-selector.html / mv-slot-stage.html (checkout/select) and upsell-mv-offer.html (upsell)"
       ],
-      "agentRule": "MV/slot-rendering families only — per-line customization requires a slot picker (eng-confirmed). Shipped enabled on olympus-mv-single-step, disabled on olympus-mv-two-step. property_key becomes the order line-item attribute name. Fill every slot explicitly; do not rely on an order-wide default to fill some slots and override others (same-package overrides drop). Not available on tier-swap families."
+      "agentRule": "MV/slot-rendering families only — per-line customization requires a slot picker (eng-confirmed); not available on tier-swap families. Same `slot_personalization` contract on MV checkout/select and MV upsell. Shipped enabled on olympus-mv-single-step (checkout.html + upsell-mv.html), disabled on olympus-mv-two-step (one live reference each). To apply on any other MV page, set slot_personalization.enabled:true in that page's frontmatter — the shared partial renders the field from the same contract (no markup copy). property_key becomes the order line-item attribute name. Fill every slot explicitly; do not rely on an order-wide default to fill some slots and override others (same-package overrides drop). When paired with order_personalization, keep property_keys distinct (per-slot overrides the page default on a shared key)."
     },
     "order_personalization": {
-      "purpose": "Order-wide line-item personalization default (SDK 0.4.26+) via personalization-field.html. One data-next-default-property-key value applied to every line the active bundle writes.",
+      "purpose": "All-lines line-item personalization default (SDK 0.4.27+) via data-next-default-property. One value is applied to every line the active bundle/cart write or upsell accept sends; on a single non-slot upsell this means the one accepted line gets the value.",
       "canonicalKeys": [
         "enabled",
         "property_key",
@@ -257,10 +257,10 @@
         "maxlength"
       ],
       "sourceOfTruth": [
-        "Campaign personalization requirement (one shared value across all units)",
-        "Template partial: personalization-field.html (ships in every family, unwired)"
+        "Campaign personalization requirement (one shared value across all units or one value on a single non-slot upsell)",
+        "Template partial: personalization-field.html; offer partials may render the same order_personalization contract with data-next-default-property"
       ],
-      "agentRule": "Reliable only for 'same value on every unit'. The partial ships in every family's _includes but is NOT wired into any page; opt in with a campaign_include. For per-line distinct values use slot_personalization (MV) instead. Not supported on post-purchase upsells."
+      "agentRule": "Reliable for 'same value on every unit' and for single non-variant / non-slot upsells where the accepted set is one line. The generic partial ships in every family's _includes but is NOT wired into generic pages; opt in with a campaign_include or an offer partial that accepts order_personalization. For per-line distinct slot values use slot_personalization (MV checkout/select/upsell) instead. When paired with a per-slot field on the same surface, use a DISTINCT property_key: the merge is { ...default, ...slot } so a per-slot value overrides the default on a shared key (MV checkout uses custom_text vs slot number; MV upsell example uses gift_message vs slot upsell_message)."
     }
   },
   "campaignSpecFixturePolicy": {
@@ -294,7 +294,7 @@
         "orderSummary": "cart-summary01|cart-summary02|cart-summary03|cart-summary04",
         "payment": "payment-methods",
         "expressCheckout": "express-checkout|express-checkout-inline",
-        "orderBump": "bump-check01|bump-check02|bump-switch01",
+        "orderBump": "bump-check01|bump-check02|bump-check03|bump-switch01",
         "upsell": "bundle-stepper|bundle-tier-pills|bundle-tier-cards",
         "receipt": "receipt-skeleton"
       },
@@ -466,7 +466,7 @@
         "orderSummary": "cart-summary02 accordion",
         "payment": "payment-methods",
         "expressCheckout": "express-checkout|express-checkout-inline",
-        "orderBump": "bump-check01|bump-check02|bump-switch01",
+        "orderBump": "bump-check01|bump-check02|bump-check03|bump-switch01",
         "upsell": "upsell-bundle-stepper-offer|upsell-bundle-tier-pills-offer|upsell-bundle-tier-cards-offer",
         "receipt": "receipt-skeleton|receipt-order-summary-mobile|receipt-order-summary-desktop"
       },
@@ -619,7 +619,7 @@
         "orderSummary": "cart-summary03 side cart",
         "payment": "payment-methods",
         "expressCheckout": "express-checkout|express-checkout-inline",
-        "orderBump": "bump-check01|bump-check02|bump-switch01",
+        "orderBump": "bump-check01|bump-check02|bump-check03|bump-switch01",
         "upsell": "upsell-bundle-stepper-offer|upsell-bundle-tier-pills-offer|upsell-bundle-tier-cards-offer",
         "receipt": "receipt-skeleton|receipt-order-summary-mobile|receipt-order-summary-desktop"
       },
@@ -775,7 +775,7 @@
         "checkoutSummary": "cart-summary04",
         "payment": "payment-methods",
         "expressCheckout": "express-checkout",
-        "orderBump": "bump-check02",
+        "orderBump": "bump-check01|bump-check02|bump-check03|bump-switch01",
         "receipt": "receipt-skeleton|receipt-order-summary-mobile|receipt-order-summary-desktop",
         "upsell": "upsell-bundle-stepper-offer|upsell-bundle-tier-pills-offer|upsell-bundle-tier-cards-offer"
       },
@@ -923,11 +923,11 @@
       "canonicalSurfaces": {
         "mainSelector": "mv-configurable-selector",
         "variantSlots": "bundle-slot-selector",
-        "personalization": "per-slot picker (data-next-property-key per slot, toggled by slot_personalization); order-wide default via personalization-field (ships unwired)",
+        "personalization": "per-slot picker (data-next-property per slot, toggled by slot_personalization); order-wide default via mv-configurable-selector order_personalization",
         "orderSummary": "cart-summary03|cart-summary04",
         "payment": "payment-methods",
         "expressCheckout": "express-checkout|express-checkout-inline",
-        "orderBump": "bump-check01|bump-check02|bump-switch01",
+        "orderBump": "bump-check01|bump-check02|bump-check03|bump-switch01",
         "upsell": "upsell-mv|upsell-bundle-stepper|upsell-bundle-tier-pills|upsell-bundle-tier-cards",
         "receipt": "receipt-skeleton"
       },
@@ -946,6 +946,8 @@
         "variant_picker",
         "upsell_offer",
         "upsell_mv_tiers",
+        "slot_personalization",
+        "order_personalization",
         "upsell_bundle_tiers"
       ],
       "agentContract": {
@@ -984,6 +986,8 @@
             "variant_slots[].label_text",
             "upsell_offer",
             "upsell_mv_tiers",
+            "slot_personalization",
+            "order_personalization",
             "upsell_bundle_tiers"
           ],
           "demoOnlyValues": [
@@ -1002,6 +1006,7 @@
             "variant_slots[].shipping_method",
             "upsell_offer.*",
             "upsell_mv_tiers[].vouchers_json",
+            "slot_personalization",
             "upsell_bundle_tiers[].items_json",
             "upsell_bundle_tiers[].vouchers_json"
           ],
@@ -1069,6 +1074,8 @@
             "ownedInputs": [
               "upsell_offer",
               "upsell_mv_tiers",
+              "slot_personalization",
+              "order_personalization",
               "upsell_bundle_tiers"
             ],
             "sdkRoots": [
@@ -1102,7 +1109,7 @@
         "selectStep": "mv-selection-step",
         "checkoutSelector": "mv-selected-bundle-review",
         "variantSlots": "bundle-slot-selector",
-        "personalization": "per-slot picker (data-next-property-key per slot, toggled by slot_personalization); order-wide default via personalization-field (ships unwired)",
+        "personalization": "per-slot picker (data-next-property per slot, toggled by slot_personalization); order-wide default via personalization-field (ships unwired)",
         "orderSummary": "cart-summary03|cart-summary04",
         "payment": "payment-methods",
         "expressCheckout": "express-checkout|express-checkout-inline",
@@ -1124,6 +1131,8 @@
         "variant_picker",
         "upsell_offer",
         "upsell_mv_tiers",
+        "slot_personalization",
+        "order_personalization",
         "upsell_bundle_tiers"
       ],
       "agentContract": {
@@ -1164,6 +1173,8 @@
             "swiper_thumbs",
             "upsell_offer",
             "upsell_mv_tiers",
+            "slot_personalization",
+            "order_personalization",
             "upsell_bundle_tiers"
           ],
           "demoOnlyValues": [
@@ -1182,6 +1193,7 @@
             "variant_slots[].shipping_method",
             "upsell_offer.*",
             "upsell_mv_tiers[].vouchers_json",
+            "slot_personalization",
             "upsell_bundle_tiers[].items_json",
             "upsell_bundle_tiers[].vouchers_json"
           ],
@@ -1263,6 +1275,8 @@
             "ownedInputs": [
               "upsell_offer",
               "upsell_mv_tiers",
+              "slot_personalization",
+              "order_personalization",
               "upsell_bundle_tiers"
             ],
             "sdkRoots": [
@@ -1437,55 +1451,193 @@
       "bump-check01.html": {
         "surface": "orderBump",
         "lineages": [
-          { "families": ["olympus"], "note": "Olympus single-package check-style bump." },
-          { "families": ["olympus-mv-single-step", "olympus-mv-two-step"], "note": "MV/configurable bump: quantity sync via data-next-product-sync (product_id), so it sums across variant swaps (SDK 0.4.25+). See CLAUDE.md." },
-          { "families": ["shop-single-step", "shop-three-step"], "note": "Shop bump layout for selector-less checkouts." },
-          { "families": ["demeter", "limos"], "note": "Editorial/Limos bump styling." }
+          {
+            "families": [
+              "olympus"
+            ],
+            "note": "Olympus single-package check-style bump."
+          },
+          {
+            "families": [
+              "olympus-mv-single-step",
+              "olympus-mv-two-step"
+            ],
+            "note": "MV/configurable bump: quantity sync via data-next-product-sync (product_id), so it sums across variant swaps (SDK 0.4.25+). See CLAUDE.md."
+          },
+          {
+            "families": [
+              "shop-single-step",
+              "shop-three-step"
+            ],
+            "note": "Shop bump layout for selector-less checkouts."
+          },
+          {
+            "families": [
+              "demeter",
+              "limos"
+            ],
+            "note": "Editorial/Limos bump styling."
+          }
+        ]
+      },
+      "bump-check03.html": {
+        "surface": "orderBump",
+        "lineages": [
+          {
+            "families": [
+              "olympus",
+              "limos",
+              "demeter",
+              "olympus-mv-single-step",
+              "olympus-mv-two-step",
+              "shop-single-step",
+              "shop-three-step"
+            ],
+            "note": "Shared unsynced product-card bump with optional PackageToggle line-item property field (SDK 0.4.27+)."
+          }
         ]
       },
       "bump-switch01.html": {
         "surface": "orderBump",
         "lineages": [
-          { "families": ["demeter", "limos"], "note": "Switch-style bump with demeter/limos styling." },
-          { "families": ["olympus", "olympus-mv-single-step", "olympus-mv-two-step", "shop-single-step", "shop-three-step"], "note": "Shared switch-style bump." }
+          {
+            "families": [
+              "demeter",
+              "limos"
+            ],
+            "note": "Switch-style bump with demeter/limos styling."
+          },
+          {
+            "families": [
+              "olympus",
+              "olympus-mv-single-step",
+              "olympus-mv-two-step",
+              "shop-single-step",
+              "shop-three-step"
+            ],
+            "note": "Shared switch-style bump."
+          }
         ]
       },
       "checkout-header.html": {
         "surface": "checkoutHeader",
         "lineages": [
-          { "families": ["olympus", "olympus-mv-single-step", "olympus-mv-two-step"], "note": "Olympus/MV header." },
-          { "families": ["demeter"], "note": "Demeter header." },
-          { "families": ["limos"], "note": "Limos header." },
-          { "families": ["shop-single-step", "shop-three-step"], "note": "Shop top-bar header (checkout-header--lg). See CLAUDE.md shop checkout top-bar notes." }
+          {
+            "families": [
+              "olympus",
+              "olympus-mv-single-step",
+              "olympus-mv-two-step"
+            ],
+            "note": "Olympus/MV header."
+          },
+          {
+            "families": [
+              "demeter"
+            ],
+            "note": "Demeter header."
+          },
+          {
+            "families": [
+              "limos"
+            ],
+            "note": "Limos header."
+          },
+          {
+            "families": [
+              "shop-single-step",
+              "shop-three-step"
+            ],
+            "note": "Shop top-bar header (checkout-header--lg). See CLAUDE.md shop checkout top-bar notes."
+          }
         ]
       },
       "cart-summary03.html": {
         "surface": "orderSummary",
         "lineages": [
-          { "families": ["olympus"], "note": "Olympus featured-product order summary (annotated reference)." },
-          { "families": ["limos", "olympus-mv-single-step", "olympus-mv-two-step", "shop-single-step", "shop-three-step"], "note": "Shared featured-product summary body." },
-          { "families": ["demeter"], "note": "Demeter side-cart summary, parameterized (heading/subtitle/feature_package)." }
+          {
+            "families": [
+              "olympus"
+            ],
+            "note": "Olympus featured-product order summary (annotated reference)."
+          },
+          {
+            "families": [
+              "limos",
+              "olympus-mv-single-step",
+              "olympus-mv-two-step",
+              "shop-single-step",
+              "shop-three-step"
+            ],
+            "note": "Shared featured-product summary body."
+          },
+          {
+            "families": [
+              "demeter"
+            ],
+            "note": "Demeter side-cart summary, parameterized (heading/subtitle/feature_package)."
+          }
         ]
       },
       "cart-summary04.html": {
         "surface": "orderSummary",
         "lineages": [
-          { "families": ["olympus", "demeter", "limos", "olympus-mv-single-step", "olympus-mv-two-step"], "note": "Large/image-line order summary (annotated in #73)." },
-          { "families": ["shop-single-step", "shop-three-step"], "note": "Shop structural rewrite of cart-summary04 (188 lines vs olympus's 143)." }
+          {
+            "families": [
+              "olympus",
+              "demeter",
+              "limos",
+              "olympus-mv-single-step",
+              "olympus-mv-two-step"
+            ],
+            "note": "Large/image-line order summary (annotated in #73)."
+          },
+          {
+            "families": [
+              "shop-single-step",
+              "shop-three-step"
+            ],
+            "note": "Shop structural rewrite of cart-summary04 (188 lines vs olympus's 143)."
+          }
         ]
       },
       "checkout-footer-links.html": {
         "surface": "footerLinks",
         "lineages": [
-          { "families": ["shop-single-step", "shop-three-step"], "note": "Shop footer links." },
-          { "families": ["limos"], "note": "Limos footer links." }
+          {
+            "families": [
+              "shop-single-step",
+              "shop-three-step"
+            ],
+            "note": "Shop footer links."
+          },
+          {
+            "families": [
+              "limos"
+            ],
+            "note": "Limos footer links."
+          }
         ]
       },
       "footer.html": {
         "surface": "footer",
         "lineages": [
-          { "families": ["olympus", "limos", "olympus-mv-single-step", "olympus-mv-two-step", "shop-single-step", "shop-three-step"], "note": "Shared footer." },
-          { "families": ["demeter"], "note": "Demeter footer (cc-medium variant)." }
+          {
+            "families": [
+              "olympus",
+              "limos",
+              "olympus-mv-single-step",
+              "olympus-mv-two-step",
+              "shop-single-step",
+              "shop-three-step"
+            ],
+            "note": "Shared footer."
+          },
+          {
+            "families": [
+              "demeter"
+            ],
+            "note": "Demeter footer (cc-medium variant)."
+          }
         ]
       }
     }

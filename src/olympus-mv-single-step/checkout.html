@@ -11,6 +11,25 @@ order_bump:
       - "Accidental Damage Protection"
       - "Express Replacement Service"
       - "24/7 Priority Customer Support"
+  # SDK 0.4.27 PackageToggle line-item personalization demo. This is intentionally unsynced
+  # from the MV bundle quantity: it adds one add-on product and carries its own property.
+  # exclude_property keeps the checkout-wide custom_text default off this add-on line.
+  check03:
+    package_id: 78
+    title: "Upsell Product"
+    subtitle: "Add this special offer to your order."
+    image_src: "images/1x1_1.svg"
+    image_alt: ""
+    badge_text: "—"
+    savings_text: "Instant savings:"
+    exclude_property: "custom_text"
+    personalization:
+      enabled: true
+      property_key: bump_custom_text
+      label: "Custom text for upsell bump"
+      optional: true
+      placeholder: "e.g. Name to print"
+      maxlength: 24
 styles:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
 scripts:
@@ -23,16 +42,30 @@ checkout_step:
   selector_id: "main"
   selector_heading: "Choose your package"
   slot_heading: "Select your color and size"
-# SDK 0.4.26 per-slot line-item personalization (MV-only). Each slot gets its own
-# data-next-property-key input, so units of the same package with different text become
+# SDK 0.4.27 per-slot line-item personalization (MV-only). Each slot gets its own
+# data-next-property input, so units of the same package with different values become
 # separate order lines. Set enabled:false to remove the field. property_key becomes the
-# line-item attribute name sent to the order API.
+# line-item attribute name sent to the order API. Distinct key from order_personalization
+# below (number per unit vs one shared custom text on all units).
 slot_personalization:
   enabled: true
-  property_key: custom_text
-  label: "Custom text"
+  property_key: number
+  label: "Number"
   optional: true
-  placeholder: "e.g. CHAMPIONS '26"
+  placeholder: "e.g. 23"
+  maxlength: 3
+# SDK 0.4.27 order-wide line-item personalization. One data-next-default-property value (custom_text)
+# is merged onto EVERY cart line — including order bumps — UNLESS a line opts out via
+# data-next-exclude-property. The check03 bump does, so the shared custom_text does not land on
+# that add-on line. Rendered ABOVE the slots by mv-configurable-selector.html. Different key from
+# the per-slot `number` above, so the shared value and the per-unit value coexist without the
+# same-key default/override merge pitfall.
+order_personalization:
+  enabled: true
+  property_key: custom_text
+  label: "Custom Text (applied to all items)"
+  optional: true
+  placeholder: "e.g. Team Eagles"
   maxlength: 24
 packages:
   main_package: 1
@@ -256,7 +289,7 @@ swiper_thumbs:
                              per-variant swatch thumbnails + an offline render fixture. Drop-in (supports
                              per-tier shipping via variant_picker.tiers[].shipping_method). See
                              _includes/variant-picker.html and the standalone /variant-picker/ reference page. -->
-                        {% campaign_include 'mv-configurable-selector.html' packages=packages shipping_methods=shipping_methods variant_slots=variant_slots slot_personalization=slot_personalization %}
+                        {% campaign_include 'mv-configurable-selector.html' packages=packages shipping_methods=shipping_methods variant_slots=variant_slots slot_personalization=slot_personalization order_personalization=order_personalization %}
                         <div class="form-section form-section--first">
                           <div class="_2step__size-guide">
                             <div class="size_chart-wrapper">
@@ -384,10 +417,16 @@ swiper_thumbs:
                               <div class="text-xs-2"><strong>90 Day Money-Back Guarantee:</strong> Feel safe knowing you are protected with a 90 day guarantee. Simply send the item(s) back in the original packaging to receive a full refund or replacement, less S&amp;H.</div>
                               </div>
                             </div>
-                            <!-- Quantity-synced order bump: tracks the main MV bundle quantity (incl. tier
-                                 1x/2x/3x and variant swaps) via data-next-product-sync — see bump-check01.html. -->
+                            {% comment %} Quantity-synced order bump: tracks the main MV bundle quantity (incl. tier
+                                 1x/2x/3x and variant swaps) via data-next-product-sync — see bump-check01.html. {% endcomment %}
                             <div class="form-section form-section--last">
                               {% campaign_include 'bump-check01.html' packages=packages %}
+                            </div>
+                            {% comment %} Unsynced order bump product-card demo: adds one PackageToggle upsell product,
+                                 shows a line-item data-next-property input, and excludes the checkout-wide custom_text
+                                 default from this add-on line via data-next-exclude-property. {% endcomment %}
+                            <div class="form-section form-section--last">
+                              {% campaign_include 'bump-check03.html' packages=packages %}
                             </div>
                             <div class="form-section form-section--last">
                               <div class="form-section__header">
