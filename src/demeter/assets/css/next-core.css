@@ -68,6 +68,14 @@
   --brand--color--text-inverse: white;
   --brand--color--rating-star: var(--brand--color--primary-dark);
 
+  /* Brand – badge / pill labels (.os-card__label--pill-*). Tokenized so the
+     generated brand-theme layer can override them; do not hardcode hex on the
+     pill rules. */
+  --brand--color--pill-primary: #08927a;
+  --brand--color--pill-primary-surface: #ecfbcb;
+  --brand--color--pill-secondary: #298fbd;
+  --brand--color--pill-secondary-surface: #e4f7ff;
+
   /* Neutrals */
   --neutral--25: #fcfcfd;
   --neutral--100: #f2f4f7;
@@ -6875,13 +6883,13 @@ figcaption {
 }
 
 .os-card__label-2.os-card__label--pill-primary {
-  color: #08927a;
-  background-color: #ecfbcb;
+  color: var(--brand--color--pill-primary);
+  background-color: var(--brand--color--pill-primary-surface);
 }
 
 .os-card__label-2.os-card__label--pill-secondary {
-  color: #298fbd;
-  background-color: #e4f7ff;
+  color: var(--brand--color--pill-secondary);
+  background-color: var(--brand--color--pill-secondary-surface);
 }
 
 .card-sup {
@@ -12402,6 +12410,19 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 
 /* ========== Prepurchase upsell (checkout add-on blocks) ========== */
 /* Isolated from upsell-page styles so checkout and upsell templates don’t share class names. */
+
+/* Order-bumps container: stacks one or more prepurchase-upsell components.
+   .form-content has no gap, so without this the bump cards render flush. */
+.order-bumps {
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1rem 0;
+  display: flex;
+}
+
+.order-bumps:empty {
+  display: none;
+}
 
 [data-component="prepurchase-upsell"] {
   border: 2px dashed var(--brand--color--primary-dark);
