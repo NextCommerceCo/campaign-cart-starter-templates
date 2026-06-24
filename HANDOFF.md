@@ -98,6 +98,8 @@ Also documented/discoverable:
 - `order_personalization` remains available as the all-lines/default path (`data-next-default-property`) for one shared value across every accepted upsell line.
 - This is the right path for single non-variant / non-slot upsells too, because the accepted set is one line.
 - On the MV upsell demo, `order_personalization.enabled: false` because the reference intentionally demonstrates per-slot fields.
+- The offer partial now renders the `order_personalization` field as a full-width `grid-full` wrapper (inline `margin-bottom: 1rem`) **above** the variant slot stage, mirroring the MV checkout layout.
+- **Key-collision fix (browser-verified):** the accept merge is `{ ...default, ...slot }`, so a per-slot `data-next-property` value overrides a page `data-next-default-property` on the **same key**. The `order_personalization` example is now keyed `gift_message` (distinct from the per-slot `upsell_message`) on both MV upsell pages so that, when enabled alongside the per-slot field, both values land on every accepted line.
 
 Mirrored files:
 - `src/olympus-mv-single-step/_includes/upsell-mv-offer.html`

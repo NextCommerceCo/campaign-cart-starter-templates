@@ -156,6 +156,22 @@
                     {% endfor %}
                   </div>
                 </div>
+                {% comment %} SDK 0.4.27 — order-wide post-purchase upsell personalization, rendered ABOVE the
+                     per-unit slots. UpsellEnhancer collects page-wide data-next-default-property inputs and merges
+                     them onto every accepted upsell line, so the value rides along on the accept POST. Opt in via
+                     order_personalization (passed from the page frontmatter); renders nothing unless enabled. {% endcomment %}
+                {%- if order_personalization and order_personalization.enabled -%}
+                {%- assign up_key = order_personalization.property_key | default: 'upsell_message' -%}
+                {%- assign up_label = order_personalization.label | default: 'Personalize this item' -%}
+                {%- assign up_placeholder = order_personalization.placeholder | default: '' -%}
+                {%- assign up_maxlength = order_personalization.maxlength | default: 40 -%}
+                <div class="grid-full" style="margin-bottom: 1rem;">
+                  <div class="os-slot__personalization">
+                    <label class="os-card__variant-label">{{ up_label }}{% if order_personalization.optional %} <span class="text-muted text-weight-normal">(optional)</span>{% endif %}</label>
+                    <input data-next-default-property="{{ up_key }}" type="text" maxlength="{{ up_maxlength }}"{% if up_placeholder != "" %} placeholder="{{ up_placeholder }}"{% endif %} class="input-flds">
+                  </div>
+                </div>
+                {%- endif -%}
                 <!--
                   Variant slot rows rendered here by SDK via data-next-bundle-slots-for.
                   One slot per configurable item in the selected tier card.
@@ -200,20 +216,6 @@
                     <div class="text-xs font-bold color-primary">+ FREE SHIPPING</div>
                   </div>
                 </div>
-                {% comment %} SDK 0.4.27 — post-purchase upsell personalization. UpsellEnhancer collects page-wide
-                     data-next-default-property inputs and merges them onto every accepted upsell line, so the value
-                     rides along on the accept POST. Opt in via order_personalization (passed from the page frontmatter);
-                     renders nothing unless enabled. {% endcomment %}
-                {%- if order_personalization and order_personalization.enabled -%}
-                {%- assign up_key = order_personalization.property_key | default: 'upsell_message' -%}
-                {%- assign up_label = order_personalization.label | default: 'Personalize this item' -%}
-                {%- assign up_placeholder = order_personalization.placeholder | default: '' -%}
-                {%- assign up_maxlength = order_personalization.maxlength | default: 40 -%}
-                <div class="os-slot__personalization">
-                  <label class="os-card__variant-label">{{ up_label }}{% if order_personalization.optional %} <span class="text-muted text-weight-normal">(optional)</span>{% endif %}</label>
-                  <input data-next-default-property="{{ up_key }}" type="text" maxlength="{{ up_maxlength }}"{% if up_placeholder != "" %} placeholder="{{ up_placeholder }}"{% endif %} class="input-flds">
-                </div>
-                {%- endif -%}
                 <!--
                   UpsellEnhancer does not use data-next-upsell-action-for (that's AcceptUpsellEnhancer).
                   Bundle for add comes from the first [data-next-bundle-selector] inside this offer (upsell-bundle).

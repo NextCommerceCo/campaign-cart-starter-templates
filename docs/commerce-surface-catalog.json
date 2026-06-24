@@ -260,7 +260,7 @@
         "Campaign personalization requirement (one shared value across all units or one value on a single non-slot upsell)",
         "Template partial: personalization-field.html; offer partials may render the same order_personalization contract with data-next-default-property"
       ],
-      "agentRule": "Reliable for 'same value on every unit' and for single non-variant / non-slot upsells where the accepted set is one line. The generic partial ships in every family's _includes but is NOT wired into generic pages; opt in with a campaign_include or an offer partial that accepts order_personalization. For per-line distinct slot values use slot_personalization (MV checkout/select) or upsell_slot_personalization (MV upsell) instead."
+      "agentRule": "Reliable for 'same value on every unit' and for single non-variant / non-slot upsells where the accepted set is one line. The generic partial ships in every family's _includes but is NOT wired into generic pages; opt in with a campaign_include or an offer partial that accepts order_personalization. For per-line distinct slot values use slot_personalization (MV checkout/select) or upsell_slot_personalization (MV upsell) instead. When paired with a per-slot field on the same surface, use a DISTINCT property_key: the merge is { ...default, ...slot } so a per-slot value overrides the default on a shared key (MV checkout uses custom_text vs slot number; MV upsell example uses gift_message vs slot upsell_message)."
     },
     "upsell_slot_personalization": {
       "purpose": "MV post-purchase upsell slot personalization (SDK 0.4.27+). Adds a data-next-property input to each rendered upsell bundle slot so accepted upsell units can carry distinct text.",
@@ -276,7 +276,7 @@
         "Campaign personalization requirement (per-line custom text on upsell units)",
         "Template partial: upsell-mv-offer.html"
       ],
-      "agentRule": "MV upsell slot-rendering families only. Requires data-next-bundle-slots-for and the upsell slot template. Shipped enabled on olympus-mv-single-step and olympus-mv-two-step upsell-mv pages; use order_personalization only for one shared value across every accepted upsell line."
+      "agentRule": "MV upsell slot-rendering families only. Requires data-next-bundle-slots-for and the upsell slot template. Shipped enabled on olympus-mv-single-step and olympus-mv-two-step upsell-mv pages; use order_personalization only for one shared value across every accepted upsell line. If both run together, keep their property_keys distinct (per-slot overrides the page default on a shared key)."
     }
   },
   "campaignSpecFixturePolicy": {

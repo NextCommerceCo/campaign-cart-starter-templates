@@ -43,9 +43,12 @@ upsell_slot_personalization:
   maxlength: 40
 # Optional shared-value fallback: one data-next-default-property value merged onto every
 # accepted upsell line. Useful for single non-slot upsells or one message across all units.
+# Disabled here because the demo uses per-slot fields above. When enabling it ALONGSIDE the
+# per-slot field, keep a DISTINCT property_key (here gift_message vs the slot's upsell_message):
+# UpsellEnhancer merges { ...default, ...slot }, so a shared key is overridden per line.
 order_personalization:
   enabled: false
-  property_key: upsell_message
+  property_key: gift_message
   label: "Personalize your bonus tee"
   optional: true
   placeholder: "e.g. name to print"
