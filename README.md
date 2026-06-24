@@ -83,6 +83,10 @@ Every checkout template includes `presell.html` and `landing.html` — a full pr
 | `[any slug]` · landing | Composable landing page | [olympus example](https://nextcommerce-campaign-templates.netlify.app/olympus/landing/) |
 | `landing` | Full section showcase (every component) | [preview](https://nextcommerce-campaign-templates.netlify.app/landing/index/) |
 
+## Migration notes
+
+Starter `bump-check01.html` order bumps now default to a single visible sale price row. Existing cloned campaigns that want the struck `originalUnitPrice` row should pass `show_compare_price=true`; leave it unset when the bump should render only the current `unitPrice`/ea price.
+
 ## npm scripts
 
 Run these inside the repository root:
