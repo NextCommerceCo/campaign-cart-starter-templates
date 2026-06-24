@@ -100,7 +100,7 @@
     <h2 class="form-section__title">{{ slot_title }}</h2>
     {% comment %} SDK 0.4.27 — order-wide line-item personalization, rendered ABOVE the per-unit slots.
          data-next-default-property is collected page-wide and merged onto EVERY cart line the bundle writes
-         (and kept off the order bump via bump_exclude_property). Uses a DISTINCT key from the per-slot field
+         (and kept off the check03 order bump via data-next-exclude-property). Uses a DISTINCT key from the per-slot field
          below, so the shared value and the per-unit value never collide. Opt in via order_personalization
          passed from the page frontmatter; renders nothing unless enabled. {% endcomment %}
     {%- if order_personalization and order_personalization.enabled -%}

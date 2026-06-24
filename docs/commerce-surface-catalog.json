@@ -294,7 +294,7 @@
         "orderSummary": "cart-summary01|cart-summary02|cart-summary03|cart-summary04",
         "payment": "payment-methods",
         "expressCheckout": "express-checkout|express-checkout-inline",
-        "orderBump": "bump-check01|bump-check02|bump-switch01",
+        "orderBump": "bump-check01|bump-check02|bump-check03|bump-switch01",
         "upsell": "bundle-stepper|bundle-tier-pills|bundle-tier-cards",
         "receipt": "receipt-skeleton"
       },
@@ -466,7 +466,7 @@
         "orderSummary": "cart-summary02 accordion",
         "payment": "payment-methods",
         "expressCheckout": "express-checkout|express-checkout-inline",
-        "orderBump": "bump-check01|bump-check02|bump-switch01",
+        "orderBump": "bump-check01|bump-check02|bump-check03|bump-switch01",
         "upsell": "upsell-bundle-stepper-offer|upsell-bundle-tier-pills-offer|upsell-bundle-tier-cards-offer",
         "receipt": "receipt-skeleton|receipt-order-summary-mobile|receipt-order-summary-desktop"
       },
@@ -619,7 +619,7 @@
         "orderSummary": "cart-summary03 side cart",
         "payment": "payment-methods",
         "expressCheckout": "express-checkout|express-checkout-inline",
-        "orderBump": "bump-check01|bump-check02|bump-switch01",
+        "orderBump": "bump-check01|bump-check02|bump-check03|bump-switch01",
         "upsell": "upsell-bundle-stepper-offer|upsell-bundle-tier-pills-offer|upsell-bundle-tier-cards-offer",
         "receipt": "receipt-skeleton|receipt-order-summary-mobile|receipt-order-summary-desktop"
       },
@@ -775,7 +775,7 @@
         "checkoutSummary": "cart-summary04",
         "payment": "payment-methods",
         "expressCheckout": "express-checkout",
-        "orderBump": "bump-check02",
+        "orderBump": "bump-check01|bump-check02|bump-check03|bump-switch01",
         "receipt": "receipt-skeleton|receipt-order-summary-mobile|receipt-order-summary-desktop",
         "upsell": "upsell-bundle-stepper-offer|upsell-bundle-tier-pills-offer|upsell-bundle-tier-cards-offer"
       },
@@ -923,11 +923,11 @@
       "canonicalSurfaces": {
         "mainSelector": "mv-configurable-selector",
         "variantSlots": "bundle-slot-selector",
-        "personalization": "per-slot picker (data-next-property per slot, toggled by slot_personalization); order-wide default via personalization-field (ships unwired)",
+        "personalization": "per-slot picker (data-next-property per slot, toggled by slot_personalization); order-wide default via mv-configurable-selector order_personalization",
         "orderSummary": "cart-summary03|cart-summary04",
         "payment": "payment-methods",
         "expressCheckout": "express-checkout|express-checkout-inline",
-        "orderBump": "bump-check01|bump-check02|bump-switch01",
+        "orderBump": "bump-check01|bump-check02|bump-check03|bump-switch01",
         "upsell": "upsell-mv|upsell-bundle-stepper|upsell-bundle-tier-pills|upsell-bundle-tier-cards",
         "receipt": "receipt-skeleton"
       },
@@ -1441,6 +1441,12 @@
           { "families": ["olympus-mv-single-step", "olympus-mv-two-step"], "note": "MV/configurable bump: quantity sync via data-next-product-sync (product_id), so it sums across variant swaps (SDK 0.4.25+). See CLAUDE.md." },
           { "families": ["shop-single-step", "shop-three-step"], "note": "Shop bump layout for selector-less checkouts." },
           { "families": ["demeter", "limos"], "note": "Editorial/Limos bump styling." }
+        ]
+      },
+      "bump-check03.html": {
+        "surface": "orderBump",
+        "lineages": [
+          { "families": ["olympus", "limos", "demeter", "olympus-mv-single-step", "olympus-mv-two-step", "shop-single-step", "shop-three-step"], "note": "Shared unsynced product-card bump with optional PackageToggle line-item property field (SDK 0.4.27+)." }
         ]
       },
       "bump-switch01.html": {

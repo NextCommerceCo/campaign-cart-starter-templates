@@ -708,6 +708,15 @@ Starter `bump-check01.html` partials expose three pricing args:
 
 Migration note for existing cloned campaigns: starter bumps now default to a single visible sale price row. Pass `show_compare_price=true` to restore the struck `originalUnitPrice` row for bumps that should visibly compare against a prior price.
 
+Shared checkout templates also include `bump-check03.html`, an unsynced product-card bump for a single add-on offer. Select it with `order_bump_variant: "check03"` on templates that dispatch bump variants, or include it directly beside an existing bump when a checkout should show more than one bump. It intentionally omits `data-next-product-sync` / `data-next-package-sync`, so it adds one standalone upsell product rather than mirroring bundle quantity.
+
+Configure it with `order_bump.check03`:
+- `package_id`, `title`, `subtitle`, `image_src`, `image_alt`, `badge_text`, and `savings_text` control the visible card.
+- `badge_text` acts as fallback text and also keeps the badge rendered; SDK 0.4.27 fills `discountPercentage` when the package offer is available.
+- `savings_text` labels the SDK-owned `discountAmount` money value.
+- `exclude_property` maps to `data-next-exclude-property` when the bump should not inherit a checkout-level property.
+- `personalization.enabled` toggles the line-item text field; `property_key`, `label`, `placeholder`, `maxlength`, and `optional` configure the field.
+
 CSS required for checkbox state (already in `next-core.css` — only add if using a custom stylesheet):
 ```css
 [data-next-bump] [os-component="check"] { display: none; }
@@ -1021,6 +1030,7 @@ Use these when implementing or verifying a specific task. Work through each item
 - [ ] Outer wrapper has `data-next-await=""` (hides until SDK ready)
 - [ ] Toggle container has `data-next-bump=""` and `data-next-package-id` set to the bump package
 - [ ] `data-next-package-sync` on the toggle container lists all main package IDs (if quantity should sync) — or, for a configurable / multi-variant main product, use `data-next-product-sync="<product_id>"` (SDK 0.4.25+) so one id covers every variant
+- [ ] For an unsynced product-card bump, use `bump-check03.html` / `order_bump_variant: "check03"` and set `order_bump.check03.package_id` to an offer-backed package
 - [ ] Clickable header has `data-next-toggle="toggle"`
 - [ ] `os-component="check"` element exists inside the header for the checkmark
 - [ ] CSS for `[data-next-bump][class*="next-active"] [os-component="check"]` is present in the stylesheet

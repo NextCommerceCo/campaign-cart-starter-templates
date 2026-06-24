@@ -11,17 +11,25 @@ order_bump:
       - "Accidental Damage Protection"
       - "Express Replacement Service"
       - "24/7 Priority Customer Support"
-# SDK 0.4.27 PackageToggle line-item personalization on the order bump. A data-next-property
-# input inside the bump card → the bump's cart line carries this value. property_key becomes the
-# order line-item attribute. Set enabled:false to remove. Paired below with bump_exclude_property
-# so the order-wide gift_message default does NOT also land on the bump line.
-bump_personalization:
-  enabled: true
-  property_key: warranty_name
-  label: "Name to register the warranty under"
-  optional: true
-  placeholder: "e.g. Jane Smith"
-  maxlength: 40
+  # SDK 0.4.27 PackageToggle line-item personalization demo. This is intentionally unsynced
+  # from the MV bundle quantity: it adds one add-on product and carries its own property.
+  # exclude_property keeps the checkout-wide custom_text default off this add-on line.
+  check03:
+    package_id: 78
+    title: "Upsell Product"
+    subtitle: "Add this special offer to your order."
+    image_src: "images/1x1_1.svg"
+    image_alt: ""
+    badge_text: "—"
+    savings_text: "Instant savings:"
+    exclude_property: "custom_text"
+    personalization:
+      enabled: true
+      property_key: bump_custom_text
+      label: "Custom text for upsell bump"
+      optional: true
+      placeholder: "e.g. Name to print"
+      maxlength: 24
 styles:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
 scripts:
@@ -47,10 +55,11 @@ slot_personalization:
   placeholder: "e.g. 23"
   maxlength: 3
 # SDK 0.4.27 order-wide line-item personalization. One data-next-default-property value (custom_text)
-# is merged onto EVERY cart line — including the order bump — UNLESS a line opts out via
-# data-next-exclude-property (the bump does, see bump_exclude_property below). Rendered ABOVE the slots
-# by mv-configurable-selector.html. Different key from the per-slot `number` above, so the shared value
-# and the per-unit value coexist without the same-key default/override merge pitfall.
+# is merged onto EVERY cart line — including order bumps — UNLESS a line opts out via
+# data-next-exclude-property. The check03 bump does, so the shared custom_text does not land on
+# that add-on line. Rendered ABOVE the slots by mv-configurable-selector.html. Different key from
+# the per-slot `number` above, so the shared value and the per-unit value coexist without the
+# same-key default/override merge pitfall.
 order_personalization:
   enabled: true
   property_key: custom_text
@@ -409,12 +418,15 @@ swiper_thumbs:
                               </div>
                             </div>
                             {% comment %} Quantity-synced order bump: tracks the main MV bundle quantity (incl. tier
-                                 1x/2x/3x and variant swaps) via data-next-product-sync — see bump-check01.html.
-                                 SDK 0.4.27: bump_personalization adds a per-line data-next-property input on the
-                                 bump; bump_exclude_property keeps the order-wide custom_text (rendered above the
-                                 slots) off the bump line. {% endcomment %}
+                                 1x/2x/3x and variant swaps) via data-next-product-sync — see bump-check01.html. {% endcomment %}
                             <div class="form-section form-section--last">
-                              {% campaign_include 'bump-check01.html' packages=packages bump_personalization=bump_personalization bump_exclude_property='custom_text' %}
+                              {% campaign_include 'bump-check01.html' packages=packages %}
+                            </div>
+                            {% comment %} Unsynced order bump product-card demo: adds one PackageToggle upsell product,
+                                 shows a line-item data-next-property input, and excludes the checkout-wide custom_text
+                                 default from this add-on line via data-next-exclude-property. {% endcomment %}
+                            <div class="form-section form-section--last">
+                              {% campaign_include 'bump-check03.html' packages=packages %}
                             </div>
                             <div class="form-section form-section--last">
                               <div class="form-section__header">
