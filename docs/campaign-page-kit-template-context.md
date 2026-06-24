@@ -606,10 +606,11 @@ Key token semantics (0.4.11+): `{item.price}` / `{item.originalPrice}` = **line 
 
 Let a customer attach custom text to a product (monogram, name-on-jersey, gift message). The **same product with different text can stay as separate cart/order lines** instead of merging by quantity. Properties flow through the whole order lifecycle automatically (`/calculate`, create-cart, create-order, express checkout); no config needed.
 
-**The model: shared default + per-slot override** — a global fallback with optional per-line flexibility.
+**The model: shared default + per-slot override** — a global fallback with optional per-line flexibility. (Browser-verified; the override half is gated on the slot-rendering setup and has a same-package caveat — see below.)
 
-- **Default (fallback)** — `data-next-default-property-key` on any input collects one value and applies it to **every** line the active bundle writes. Works on **non-MV bundles** too — the simple "one input, propagate everywhere" path (regardless of quantity or how many package ids).
-- **Override** — `data-next-property-key` on an **individual slot** replaces the shared default **for that line only**.
+- **Default (fallback)** — `data-next-default-property-key` on any input applies one value to **every** line the active bundle writes. Works on **any selector, including a plain non-MV tier-swap** — the simple "one input, propagate everywhere" path (regardless of quantity or package-id mix).
+- **Override** — `data-next-property-key` on an **individual slot** replaces the default for that line. This **requires the slot-rendering selector** (`data-next-bundle-slots-for` + slot `<template>`). A plain tier-swap renders **no slots** → no override there (default only). The slot structure does **not** need a variant product — a standalone product works by listing its packageId N times with `configurable:false`.
+  - **Caveat:** "set a default, override only some slots, leave the rest on the default" is **unreliable for repeats of the same package** — the lone override can be dropped (cart keeps the default for all units), because the live sync (`setItemProperties`) is keyed by packageId. Reliable per-line values require **every slot to carry its own explicit value**.
 
 ```html
 <!-- Default: one input, propagated to every line (gift message on the whole order/bundle). -->
