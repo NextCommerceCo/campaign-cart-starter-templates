@@ -309,3 +309,17 @@ window.addEventListener('next:initialized', function () {
     await next.applyCoupon('EXIT10');
   });
 });
+
+// SDK 0.4.27 — bump line-item personalization (PackageToggle property).
+// The whole bump card is the PackageToggle click target, so a click/keypress inside the
+// personalization field would otherwise toggle the bump on/off. The field is static HTML
+// (present at DOM ready), so stop those events from bubbling up to the card.
+function guardBumpPersonalization() {
+  document.querySelectorAll('[data-next-toggle-card] .bump__personalization').forEach(function (el) {
+    ['click', 'mousedown', 'keydown'].forEach(function (evt) {
+      el.addEventListener(evt, function (e) { e.stopPropagation(); });
+    });
+  });
+}
+if (document.readyState !== 'loading') guardBumpPersonalization();
+else document.addEventListener('DOMContentLoaded', guardBumpPersonalization);

@@ -11,6 +11,17 @@ order_bump:
       - "Accidental Damage Protection"
       - "Express Replacement Service"
       - "24/7 Priority Customer Support"
+# SDK 0.4.27 PackageToggle line-item personalization on the order bump. A data-next-property
+# input inside the bump card → the bump's cart line carries this value. property_key becomes the
+# order line-item attribute. Set enabled:false to remove. Paired below with bump_exclude_property
+# so the order-wide gift_message default does NOT also land on the bump line.
+bump_personalization:
+  enabled: true
+  property_key: warranty_name
+  label: "Name to register the warranty under"
+  optional: true
+  placeholder: "e.g. Jane Smith"
+  maxlength: 40
 styles:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
 scripts:
@@ -34,6 +45,17 @@ slot_personalization:
   optional: true
   placeholder: "e.g. CHAMPIONS '26"
   maxlength: 24
+# SDK 0.4.27 order-wide line-item personalization. One data-next-default-property value (gift_message)
+# is merged onto EVERY cart line — including the order bump — UNLESS a line opts out via
+# data-next-exclude-property (the bump does, see bump_exclude_property below). Different key from the
+# per-slot custom_text above, so the two coexist without the same-key default/override merge pitfall.
+order_personalization:
+  enabled: true
+  property_key: gift_message
+  label: "Add a gift message (applied to all items)"
+  optional: true
+  placeholder: "e.g. Happy birthday!"
+  maxlength: 120
 packages:
   main_package: 1
 shipping_methods:
@@ -384,10 +406,15 @@ swiper_thumbs:
                               <div class="text-xs-2"><strong>90 Day Money-Back Guarantee:</strong> Feel safe knowing you are protected with a 90 day guarantee. Simply send the item(s) back in the original packaging to receive a full refund or replacement, less S&amp;H.</div>
                               </div>
                             </div>
+                            <!-- SDK 0.4.27 order-wide personalization: one data-next-default-property (gift_message)
+                                 merged onto every cart line. The bump opts out via bump_exclude_property below. -->
+                            {% campaign_include 'personalization-field.html' order_personalization=order_personalization %}
                             <!-- Quantity-synced order bump: tracks the main MV bundle quantity (incl. tier
-                                 1x/2x/3x and variant swaps) via data-next-product-sync — see bump-check01.html. -->
+                                 1x/2x/3x and variant swaps) via data-next-product-sync — see bump-check01.html.
+                                 SDK 0.4.27: bump_personalization adds a per-line data-next-property input on the
+                                 bump; bump_exclude_property keeps the order-wide gift_message off the bump line. -->
                             <div class="form-section form-section--last">
-                              {% campaign_include 'bump-check01.html' packages=packages %}
+                              {% campaign_include 'bump-check01.html' packages=packages bump_personalization=bump_personalization bump_exclude_property='gift_message' %}
                             </div>
                             <div class="form-section form-section--last">
                               <div class="form-section__header">

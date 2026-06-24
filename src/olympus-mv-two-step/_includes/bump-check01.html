@@ -1,9 +1,16 @@
 {% comment %}
   next_component: order-bump-card
+  next_sdk_min: 0.4.27 (only when bump_personalization / bump_exclude_property are used)
   next_params:
     show_compare_price: bool, default false. Explicitly render struck originalUnitPrice in Option A.
     show_per_unit_price: bool, default true. Render Option A row (unitPrice/ea).
     show_line_total_price: bool, default false. Render Option B row (originalPrice + price).
+    bump_personalization: object, default off. { enabled, property_key, label, optional, placeholder, maxlength }.
+                          SDK 0.4.27 PackageToggle line-item property — a data-next-property input INSIDE the
+                          toggle card; the bump's cart line carries the value (collected on add/sync).
+    bump_exclude_property: string, default "". SDK 0.4.27 data-next-exclude-property on the card — drops the
+                          named key(s) from THIS line only ("gift_message" / "a, b" / "*"). Use to keep an
+                          order-wide data-next-default-property off the bump line.
 {% endcomment %}
 {% if show_per_unit_price == nil %}{% assign show_per_unit_price = true %}{% endif -%}
 {% if show_compare_price == nil %}{% assign show_compare_price = false %}{% endif -%}
@@ -27,7 +34,7 @@
          and future. 400 is this demo campaign's "T Shirt" product_id (verified: variant ref_ids 1-9 and
          66-74 all return product_id 400). Replace with your product's id when cloning — find it under
          packages[].product_id in the campaign API response (same value for every variant). -->
-    <div class="bump-card" data-next-toggle-card data-next-is-upsell="true" data-next-product-sync="400" data-next-package-id="77">
+    <div class="bump-card" data-next-toggle-card data-next-is-upsell="true" data-next-product-sync="400" data-next-package-id="77"{% if bump_exclude_property and bump_exclude_property != "" %} data-next-exclude-property="{{ bump_exclude_property }}"{% endif %}>
       <!-- Bump header — visual only, whole card is the toggle target -->
       <div class="bump__header-left">
         <div class="bump__header-content">
@@ -90,6 +97,21 @@
           <img data-next-toggle-image loading="lazy" alt="" src="{{ 'images/1x1_1.svg' | campaign_asset }}" class="bump__image">
         </div>
       </div>
+      {% comment %} SDK 0.4.27 — PackageToggle line-item personalization. This data-next-property input lives
+           INSIDE the toggle card, so PackageToggleEnhancer collects it into the bump line's properties when the
+           bump is added (and live-syncs on blur). The whole card is the toggle target, so the click guard in
+           checkout-olympus-mv-full.js (guardBumpPersonalization) stops field clicks from toggling the bump.
+           Opt in via bump_personalization; pairs with bump_exclude_property to drop an order-wide default. {% endcomment %}
+      {%- if bump_personalization and bump_personalization.enabled -%}
+      {%- assign bp_key = bump_personalization.property_key | default: 'engraving' -%}
+      {%- assign bp_label = bump_personalization.label | default: 'Add your personalization' -%}
+      {%- assign bp_placeholder = bump_personalization.placeholder | default: '' -%}
+      {%- assign bp_maxlength = bump_personalization.maxlength | default: 24 -%}
+      <div class="os-slot__personalization bump__personalization">
+        <label class="os-card__variant-label">{{ bp_label }}{% if bump_personalization.optional %} <span class="text-muted text-weight-normal">(optional)</span>{% endif %}</label>
+        <input data-next-property="{{ bp_key }}" type="text" maxlength="{{ bp_maxlength }}"{% if bp_placeholder != "" %} placeholder="{{ bp_placeholder }}"{% endif %} class="input-flds">
+      </div>
+      {%- endif -%}
     </div>
   </div>
 </div>
