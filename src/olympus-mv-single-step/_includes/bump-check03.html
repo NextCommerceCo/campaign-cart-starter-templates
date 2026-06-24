@@ -5,7 +5,7 @@
   next_purpose: Unsynced product-card pre-purchase upsell with an optional line-item property field.
   next_params:
     order_bump.check03: optional frontmatter object for package_id, title, subtitle, image_src, image_alt, badge_text, savings_text, personalization, and exclude_property.
-    package_id:         number, default order_bump.check03.package_id or packages.prepurchase_2 or 77.
+    package_id:         number, default order_bump.check03.package_id or packages.prepurchase_2 or 78 (distinct from bump-check01's hardcoded 77, so the two bumps never share a package when both render with unset ids).
     is_upsell:          bool, default true.
   next_sdk_owns:
     - data-next-package-toggle
@@ -18,9 +18,16 @@
     - data-next-exclude-property
   next_dont_touch:
     - This variant intentionally omits data-next-package-sync and data-next-product-sync so it stays one add-on product.
+  next_note:
+    - The optional personalization input sits INSIDE the PackageToggle click target (data-next-toggle-card).
+      A click/keydown inside the field must NOT toggle the bump; that protection is guardBumpPersonalization(),
+      which ships ONLY in the MV checkout JS (checkout-olympus-mv-full.js). So personalization is wired safely
+      on olympus-mv-single-step / olympus-mv-two-step only. Before enabling order_bump.check03.personalization
+      on any other family (demeter, limos, olympus, shop-single-step, shop-three-step), port
+      guardBumpPersonalization into that template's checkout JS or a field click will toggle the bump.
 {% endcomment %}
 {% assign bump = order_bump.check03 -%}
-{% assign pkg_id = package_id | default: bump.package_id | default: packages.prepurchase_2 | default: 77 -%}
+{% assign pkg_id = package_id | default: bump.package_id | default: packages.prepurchase_2 | default: 78 -%}
 {% if is_upsell == nil %}{% assign is_upsell = true %}{% endif -%}
 {% assign bump_title = bump.title | default: 'Add a personalized add-on' -%}
 {% assign subtitle = bump.subtitle | default: 'Perfect companion for your order' -%}
