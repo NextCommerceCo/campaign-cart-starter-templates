@@ -26,6 +26,16 @@
   package/cart-line image, and falls back to the declared swatch otherwise. The declared swatch
   is therefore the offline/no-API source of truth, not a throwaway placeholder.
 
+  RELATIONSHIP TO mv-configurable-selector (kept as TWO partials on purpose):
+    Both share the tier-card skeleton but use different slot-rendering strategies —
+    mv-configurable-selector is SDK-template-driven (data-next-bundle-slot-template-id +
+    data-next-variant-selectors); variant-picker is custom-JS-driven (variant-picker.js paints the
+    stage and rebuilds data-next-bundle-items). They carry different data-next-catalog-component
+    identities and different input contracts, so they are deliberately NOT merged into one
+    mode-switched partial. Per-tier shipping (data-next-shipping-id) IS supported here too via
+    tiers[].shipping_method / shipping_id (mirrors mv-configurable-selector), so this is a full
+    drop-in alternative selector, not only a variant-selection demo.
+
   next_params:
     variant_picker: object.
       selector_id:      string, fallback "vp-main". data-next-selector-id + slots-for target + bundle.<id>.* path.
@@ -33,9 +43,13 @@
       slot_heading:     string. Heading above the per-unit variant rows.
       variant_label:    string, fallback "Color:". Inline label on each slot dropdown.
       card_sup:         string. Small product line shown under each tier card title.
-      tiers:            array. { id, quantity, selected, label_text, label_class, card_sup }.
+      tiers:            array. { id, quantity, selected, label_text, label_class, card_sup,
+                        shipping_method (key into shipping_methods) OR shipping_id (raw ref) }.
       variants:         array. { value, label, package_id, image } — the ONE declared source.
+    shipping_methods:   object, optional. Campaigns App shipping method ref_ids (e.g. standard/free);
+                        tiers[].shipping_method resolves through this into data-next-shipping-id per card.
   next_sdk_owns:
+    - data-next-shipping-id (per-tier shipping method, when configured)
     - data-next-bundle-selector / data-next-selector-id / data-next-selection-mode
     - data-next-bundle-card / data-next-bundle-id / data-next-bundle-items / data-next-selected
     - data-next-bundle-display / data-next-display (package.<id>.* and bundle.<selector_id>.*)
@@ -64,7 +78,6 @@
   {
     "selectorId": "{{ sel_id }}",
     "defaultVariant": "{{ default_variant.value }}",
-    "qtyMax": {{ tiers | size }},
     "packages": { {% for v in variants %}"{{ v.value }}": {{ v.package_id }}{% unless forloop.last %}, {% endunless %}{% endfor %} },
     "images": { {% for v in variants %}"{{ v.value }}": "{{ v.image | campaign_asset }}"{% unless forloop.last %}, {% endunless %}{% endfor %} }
   }
@@ -88,9 +101,12 @@
           {% assign card_id = tier.id | default: 'buy1' -%}
           {% assign card_sup = tier.card_sup | default: default_card_sup -%}
           {% assign card_title = tier.title | default: card_id -%}
+          {% assign shipping_key = tier.shipping_method -%}
+          {% assign card_shipping_id = tier.shipping_id -%}
+          {% if card_shipping_id == nil and shipping_key %}{% assign card_shipping_id = shipping_methods[shipping_key] %}{% endif -%}
           {% capture init_items %}[{"packageId":{{ default_variant.package_id }},"quantity":{{ tier.quantity | default: 1 }}}]{% endcapture -%}
           <div data-next-bundle-card data-next-bundle-id="{{ card_id }}"
-               data-next-bundle-items='{{ init_items }}'{% if tier.selected %} data-next-selected="true"{% endif %} role="button" class="os-card vp-tier-card">
+               data-next-bundle-items='{{ init_items }}'{% if tier.selected %} data-next-selected="true"{% endif %} role="button" class="os-card vp-tier-card"{% if card_shipping_id %} data-next-shipping-id="{{ card_shipping_id }}"{% endif %}>
             <!-- Non-first tiers expose os-slot="header" (matches the mv-configurable-selector
                  convention); the SDK uses it as the top-of-card spacing/label anchor on the
                  2nd/3rd cards. The first card omits it intentionally. -->

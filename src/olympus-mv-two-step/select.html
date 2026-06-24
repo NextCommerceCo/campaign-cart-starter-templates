@@ -109,6 +109,10 @@ variant_slots:
                         </div>
                         <div class="_2step_form-selector-2 cc-qty">
                           <div class="selector__wrapper">
+                            <!-- Alternative MV selector: variant-picker.html — custom-JS slot rendering with
+                                 per-variant swatch thumbnails + an offline render fixture. Drop-in (supports
+                                 per-tier shipping via variant_picker.tiers[].shipping_method). See
+                                 _includes/variant-picker.html and the standalone /variant-picker/ reference page. -->
                             {% campaign_include 'mv-selection-step.html' packages=packages shipping_methods=shipping_methods variant_slots=variant_slots %}
                           <div data-next-component="quantity-cta" class="checkout_cta-sec">
                             <button data-next-action="select-variants" class="button cc-gold">

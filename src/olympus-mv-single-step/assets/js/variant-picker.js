@@ -27,7 +27,6 @@
   var PACKAGES    = CFG.packages || {};          // { variantValue: packageId }
   var IMAGES      = CFG.images || {};            // { variantValue: templateSwatchSrc }
   var DEFAULT     = { cs: CFG.defaultVariant || Object.keys(PACKAGES)[0] };
-  var QTY_MAX     = CFG.qtyMax || 3;
 
   var slots     = [];
   var activeQty = 1;
