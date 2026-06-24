@@ -5,16 +5,6 @@ promo_sale: "default"
 next_url: upsell-bundle-stepper.html
 cart_summary_variant: "01"
 order_bump_variant: "check01+switch01"
-# SDK 0.4.26 order-wide line-item personalization. One value applied to every cart line
-# (data-next-default-property-key), forwarded to the order. Set enabled:false to remove the field.
-# For per-line DISTINCT values use the MV slot pattern instead (see olympus-mv-* slot_personalization).
-order_personalization:
-  enabled: true
-  property_key: gift_message
-  label: "Add a gift message"
-  optional: true
-  placeholder: "e.g. Happy Birthday, Mom!"
-  maxlength: 120
 styles:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
 scripts:
@@ -330,9 +320,6 @@ bundles:
                               </div>
                               {% endcomment %}
                             </div>
-
-                            {% campaign_include 'personalization-field.html' order_personalization=order_personalization %}
-
 
                             <div data-next-component="shipping-form" class="form-sections">
                               {% campaign_include 'customer-info-form.html' %}

@@ -34,6 +34,16 @@ slot_personalization:
   optional: true
   placeholder: "e.g. CHAMPIONS '26"
   maxlength: 24
+# Shared default for the SAME key as the slots above. The default applies to every line;
+# a filled slot overrides it for that line (eng-confirmed slot-style picker model). Fill each
+# slot for reliable per-line values — see personalization-field.html gotchas.
+order_personalization:
+  enabled: true
+  property_key: custom_text
+  label: "Default message for all items"
+  optional: true
+  placeholder: "e.g. Season's Greetings"
+  maxlength: 24
 packages:
   main_package: 1
 shipping_methods:
@@ -252,6 +262,7 @@ swiper_thumbs:
                     <promo-timer{% if promo_sale %} force-sale="{{ promo_sale }}"{% endif %}></promo-timer>
                     <div class="checkout-form">
                       <div class="checkout-selectors" data-next-await="">
+                        {% campaign_include 'personalization-field.html' order_personalization=order_personalization %}
                         {% campaign_include 'mv-configurable-selector.html' packages=packages shipping_methods=shipping_methods variant_slots=variant_slots slot_personalization=slot_personalization %}
                         <div class="form-section form-section--first">
                           <div class="_2step__size-guide">
