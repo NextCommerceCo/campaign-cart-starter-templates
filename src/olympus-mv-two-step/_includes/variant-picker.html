@@ -44,7 +44,11 @@
       variant_label:    string, fallback "Color:". Inline label on each slot dropdown.
       card_sup:         string. Small product line shown under each tier card title.
       tiers:            array. { id, quantity, selected, label_text, label_class, card_sup,
-                        shipping_method (key into shipping_methods) OR shipping_id (raw ref) }.
+                        shipping_label, shipping_method, shipping_id }.
+                        Shipping: shipping_id (raw ref) takes PRECEDENCE over shipping_method (a key
+                        into shipping_methods) — set at most one. shipping_label is optional static
+                        text (e.g. "Free Shipping") rendered on the card; it is visual only and
+                        independent of the SDK data-next-shipping-id wiring.
       variants:         array. { value, label, package_id, image } — the ONE declared source.
     shipping_methods:   object, optional. Campaigns App shipping method ref_ids (e.g. standard/free);
                         tiers[].shipping_method resolves through this into data-next-shipping-id per card.
@@ -106,7 +110,7 @@
           {% if card_shipping_id == nil and shipping_key %}{% assign card_shipping_id = shipping_methods[shipping_key] %}{% endif -%}
           {% capture init_items %}[{"packageId":{{ default_variant.package_id }},"quantity":{{ tier.quantity | default: 1 }}}]{% endcapture -%}
           <div data-next-bundle-card data-next-bundle-id="{{ card_id }}"
-               data-next-bundle-items='{{ init_items }}'{% if tier.selected %} data-next-selected="true"{% endif %} role="button" class="os-card vp-tier-card"{% if card_shipping_id %} data-next-shipping-id="{{ card_shipping_id }}"{% endif %}>
+               data-next-bundle-items='{{ init_items }}'{% if tier.selected %} data-next-selected="true"{% endif %} role="button" class="os-card vp-tier-card"{% if card_shipping_id != nil and card_shipping_id != "" %} data-next-shipping-id="{{ card_shipping_id }}"{% endif %}>
             <!-- Non-first tiers expose os-slot="header" (matches the mv-configurable-selector
                  convention); the SDK uses it as the top-of-card spacing/label anchor on the
                  2nd/3rd cards. The first card omits it intentionally. -->
@@ -122,6 +126,7 @@
               </div>
               <div os-slot="bottom" class="os-card__bottom-slot cc-gap vp-tier-card__bottom">
                 <div class="card-sup">{{ card_sup }}</div>
+                {% if tier.shipping_label and tier.shipping_label != "" %}<div class="card-sup vp-tier-card__shipping">{{ tier.shipping_label }}</div>{% endif %}
                 <div class="os-card__subtitle-text-2">Save <span data-next-bundle-display="discountPercentage" data-next-format="percentage">—</span> OFF</div>
               </div>
             </div>

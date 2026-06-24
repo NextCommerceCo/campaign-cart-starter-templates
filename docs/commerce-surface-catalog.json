@@ -909,6 +909,7 @@
         "swiper_slides",
         "swiper_thumbs",
         "variant_slots",
+        "variant_picker",
         "upsell_offer",
         "upsell_mv_tiers",
         "upsell_bundle_tiers"
@@ -1084,6 +1085,7 @@
         "select_step",
         "selector_id",
         "variant_slots",
+        "variant_picker",
         "upsell_offer",
         "upsell_mv_tiers",
         "upsell_bundle_tiers"
