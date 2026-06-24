@@ -17,7 +17,7 @@
      Option A (per-unit, stable, DEFAULT): unitPrice/ea, with originalUnitPrice/ea only when show_compare_price=true — does not scale with synced qty
      Option B (line total, scales, opt-in): originalPrice + price — multiplies with data-next-package-sync qty
        To switch: pass show_per_unit_price=false show_line_total_price=true to {% campaign_include %} -->
-<div data-component="prepurchase-upsell" data-variant="check01" data-next-await="">
+<div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="check01" data-next-await="">
   <div data-next-package-toggle>
     <!-- QTY SYNC ON MV / CONFIGURABLE PRODUCTS — data-next-product-sync (SDK 0.4.25+).
          data-next-package-sync matches cart lines by packageId, which under-counts on a configurable
