@@ -229,6 +229,38 @@
         "Campaigns API/payment provider capability"
       ],
       "agentRule": "Payment config, CampaignSpec/API support, and visible rows must agree."
+    },
+    "slot_personalization": {
+      "purpose": "MV slot-picker line-item personalization (SDK 0.4.26+). Adds a data-next-property-key input to each rendered bundle slot so units can carry distinct text and become separate order lines.",
+      "canonicalKeys": [
+        "enabled",
+        "property_key",
+        "label",
+        "optional",
+        "placeholder",
+        "maxlength"
+      ],
+      "sourceOfTruth": [
+        "Campaign personalization requirement (per-line custom text)",
+        "Template slot partials: mv-configurable-selector.html / mv-slot-stage.html"
+      ],
+      "agentRule": "MV/slot-rendering families only — per-line customization requires a slot picker (eng-confirmed). Shipped enabled on olympus-mv-single-step, disabled on olympus-mv-two-step. property_key becomes the order line-item attribute name. Fill every slot explicitly; do not rely on an order-wide default to fill some slots and override others (same-package overrides drop). Not available on tier-swap families."
+    },
+    "order_personalization": {
+      "purpose": "Order-wide line-item personalization default (SDK 0.4.26+) via personalization-field.html. One data-next-default-property-key value applied to every line the active bundle writes.",
+      "canonicalKeys": [
+        "enabled",
+        "property_key",
+        "label",
+        "optional",
+        "placeholder",
+        "maxlength"
+      ],
+      "sourceOfTruth": [
+        "Campaign personalization requirement (one shared value across all units)",
+        "Template partial: personalization-field.html (ships in every family, unwired)"
+      ],
+      "agentRule": "Reliable only for 'same value on every unit'. The partial ships in every family's _includes but is NOT wired into any page; opt in with a campaign_include. For per-line distinct values use slot_personalization (MV) instead. Not supported on post-purchase upsells."
     }
   },
   "campaignSpecFixturePolicy": {
@@ -891,6 +923,7 @@
       "canonicalSurfaces": {
         "mainSelector": "mv-configurable-selector",
         "variantSlots": "bundle-slot-selector",
+        "personalization": "per-slot picker (data-next-property-key per slot, toggled by slot_personalization); order-wide default via personalization-field (ships unwired)",
         "orderSummary": "cart-summary03|cart-summary04",
         "payment": "payment-methods",
         "expressCheckout": "express-checkout|express-checkout-inline",
@@ -909,6 +942,7 @@
         "swiper_slides",
         "swiper_thumbs",
         "variant_slots",
+        "slot_personalization",
         "variant_picker",
         "upsell_offer",
         "upsell_mv_tiers",
@@ -1068,6 +1102,7 @@
         "selectStep": "mv-selection-step",
         "checkoutSelector": "mv-selected-bundle-review",
         "variantSlots": "bundle-slot-selector",
+        "personalization": "per-slot picker (data-next-property-key per slot, toggled by slot_personalization); order-wide default via personalization-field (ships unwired)",
         "orderSummary": "cart-summary03|cart-summary04",
         "payment": "payment-methods",
         "expressCheckout": "express-checkout|express-checkout-inline",
@@ -1085,6 +1120,7 @@
         "select_step",
         "selector_id",
         "variant_slots",
+        "slot_personalization",
         "variant_picker",
         "upsell_offer",
         "upsell_mv_tiers",

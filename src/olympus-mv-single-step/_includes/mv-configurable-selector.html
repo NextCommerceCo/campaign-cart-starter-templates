@@ -143,6 +143,22 @@
               <div data-next-variant-selectors></div>
             </div>
           </div>
+          {% comment %} SDK 0.4.26 — per-slot line-item personalization (issue #47 / PR #56).
+               This input lives INSIDE the slot template, which the SDK clones once per unit, so each
+               unit gets its own data-next-property-key field → two units of the same package with
+               different text become SEPARATE cart + order lines. Captured on input; cart syncs on blur.
+               Toggle + configure via the `slot_personalization` frontmatter object passed as an include
+               arg; renders only when slot_personalization.enabled is true. {% endcomment %}
+          {%- if slot_personalization and slot_personalization.enabled -%}
+          {%- assign sp_key = slot_personalization.property_key | default: 'custom_text' -%}
+          {%- assign sp_label = slot_personalization.label | default: 'Custom text' -%}
+          {%- assign sp_placeholder = slot_personalization.placeholder | default: '' -%}
+          {%- assign sp_maxlength = slot_personalization.maxlength | default: 24 -%}
+          <div class="os-slot__personalization">
+            <label class="os-card__variant-label">{{ sp_label }}{% if slot_personalization.optional %} <span class="text-muted text-weight-normal">(optional)</span>{% endif %}</label>
+            <input data-next-property-key="{{ sp_key }}" type="text" maxlength="{{ sp_maxlength }}"{% if sp_placeholder != "" %} placeholder="{{ sp_placeholder }}"{% endif %} class="input-flds">
+          </div>
+          {%- endif -%}
         </div>
       </div>
     </div>

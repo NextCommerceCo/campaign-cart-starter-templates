@@ -15,6 +15,16 @@ select_step:
   selector_id: "main"
 checkout_step:
   selector_id: "main"
+# SDK 0.4.26 per-slot line-item personalization (MV-only). Off by default here; set enabled:true
+# to add a per-slot custom-text input (renders on this select step, flows to the order). See the
+# single-step MV checkout for an enabled reference. property_key becomes the order line-item attribute.
+slot_personalization:
+  enabled: false
+  property_key: custom_text
+  label: "Custom text"
+  optional: true
+  placeholder: "e.g. CHAMPIONS '26"
+  maxlength: 24
 packages:
   main_package: 1
 shipping_methods:
@@ -167,7 +177,7 @@ variant_slots:
                         </div>
                         <div class="_2step_form-selector-2">
                           <div class="selector__wrapper">
-                            {% campaign_include 'mv-slot-stage.html' %}
+                            {% campaign_include 'mv-slot-stage.html' slot_personalization=slot_personalization %}
                             <div class="_2step__size-guide">
                               <div class="size_chart-wrapper">
                                 <div>Not sure on size? Check the chart &gt;</div>

@@ -62,6 +62,14 @@
                             </div>
                           </div>
                         </div>
+                        {% comment %} SDK 0.4.26: line-item properties (personalization). Each unique slot renders as
+                             its own line, so this shows the back_text bound to that specific unit. Container
+                             gets next-summary-empty / next-summary-has-items for CSS show/hide. {% endcomment %}
+                        <div data-next-item-properties class="cart-item__properties text-2xs text-muted">
+                          <template>
+                            <div class="cart-item__property"><span class="os-bold">{property.key}:</span> {property.value}</div>
+                          </template>
+                        </div>
                       </div>
                       <div class="cart-item__pricing">
                         <div class="cart-price diagonal-strike line-compare {item.hasDiscount}">{item.originalPrice}</div>

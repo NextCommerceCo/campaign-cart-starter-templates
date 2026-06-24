@@ -37,6 +37,14 @@
                       <div class="text-2xs text-muted text-weight-normal diagonal-strike {item.hasDiscount}">{item.originalUnitPrice}/ea</div>
                       <div class="text-2xs text-muted text-weight-normal">{item.unitPrice}/ea</div>
                     </div>
+                    {% comment %} SDK 0.4.26: line-item properties (personalization). Renders one row per property on the
+                         line item; container gets next-summary-empty / next-summary-has-items so it stays invisible
+                         unless the item carries properties. Harmless on lines without properties. {% endcomment %}
+                    <div data-next-item-properties class="cart-item__properties text-2xs text-muted">
+                      <template>
+                        <div class="cart-item__property"><span class="os-bold">{property.key}:</span> {property.value}</div>
+                      </template>
+                    </div>
                   </div>
                   <div class="cart-item__pricing">
                     <div class="cart-price price--original {item.hasDiscount}">{item.originalPrice}</div>
