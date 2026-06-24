@@ -1,0 +1,168 @@
+/* ──────────────────────────────────────────────────────────────────────────
+ * variant-picker.css — chrome for the reference MV variant-picker component.
+ * Pairs with _includes/variant-picker.html + assets/js/variant-picker.js.
+ *
+ * The "Label: [dropdown]" ROW layout lives in next-core.css as the documented
+ * hook .os-card__variant-group.cc-row (overrides next-core's default
+ * flex-flow: column). This file only styles the dropdown chrome, tier cards,
+ * and the responsive collapse — scoped to #vp-slot-stage / [data-catalog-component].
+ * ────────────────────────────────────────────────────────────────────────── */
+
+[data-next-catalog-component="variant-picker"] {
+  display: contents;
+}
+
+/* Slot separator when multiple units shown */
+.vp-slot + .vp-slot {
+  margin-top: 0.75rem;
+}
+
+[data-next-catalog-component="variant-picker"] .os-cards__grid.os--three {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* Dropdown menus must escape the slot row's clipping. */
+#vp-slot-stage,
+#vp-slot-stage .vp-slot,
+#vp-slot-stage .slot__right,
+#vp-slot-stage .os-card__variant-options,
+#vp-slot-stage .os-card__variant-grid,
+#vp-slot-stage .os-card__variant-group,
+#vp-slot-stage .next-slot-variant-field {
+  overflow: visible;
+}
+
+#vp-slot-stage .os-card__variant-label {
+  font-size: 0.938rem;
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+#vp-slot-stage .os-variant-dropdown {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  min-width: 0;
+  /* width: 100% keeps the dropdown full-width even outside a flex .cc-row parent
+     (standalone render); inside .cc-row, flex-grow still fills the row. */
+  width: 100%;
+}
+
+#vp-slot-stage .os-variant-dropdown[open],
+#vp-slot-stage .os-variant-dropdown:has(.show) {
+  z-index: 1001;
+}
+
+#vp-slot-stage .os-card__variant-dropdown-toggle {
+  grid-column-gap: 0.5rem;
+  grid-row-gap: 0.5rem;
+  color: #000;
+  letter-spacing: -0.006em;
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 3rem;
+  padding: 0.5rem 0.75rem;
+  font-size: var(--font-size--sm);
+  line-height: 1.25rem;
+  display: flex;
+  width: 100%;
+}
+
+#vp-slot-stage .os-card__variant-dropdown-menu-v2 {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  max-height: min(18rem, 60vh);
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+#vp-slot-stage .os-card__variant-dropdown-icon {
+  width: 1rem;
+  height: 1rem;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+#vp-slot-stage .os-card__variant-toggle-name {
+  font-weight: 600;
+}
+
+#vp-slot-stage .os-card__toggle-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Swatch thumbnails (toggle + menu items) */
+#vp-slot-stage .vp-color-swatch {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 4px;
+  object-fit: cover;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  flex: none;
+}
+
+#vp-slot-stage .os-card__variant-dropdown-item {
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+}
+
+#vp-slot-stage .os-card__variant-dropdown-item.selected,
+#vp-slot-stage .os-card__variant-dropdown-item:hover {
+  background: #f5f5f5;
+}
+
+.vp-slot__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vp-tier-card .os-card__subtitle-text-2 {
+  color: #cb0000;
+  font-family: var(--font-display, inherit);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+@media screen and (max-width: 991px) {
+  [data-catalog-component="variant-picker"] .os-cards__grid.os--three {
+    display: flex;
+    flex-flow: column;
+  }
+
+  #vp-slot-stage .os-card__variant-dropdown-menu-v2 {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .vp-tier-card .os-card__subtitle-text-2 {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  #vp-slot-stage os-dropdown-menu,
+  #vp-slot-stage [os-element="dropdown-menu"] {
+    position: absolute !important;
+    top: calc(100% + 8px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+  }
+}

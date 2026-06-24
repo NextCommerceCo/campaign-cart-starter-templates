@@ -543,6 +543,16 @@ bundles:
     shipping_label: "+ Free Shipping"  # rendered unconditionally when set
 ```
 
+### MV variant-picker (olympus-mv alternative selector)
+
+`olympus-mv-single-step` and `olympus-mv-two-step` ship a **variant-picker** reference component — quantity tier cards plus per-unit variant (e.g. colorway) dropdowns with **custom per-variant swatch thumbnails**. Use it when a campaign needs visible swatch images on the selector, or a picker that renders for visual QA without the live API. It is an **additive alternative** to the default `mv-configurable-selector` (which uses SDK-injected native `<select>`s, no swatch images).
+
+- Files per template: `_includes/variant-picker.html`, `assets/js/variant-picker.js`, `assets/js/variant-picker-fixture.js`, `assets/css/variant-picker.css`, and a standalone `variant-picker.html` reference page. To use it on checkout, `{% campaign_include 'variant-picker.html' %}` in place of the default selector and add the css/js to the page frontmatter.
+- **One declared variant source.** `variant_picker.variants[]` (`{ value, label, package_id, image }`) is emitted once and feeds BOTH the dropdown swatch `src` AND the JS `value→packageId` / `value→image` maps — no second map to drift. Replace the demo image paths with your CampaignSpec per-variant package images.
+- **Image precedence:** live API `getPackageImage(packageId)` > declared template swatch. The swatch is the offline source of truth, not a placeholder.
+- **Per-tier shipping** is supported via `variant_picker.tiers[].shipping_method` (resolved through `shipping_methods` into `data-next-shipping-id`), so it is a full drop-in alternative selector, not only a variant-selection demo.
+- **Layout hook:** the inline "Label: [dropdown]" row uses `.os-card__variant-group.cc-row` (next-core), which overrides next-core's default `flex-flow: column` so the label does not stack above the control.
+
 ### Conditional visibility
 
 ```html

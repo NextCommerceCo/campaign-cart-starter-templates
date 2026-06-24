@@ -58,6 +58,8 @@ Each checkout template includes presell + landing pages, all upsell variants, an
 | `shop-single-step` | Shop-style single-step | [preview](https://nextcommerce-campaign-templates.netlify.app/shop-single-step/checkout/?forcePackageId=1:1) |
 | `shop-three-step` | Shop-style three-step (info → shipping → billing) | [preview](https://nextcommerce-campaign-templates.netlify.app/shop-three-step/information/?forcePackageId=1:1) |
 
+> **MV variant-picker (alternative selector).** `olympus-mv-single-step` and `olympus-mv-two-step` also ship a reference **variant-picker** — quantity tier cards + per-unit variant (colorway) dropdowns with custom per-variant swatch thumbnails and an offline render fixture, an additive alternative to the default `mv-configurable-selector`. Preview: [single-step](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/variant-picker/) · [two-step](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-two-step/variant-picker/).
+
 **Upsells**
 
 | Variant | Description | Preview |
