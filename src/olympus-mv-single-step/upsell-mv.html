@@ -32,12 +32,20 @@ upsell_mv_tiers:
   - id: "upsell-bundle-5x"
     quantity: 5
     vouchers_json: '["UP80TSHIRT"]'
-# SDK 0.4.27 — post-purchase upsells now forward line-item properties. UpsellEnhancer collects
-# page-wide data-next-default-property inputs and merges them onto every accepted upsell line
-# (UpsellEnhancer.handlers: { ...defaultProperties, ...bundleItem.properties }). The personalization-field
-# partial renders that input; the value rides along on the upsell accept POST. Set enabled:false to remove.
-order_personalization:
+# SDK 0.4.27 — per-slot post-purchase upsell personalization. Each upsell slot gets its
+# own data-next-property input, so accepted upsell units can carry distinct text.
+upsell_slot_personalization:
   enabled: true
+  property_key: upsell_message
+  label: "Custom text"
+  optional: true
+  placeholder: "e.g. name to print"
+  maxlength: 40
+# Optional shared-value fallback: one data-next-default-property value merged onto every
+# accepted upsell line. Useful for single non-slot upsells or one message across all units.
+# Disabled here because the demo uses per-slot fields above.
+order_personalization:
+  enabled: false
   property_key: upsell_message
   label: "Personalize your bonus tee"
   optional: true
@@ -95,7 +103,7 @@ order_personalization:
         </div>
       </div>
     </section>
-    {% campaign_include 'upsell-mv-offer.html' order_personalization=order_personalization %}
+    {% campaign_include 'upsell-mv-offer.html' upsell_slot_personalization=upsell_slot_personalization order_personalization=order_personalization %}
     {% campaign_include 'footer.html' %}
   </div>
 </div>

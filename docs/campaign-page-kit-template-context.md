@@ -620,7 +620,7 @@ Let a customer attach custom text to a product (monogram, name-on-jersey, gift m
 
 **The model: shared default + per-slot override** — a global fallback with optional per-line flexibility. **Per engineering, a customized product is expected to use a slot-style picker — that's the intended way to get per-line values.**
 
-- **Default (fallback)** — `data-next-default-property` on any input applies one value to **every** line the active bundle writes. Works on **any selector, including a plain non-MV tier-swap** — the simple "one input, propagate everywhere" path (no slot picker needed).
+- **Default (fallback)** — `data-next-default-property` on any input applies one value to **every** line the active bundle writes or upsell accept sends. Works on **any selector, including a plain non-MV tier-swap** — the simple "one input, propagate everywhere" path (no slot picker needed). On a single non-variant / non-slot upsell, that means the one accepted line gets the value.
 - **Per-line customization needs a slot-style picker** — `data-next-bundle-slots-for` + a slot `<template>` with a `data-next-property` input per slot. A plain tier-swap renders **no slots**, so it can only carry the shared default. The slot structure does **not** need a variant product — a standalone product works by listing its packageId N times with `configurable:false`.
   - **Fill every slot explicitly** (the natural slot-picker UX). `[DAD, MOM, DAD]` → 2×DAD + 1×MOM works. Do **not** rely on "set a default, override only some slots, leave the rest empty" for repeats of the same package — the lone override gets dropped (cart keeps the default for all units), because the live sync (`setItemProperties`) is keyed by packageId.
 
@@ -662,6 +662,7 @@ The container gets `next-summary-empty` when the item has no properties and `nex
 - **Per-package live-sync (`setItemProperties`) matches packageId only** — unreliable when several lines share a package with different properties.
 - **The order-wide default is not auto-applied to order-bump lines** — a bump carries properties only when added/synced via its own AddToCart.
 - **Post-purchase upsells carry properties as of SDK 0.4.27.** The upsell accept (`POST /orders/{ref}/upsells/`) now includes a `properties` object per line, matching order creation. On 0.4.26 and earlier it sent only `package_id` + `quantity` and any property on an upsell offer was silently dropped — so personalize on upsells only when pinned to 0.4.27+.
+- **MV upsell per-slot fields are wired via `upsell_slot_personalization`.** `upsell-mv-offer.html` renders the configured `data-next-property` field inside the upsell slot template, so each accepted upsell unit can carry distinct text. `order_personalization` remains available for the one-value-for-all fallback, and is the discoverable path for non-slot upsells; the MV upsell demo keeps it disabled because the reference uses per-slot fields.
 
 ### Order bump
 
