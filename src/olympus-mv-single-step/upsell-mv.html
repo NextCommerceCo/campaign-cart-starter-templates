@@ -34,7 +34,8 @@ upsell_mv_tiers:
     vouchers_json: '["UP80TSHIRT"]'
 # SDK 0.4.27 — per-slot post-purchase upsell personalization. Each upsell slot gets its
 # own data-next-property input, so accepted upsell units can carry distinct text.
-upsell_slot_personalization:
+# Uses the same `slot_personalization` contract name as the MV checkout selector.
+slot_personalization:
   enabled: true
   property_key: upsell_message
   label: "Custom text"
@@ -105,7 +106,7 @@ order_personalization:
         </div>
       </div>
     </section>
-    {% campaign_include 'upsell-mv-offer.html' upsell_slot_personalization=upsell_slot_personalization order_personalization=order_personalization %}
+    {% campaign_include 'upsell-mv-offer.html' slot_personalization=slot_personalization order_personalization=order_personalization %}
     {% campaign_include 'footer.html' %}
   </div>
 </div>

@@ -34,8 +34,12 @@ upsell_mv_tiers:
     vouchers_json: '["UP80TSHIRT"]'
 # SDK 0.4.27 — per-slot post-purchase upsell personalization. Each upsell slot gets its
 # own data-next-property input, so accepted upsell units can carry distinct text.
-upsell_slot_personalization:
-  enabled: true
+# Uses the same `slot_personalization` contract name as the MV checkout selector.
+# Disabled here: the live reference is shown only on olympus-mv-single-step/upsell-mv.html.
+# To enable on this (or any other MV upsell page), set enabled: true — the shared
+# upsell-mv-offer.html partial renders the per-slot field from this same contract.
+slot_personalization:
+  enabled: false
   property_key: upsell_message
   label: "Custom text"
   optional: true
@@ -105,7 +109,7 @@ order_personalization:
         </div>
       </div>
     </section>
-    {% campaign_include 'upsell-mv-offer.html' upsell_slot_personalization=upsell_slot_personalization order_personalization=order_personalization %}
+    {% campaign_include 'upsell-mv-offer.html' slot_personalization=slot_personalization order_personalization=order_personalization %}
     {% campaign_include 'footer.html' %}
   </div>
 </div>

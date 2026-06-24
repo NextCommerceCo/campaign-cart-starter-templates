@@ -655,6 +655,16 @@ The container gets `next-summary-empty` when the item has no properties and `nex
 
 **Rules:** opt-in and additive — pages without these attributes behave exactly as before. Property keys become order line-item attribute names — keep them stable and snake_case.
 
+**Possibilities by surface (checkout and upsell mirror each other):**
+
+| Surface type | Per-line distinct text (`data-next-property`) | Same value on all lines (`data-next-default-property`) |
+|---|---|---|
+| Standard / tier-swap selector, or bundle upsell offer (stepper / tier-pills / tier-cards) | ✗ no slots — not possible | ✓ general `order_personalization` (a single non-slot upsell = the one accepted line) |
+| MV / variant slot picker — MV checkout/select **or** MV upsell | ✓ per-slot `slot_personalization` | ✓ general `order_personalization` |
+| Standalone product wanting per-line text | ✓ only via an MV-style slot picker (list the packageId ×N) | ✓ general `order_personalization` |
+
+Live examples are wired only on the MV templates (`olympus-mv-*`): per-slot `slot_personalization` on `checkout.html` and the single-step `upsell-mv.html`; general `order_personalization` is present but disabled (keyed distinctly from the per-slot field). Every other family ships the `personalization-field.html` partial (general field) plus the shared offer/selector partials **unwired** — opt in per the rules above. `bump-check03.html` (product-card order bump) ships in all checkout families with a togglable `data-next-property` field, demoed enabled on `olympus-mv-single-step`. Same key-collision rule everywhere: a per-slot value overrides the general default on a shared key, so use distinct keys when running both.
+
 **Implementation caveats (0.4.26+):**
 - **The per-slot override needs slots to actually render.** A tier-*swap* selector has one active card and no slots, so `data-next-property` is never scanned there — it can only carry the shared default. The override requires the configurable-slot / slot-template selector (the MV pattern).
 - **Same-package multi-quantity per-unit slots are variant-gated.** `configurable: true` + qty>1 blocks checkout until each slot's variant is selected, so you can't mark a plain (non-variant) product `configurable` just to get per-unit slots — it bricks the checkout.
@@ -662,7 +672,7 @@ The container gets `next-summary-empty` when the item has no properties and `nex
 - **Per-package live-sync (`setItemProperties`) matches packageId only** — unreliable when several lines share a package with different properties.
 - **The order-wide default is not auto-applied to order-bump lines** — a bump carries properties only when added/synced via its own AddToCart.
 - **Post-purchase upsells carry properties as of SDK 0.4.27.** The upsell accept (`POST /orders/{ref}/upsells/`) now includes a `properties` object per line, matching order creation. On 0.4.26 and earlier it sent only `package_id` + `quantity` and any property on an upsell offer was silently dropped — so personalize on upsells only when pinned to 0.4.27+.
-- **MV upsell per-slot fields are wired via `upsell_slot_personalization`.** `upsell-mv-offer.html` renders the configured `data-next-property` field inside the upsell slot template, so each accepted upsell unit can carry distinct text. `order_personalization` remains available for the one-value-for-all fallback (rendered as a full-width field above the slot stage), and is the discoverable path for non-slot upsells; the MV upsell demo keeps it disabled because the reference uses per-slot fields. **If you enable both at once, give them distinct `property_key`s.** The accept merge is `{ ...default, ...slot }`, so a per-slot value overrides the page default on a shared key — the demo keys `order_personalization` `gift_message` to stay clear of the per-slot `upsell_message`.
+- **MV upsell per-slot fields are wired via `slot_personalization`** — the same frontmatter contract name as the MV checkout selector. `upsell-mv-offer.html` renders the configured `data-next-property` field inside the upsell slot template, so each accepted upsell unit can carry distinct text. It ships enabled as a **single live reference on `olympus-mv-single-step/upsell-mv.html`** (disabled on `olympus-mv-two-step`). **To turn it on for another MV upsell page, just set `slot_personalization.enabled: true` in that page's frontmatter** — the shared `upsell-mv-offer.html` partial renders the field from the same contract, so there's nothing to copy within an MV family. `order_personalization` remains available for the one-value-for-all fallback (rendered as a full-width field above the slot stage), and is the discoverable path for non-slot upsells (which have no slot stage to render per-slot fields); the MV upsell demo keeps it disabled because the reference uses per-slot fields. **If you enable both at once, give them distinct `property_key`s.** The accept merge is `{ ...default, ...slot }`, so a per-slot value overrides the page default on a shared key — the demo keys `order_personalization` `gift_message` to stay clear of the per-slot `upsell_message`.
 
 ### Order bump
 

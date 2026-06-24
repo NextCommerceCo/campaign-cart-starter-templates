@@ -231,7 +231,7 @@
       "agentRule": "Payment config, CampaignSpec/API support, and visible rows must agree."
     },
     "slot_personalization": {
-      "purpose": "MV slot-picker line-item personalization (SDK 0.4.27+). Adds a data-next-property input to each rendered bundle slot so units can carry distinct text and become separate order lines.",
+      "purpose": "MV slot-picker line-item personalization (SDK 0.4.27+). Adds a data-next-property input to each rendered bundle slot — on the checkout/select selector AND the post-purchase upsell offer — so units carry distinct text and become separate order lines. Same contract name across both surfaces.",
       "canonicalKeys": [
         "enabled",
         "property_key",
@@ -242,9 +242,9 @@
       ],
       "sourceOfTruth": [
         "Campaign personalization requirement (per-line custom text)",
-        "Template slot partials: mv-configurable-selector.html / mv-slot-stage.html"
+        "Template slot partials: mv-configurable-selector.html / mv-slot-stage.html (checkout/select) and upsell-mv-offer.html (upsell)"
       ],
-      "agentRule": "MV/slot-rendering families only — per-line customization requires a slot picker (eng-confirmed). Shipped enabled on olympus-mv-single-step, disabled on olympus-mv-two-step. property_key becomes the order line-item attribute name. Fill every slot explicitly; do not rely on an order-wide default to fill some slots and override others (same-package overrides drop). Not available on tier-swap families."
+      "agentRule": "MV/slot-rendering families only — per-line customization requires a slot picker (eng-confirmed); not available on tier-swap families. Same `slot_personalization` contract on MV checkout/select and MV upsell. Shipped enabled on olympus-mv-single-step (checkout.html + upsell-mv.html), disabled on olympus-mv-two-step (one live reference each). To apply on any other MV page, set slot_personalization.enabled:true in that page's frontmatter — the shared partial renders the field from the same contract (no markup copy). property_key becomes the order line-item attribute name. Fill every slot explicitly; do not rely on an order-wide default to fill some slots and override others (same-package overrides drop). When paired with order_personalization, keep property_keys distinct (per-slot overrides the page default on a shared key)."
     },
     "order_personalization": {
       "purpose": "All-lines line-item personalization default (SDK 0.4.27+) via data-next-default-property. One value is applied to every line the active bundle/cart write or upsell accept sends; on a single non-slot upsell this means the one accepted line gets the value.",
@@ -260,23 +260,7 @@
         "Campaign personalization requirement (one shared value across all units or one value on a single non-slot upsell)",
         "Template partial: personalization-field.html; offer partials may render the same order_personalization contract with data-next-default-property"
       ],
-      "agentRule": "Reliable for 'same value on every unit' and for single non-variant / non-slot upsells where the accepted set is one line. The generic partial ships in every family's _includes but is NOT wired into generic pages; opt in with a campaign_include or an offer partial that accepts order_personalization. For per-line distinct slot values use slot_personalization (MV checkout/select) or upsell_slot_personalization (MV upsell) instead. When paired with a per-slot field on the same surface, use a DISTINCT property_key: the merge is { ...default, ...slot } so a per-slot value overrides the default on a shared key (MV checkout uses custom_text vs slot number; MV upsell example uses gift_message vs slot upsell_message)."
-    },
-    "upsell_slot_personalization": {
-      "purpose": "MV post-purchase upsell slot personalization (SDK 0.4.27+). Adds a data-next-property input to each rendered upsell bundle slot so accepted upsell units can carry distinct text.",
-      "canonicalKeys": [
-        "enabled",
-        "property_key",
-        "label",
-        "optional",
-        "placeholder",
-        "maxlength"
-      ],
-      "sourceOfTruth": [
-        "Campaign personalization requirement (per-line custom text on upsell units)",
-        "Template partial: upsell-mv-offer.html"
-      ],
-      "agentRule": "MV upsell slot-rendering families only. Requires data-next-bundle-slots-for and the upsell slot template. Shipped enabled on olympus-mv-single-step and olympus-mv-two-step upsell-mv pages; use order_personalization only for one shared value across every accepted upsell line. If both run together, keep their property_keys distinct (per-slot overrides the page default on a shared key)."
+      "agentRule": "Reliable for 'same value on every unit' and for single non-variant / non-slot upsells where the accepted set is one line. The generic partial ships in every family's _includes but is NOT wired into generic pages; opt in with a campaign_include or an offer partial that accepts order_personalization. For per-line distinct slot values use slot_personalization (MV checkout/select/upsell) instead. When paired with a per-slot field on the same surface, use a DISTINCT property_key: the merge is { ...default, ...slot } so a per-slot value overrides the default on a shared key (MV checkout uses custom_text vs slot number; MV upsell example uses gift_message vs slot upsell_message)."
     }
   },
   "campaignSpecFixturePolicy": {
@@ -962,7 +946,7 @@
         "variant_picker",
         "upsell_offer",
         "upsell_mv_tiers",
-        "upsell_slot_personalization",
+        "slot_personalization",
         "order_personalization",
         "upsell_bundle_tiers"
       ],
@@ -1002,7 +986,7 @@
             "variant_slots[].label_text",
             "upsell_offer",
             "upsell_mv_tiers",
-            "upsell_slot_personalization",
+            "slot_personalization",
             "order_personalization",
             "upsell_bundle_tiers"
           ],
@@ -1022,7 +1006,7 @@
             "variant_slots[].shipping_method",
             "upsell_offer.*",
             "upsell_mv_tiers[].vouchers_json",
-            "upsell_slot_personalization",
+            "slot_personalization",
             "upsell_bundle_tiers[].items_json",
             "upsell_bundle_tiers[].vouchers_json"
           ],
@@ -1090,7 +1074,7 @@
             "ownedInputs": [
               "upsell_offer",
               "upsell_mv_tiers",
-              "upsell_slot_personalization",
+              "slot_personalization",
               "order_personalization",
               "upsell_bundle_tiers"
             ],
@@ -1147,7 +1131,7 @@
         "variant_picker",
         "upsell_offer",
         "upsell_mv_tiers",
-        "upsell_slot_personalization",
+        "slot_personalization",
         "order_personalization",
         "upsell_bundle_tiers"
       ],
@@ -1189,7 +1173,7 @@
             "swiper_thumbs",
             "upsell_offer",
             "upsell_mv_tiers",
-            "upsell_slot_personalization",
+            "slot_personalization",
             "order_personalization",
             "upsell_bundle_tiers"
           ],
@@ -1209,7 +1193,7 @@
             "variant_slots[].shipping_method",
             "upsell_offer.*",
             "upsell_mv_tiers[].vouchers_json",
-            "upsell_slot_personalization",
+            "slot_personalization",
             "upsell_bundle_tiers[].items_json",
             "upsell_bundle_tiers[].vouchers_json"
           ],
@@ -1291,7 +1275,7 @@
             "ownedInputs": [
               "upsell_offer",
               "upsell_mv_tiers",
-              "upsell_slot_personalization",
+              "slot_personalization",
               "order_personalization",
               "upsell_bundle_tiers"
             ],
