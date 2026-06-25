@@ -7,12 +7,20 @@
 // has historically drifted by hand (e.g. a shared rule added to some families
 // but not others), so this linter makes the invariant a hard gate.
 //
-// Files checked: src/<family>/assets/css/next-core.css
-//   (src/landing/ ships tokens.css only and is naturally excluded.)
+// Design notes:
+//   - The canonical family list is pinned (FAMILIES) and `olympus` is the fixed
+//     reference. We do NOT infer "correct" from a majority vote (4 families
+//     accidentally agreeing on bad content must not redefine the canonical) and
+//     we do NOT infer the family set from "who has the file" (deleting the file
+//     from N families would otherwise shrink the set and pass — a fail-open hole).
+//   - A family in FAMILIES that is missing next-core.css is a hard failure.
+//   - A src/<dir> that ships next-core.css but is NOT in FAMILIES is a hard
+//     failure too, so the pinned list cannot silently fall out of date.
+//   - Comparison is byte-exact on purpose: whitespace / line-ending / BOM
+//     differences are real drift we want to catch.
 //
 // USAGE
-//   node scripts/lint-next-core-sync.mjs        # report drift, exit 0
-//   CI=1 node scripts/lint-next-core-sync.mjs   # exit non-zero on drift
+//   node scripts/lint-next-core-sync.mjs   # exits non-zero on any drift (no "report only" mode)
 //
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join, relative } from 'node:path';
@@ -23,78 +31,86 @@ const srcRoot = join(repoRoot, 'src');
 
 const REL = 'assets/css/next-core.css';
 
+// Canonical template families that MUST ship an identical next-core.css.
+// Mirrors the promoted-family list in lint-sdk.mjs. (src/landing/ ships
+// tokens.css only and is intentionally absent.)
+const FAMILIES = [
+  'olympus',
+  'limos',
+  'demeter',
+  'shop-single-step',
+  'shop-three-step',
+  'olympus-mv-single-step',
+  'olympus-mv-two-step',
+];
+const CANONICAL = 'olympus'; // fixed reference — not a majority vote
+
 function sha(buf) {
   return createHash('sha256').update(buf).digest('hex');
 }
 
-// Discover every family that ships a next-core.css.
-const families = readdirSync(srcRoot, { withFileTypes: true })
-  .filter((e) => e.isDirectory())
-  .map((e) => e.name)
-  .filter((name) => existsSync(join(srcRoot, name, REL)))
-  .sort();
+console.log(`[lint-next-core] checking ${FAMILIES.length} families share an identical ${REL}`);
 
-console.log(`[lint-next-core] checking ${families.length} families share an identical ${REL}`);
+const failures = [];
 
-if (families.length < 2) {
-  console.log('[lint-next-core] PASS (fewer than 2 files — nothing to compare)');
-  process.exit(0);
-}
-
-const entries = families.map((family) => {
-  const path = join(srcRoot, family, REL);
-  const content = readFileSync(path);
-  return { family, path, content, hash: sha(content) };
-});
-
-// Group by hash; the largest group is the reference, the rest are drifted.
-const byHash = new Map();
-for (const e of entries) {
-  if (!byHash.has(e.hash)) byHash.set(e.hash, []);
-  byHash.get(e.hash).push(e);
-}
-
-if (byHash.size === 1) {
-  console.log('[lint-next-core] PASS — all next-core.css files are identical');
-  process.exit(0);
-}
-
-// Pick the reference group (most members; ties broken by first family alphabetically).
-const groups = [...byHash.values()].sort(
-  (a, b) => b.length - a.length || a[0].family.localeCompare(b[0].family),
-);
-const reference = groups[0];
-const refLines = reference[0].content.toString('utf8').split('\n');
-
-console.error(
-  `\n[lint-next-core] FAIL — next-core.css has drifted across families.\n` +
-    `  Reference (${reference.length}/${entries.length} agree): ${reference.map((e) => e.family).join(', ')}`,
-);
-
-for (const group of groups.slice(1)) {
-  for (const e of group) {
-    const lines = e.content.toString('utf8').split('\n');
-    // Find the first differing line to point the developer at the drift.
-    let firstDiff = -1;
-    const max = Math.max(lines.length, refLines.length);
-    for (let i = 0; i < max; i++) {
-      if (lines[i] !== refLines[i]) {
-        firstDiff = i;
-        break;
-      }
-    }
-    const where =
-      firstDiff === -1
-        ? 'differs only in length'
-        : `first diff at line ${firstDiff + 1}:\n      reference: ${JSON.stringify(refLines[firstDiff] ?? '<EOF>')}\n      ${e.family}: ${JSON.stringify(lines[firstDiff] ?? '<EOF>')}`;
-    console.error(`  ✗ ${relative(repoRoot, e.path)} (${lines.length} lines) — ${where}`);
+// 1. The pinned list must stay current: any family dir that ships next-core.css
+//    but isn't in FAMILIES means the list is stale.
+const onDisk = readdirSync(srcRoot, { withFileTypes: true })
+  .filter((e) => e.isDirectory() && existsSync(join(srcRoot, e.name, REL)))
+  .map((e) => e.name);
+for (const dir of onDisk) {
+  if (!FAMILIES.includes(dir)) {
+    failures.push(`unknown family "${dir}" ships ${REL} but is not in the canonical FAMILIES list — add it to scripts/lint-next-core-sync.mjs`);
   }
 }
 
-console.error(
-  `\n  Fix: propagate the intended next-core.css to every family so all ${entries.length} files match.\n` +
-    `  Inspect with:  diff src/${reference[0].family}/${REL} src/<drifted-family>/${REL}\n`,
-);
+// 2. The canonical reference must exist.
+const canonicalPath = join(srcRoot, CANONICAL, REL);
+if (!existsSync(canonicalPath)) {
+  console.error(`\n[lint-next-core] FAIL — canonical reference missing: src/${CANONICAL}/${REL}`);
+  process.exit(1);
+}
+const refContent = readFileSync(canonicalPath);
+const refHash = sha(refContent);
+const refLines = refContent.toString('utf8').split('\n');
 
-// Drift is always a hard failure (locally and in CI).
+// 3. Every family must ship the file and match the canonical byte-for-byte.
+for (const family of FAMILIES) {
+  if (family === CANONICAL) continue;
+  const path = join(srcRoot, family, REL);
+  if (!existsSync(path)) {
+    failures.push(`${relative(repoRoot, path)} is MISSING (every family must ship next-core.css)`);
+    continue;
+  }
+  const content = readFileSync(path);
+  if (sha(content) === refHash) continue;
+
+  // Drift — point at the first differing line.
+  const lines = content.toString('utf8').split('\n');
+  let firstDiff = -1;
+  const max = Math.max(lines.length, refLines.length);
+  for (let i = 0; i < max; i++) {
+    if (lines[i] !== refLines[i]) {
+      firstDiff = i;
+      break;
+    }
+  }
+  const where =
+    firstDiff === -1
+      ? 'differs only in length'
+      : `first diff at line ${firstDiff + 1}:\n      ${CANONICAL}: ${JSON.stringify(refLines[firstDiff] ?? '<EOF>')}\n      ${family}: ${JSON.stringify(lines[firstDiff] ?? '<EOF>')}`;
+  failures.push(`${relative(repoRoot, path)} (${lines.length} lines) drifted from src/${CANONICAL}/${REL} — ${where}`);
+}
+
+if (failures.length === 0) {
+  console.log(`[lint-next-core] PASS — all ${FAMILIES.length} families match src/${CANONICAL}/${REL}`);
+  process.exit(0);
+}
+
+console.error(`\n[lint-next-core] FAIL — next-core.css is out of sync (${failures.length} issue${failures.length === 1 ? '' : 's'}):`);
+for (const f of failures) console.error(`  ✗ ${f}`);
+console.error(
+  `\n  Fix: propagate the intended next-core.css so every family matches the canonical (src/${CANONICAL}/${REL}).\n` +
+    `  Inspect with:  diff src/${CANONICAL}/${REL} src/<family>/${REL}\n`,
+);
 process.exit(1);
