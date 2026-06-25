@@ -20,6 +20,7 @@
     "lint:sdk:shop-single-step:all": "node scripts/lint-sdk.mjs --scope=shop-single-step --pages=all",
     "lint:sdk:ci": "CI=1 node scripts/lint-sdk.mjs --scope=all --pages=all",
     "lint:sdk:promoted:all": "node scripts/lint-sdk.mjs --scope=promoted --pages=all",
+    "lint:next-core": "node scripts/lint-next-core-sync.mjs",
     "lint:agent-contracts": "node scripts/lint-agent-contracts.mjs"
   },
   "dependencies": {
