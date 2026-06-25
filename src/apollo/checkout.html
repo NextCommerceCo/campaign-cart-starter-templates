@@ -5,6 +5,16 @@ promo_sale: "default"
 next_url: upsell-bundle-stepper.html
 cart_summary_variant: "01"
 order_bump_variant: "check01+switch01"
+promo_banner:
+  emoji: "✨"
+  highlight: "Up to 60% off"
+  lead: "your"
+  strong: "Product Name"
+  trail: "- Today only · Free USA shipping"
+promo_timer:
+  text: "Discount"
+  highlight: "Activated"
+  start: "59:59"
 product_heading:
   title: "Product Name"
   features:
@@ -14,12 +24,12 @@ product_heading:
     - text: "Proudly made in the USA"
       emoji: "🇺🇸"
 styles:
+  - css/promo-banner.css
   - css/checkout-header.css
   - css/product-heading.css
+  - css/promo-timer.css
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
 scripts:
-  - js/promo-banner.js
-  - js/promo-timer.js
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js
   - js/checkout.js
   - js/checkout-apollo.js
@@ -99,7 +109,7 @@ bundles:
       <div class="main-wrapper">
 
         <div data-next-hide="param.banner=='n'" class="section_header">
-          <promo-banner{% if promo_sale %} force-sale="{{ promo_sale }}"{% endif %}{% if promo_topbar %} show-topbar="{{ promo_topbar }}"{% endif %}></promo-banner>
+          {% campaign_include 'promo-banner.html' promo_banner=promo_banner %}
         </div>
         {% campaign_include 'checkout-header.html' %}
         <div class="section-checkout cc-gray">
@@ -175,7 +185,7 @@ bundles:
                     <div class="hide-tablet">
                       {% campaign_include 'product-heading.html' product_heading=product_heading %}
                     </div>
-                    <promo-timer{% if promo_sale %} force-sale="{{ promo_sale }}"{% endif %}></promo-timer>
+                    {% campaign_include 'promo-timer.html' promo_timer=promo_timer %}
                     <div class="checkout-form">
                       <form data-next-checkout="form" id="combo_form" method="post">
                         <div class="form-content">

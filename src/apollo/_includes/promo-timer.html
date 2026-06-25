@@ -1,0 +1,17 @@
+{%- comment -%}
+  promo-timer.html — slim "discount activated" urgency bar + countdown.
+  Plain markup (no web component): the countdown span carries
+  data-next-element="timer" and is driven by the countdown handler in
+  checkout.js (counts down from `start`, stops at 00:00).
+  Data: promo_timer { text, highlight, start }.
+    {% campaign_include 'promo-timer.html' promo_timer=promo_timer %}
+{%- endcomment -%}
+<div class="promo-timer">
+  <div class="promo-timer__inner">
+    <p class="promo-timer__label">
+      <span class="promo-timer__label-accent">{{ promo_timer.text }}</span>
+      <span class="promo-timer__label-strong">{{ promo_timer.highlight }}</span>
+    </p>
+    <span class="promo-timer__pill"><span data-next-element="timer">{{ promo_timer.start }}</span></span>
+  </div>
+</div>
