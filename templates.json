@@ -9,6 +9,14 @@
       "hidden": false
     },
     {
+      "slug": "apollo",
+      "name": "Apollo",
+      "description": "One-page checkout funnel",
+      "priority": 95,
+      "deprecated": false,
+      "hidden": false
+    },
+    {
       "slug": "olympus-mv-single-step",
       "name": "Olympus Multi-variant",
       "description": "Multi-variant Bundles Olympus checkout - recommended variant product campaigns",

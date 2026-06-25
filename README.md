@@ -50,6 +50,7 @@ Each checkout template includes presell + landing pages, all upsell variants, an
 
 | Template | Description | Preview |
 |----------|-------------|---------|
+| `apollo` | Single-step checkout | [preview](https://nextcommerce-campaign-templates.netlify.app/apollo/checkout/) |
 | `demeter` | Single-step checkout | [preview](https://nextcommerce-campaign-templates.netlify.app/demeter/checkout/) |
 | `limos` | Single-step · native bundle qty on page | [preview](https://nextcommerce-campaign-templates.netlify.app/limos/checkout/) |
 | `olympus` | Single-step checkout | [preview](https://nextcommerce-campaign-templates.netlify.app/olympus/checkout/) |

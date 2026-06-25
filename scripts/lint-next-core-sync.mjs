@@ -36,6 +36,7 @@ const REL = 'assets/css/next-core.css';
 // tokens.css only and is intentionally absent.)
 const FAMILIES = [
   'olympus',
+  'apollo',
   'limos',
   'demeter',
   'shop-single-step',
