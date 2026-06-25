@@ -96,6 +96,12 @@ repo-root/
 └── package.json                ← kit scripts + next-campaign-page-kit dependency
 ```
 
+## Adding a new template family
+When adding a new `src/<slug>/` family, update these together or the **`lint-sdk` CI gate** fails. (That CI job — `.github/workflows/lint-sdk.yml` — runs two separate linters as steps: `lint:next-core` → `scripts/lint-next-core-sync.mjs`, and `lint:sdk:ci` → `scripts/lint-sdk.mjs`.)
+1. `templates.json` — add the picker-registry entry (see File Structure note above).
+2. `scripts/lint-next-core-sync.mjs` — add the slug to the `FAMILIES` list. The `lint:next-core` linter asserts every family ships a **byte-identical** `next-core.css`; an unlisted family that ships one fails with `unknown family … not in the canonical FAMILIES list`, and the new file must match the canonical (`src/olympus/assets/css/next-core.css`).
+3. Preview-URL / inventory tables in this file and `README.md`, if you want it listed.
+
 ## Each src/[slug]/ Structure
 ```
 [slug]/
