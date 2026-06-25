@@ -96,7 +96,6 @@
 .checkout-header--apollo .checkout-header__badge-icon {
   width: 15px;
   height: 15px;
-  fill: var(--brand--color--primary-dark);
   flex: 0 0 auto;
 }
 

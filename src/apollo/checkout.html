@@ -5,8 +5,17 @@ promo_sale: "default"
 next_url: upsell-bundle-stepper.html
 cart_summary_variant: "01"
 order_bump_variant: "check01+switch01"
+product_heading:
+  title: "Product Name"
+  features:
+    - text: "Key product benefit goes here"
+    - text: "Another standout feature here"
+    - text: "Backed by our guarantee"
+    - text: "Proudly made in the USA"
+      emoji: "🇺🇸"
 styles:
   - css/checkout-header.css
+  - css/product-heading.css
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
 scripts:
   - js/promo-banner.js
@@ -97,39 +106,7 @@ bundles:
           <div class="container">
             <div class="checkout-page-layout">
               <div class="show-tablet">
-                <div class="heading-box">
-                  <div class="hero_review-box">
-                    <div class="review_component cc-sm">
-                      <div class="review_component-wrapper">
-                        <div class="star_wrapper">
-                          <div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
-                              <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
-                            </svg></div>
-                          <div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
-                              <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
-                            </svg></div>
-                          <div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
-                              <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
-                            </svg></div>
-                          <div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
-                              <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
-                            </svg></div>
-                          <div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
-                              <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
-                            </svg></div>
-                        </div>
-                        <div>TRUSTED BY 180,000+ FAMILIES</div>
-                      </div>
-                    </div>
-                  </div>
-                  <h1 class="display-md"><span>Product Name</span></h1>
-                  <div class="text-reg"><strong>2026 New &amp; Improved, Premium product bundle</strong></div>
-                </div>
+                {% campaign_include 'product-heading.html' product_heading=product_heading %}
               </div>
               <div class="checkout-wrapper">
                 <div class="checkout-layout__left">
@@ -196,44 +173,7 @@ bundles:
                   <div class="checkout-layout__form">
                   <div class="checkout__form-container">
                     <div class="hide-tablet">
-                      <div class="hero_heading-box">
-                        <div class="heading-box">
-                          <div class="hero_review-box">
-                            <div class="review_component cc-sm">
-                              <div class="review_component-wrapper">
-                                <div class="star_wrapper">
-                                <div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
-                                    <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
-                                  </svg></div>
-                                <div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
-                                    <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
-                                  </svg></div>
-                                <div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
-                                    <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
-                                  </svg></div>
-                                <div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
-                                    <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
-                                  </svg></div>
-                                <div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
-                                    <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
-                                  </svg></div>
-                                </div>
-                                <div>TRUSTED BY 180,000+ FAMILIES</div>
-                              </div>
-                            </div>
-                          </div>
-                          <h1 class="display-md"><span>Product Name</span></h1>
-                          <div class="text-reg"><strong>2026 New &amp; Improved, Premium product bundle</strong></div>
-                        </div>
-                        <div class="sub-head-text">
-                          <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
-                        </div>
-                      </div>
+                      {% campaign_include 'product-heading.html' product_heading=product_heading %}
                     </div>
                     <promo-timer{% if promo_sale %} force-sale="{{ promo_sale }}"{% endif %}></promo-timer>
                     <div class="checkout-form">
