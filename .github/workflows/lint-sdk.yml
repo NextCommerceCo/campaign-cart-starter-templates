@@ -1,0 +1,31 @@
+name: lint:sdk
+
+# SDK-markup discipline gate. Builds all template families and runs the catalog
+# linter (lint:sdk:ci = lint-sdk.mjs --scope=all --pages=all) in both source and
+# rendered modes, so SDK-binding drift across any family fails the PR instead of
+# slipping in silently. Make this a required status check in branch protection.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint-sdk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Build all template families
+        run: npm run build
+      - name: Lint SDK markup (all families, source + rendered)
+        run: npm run lint:sdk:ci
