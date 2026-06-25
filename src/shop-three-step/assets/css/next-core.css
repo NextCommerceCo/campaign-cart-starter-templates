@@ -12411,6 +12411,15 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 /* ========== Prepurchase upsell (checkout add-on blocks) ========== */
 /* Isolated from upsell-page styles so checkout and upsell templates don’t share class names. */
 
+/* Order-bumps container: stacks one or more prepurchase-upsell components.
+   .form-content has no gap, so without this the bump cards render flush. */
+.order-bumps {
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1rem 0;
+  display: flex;
+}
+
 [data-component="prepurchase-upsell"] {
   border: 2px dashed var(--brand--color--primary-dark);
   border-radius: var(--radius--cards);
