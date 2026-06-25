@@ -1,0 +1,35 @@
+# Dependabot keeps this repo aligned with upstream releases by opening PRs when a
+# newer version ships. Each PR runs through the lint-sdk gate (next-core sync +
+# build + SDK lint), so a bump that breaks anything fails its own PR. Nothing
+# auto-merges — review the green ones and merge.
+version: 2
+updates:
+  # npm — most importantly next-campaign-page-kit (the build tool / SDK pin).
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # Collapse routine minor/patch bumps into one PR to cut noise; majors
+      # still open individually so breaking changes get their own review.
+      npm-minor-patch:
+        update-types:
+          - minor
+          - patch
+    commit-message:
+      prefix: "chore(deps)"
+
+  # GitHub Actions used by .github/workflows/*.yml (checkout, setup-node, …).
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      actions:
+        update-types:
+          - minor
+          - patch
+    commit-message:
+      prefix: "chore(ci)"
