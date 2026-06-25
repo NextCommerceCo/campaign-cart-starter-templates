@@ -64,17 +64,23 @@ for (const dir of onDisk) {
   }
 }
 
-// 2. The canonical reference must exist.
+// 2. The canonical reference must exist. If it doesn't, we can't compute drift
+//    for the others — but we still run the presence sweep below so the report
+//    lists every missing file in one pass instead of bailing on the first.
 const canonicalPath = join(srcRoot, CANONICAL, REL);
-if (!existsSync(canonicalPath)) {
-  console.error(`\n[lint-next-core] FAIL — canonical reference missing: src/${CANONICAL}/${REL}`);
-  process.exit(1);
+const haveCanonical = existsSync(canonicalPath);
+let refHash = null;
+let refLines = [];
+if (!haveCanonical) {
+  failures.push(`canonical reference is MISSING: ${relative(repoRoot, canonicalPath)} — cannot compute drift for other families until it is restored`);
+} else {
+  const refContent = readFileSync(canonicalPath);
+  refHash = sha(refContent);
+  refLines = refContent.toString('utf8').split('\n');
 }
-const refContent = readFileSync(canonicalPath);
-const refHash = sha(refContent);
-const refLines = refContent.toString('utf8').split('\n');
 
-// 3. Every family must ship the file and match the canonical byte-for-byte.
+// 3. Every family must ship the file and (when the canonical exists) match it
+//    byte-for-byte.
 for (const family of FAMILIES) {
   if (family === CANONICAL) continue;
   const path = join(srcRoot, family, REL);
@@ -82,6 +88,7 @@ for (const family of FAMILIES) {
     failures.push(`${relative(repoRoot, path)} is MISSING (every family must ship next-core.css)`);
     continue;
   }
+  if (!haveCanonical) continue; // presence noted; drift uncheckable without a reference
   const content = readFileSync(path);
   if (sha(content) === refHash) continue;
 
