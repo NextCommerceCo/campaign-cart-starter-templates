@@ -12420,10 +12420,6 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   display: flex;
 }
 
-.order-bumps:empty {
-  display: none;
-}
-
 [data-component="prepurchase-upsell"] {
   border: 2px dashed var(--brand--color--primary-dark);
   border-radius: var(--radius--cards);

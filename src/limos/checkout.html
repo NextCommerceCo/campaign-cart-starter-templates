@@ -258,18 +258,19 @@ scripts:
                           {% campaign_include 'payment-methods.html' show_paypal=true show_klarna=true show_apple_pay=true show_google_pay=true %}
                         </div>
                         {% assign bump_variant = order_bump_variant | default: 'check01+switch01' %}
+                        {% unless bump_variant == 'none' or bump_variant == 'off' or bump_variant == 'false' %}
                         <div class="order-bumps">
                         {% case bump_variant %}
                         {% when 'check01' %}
                         {% campaign_include 'bump-check01.html' packages=packages %}
                         {% when 'switch01' %}
                         {% campaign_include 'bump-switch01.html' packages=packages %}
-                        {% when 'none', 'off', 'false' %}
                         {% else %}
                         {% campaign_include 'bump-check01.html' packages=packages %}
                         {% campaign_include 'bump-switch01.html' packages=packages %}
                         {% endcase %}
                         </div>
+                        {% endunless %}
                         <div class="submit-section submit-section--no-margin-top">
                           <div class="submit-section__button">
                             <button os-checkout-payment="combo" data-action="submit" type="submit" class="submit-button submit-button--compact">

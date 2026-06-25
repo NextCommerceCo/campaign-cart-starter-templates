@@ -244,18 +244,19 @@ scripts:
                                 <!-- DEMO-ONLY override: pricing_mode='discounted' keeps the showcase's struck-price look.
                                      The contract default for bumps is full_price (single unitPrice/ea row) — when cloning
                                      this page for a real campaign, drop the arg unless the bump has a genuine discount. -->
+                                {% unless bump_variant == 'none' or bump_variant == 'off' or bump_variant == 'false' %}
                                 <div class="order-bumps">
                                 {% case bump_variant %}
                                 {% when 'check01' %}
                                 {% campaign_include 'bump-check01.html' packages=packages pricing_mode='discounted' %}
                                 {% when 'switch01' %}
                                 {% campaign_include 'bump-switch01.html' packages=packages %}
-                                {% when 'none', 'off', 'false' %}
                                 {% else %}
                                 {% campaign_include 'bump-check01.html' packages=packages pricing_mode='discounted' %}
                                 {% campaign_include 'bump-switch01.html' packages=packages %}
                                 {% endcase %}
                                 </div>
+                                {% endunless %}
                                 <div class="form-section form-section--last">
                                   <div class="form-section__header">
                                     <h1 class="form-section__title">Payment</h1>
