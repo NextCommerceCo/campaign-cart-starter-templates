@@ -242,7 +242,7 @@ scripts:
 | `checkout_reveal` | `apollo`, `apollo-mv-single-step` | Opt-in progressive disclosure before payment form |
 | `order_bump.check03.*` | all (when check03 used) | check03 reads **only** this frontmatter block — never bare include arg names |
 
-Apollo `product` and `tiles` bundle cards show coupon extra savings: `data-next-discounts="voucher"` gated by `data-next-show="cart.hasCoupon()"` rendering `+{discount.percentage}`.
+Apollo `product` and `classic` bundle cards show an additive coupon badge: `data-next-discounts="voucher"` gated by `data-next-show="cart.hasCoupon()"` rendering `+{discount.percentage}`. The `tiles` style omits that badge — coupon savings appear in struck/current pricing only.
 
 ```yaml
 ---

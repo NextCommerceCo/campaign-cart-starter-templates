@@ -131,7 +131,7 @@ Key frontmatter knobs:
 | `selector_order_bump_variant` | `apollo`, `apollo-mv-single-step` | `check03` or `none` — product-card bump below selector; config in `order_bump.check03.*` only |
 | `order_bump_variant` | all checkout families | Form-section `.order-bumps` slot only — not the selector-area bump |
 | `checkout_reveal` | `apollo`, `apollo-mv-single-step` | `true` hides payment form until Add to Cart; panel is off-screen (not `display:none`) for Spreedly |
-| Coupon badge on bundle cards | `apollo` `product`/`tiles` | `data-next-discounts="voucher"` + `cart.hasCoupon()` shows `+{discount.percentage}` |
+| Coupon badge on bundle cards | `apollo` `product`/`classic` | `data-next-discounts="voucher"` + `cart.hasCoupon()` shows `+{discount.percentage}`; `tiles` omits badge (pricing only) |
 
 Apollo checkout `styles:` is typically Swiper CDN only. `checkout-apollo.js` handles reveal + reviews slider; `checkout-apollo-mv-full.js` adds MV slot dropdown behavior + bump personalization guard + reveal.
 
