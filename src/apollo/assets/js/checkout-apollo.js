@@ -1,3 +1,17 @@
+// Bump personalization guard — stops clicks/keys inside a bump's
+// .bump__personalization field from toggling the PackageToggle card. Ported for
+// posterity: apollo doesn't enable bump personalization today, so this is a
+// no-op (no .bump__personalization fields), but it's ready if it's turned on.
+function guardBumpPersonalization() {
+  document.querySelectorAll('[data-next-toggle-card] .bump__personalization').forEach(function (el) {
+    ['click', 'mousedown', 'keydown'].forEach(function (evt) {
+      el.addEventListener(evt, function (e) { e.stopPropagation(); });
+    });
+  });
+}
+if (document.readyState !== 'loading') guardBumpPersonalization();
+else document.addEventListener('DOMContentLoaded', guardBumpPersonalization);
+
 // Checkout reveal — show only bundles + "Add to Cart" first; reveal the
 // rest of the form (shipping/payment/summary/submit) on click. Opt-in via the
 // .checkout-form--reveal modifier (set by the checkout_reveal frontmatter flag).

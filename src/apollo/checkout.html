@@ -119,6 +119,14 @@ order_bump:
     title: "Shipping Insurance & Loss Prevention"
     description_prefix: "Total shipping coverage and extended warranty. Breakage, loss, delays, porch pirates - even defects. 100% protected for just"
     show_unit_price: true
+  check03:
+    # Standalone product-card bump shown under the bundles, above Add to Cart.
+    package_id: 4
+    title: "Add a Travel Case"
+    subtitle: "Protect your kit on the go — water-resistant zip case"
+    image_src: "images/1x1_1.svg"
+    badge_text: "Add-on"
+    savings_text: "Instant savings:"
 shipping_methods:
   # Starter/demo Campaigns App shipping method ref_ids.
   # Replace these from the target CampaignSpec/Campaigns App when cloning the Apollo shape.
@@ -259,6 +267,7 @@ bundles:
                               </div>
                               {% endcomment %}
                             </div>
+                            {% campaign_include 'bump-check03.html' order_bump=order_bump packages=packages %}
                             {% if checkout_reveal %}
                             <div class="submit-section checkout-reveal__cta" data-checkout-reveal-cta>
                               <div class="submit-section__button"><button type="button" class="submit-button" data-checkout-reveal-trigger>
