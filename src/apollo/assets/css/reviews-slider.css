@@ -1,0 +1,46 @@
+/* ==========================================================================
+   Apollo reviews-slider (AuraGlow) — horizontal Swiper of the existing
+   .checkout-review cards with a progress scrollbar. Card styling is reused
+   from next-core; the only card change (width / equal-height / border) lives
+   on the .checkout-review--slide modifier. Colors/sizes use next-core vars.
+   ========================================================================== */
+
+.reviews-slider {
+  width: 100%;
+}
+
+.reviews-slider .swiper {
+  width: 100%;
+}
+
+.reviews-slider .swiper-slide {
+  width: auto;
+  height: auto;
+}
+
+/* Slider-specific card tweaks (modifier — original .checkout-review unchanged) */
+.checkout-review--slide {
+  width: 340px;
+  max-width: 85vw;
+  height: 100%;
+  border: 1px solid var(--brand--color--border);
+}
+
+/* Progress scrollbar — flows below the cards (override Swiper's absolute
+   positioning; the extra .reviews-slider scope out-specifies
+   .swiper-horizontal > .swiper-scrollbar, which loads after this file). */
+.reviews-slider .swiper-scrollbar.reviews-slider__scrollbar {
+  position: static;
+  left: auto;
+  bottom: auto;
+  width: 100%;
+  height: 6px;
+  margin-top: 1.5rem;
+  background-color: var(--neutral--300);
+  border-radius: 10px;
+}
+
+.reviews-slider .swiper-scrollbar.reviews-slider__scrollbar .swiper-scrollbar-drag {
+  background-color: var(--brand--color--primary-dark);
+  border-radius: 10px;
+}

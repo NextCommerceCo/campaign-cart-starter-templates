@@ -5,6 +5,17 @@ promo_sale: "default"
 next_url: upsell-bundle-stepper.html
 cart_summary_variant: "01"
 order_bump_variant: "check01+switch01"
+as_seen_in:
+  heading: "As seen in"
+  logos:
+    - src: "images/landing/_shared/16x9.svg"
+      alt: "Press logo"
+    - src: "images/landing/_shared/16x9.svg"
+      alt: "Press logo"
+    - src: "images/landing/_shared/16x9.svg"
+      alt: "Press logo"
+    - src: "images/landing/_shared/16x9.svg"
+      alt: "Press logo"
 promo_banner:
   emoji: "✨"
   highlight: "Up to 60% off"
@@ -23,11 +34,30 @@ product_heading:
     - text: "Backed by our guarantee"
     - text: "Proudly made in the USA"
       emoji: "🇺🇸"
+reviews:
+  - title: "Whitest my teeth have ever been"
+    body: "Years of coffee and wine stains gone in a week. I did the short sessions while watching TV and barely noticed - and zero sensitivity."
+    author: "Jessica M."
+    verified: "Verified Customer"
+  - title: "Woke up without the soreness"
+    body: "First thing that's helped without taking something. I didn't expect it to make that kind of difference, but it really does."
+    author: "Daniel K."
+    verified: "Verified Customer"
+  - title: "Exactly as described"
+    body: "Easy to use and the results showed up fast. Setup took a couple of minutes and I was good to go."
+    author: "Priya S."
+    verified: "Verified Customer"
+  - title: "Worth every penny"
+    body: "Skeptical at first, but it delivered. I've already recommended it to two friends who ordered the same day."
+    author: "Marcus T."
+    verified: "Verified Customer"
 styles:
   - css/promo-banner.css
+  - css/as-seen-in.css
   - css/checkout-header.css
   - css/product-heading.css
   - css/promo-timer.css
+  - css/reviews-slider.css
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
 scripts:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js
@@ -125,54 +155,12 @@ bundles:
                       <div class="checkout-media__wrapper">
                         {% campaign_include 'swiper-gallery.html' main_slides=swiper_slides thumbs=swiper_thumbs variant='sw1' %}
                       </div>
-                      <div class="icons-grids hide-tablet-down">
-                        <div class="icon-image">
-                          <div class="icon-img"><img loading="eager" src="{{ 'images/1x1_2.svg' | campaign_asset }}" alt="" class="cover"></div>
-                          <div class="text-xs">Benefit one</div>
-                        </div>
-                        <div class="icon-image">
-                          <div class="icon-img"><img loading="eager" src="{{ 'images/1x1_2.svg' | campaign_asset }}" alt="" class="cover"></div>
-                          <div class="text-xs">Benefit two</div>
-                        </div>
-                        <div class="icon-image">
-                          <div class="icon-img"><img loading="eager" src="{{ 'images/1x1_2.svg' | campaign_asset }}" alt="" class="cover"></div>
-                          <div class="text-xs">Benefit three</div>
-                        </div>
-                        <div class="icon-image">
-                          <div class="icon-img"><img loading="eager" src="{{ 'images/1x1_2.svg' | campaign_asset }}" alt="" class="cover"></div>
-                          <div class="text-xs">Benefit four</div>
-                        </div>
+                      <div class="hide-tablet-down" data-next-hide="param.seen=='n'">
+                        {% campaign_include 'as-seen-in.html' as_seen_in=as_seen_in %}
                       </div>
                 
-                      <div class="checkout-reviews hide-tablet-down">
-                          <div class="checkout-review">
-                            <div class="checkout-review__body grid-cell">
-                              <div class="checkout-review__stars">
-                                <div class="review_component cc-sm"><div class="review_component-wrapper"><div class="star_wrapper"><div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div></div></div></div>
-                              </div>
-                              <p class="checkout-review__title">Woke up without the soreness<br></p>
-                              <p class="checkout-review__description">I’ve had morning back pain for years, and this is the first thing that’s helped without taking something. I didn’t expect a sheet to make that kind of difference, but it really does.<br></p>
-                              <div class="checkout-review__meta">
-                                <div class="review-auth">Daniel K.</div>
-                                <div class="review-auth">|</div>
-                                <div class="checkout-review__verified">Verified Customer</div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="checkout-review">
-                            <div class="checkout-review__body grid-cell">
-                              <div class="checkout-review__stars">
-                                <div class="review_component cc-sm"><div class="review_component-wrapper"><div class="star_wrapper"><div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div></div></div></div>
-                              </div>
-                              <p class="checkout-review__title">Woke up without the soreness<br></p>
-                              <p class="checkout-review__description">I’ve had morning back pain for years, and this is the first thing that’s helped without taking something. I didn’t expect a sheet to make that kind of difference, but it really does.<br></p>
-                              <div class="checkout-review__meta">
-                                <div class="review-auth">Daniel K.</div>
-                                <div class="review-auth">|</div>
-                                <div class="checkout-review__verified">Verified Customer</div>
-                              </div>
-                            </div>
-                          </div>
+                      <div class="hide-tablet-down">
+                        {% campaign_include 'reviews-slider.html' reviews=reviews %}
                       </div>
                     </div>
                     
@@ -339,54 +327,12 @@ bundles:
                         </div>
                       </div><img loading="lazy" src="{{ 'images/credit-card-flags.svg' | campaign_asset }}" alt="" class="credit-card__flags">
                     </div>
-                    <div class="icons-grids hide-tablet-up">
-                      <div class="icon-image">
-                        <div class="icon-img"><img loading="eager" src="{{ 'images/1x1_2.svg' | campaign_asset }}" alt="" class="cover"></div>
-                        <div class="text-xs">Benefit one</div>
-                      </div>
-                      <div class="icon-image">
-                        <div class="icon-img"><img loading="eager" src="{{ 'images/1x1_2.svg' | campaign_asset }}" alt="" class="cover"></div>
-                        <div class="text-xs">Benefit two</div>
-                      </div>
-                      <div class="icon-image">
-                        <div class="icon-img"><img loading="eager" src="{{ 'images/1x1_2.svg' | campaign_asset }}" alt="" class="cover"></div>
-                        <div class="text-xs">Benefit three</div>
-                      </div>
-                      <div class="icon-image">
-                        <div class="icon-img"><img loading="eager" src="{{ 'images/1x1_2.svg' | campaign_asset }}" alt="" class="cover"></div>
-                        <div class="text-xs">Benefit four</div>
-                      </div>
+                    <div class="hide-tablet-up" data-next-hide="param.seen=='n'">
+                      {% campaign_include 'as-seen-in.html' as_seen_in=as_seen_in scroll=true %}
                     </div>
               
-                    <div class="checkout-reviews hide-tablet-up">
-                        <div class="checkout-review">
-                          <div class="checkout-review__body grid-cell">
-                            <div class="checkout-review__stars">
-                              <div class="review_component cc-sm"><div class="review_component-wrapper"><div class="star_wrapper"><div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div></div></div></div>
-                            </div>
-                            <p class="checkout-review__title">Woke up without the soreness<br></p>
-                            <p class="checkout-review__description">I’ve had morning back pain for years, and this is the first thing that’s helped without taking something. I didn’t expect a sheet to make that kind of difference, but it really does.<br></p>
-                            <div class="checkout-review__meta">
-                              <div class="review-auth">Daniel K.</div>
-                              <div class="review-auth">|</div>
-                              <div class="checkout-review__verified">Verified Customer</div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="checkout-review">
-                          <div class="checkout-review__body grid-cell">
-                            <div class="checkout-review__stars">
-                              <div class="review_component cc-sm"><div class="review_component-wrapper"><div class="star_wrapper"><div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div><div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="15" height="15" rx="2" fill="#1BBA86"></rect><path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path></svg></div></div></div></div>
-                            </div>
-                            <p class="checkout-review__title">Woke up without the soreness<br></p>
-                            <p class="checkout-review__description">I’ve had morning back pain for years, and this is the first thing that’s helped without taking something. I didn’t expect a sheet to make that kind of difference, but it really does.<br></p>
-                            <div class="checkout-review__meta">
-                              <div class="review-auth">Daniel K.</div>
-                              <div class="review-auth">|</div>
-                              <div class="checkout-review__verified">Verified Customer</div>
-                            </div>
-                          </div>
-                        </div>
+                    <div class="hide-tablet-up">
+                      {% campaign_include 'reviews-slider.html' reviews=reviews %}
                     </div>
                     <div class="guarantee-section"><img loading="lazy" src="{{ 'images/90d.webp' | campaign_asset }}" alt="" class="guarantee-badge">
                       <div class="text-xs"><strong>90 Day Money-Back Guarantee:</strong> Feel safe knowing you're protected. Try it risk-free and return it within 90 days for a full refund or replacement—no questions asked.</div>
