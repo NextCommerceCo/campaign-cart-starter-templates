@@ -26,10 +26,12 @@
   next_note:
     - The optional personalization input sits INSIDE the PackageToggle click target (data-next-toggle-card).
       A click/keydown inside the field must NOT toggle the bump; that protection is guardBumpPersonalization(),
-      which ships ONLY in the MV checkout JS (checkout-olympus-mv-full.js). So personalization is wired safely
-      on olympus-mv-single-step / olympus-mv-two-step only. Before enabling order_bump.check03.personalization
-      on any other family (demeter, limos, olympus, shop-single-step, shop-three-step), port
-      guardBumpPersonalization into that template's checkout JS or a field click will toggle the bump.
+      which ships in checkout-apollo.js (this family) and in the MV checkout JS
+      (checkout-apollo-mv-full.js / checkout-olympus-mv-full.js). Personalization is wired safely
+      on apollo, apollo-mv-single-step, olympus-mv-single-step, and olympus-mv-two-step. Before enabling
+      order_bump.check03.personalization on any other family (demeter, limos, olympus,
+      shop-single-step, shop-three-step), port guardBumpPersonalization into that template's checkout JS
+      or a field click will toggle the bump.
 {% endcomment %}
 {% assign bump = order_bump.check03 -%}
 {% assign pkg_id = package_id | default: bump.package_id | default: packages.prepurchase_2 | default: 78 -%}
