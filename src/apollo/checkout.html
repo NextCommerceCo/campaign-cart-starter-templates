@@ -5,6 +5,7 @@ promo_sale: "default"
 next_url: upsell-bundle-stepper.html
 cart_summary_variant: "01"
 order_bump_variant: "check01+switch01"
+bundle_card_style: "product"
 fast_checkout: true
 fast_checkout_cta: "Add to Cart"
 as_seen_in:
@@ -65,6 +66,7 @@ styles:
   - css/promo-timer.css
   - css/reviews-slider.css
   - css/guarantee.css
+  - css/bundle-card.css
   - css/fast-checkout.css
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
 scripts:
@@ -193,7 +195,7 @@ bundles:
                               <h2 class="form-section__title">Step 1: Pick Your Bundle Deal</h2>
                               <!-- v0 catalog: bundle-selector partial. Canonical 3-tier defaults live in page frontmatter so CampaignSpec package/shipping ids stay visible.
                                    Reference variant (data-next-bundles= JSON config-driven) preserved below as commented reference. -->
-                              {% campaign_include 'bundle-selector.html' selector_id='main' packages=packages shipping_methods=shipping_methods bundles=bundles %}
+                              {% campaign_include 'bundle-selector.html' selector_id='main' card_style=bundle_card_style packages=packages shipping_methods=shipping_methods bundles=bundles %}
                               {% comment %}
                               Reference only — optional config-driven variant.
                               Kept as an optional implementation reference; do not treat as the default checkout pattern.
