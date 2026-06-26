@@ -49,6 +49,7 @@
   font-size: var(--font-size--base);
   line-height: 1.5;
   color: var(--brand--color--text-secondary);
+  padding: 0;
 }
 
 .product-heading__check {
