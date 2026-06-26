@@ -12711,12 +12711,13 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 }
 
 [data-component="prepurchase-upsell"][data-variant="check03"] .bump__price-row {
+  align-items: baseline;
   gap: .75rem;
 }
 
 [data-component="prepurchase-upsell"][data-variant="check03"] .bump__price-reg {
   color: var(--brand--color--text-muted);
-  font-size: var(--font-size--xl);
+  font-size: var(--font-size--base);
   font-weight: 700;
 }
 
@@ -12727,19 +12728,19 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 }
 
 [data-component="prepurchase-upsell"][data-variant="check03"] .bump__savings {
-  color: #2f9e00;
+  color: var(--system-colors--success-medium);
   font-size: var(--font-size--sm);
   font-weight: 700;
 }
 
 [data-component="prepurchase-upsell"][data-variant="check03"] .bump__badge {
-  background-color: #e03131;
+  background-color: var(--system-colors--destructive);
   border-radius: .375rem;
   color: var(--brand--color--primary-foreground);
-  font-size: var(--font-size--sm);
+  font-size: var(--font-size--xs);
   font-weight: 800;
   line-height: 1;
-  padding: .375rem .625rem;
+  padding: .3rem .6rem;
   position: absolute;
   right: 1rem;
   top: 0;
@@ -12798,7 +12799,6 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
     font-size: var(--font-size--sm);
   }
 
-  [data-component="prepurchase-upsell"][data-variant="check03"] .bump__price-reg,
   [data-component="prepurchase-upsell"][data-variant="check03"] .bump__price-total {
     font-size: var(--font-size--lg);
   }
