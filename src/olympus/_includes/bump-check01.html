@@ -47,12 +47,12 @@
 {% assign t = bump_title | default: bump.title | default: 'Order Bump Title' -%}
 {% assign img_src = bump_image | default: bump.image_src | default: 'images/1x1_1.svg' -%}
 {% assign img_alt = bump_image_alt | default: bump.image_alt | default: t -%}
-{% if package_sync == nil and bump.sync_quantity == nil %}{% assign package_sync = packages.main_package | default: 1 %}{% elsif package_sync == nil %}{% assign package_sync = bump.sync_quantity %}{% endif -%}
+{% if package_sync != nil %}{% assign b_sync = package_sync %}{% elsif bump.sync_quantity != nil %}{% assign b_sync = bump.sync_quantity %}{% else %}{% assign b_sync = packages.main_package | default: 1 %}{% endif -%}
 {% assign feature_list = features | default: bump.features -%}
 {% if is_upsell == nil %}{% assign is_upsell = true %}{% endif -%}
-{% if show_per_unit_price == nil %}{% assign show_per_unit_price = true %}{% endif -%}
-{% if show_compare_price == nil %}{% assign show_compare_price = false %}{% endif -%}
-{% if show_line_total_price == nil %}{% assign show_line_total_price = false %}{% endif -%}
+{% if show_per_unit_price != nil %}{% assign b_unit = show_per_unit_price %}{% elsif bump.show_per_unit_price != nil %}{% assign b_unit = bump.show_per_unit_price %}{% else %}{% assign b_unit = true %}{% endif -%}
+{% if show_compare_price != nil %}{% assign b_compare = show_compare_price %}{% elsif bump.show_compare_price != nil %}{% assign b_compare = bump.show_compare_price %}{% else %}{% assign b_compare = false %}{% endif -%}
+{% if show_line_total_price != nil %}{% assign b_line_total = show_line_total_price %}{% elsif bump.show_line_total_price != nil %}{% assign b_line_total = bump.show_line_total_price %}{% else %}{% assign b_line_total = false %}{% endif -%}
 <!-- Prepurchase upsell: checkbox bump (check01) — SDK 0.4.x
      Uses data-next-package-toggle / data-next-toggle-card / data-next-toggle-display
      Pick ONE pricing row — rendering both confuses the customer.
@@ -61,7 +61,7 @@
        To switch: pass show_per_unit_price=false show_line_total_price=true to {% campaign_include %} -->
 <div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="check01" data-next-await="">
   <div data-next-package-toggle>
-    <div class="bump-card" data-next-toggle-card{% if is_upsell %} data-next-is-upsell="true"{% endif %}{% if package_sync %} data-next-package-sync="{{ package_sync }}"{% endif %} data-next-package-id="{{ pkg_id }}">
+    <div class="bump-card" data-next-toggle-card{% if is_upsell %} data-next-is-upsell="true"{% endif %}{% if b_sync %} data-next-package-sync="{{ b_sync }}"{% endif %} data-next-package-id="{{ pkg_id }}">
       <!-- Bump header — visual only, whole card is the toggle target -->
       <div class="bump__header-left">
         <div class="bump__header-content">
@@ -76,14 +76,14 @@
         <div class="bump__content">
           <div class="bump__content-wrap">
             <div class="bump__price">
-              {% if show_per_unit_price %}
+              {% if b_unit %}
               <!-- Option A: per-unit pricing — stable across tier changes (SDK 0.4.14+) -->
               <div class="bump__price-row">
-                {% if show_compare_price %}<div class="bump__price-unit"><span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span></div>{% endif %}
+                {% if b_compare %}<div class="bump__price-unit"><span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span></div>{% endif %}
                 <div class="bump__price-unit"><span data-next-toggle-display="unitPrice" class="bump__price-sale">--</span><span class="text-xl">/ea</span></div>
               </div>
               {% endif %}
-              {% if show_line_total_price %}
+              {% if b_line_total %}
               <!-- Option B: line total pricing — scales with synced qty -->
               <div class="bump__price-row">
                 <div data-next-toggle-display="originalPrice" class="bump__price-reg">--</div>

@@ -105,8 +105,14 @@ packages:
   prepurchase_2: 9
 order_bump:
   check01:
+    # Pre-purchase add-on (checkbox card). Optional keys (full list: _includes/bump-check01.html):
+    #   sync_quantity: <main packageId>    -> add-on qty mirrors the main bundle (omit = fixed qty 1)
+    #   show_per_unit_price:   true|false  -> per-unit "$X/ea" row, stable across qty (default true)
+    #   show_compare_price:    true|false  -> struck originalUnitPrice beside it (default false)
+    #   show_line_total_price: true|false  -> line totals instead (scales with qty); pick this OR per-unit
     package_id: 7
     sync_quantity: 1
+    show_compare_price: true
     title: "Get Extended Warranty"
     image_src: "images/1x1_1.svg"
     features:
@@ -115,6 +121,9 @@ order_bump:
       - "Express Replacement Service"
       - "24/7 Priority Customer Support"
   switch01:
+    # Pre-purchase add-on (toggle switch). Optional keys:
+    #   show_unit_price: true|false -> append "or $X/ea" after the line total (default true)
+    #   (no quantity sync — switch01 is a single line item by design)
     package_id: 9
     title: "Shipping Insurance & Loss Prevention"
     description_prefix: "Total shipping coverage and extended warranty. Breakage, loss, delays, porch pirates - even defects. 100% protected for just"
@@ -300,7 +309,7 @@ bundles:
                         {% unless bump_variant == 'none' %}
                           <div class="order-bumps">
                           {% if bump_variant == 'check01' %}
-                          {% campaign_include 'bump-check01.html' packages=packages show_compare_price=true %}
+                          {% campaign_include 'bump-check01.html' packages=packages %}
                           {% elsif bump_variant == 'check02' %}
                           {% campaign_include 'bump-check02.html' packages=packages %}
                           {% elsif bump_variant == 'check03' %}
@@ -308,10 +317,10 @@ bundles:
                           {% elsif bump_variant == 'switch01' %}
                           {% campaign_include 'bump-switch01.html' packages=packages %}
                           {% elsif bump_variant == 'check01+switch01' %}
-                          {% campaign_include 'bump-check01.html' packages=packages show_compare_price=true %}
+                          {% campaign_include 'bump-check01.html' packages=packages %}
                           {% campaign_include 'bump-switch01.html' packages=packages %}
                           {% else %}
-                          {% campaign_include 'bump-check01.html' packages=packages show_compare_price=true %}
+                          {% campaign_include 'bump-check01.html' packages=packages %}
                           {% campaign_include 'bump-switch01.html' packages=packages %}
                           {% endif %}
                           </div>

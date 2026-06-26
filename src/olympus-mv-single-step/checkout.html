@@ -5,6 +5,11 @@ next_url: upsell-mv.html
 promo_sale: "default"
 order_bump:
   check01:
+    # Pre-purchase add-on (checkbox card). Optional keys (full list: _includes/bump-check01.html):
+    #   sync_quantity: <main packageId>    -> add-on qty mirrors the main bundle (omit = fixed qty 1)
+    #   show_per_unit_price:   true|false  -> per-unit "$X/ea" row, stable across qty (default true)
+    #   show_compare_price:    true|false  -> struck originalUnitPrice beside it (default false)
+    #   show_line_total_price: true|false  -> line totals instead (scales with qty); pick this OR per-unit
     title: "Get Extended Warranty"
     features:
       - "1 year with our replacement and protection"
@@ -16,6 +21,13 @@ order_bump:
   # exclude_property keeps the checkout-wide custom_text default off this add-on line.
   check03:
     package_id: 78
+    # --- Quantity sync (this MV reference is intentionally a single add-on) ---
+    # sync_quantity: <main packageId>  -> add-on qty mirrors the main selection. Omitted = single unit (qty 1).
+    #   NOTE: on MV/configurable mains use data-next-product-sync instead (see CLAUDE.md); package-sync under-counts.
+    # --- Price display (defaults shown explicitly; change to taste) ---
+    # price_mode: "unit"   -> per-unit "$X/ea", STABLE across qty (like bump-check01).
+    price_mode: "total"    # "total" -> line total, multiplies with synced qty.
+    show_compare_price: true   # true -> struck was-price beside the sale price; false -> hide (no discount).
     title: "Upsell Product"
     subtitle: "Add this special offer to your order."
     image_src: "images/1x1_1.svg"

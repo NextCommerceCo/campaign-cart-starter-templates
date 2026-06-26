@@ -9,6 +9,9 @@ packages:
   prepurchase_2: 9
 order_bump:
   check02:
+    # Pre-purchase add-on (expanded checkbox). Optional keys:
+    #   sync_quantity: <main packageId> -> add-on qty mirrors the main bundle (omit = fixed qty 1)
+    #   description_prefix / description_suffix wrap the inline price (single total; no compare/per-unit toggle)
     package_id: 9
     sync_quantity: 1
     title: "YES, &nbsp;I Will Take It"
