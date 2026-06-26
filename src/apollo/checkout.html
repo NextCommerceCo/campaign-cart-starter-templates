@@ -5,6 +5,8 @@ promo_sale: "default"
 next_url: upsell-bundle-stepper.html
 cart_summary_variant: "01"
 order_bump_variant: "check01+switch01"
+fast_checkout: true
+fast_checkout_cta: "Add to Cart"
 as_seen_in:
   heading: "As seen in"
   logos:
@@ -63,6 +65,7 @@ styles:
   - css/promo-timer.css
   - css/reviews-slider.css
   - css/guarantee.css
+  - css/fast-checkout.css
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
 scripts:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js
@@ -182,7 +185,7 @@ bundles:
                       {% campaign_include 'product-heading.html' product_heading=product_heading %}
                     </div>
                     {% campaign_include 'promo-timer.html' promo_timer=promo_timer %}
-                    <div class="checkout-form">
+                    <div class="checkout-form{% if fast_checkout %} checkout-form--fast{% endif %}">
                       <form data-next-checkout="form" id="combo_form" method="post">
                         <div class="form-content">
                           <div class="form-sections">
@@ -254,6 +257,18 @@ bundles:
                               </div>
                               {% endcomment %}
                             </div>
+                            {% if fast_checkout %}
+                            <div class="submit-section fast-checkout__cta" data-fast-checkout-cta>
+                              <div class="submit-section__button"><button type="button" class="submit-button" data-fast-checkout-trigger>
+                                <div class="submit-button__content">
+                                  <div class="submit-button__text">
+                                    <div class="submit-button__main-text">{{ fast_checkout_cta | default: 'Add to Cart' }}</div>
+                                  </div>
+                                </div>
+                              </button></div>
+                            </div>
+                            {% endif %}
+                            <div class="fast-checkout__reveal" data-fast-checkout-reveal>
 
                             <div data-next-component="shipping-form" class="form-sections">
                               {% campaign_include 'customer-info-form.html' %}
@@ -305,6 +320,7 @@ bundles:
                             <!-- END SUMMARY V2 -->
 
                             {% campaign_include 'submit-block.html' %}
+                            </div>
                           </div>
                         </div>
                       </form>

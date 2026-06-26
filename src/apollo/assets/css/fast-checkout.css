@@ -1,0 +1,48 @@
+/* ==========================================================================
+   Apollo fast-checkout UX (opt-in via `fast_checkout` frontmatter).
+   Initially shows only the bundle selector + an "Add to Cart" button; the rest
+   of the form (shipping, bumps, payment, summary, submit) is revealed on click
+   (JS adds .is-revealed in checkout-apollo.js).
+
+   IMPORTANT: the hidden state is positioned OFF-SCREEN, not display:none. The
+   credit-card fields are Spreedly iframes that the SDK mounts on init — mounting
+   inside a display:none container renders them at zero size and breaks the card
+   form. Off-screen keeps real layout dimensions so Spreedly mounts correctly.
+   Scoped to .checkout-form--fast so default checkout is unaffected.
+   ========================================================================== */
+
+.checkout-form--fast .fast-checkout__reveal {
+  position: absolute;
+  top: 0;
+  left: -99999px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.checkout-form--fast .fast-checkout__cta {
+  display: block;
+}
+
+/* "Add to Cart" reuses .submit-button styling but at a smaller size */
+.fast-checkout__cta .submit-button {
+  min-height: 0;
+  padding: 0.875rem 1.5rem;
+}
+
+.fast-checkout__cta .submit-button__main-text {
+  font-size: var(--font-size--base);
+  text-transform: uppercase;
+}
+
+.checkout-form--fast.is-revealed .fast-checkout__reveal {
+  position: static;
+  left: auto;
+  top: auto;
+  display: flex;
+  flex-flow: column;
+  gap: 2rem; /* matches .form-sections row gap */
+}
+
+.checkout-form--fast.is-revealed .fast-checkout__cta {
+  display: none;
+}
