@@ -51,6 +51,10 @@ reviews:
     body: "Skeptical at first, but it delivered. I've already recommended it to two friends who ordered the same day."
     author: "Marcus T."
     verified: "Verified Customer"
+guarantee:
+  badge: "images/guarantee-badge.png"
+  title: "60 Day Money-Back Guarantee"
+  text: "Feel safe knowing you're protected. Try it risk-free and return it within 60 days for a full refund or replacement—no questions asked."
 styles:
   - css/promo-banner.css
   - css/as-seen-in.css
@@ -58,6 +62,7 @@ styles:
   - css/product-heading.css
   - css/promo-timer.css
   - css/reviews-slider.css
+  - css/guarantee.css
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
 scripts:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js
@@ -161,6 +166,9 @@ bundles:
                 
                       <div class="hide-tablet-down">
                         {% campaign_include 'reviews-slider.html' reviews=reviews %}
+                      </div>
+                      <div class="hide-tablet-down">
+                        {% campaign_include 'guarantee.html' guarantee=guarantee %}
                       </div>
                     </div>
                     
@@ -327,15 +335,15 @@ bundles:
                         </div>
                       </div><img loading="lazy" src="{{ 'images/credit-card-flags.svg' | campaign_asset }}" alt="" class="credit-card__flags">
                     </div>
+                    <div class="hide-tablet-up">
+                      {% campaign_include 'guarantee.html' guarantee=guarantee %}
+                    </div>
                     <div class="hide-tablet-up" data-next-hide="param.seen=='n'">
                       {% campaign_include 'as-seen-in.html' as_seen_in=as_seen_in scroll=true %}
                     </div>
               
                     <div class="hide-tablet-up">
                       {% campaign_include 'reviews-slider.html' reviews=reviews %}
-                    </div>
-                    <div class="guarantee-section"><img loading="lazy" src="{{ 'images/90d.webp' | campaign_asset }}" alt="" class="guarantee-badge">
-                      <div class="text-xs"><strong>90 Day Money-Back Guarantee:</strong> Feel safe knowing you're protected. Try it risk-free and return it within 90 days for a full refund or replacement—no questions asked.</div>
                     </div>
                   </div>
                 </div>
