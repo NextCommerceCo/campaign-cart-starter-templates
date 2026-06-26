@@ -66,16 +66,16 @@ Each checkout template includes presell + landing pages, all upsell variants, an
 
 | Variant | Description | Preview |
 |---------|-------------|---------|
-| `upsell-bundle-stepper` | Quantity stepper with tier pricing | [preview](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-stepper/) |
-| `upsell-bundle-tier-pills` | Pill-style tier selector | [preview](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-tier-pills/) |
-| `upsell-bundle-tier-cards` | Card-style tier selector | [preview](https://nextcommerce-campaign-templates.netlify.app/olympus/upsell-bundle-tier-cards/) |
-| `upsell-mv` | Multi-variant upsell | [preview](https://nextcommerce-campaign-templates.netlify.app/olympus-mv-single-step/upsell-mv/) |
+| `upsell-bundle-stepper` | Quantity stepper with tier pricing | [preview](https://nextcommerce-campaign-templates.netlify.app/apollo/upsell-bundle-stepper/) |
+| `upsell-bundle-tier-pills` | Pill-style tier selector | [preview](https://nextcommerce-campaign-templates.netlify.app/apollo/upsell-bundle-tier-pills/) |
+| `upsell-bundle-tier-cards` | Card-style tier selector | [preview](https://nextcommerce-campaign-templates.netlify.app/apollo/upsell-bundle-tier-cards/) |
+| `upsell-mv` | Multi-variant upsell | [preview](https://nextcommerce-campaign-templates.netlify.app/apollo-mv-single-step/upsell-mv/) |
 
 **Receipt**
 
 | Variant | Description | Preview |
 |---------|-------------|---------|
-| `receipt` | Order confirmation page | [preview](https://nextcommerce-campaign-templates.netlify.app/olympus/receipt/) |
+| `receipt` | Order confirmation page | [preview](https://nextcommerce-campaign-templates.netlify.app/apollo/receipt/) |
 
 **Pre-checkout pages (landing + presell)**
 
@@ -83,13 +83,25 @@ Every checkout template includes `presell.html` and `landing.html` — a full pr
 
 | Template | Description | Preview |
 |----------|-------------|---------|
-| `[any slug]` · presell | Advertorial "10 reasons" article | [olympus example](https://nextcommerce-campaign-templates.netlify.app/olympus/presell/) |
-| `[any slug]` · landing | Composable landing page | [olympus example](https://nextcommerce-campaign-templates.netlify.app/olympus/landing/) |
+| `[any slug]` · presell | Advertorial "10 reasons" article | [apollo example](https://nextcommerce-campaign-templates.netlify.app/apollo/presell/) |
+| `[any slug]` · landing | Composable landing page | [apollo example](https://nextcommerce-campaign-templates.netlify.app/apollo/landing/) |
 | `landing` | Full section showcase (every component) | [preview](https://nextcommerce-campaign-templates.netlify.app/landing/index/) |
 
 ## Migration notes
 
 Starter `bump-check01.html` order bumps now default to a single visible sale price row. Existing cloned campaigns that want the struck `originalUnitPrice` row should pass `show_compare_price=true`; leave it unset when the bump should render only the current `unitPrice`/ea price.
+
+### Template configuration (Apollo and MV)
+
+**Checkout component CSS lives in `next-core.css`.** Apollo, Apollo MV, and Olympus MV checkout layout styles (promo banner, checkout header, bundle cards, MV selector layout, checkout reveal, etc.) are in the shared **Promoted checkout component styles** block of canonical `src/olympus/assets/css/next-core.css`, byte-identical across all nine template families. Apollo/Apollo MV checkout pages typically load only `next-core.css` (via `base.html`) plus Swiper CDN CSS — not per-page checkout component stylesheets. Route-specific CSS that stays outside core: `variant-picker.css`, `exit-intent-popup.css`, landing/presell `tokens.css`.
+
+**Apollo `bundle_card_style`** — on `apollo` checkout, set `bundle_card_style: "product" | "classic" | "tiles"` (default `product`). The `bundle-selector.html` dispatcher renders `bundle-card-product.html`, `bundle-card-classic.html`, or `bundle-card-tiles.html`. Product and tiles styles show coupon extra savings via `data-next-discounts="voucher"` when a coupon is applied.
+
+**MV `selector_layout`** — on `apollo-mv-single-step`, `olympus-mv-single-step`, and `olympus-mv-two-step`, set `selector_layout: "grid" | "vertical"` under `checkout_step` (single-step) or `select_step` (two-step). Default `"grid"` keeps the current 3-up desktop layout; `"vertical"` stacks cards with `mv-cards--vertical`.
+
+**Two bump slots (Apollo and Apollo MV)** — `selector_order_bump_variant` controls the product-card `check03` bump immediately below the bundle/MV selector (`"check03"` or `"none"`). `order_bump_variant` controls only the later `.order-bumps` form-section slot (`"check01"`, `"switch01"`, `"check01+switch01"`, etc.) — not every bump on the page. Configure `check03` via `order_bump.check03.*` frontmatter only.
+
+**Checkout reveal** — opt in with `checkout_reveal: true` and optional `checkout_reveal_cta` on Apollo and Apollo MV checkouts. Bundles and Add to Cart show first; the payment form reveals on click (`checkout-apollo.js` / `checkout-apollo-mv-full.js`).
 
 ## npm scripts
 

@@ -66,11 +66,11 @@ Do **not** infer the whole template family from brand colors, product category, 
 
 High confidence means `>= 0.85` in the commerce surface JSON catalog. If the family is below that threshold, or if two families plausibly fit, ask the user before wiring SDK components. This is faster and safer than burning tokens on uncertain inference. Example:
 
-> I can map this checkout to `olympus` or `olympus-mv-two-step`. The ambiguity is tier cards plus MV variant slot behavior. Which family should I use before wiring SDK components?
+> I can map this checkout to `apollo` or `apollo-mv-single-step`. The ambiguity is Apollo layout plus MV variant slot behavior. Which family should I use before wiring SDK components?
 
 Reference catalog: [commerce-surface-catalog.md](https://raw.githubusercontent.com/NextCommerceCo/campaign-cart-starter-templates/main/docs/commerce-surface-catalog.md) and [commerce-surface-catalog.json](https://raw.githubusercontent.com/NextCommerceCo/campaign-cart-starter-templates/main/docs/commerce-surface-catalog.json).
 
-Current first-class families include `olympus`, `limos`, `demeter`, `olympus-mv-single-step`, `olympus-mv-two-step`, `shop-single-step`, and `shop-three-step`. This list should grow as the commerce surface library grows.
+Current first-class families include `apollo`, `apollo-mv-single-step`, `olympus`, `olympus-mv-single-step`, `olympus-mv-two-step`, `limos`, `demeter`, `shop-single-step`, and `shop-three-step`. **`apollo`** is the flagship single-step family; **`apollo-mv-single-step`** is the flagship MV family.
 
 For each first-class family, read `families[family].agentContract` in the JSON catalog before patching checkout, upsell, or receipt frontmatter. Treat `sharedFrontmatterVocabulary` as the cross-family dictionary:
 
@@ -217,8 +217,7 @@ next_url: upsell.html        # checkout pages: where to go after order
 next_url: up02.html        # upsell pages: accept destination
 decline_url: receipt.html    # upsell pages: decline destination
 styles:
-  - css/checkout.css
-  - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
+  - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css   # Apollo/MV checkout: often only CDN; UI CSS is in next-core.css
 scripts:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js
   - js/checkout.js
@@ -230,6 +229,55 @@ scripts:
 - `next_url` is required on checkout pages
 - `next_url` / `decline_url` are required on upsell pages
 - `styles` / `scripts` are page-specific; `next-core.css` and `config.js` are loaded by `base.html` for every page
+- **Apollo / Apollo MV checkout** — promoted checkout component styles (header, bundle cards, promo blocks, checkout reveal, MV selector layout) live in shared `next-core.css` (byte-identical across all nine families). Do not add per-page CSS for those surfaces; typical checkout `styles:` is Swiper CDN only plus any route-specific files (`variant-picker.css`, `exit-intent-popup.css`).
+
+### Apollo and MV checkout knobs
+
+| Frontmatter | Families | Purpose |
+|-------------|----------|---------|
+| `bundle_card_style` | `apollo` | `product` · `classic` · `tiles` — bundle card visual via `bundle-selector.html` dispatcher |
+| `selector_layout` | MV families | Under `checkout_step` or `select_step`: `grid` (default) · `vertical` |
+| `selector_order_bump_variant` | `apollo`, `apollo-mv-single-step` | `check03` or `none` — product-card bump below bundle/MV selector |
+| `order_bump_variant` | checkout families | Form-section `.order-bumps` slot only — **not** the selector-area bump |
+| `checkout_reveal` | `apollo`, `apollo-mv-single-step` | Opt-in progressive disclosure before payment form |
+| `order_bump.check03.*` | all (when check03 used) | check03 reads **only** this frontmatter block — never bare include arg names |
+
+Apollo `product` and `tiles` bundle cards show coupon extra savings: `data-next-discounts="voucher"` gated by `data-next-show="cart.hasCoupon()"` rendering `+{discount.percentage}`.
+
+```yaml
+---
+title: "Page Title"
+page_layout: base.html
+page_type: checkout
+next_url: upsell.html
+bundle_card_style: "product"              # apollo only
+selector_order_bump_variant: "check03"    # apollo / apollo-mv: bump below selector
+order_bump_variant: "check01+switch01"    # later form-section bumps
+checkout_reveal: true
+checkout_step:
+  selector_layout: "grid"                 # MV: grid | vertical
+styles:
+  - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
+scripts:
+  - js/checkout.js
+  - js/checkout-apollo.js                  # or checkout-apollo-mv-full.js
+---
+```
+
+Placeholder frontmatter example (generic families may still use per-page CSS such as `css/checkout.css`):
+
+```yaml
+---
+title: "Page Title"
+page_layout: base.html
+page_type: checkout
+next_url: upsell.html
+styles:
+  - css/checkout.css
+scripts:
+  - js/checkout.js
+---
+```
 
 ### Build validation and warnings (CPK 0.2.0+)
 
@@ -543,9 +591,9 @@ bundles:
     shipping_label: "+ Free Shipping"  # rendered unconditionally when set
 ```
 
-### MV variant-picker (olympus-mv alternative selector)
+### MV variant-picker (alternative selector)
 
-`olympus-mv-single-step` and `olympus-mv-two-step` ship a **variant-picker** reference component — quantity tier cards plus per-unit variant (e.g. colorway) dropdowns with **custom per-variant swatch thumbnails**. Use it when a campaign needs visible swatch images on the selector, or a picker that renders for visual QA without the live API. It is an **additive alternative** to the default `mv-configurable-selector` (which uses SDK-injected native `<select>`s, no swatch images).
+`apollo-mv-single-step`, `olympus-mv-single-step`, and `olympus-mv-two-step` ship a **variant-picker** reference component — quantity tier cards plus per-unit variant (e.g. colorway) dropdowns with **custom per-variant swatch thumbnails**. Use it when a campaign needs visible swatch images on the selector, or a picker that renders for visual QA without the live API. It is an **additive alternative** to the default `mv-configurable-selector` (which uses SDK-injected native `<select>`s, no swatch images).
 
 - Files per template: `_includes/variant-picker.html`, `assets/js/variant-picker.js`, `assets/js/variant-picker-fixture.js`, `assets/css/variant-picker.css`, and a standalone `variant-picker.html` reference page. To use it on checkout, `{% campaign_include 'variant-picker.html' %}` in place of the default selector and add the css/js to the page frontmatter.
 - **One declared variant source.** `variant_picker.variants[]` (`{ value, label, package_id, image }`) is emitted once and feeds BOTH the dropdown swatch `src` AND the JS `value→packageId` / `value→image` maps — no second map to drift. Replace the demo image paths with your CampaignSpec per-variant package images.
@@ -663,7 +711,7 @@ The container gets `next-summary-empty` when the item has no properties and `nex
 | MV / variant slot picker — MV checkout/select **or** MV upsell | ✓ per-slot `slot_personalization` | ✓ general `order_personalization` |
 | Standalone product wanting per-line text | ✓ only via an MV-style slot picker (list the packageId ×N) | ✓ general `order_personalization` |
 
-Live examples are wired only on the MV templates (`olympus-mv-*`): per-slot `slot_personalization` on `checkout.html` and the single-step `upsell-mv.html`; general `order_personalization` is present but disabled (keyed distinctly from the per-slot field). Every other family ships the `personalization-field.html` partial (general field) plus the shared offer/selector partials **unwired** — opt in per the rules above. `bump-check03.html` (product-card order bump) ships in all checkout families with a togglable `data-next-property` field, demoed enabled on `olympus-mv-single-step`. Same key-collision rule everywhere: a per-slot value overrides the general default on a shared key, so use distinct keys when running both.
+Live examples are wired on the MV templates (`apollo-mv-*` flagship, `olympus-mv-*` classic): per-slot `slot_personalization` on `checkout.html` and the single-step `upsell-mv.html`; general `order_personalization` is present but disabled (keyed distinctly from the per-slot field). Every other family ships the `personalization-field.html` partial (general field) plus the shared offer/selector partials **unwired** — opt in per the rules above. `bump-check03.html` (product-card order bump) ships in all checkout families with a togglable `data-next-property` field, demoed enabled on **`apollo-mv-single-step`** and **`olympus-mv-single-step`**. Same key-collision rule everywhere: a per-slot value overrides the general default on a shared key, so use distinct keys when running both.
 
 **Implementation caveats (0.4.26+):**
 - **The per-slot override needs slots to actually render.** A tier-*swap* selector has one active card and no slots, so `data-next-property` is never scanned there — it can only carry the shared default. The override requires the configurable-slot / slot-template selector (the MV pattern).
@@ -672,7 +720,7 @@ Live examples are wired only on the MV templates (`olympus-mv-*`): per-slot `slo
 - **Per-package live-sync (`setItemProperties`) matches packageId only** — unreliable when several lines share a package with different properties.
 - **The order-wide default is not auto-applied to order-bump lines** — a bump carries properties only when added/synced via its own AddToCart.
 - **Post-purchase upsells carry properties as of SDK 0.4.27.** The upsell accept (`POST /orders/{ref}/upsells/`) now includes a `properties` object per line, matching order creation. On 0.4.26 and earlier it sent only `package_id` + `quantity` and any property on an upsell offer was silently dropped — so personalize on upsells only when pinned to 0.4.27+.
-- **MV upsell per-slot fields are wired via `slot_personalization`** — the same frontmatter contract name as the MV checkout selector. `upsell-mv-offer.html` renders the configured `data-next-property` field inside the upsell slot template, so each accepted upsell unit can carry distinct text. It ships enabled as a **single live reference on `olympus-mv-single-step/upsell-mv.html`** (disabled on `olympus-mv-two-step`). **To turn it on for another MV upsell page, just set `slot_personalization.enabled: true` in that page's frontmatter** — the shared `upsell-mv-offer.html` partial renders the field from the same contract, so there's nothing to copy within an MV family. `order_personalization` remains available for the one-value-for-all fallback (rendered as a full-width field above the slot stage), and is the discoverable path for non-slot upsells (which have no slot stage to render per-slot fields); the MV upsell demo keeps it disabled because the reference uses per-slot fields. **If you enable both at once, give them distinct `property_key`s.** The accept merge is `{ ...default, ...slot }`, so a per-slot value overrides the page default on a shared key — the demo keys `order_personalization` `gift_message` to stay clear of the per-slot `upsell_message`.
+- **MV upsell per-slot fields are wired via `slot_personalization`** — the same frontmatter contract name as the MV checkout selector. `upsell-mv-offer.html` renders the configured `data-next-property` field inside the upsell slot template, so each accepted upsell unit can carry distinct text. It ships enabled on **`apollo-mv-single-step/upsell-mv.html`** and **`olympus-mv-single-step/upsell-mv.html`** (disabled on `olympus-mv-two-step`). **To turn it on for another MV upsell page, just set `slot_personalization.enabled: true` in that page's frontmatter** — the shared `upsell-mv-offer.html` partial renders the field from the same contract, so there's nothing to copy within an MV family. `order_personalization` remains available for the one-value-for-all fallback (rendered as a full-width field above the slot stage), and is the discoverable path for non-slot upsells (which have no slot stage to render per-slot fields); the MV upsell demo keeps it disabled because the reference uses per-slot fields. **If you enable both at once, give them distinct `property_key`s.** The accept merge is `{ ...default, ...slot }`, so a per-slot value overrides the page default on a shared key — the demo keys `order_personalization` `gift_message` to stay clear of the per-slot `upsell_message`.
 
 ### Order bump
 
@@ -719,7 +767,11 @@ Starter `bump-check01.html` partials expose three pricing args:
 
 Migration note for existing cloned campaigns: starter bumps now default to a single visible sale price row. Pass `show_compare_price=true` to restore the struck `originalUnitPrice` row for bumps that should visibly compare against a prior price.
 
-Shared checkout templates also include `bump-check03.html`, an unsynced product-card bump for a single add-on offer. Select it with `order_bump_variant: "check03"` on templates that dispatch bump variants, or include it directly beside an existing bump when a checkout should show more than one bump. It intentionally omits `data-next-product-sync` / `data-next-package-sync`, so it adds one standalone upsell product rather than mirroring bundle quantity.
+Shared checkout templates also include `bump-check03.html`, an unsynced product-card bump for a single add-on offer (opt-in quantity sync via `order_bump.check03.sync_quantity`).
+
+**Two bump slots on Apollo and Apollo MV:** `selector_order_bump_variant` controls the check03 bump immediately below the bundle/MV selector (`"check03"` or `"none"`). `order_bump_variant` controls only the later `.order-bumps` form-section slot — do not use it to mean "all bumps on the page." On other families, select check03 with `order_bump_variant: "check03"` or include the partial directly when a checkout should show more than one bump.
+
+By default check03 omits `data-next-product-sync` / `data-next-package-sync` (one standalone add-on). Apollo demo sets `sync_quantity` on the selector-area check03 so the Travel Case scales with 1x/2x/3x; MV/configurable mains need `data-next-product-sync` instead.
 
 Configure it with `order_bump.check03`:
 - `package_id`, `title`, `subtitle`, `image_src`, `image_alt`, `badge_text`, and `savings_text` control the visible card.
@@ -850,7 +902,7 @@ All templates ship three ready-to-use cart summary partials in `_includes/`. Swa
 
 | Partial | Style | Notes |
 |---------|-------|-------|
-| `cart-summary01.html` | Tabular, no accordion | Default for olympus. Clean item + totals list. |
+| `cart-summary01.html` | Tabular, no accordion | Default for `apollo` and `olympus`. Clean item + totals list. |
 | `cart-summary02.html` | Accordion / card | Default for limos. Includes `item.isRecurring` / `item.frequency` row. |
 | `cart-summary03.html` | Tabular + feature block | Default for demeter. Cart heading + product image outside `<template>` — no flash on re-render. |
 
@@ -952,8 +1004,8 @@ For single-package upsells without voucher-driven pricing. If the upsell uses Ca
 ### Bundle upsell (SDK 0.4.x) and MV external slots
 
 - **Coupon/voucher-driven** upsell pricing uses **Approach B**: `data-next-bundle-selector` + `data-next-upsell-context`, `data-next-bundle-vouchers`, `data-next-upsell-action-for`. Contrast with simple single-package upsells in the [Upsells](https://developers.nextcommerce.com/docs/campaigns/upsells) documentation (bundle vs selection patterns).
-- **References:** `limos/checkout.html` (checkout + native **bundleQuantity**, **`.checkout-bundle-offer`** + **`.next-bundle-qty--anchor-br`**, stepper **not** inside **`[data-next-bundle-card]`**); `olympus/upsell-bundle-stepper.html` (same **`.next-bundle-qty*`** stepper on upsell); `upsell-bundle-tier-pills.html` / `upsell-bundle-tier-cards.html` (tiered bundle tiers, same generic qty classes); **`olympus-mv-single-step/upsell-mv.html`** (tier pills + **`data-next-bundle-slots-for`** slot layout; checkout omits native checkout bundle qty — see **limos**). Styles: **`next-core.css`** (not upsell-only).
-- **Variant UI in staged bundle slots:** SDK-injected **native `<select>`** works **without** extra JS. **`setupBundleSlotVariantDropdowns()`** (custom **`os-dropdown`** UI) is **opt-in** — see file-header comments in **`checkout-olympus-mv-full.js`** and **`upsells-mv.js`** on the **`olympus-mv-single-step`** template.
+- **References:** `apollo/checkout.html` (flagship tiered selector + Apollo layout); `limos/checkout.html` (checkout + native **bundleQuantity**, **`.checkout-bundle-offer`** + **`.next-bundle-qty--anchor-br`**, stepper **not** inside **`[data-next-bundle-card]`**); `apollo/upsell-bundle-stepper.html` (same **`.next-bundle-qty*`** stepper on upsell); `upsell-bundle-tier-pills.html` / `upsell-bundle-tier-cards.html` (tiered bundle tiers, same generic qty classes); **`apollo-mv-single-step/upsell-mv.html`** (tier pills + **`data-next-bundle-slots-for`** slot layout; checkout omits native checkout bundle qty — see **limos**). Styles: **`next-core.css`** (not upsell-only).
+- **Variant UI in staged bundle slots:** SDK-injected **native `<select>`** works **without** extra JS. **`setupBundleSlotVariantDropdowns()`** (custom **`os-dropdown`** UI) is **opt-in** — see file-header comments in **`checkout-apollo-mv-full.js`** / **`checkout-olympus-mv-full.js`** and **`upsells-mv.js`** on the MV templates.
 
 ---
 
@@ -1041,7 +1093,8 @@ Use these when implementing or verifying a specific task. Work through each item
 - [ ] Outer wrapper has `data-next-await=""` (hides until SDK ready)
 - [ ] Toggle container has `data-next-bump=""` and `data-next-package-id` set to the bump package
 - [ ] `data-next-package-sync` on the toggle container lists all main package IDs (if quantity should sync) — or, for a configurable / multi-variant main product, use `data-next-product-sync="<product_id>"` (SDK 0.4.25+) so one id covers every variant
-- [ ] For an unsynced product-card bump, use `bump-check03.html` / `order_bump_variant: "check03"` and set `order_bump.check03.package_id` to an offer-backed package
+- [ ] For an unsynced product-card bump, use `bump-check03.html` with `order_bump.check03.package_id` set to an offer-backed package
+- [ ] On Apollo / Apollo MV: use `selector_order_bump_variant: "check03"` for the selector-area bump; use `order_bump_variant` only for the later form-section bumps
 - [ ] Clickable header has `data-next-toggle="toggle"`
 - [ ] `os-component="check"` element exists inside the header for the checkmark
 - [ ] CSS for `[data-next-bump][class*="next-active"] [os-component="check"]` is present in the stylesheet
@@ -1060,9 +1113,9 @@ Use these when implementing or verifying a specific task. Work through each item
 
 ### External bundle slots + variant dropdown (MV 0.4.x)
 
-- [ ] **`data-next-bundle-slots-for`** and slot markup match the campaign’s bundle structure — see [Upsells](https://developers.nextcommerce.com/docs/campaigns/upsells) and the reference implementation **`olympus-mv-single-step/checkout.html`** in [campaign-cart-starter-templates](https://github.com/NextCommerceCo/campaign-cart-starter-templates)
+- [ ] **`data-next-bundle-slots-for`** and slot markup match the campaign’s bundle structure — see [Upsells](https://developers.nextcommerce.com/docs/campaigns/upsells) and the reference implementation **`apollo-mv-single-step/checkout.html`** in [campaign-cart-starter-templates](https://github.com/NextCommerceCo/campaign-cart-starter-templates)
 - [ ] **Barebones path:** if native **`<select>`** styling is enough, do **not** call **`setupBundleSlotVariantDropdowns()`** (no custom dropdown JS required)
-- [ ] **Custom dropdown path:** if you call **`setupBundleSlotVariantDropdowns()`** from **`checkout-olympus-mv-full.js`** / **`upsells-mv.js`**, keep **`initBundleQtyToggle()`** (or equivalent) in sync on upsell when using quantity toggles + Approach B
+- [ ] **Custom dropdown path:** if you call **`setupBundleSlotVariantDropdowns()`** from **`checkout-apollo-mv-full.js`** / **`checkout-olympus-mv-full.js`** / **`upsells-mv.js`**, keep **`initBundleQtyToggle()`** (or equivalent) in sync on upsell when using quantity toggles + Approach B
 - [ ] **Per-tier vouchers** on bundle upsell cards exist in Campaigns and match **`data-next-bundle-vouchers`** on each **`data-next-bundle-card`**
 
 ### Configuring FOMO popups
@@ -1087,6 +1140,10 @@ Use these when implementing or verifying a specific task. Work through each item
 - [ ] **If using profiles for dynamic pricing:** `profiles` block in `config.js` is uncommented and the profile name matches what the exit intent logic references
 
 ### Configuring the promo banner and timer
+
+**Apollo and Apollo MV** use frontmatter-driven partials (`promo-banner.html`, `promo-timer.html`) — not `<promo-banner>` / `<promo-timer>` web components. Configure via `promo_banner`, `promo_timer`, and optional `promo_sale` frontmatter. The timer reuses `checkout.js` `[data-next-element="timer"]` countdown. No `promo-banner.js` / `promo-timer.js` on Apollo checkout.
+
+**Other families (olympus, limos, demeter, olympus-mv)** still ship the web-component path:
 
 - [ ] `promo-banner.js` and `promo-timer.js` added to `scripts:` in page frontmatter
 - [ ] `promo_sale: "default"` set in frontmatter (or a specific sale name to force a promotion year-round)

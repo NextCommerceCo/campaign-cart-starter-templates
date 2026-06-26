@@ -11,11 +11,11 @@
 //               that are NOT inside a data-next-catalog-component="<name>" wrapper.
 //               This catches "agent copied canonical markup raw to game the gate."
 //
-// SCOPE for v0 = olympus + checkout page only. Other template families still inline;
-// other olympus pages (presell/landing/upsell/receipt) deferred to v1 cross-page expansion.
+// SCOPE default = apollo + checkout page. Other template families still inline historically;
+// other apollo pages (presell/landing/upsell/receipt) covered by lint:sdk:ci --pages=all.
 //
 // Usage:
-//   node scripts/lint-sdk.mjs                       # both modes, scope=olympus, pages=checkout
+//   node scripts/lint-sdk.mjs                       # both modes, scope=apollo, pages=checkout
 //   node scripts/lint-sdk.mjs --source              # source-only
 //   node scripts/lint-sdk.mjs --rendered            # rendered-only
 //   node scripts/lint-sdk.mjs --pages=all           # all pages in scope (graduates to v1+)
@@ -32,13 +32,14 @@ const args = new Set(process.argv.slice(2));
 const wantSource = args.has('--source') || (!args.has('--source') && !args.has('--rendered'));
 const wantRendered = args.has('--rendered') || (!args.has('--source') && !args.has('--rendered'));
 const scopeArg = [...args].find((a) => a.startsWith('--scope='));
-const scope = scopeArg ? scopeArg.split('=')[1] : 'olympus'; // v0 default: olympus only
+const scope = scopeArg ? scopeArg.split('=')[1] : 'apollo';
 const pagesArg = [...args].find((a) => a.startsWith('--pages='));
 const pages = pagesArg ? pagesArg.split('=')[1].split(',') : ['checkout']; // v0 default: checkout only
 const allPages = pages.includes('all');
 const isCI = process.env.CI === '1' || process.env.CI === 'true';
 const PROMOTED_FAMILIES = [
   'olympus',
+  'apollo',
   'limos',
   'demeter',
   'shop-single-step',
@@ -244,7 +245,7 @@ function includeSuggestion(attr) {
     'data-next-quantity-increase': "{% campaign_include 'single-offer-quantity-selector.html' %}",
     'data-next-quantity-display': "{% campaign_include 'single-offer-quantity-selector.html' %}",
   };
-  return map[attr] ?? '(see catalog: olympus/_includes/)';
+  return map[attr] ?? '(see catalog: apollo/_includes/)';
 }
 
 function lineOf(content, charIdx) {
@@ -291,7 +292,7 @@ if (all.length === 0) {
 console.log(`[lint-sdk] FAIL — ${all.length} total violation(s)`);
 console.log('');
 console.log('Background: v0 catalog requires SDK markup to live in canonical partials');
-console.log('under olympus/_includes/, called via {% campaign_include %}. Inlined SDK');
+console.log('under family _includes/, called via {% campaign_include %}. Inlined SDK');
 console.log('attributes break the agentic build assumption that partials own SDK contracts.');
 console.log('See: next-campaigns-ops/docs/checkout-components-inventory-2026-05-01.md');
 
