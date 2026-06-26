@@ -15983,16 +15983,13 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   font-weight: 700;
 }
 
-/* Badges — centered on the top edge (desktop) */
-.bundle-tile__badges {
+/* Tier badge — centered on the top edge (desktop) */
+.bundle-tile > .bundle-card__badge {
   position: absolute;
   top: 0;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
 }
 
 /* Mobile: stack tiles; each tile goes horizontal (image left, title+price row) */
@@ -16029,8 +16026,8 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
     text-align: left;
   }
 
-  /* badges move to the top-right edge on mobile */
-  .bundle-tile__badges {
+  /* tier badge moves to the top-right edge on mobile */
+  .bundle-tile > .bundle-card__badge {
     left: auto;
     right: 1rem;
     transform: translateY(-50%);
