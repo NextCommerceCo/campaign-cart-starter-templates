@@ -7396,7 +7396,7 @@ figcaption {
   grid-column-gap: 2rem;
   grid-row-gap: 2rem;
   flex-flow: column;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   display: flex;
 }
 .checkout-selectors [data-next-catalog-component] {
