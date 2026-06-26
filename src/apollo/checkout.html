@@ -120,8 +120,19 @@ order_bump:
     description_prefix: "Total shipping coverage and extended warranty. Breakage, loss, delays, porch pirates - even defects. 100% protected for just"
     show_unit_price: true
   check03:
-    # Standalone product-card bump shown under the bundles, above Add to Cart.
+    # Product-card bump shown under the bundles, above Add to Cart.
     package_id: 4
+    # --- Quantity sync ---
+    # sync_quantity: <main packageId>  -> add-on qty mirrors the 1x/2x/3x bundle selection.
+    # Remove this line entirely         -> add-on stays a single unit (qty 1), never scales.
+    sync_quantity: 1
+    # --- Price display ---
+    # price_mode: "unit"   -> per-unit price, e.g. "$20/ea". STABLE: same number whether 1x/2x/3x (like bump-check01).
+    # price_mode: "total"  -> line total, e.g. "$40". CHANGES with synced qty (2x -> doubles).
+    price_mode: "unit"
+    # show_compare_price: true  -> show the struck was-price next to the sale price.
+    # show_compare_price: false -> hide it (use when there's no discount). Defaults to true if omitted.
+    show_compare_price: true
     title: "Add a Travel Case"
     subtitle: "Protect your kit on the go — water-resistant zip case"
     image_src: "images/1x1_1.svg"
@@ -289,7 +300,7 @@ bundles:
                         {% unless bump_variant == 'none' %}
                           <div class="order-bumps">
                           {% if bump_variant == 'check01' %}
-                          {% campaign_include 'bump-check01.html' packages=packages %}
+                          {% campaign_include 'bump-check01.html' packages=packages show_compare_price=true %}
                           {% elsif bump_variant == 'check02' %}
                           {% campaign_include 'bump-check02.html' packages=packages %}
                           {% elsif bump_variant == 'check03' %}
@@ -297,10 +308,10 @@ bundles:
                           {% elsif bump_variant == 'switch01' %}
                           {% campaign_include 'bump-switch01.html' packages=packages %}
                           {% elsif bump_variant == 'check01+switch01' %}
-                          {% campaign_include 'bump-check01.html' packages=packages %}
+                          {% campaign_include 'bump-check01.html' packages=packages show_compare_price=true %}
                           {% campaign_include 'bump-switch01.html' packages=packages %}
                           {% else %}
-                          {% campaign_include 'bump-check01.html' packages=packages %}
+                          {% campaign_include 'bump-check01.html' packages=packages show_compare_price=true %}
                           {% campaign_include 'bump-switch01.html' packages=packages %}
                           {% endif %}
                           </div>

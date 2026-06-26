@@ -12712,7 +12712,7 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 
 [data-component="prepurchase-upsell"][data-variant="check03"] .bump__price-row {
   align-items: baseline;
-  gap: .75rem;
+  gap: .375rem;
 }
 
 [data-component="prepurchase-upsell"][data-variant="check03"] .bump__price-reg {
