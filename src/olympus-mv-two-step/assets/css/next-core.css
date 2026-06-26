@@ -15165,3 +15165,975 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
     display: none;
   }
 }
+
+/* ==========================================================================
+   Promoted checkout component styles
+   ========================================================================== */
+
+/* --- Apollo promo banner (formerly page-level CSS) ------------------------------- */
+/* ==========================================================================
+   Apollo promo-banner — slim promo announcement bar.
+   NOTE: next-core already ships a generic `.promo-banner` (urgency strip), so
+   this is scoped under the `.promo-banner--apollo` MODIFIER to avoid colliding
+   when merged into the shared core CSS. Colors/sizes use next-core CSS vars.
+   ========================================================================== */
+
+.promo-banner--apollo {
+  background-color: var(--brand--color--black);
+  border-radius: 0;
+  padding: 0.5rem 1rem;
+  text-align: center;
+}
+
+.promo-banner--apollo .promo-banner__text {
+  margin: 0;
+  font-size: var(--font-size--base);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.32px;
+  color: var(--brand--color--white);
+  text-transform: uppercase;
+}
+
+.promo-banner--apollo .promo-banner__emoji {
+  font-weight: 800;
+}
+
+.promo-banner--apollo .promo-banner__highlight {
+  color: var(--system-colors--success-medium);
+  font-weight: 800;
+}
+
+.promo-banner--apollo .promo-banner__strong {
+  font-weight: 800;
+}
+
+/* --- Apollo as-seen-in (formerly page-level CSS) ------------------------------- */
+/* ==========================================================================
+   Apollo as-seen-in — "AS SEEN IN" press-logo strip + divider.
+   Adapted from the landing media-1 section. Static justified row by default;
+   .as-seen-in--scroll renders an auto-scrolling marquee (used on mobile).
+   Colors/sizes use next-core vars.
+   ========================================================================== */
+
+.as-seen-in {
+  display: flex;
+  flex-flow: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.as-seen-in__head {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.as-seen-in__heading {
+  margin: 0;
+  font-size: var(--font-size--base);
+  font-weight: 700;
+  line-height: 1.5;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--brand--color--foreground);
+}
+
+/* Static row -------------------------------------------------------------- */
+.as-seen-in__logos {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  width: 100%;
+}
+
+.as-seen-in__logos .as-seen-in__logo {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.as-seen-in__logo {
+  object-fit: contain;
+}
+
+/* Divider ----------------------------------------------------------------- */
+.as-seen-in__divider {
+  height: 1px;
+  width: 100%;
+  background-color: var(--brand--color--border);
+}
+
+/* Scrolling marquee variant (mobile, mirrors landing media-1) ------------- */
+.as-seen-in__viewport {
+  width: 100%;
+  overflow: hidden;
+}
+
+.as-seen-in__track {
+  display: flex;
+  align-items: center;
+  gap: 2.25rem;
+  width: max-content;
+  animation: as-seen-in-scroll 24s linear infinite;
+  will-change: transform;
+}
+
+.as-seen-in__track:hover {
+  animation-play-state: paused;
+}
+
+.as-seen-in__track .as-seen-in__logo {
+  flex: 0 0 auto;
+  width: auto;
+  height: 44px;
+}
+
+@keyframes as-seen-in-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .as-seen-in__track {
+    animation: none;
+  }
+}
+
+/* --- Apollo checkout header (formerly page-level CSS) ------------------------------- */
+/* ==========================================================================
+   Apollo checkout-header (trust-bar variant)
+   Scoped to .checkout-header--apollo so it never touches the shared next-core
+   .checkout-header rules. Lives as a standalone file (loaded via page
+   frontmatter `styles:`) until propagated to the shared base across families.
+   Colors / sizes pull from next-core CSS vars so it stays themeable.
+   ========================================================================== */
+
+.checkout-header--apollo {
+  background-color: var(--brand--color--background);
+  border-bottom: 1px solid var(--brand--color--border);
+  padding: var(--spacing--1) 0;
+}
+
+.checkout-header--apollo .checkout-header__inner {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing--1);
+}
+
+/* Logo --------------------------------------------------------------------- */
+.checkout-header--apollo .checkout-header__brand {
+  display: flex;
+  align-items: center;
+}
+
+.checkout-header--apollo .checkout-header__logo {
+  display: block;
+  width: 150px;
+  object-fit: contain;
+}
+
+/* Vertical divider (desktop only) ----------------------------------------- */
+.checkout-header--apollo .checkout-header__divider {
+  width: 1px;
+  height: 46px;
+  background-color: var(--brand--color--border);
+  flex: 0 0 auto;
+}
+
+/* Trust block -------------------------------------------------------------- */
+.checkout-header--apollo .checkout-header__trust {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Reviews row -------------------------------------------------------------- */
+.checkout-header--apollo .checkout-header__reviews {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkout-header--apollo .checkout-header__reviews-text {
+  font-size: var(--font-size--lg);
+  font-weight: 500;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--brand--color--primary-dark);
+  white-space: nowrap;
+}
+
+.checkout-header--apollo .checkout-header__reviews-text strong {
+  font-weight: 700;
+}
+
+/* Trust badges row --------------------------------------------------------- */
+.checkout-header--apollo .checkout-header__badges {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checkout-header--apollo .checkout-header__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.625rem; /* 10px — no core var at this size */
+  font-weight: 700;
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: var(--brand--color--primary-dark);
+  white-space: nowrap;
+}
+
+.checkout-header--apollo .checkout-header__badge-icon {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+}
+
+/* Mobile: stack logo above the trust block, hide the divider --------------- */
+@media screen and (max-width: 767px) {
+  .checkout-header--apollo {
+    padding: var(--spacing--0-75) 0;
+  }
+
+  .checkout-header--apollo .checkout-header__inner {
+    flex-flow: column;
+    gap: 0.5rem;
+  }
+
+  .checkout-header--apollo .checkout-header__divider {
+    display: none;
+  }
+
+  .checkout-header--apollo .checkout-header__logo {
+    height: 32px;
+  }
+
+  .checkout-header--apollo .checkout-header__reviews-text {
+    font-size: var(--font-size--base);
+  }
+
+  .checkout-header--apollo .checkout-header__badges {
+    gap: 0.4rem;
+  }
+
+  .checkout-header--apollo .checkout-header__badge {
+    gap: 0.2rem;
+  }
+
+  .checkout-header--apollo .checkout-header__badge-icon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* --- Apollo product heading (formerly page-level CSS) ------------------------------- */
+/* ==========================================================================
+   Apollo product-heading — product title + divider + feature list.
+   Replaces the legacy stars / "trusted by" / subtitle heading block.
+   One partial renders in both the .show-tablet (tablet/mobile) and .hide-tablet
+   (desktop) wrappers; only one is visible per breakpoint, so the media queries
+   below drive the three layouts (desktop left-aligned list, tablet centered
+   2x2 grid, mobile centered list). Colors/sizes use next-core CSS vars.
+   ========================================================================== */
+
+.product-heading {
+  display: flex;
+  flex-flow: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+/* Title -------------------------------------------------------------------- */
+.product-heading__title {
+  margin: 0;
+  font-size: var(--font-size--3xl); /* 32px desktop */
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.2px;
+  color: var(--brand--color--primary-dark);
+  text-align: left;
+}
+
+/* Divider ------------------------------------------------------------------ */
+.product-heading__divider {
+  height: 1px;
+  width: 100%;
+  background-color: var(--brand--color--border);
+}
+
+/* Feature list ------------------------------------------------------------- */
+.product-heading__features {
+  display: flex;
+  flex-flow: column;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.product-heading__feature {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--font-size--base);
+  line-height: 1.5;
+  color: var(--brand--color--text-secondary);
+  padding: 0;
+}
+
+.product-heading__check {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  fill: var(--system-colors--success-medium);
+}
+
+.product-heading__flag {
+  width: 24px;
+  font-size: 22px;
+  line-height: 1;
+  text-align: center;
+  flex: 0 0 auto;
+}
+
+/* Tablet: centered title, 2x2 feature grid --------------------------------- */
+@media screen and (max-width: 991px) {
+  .product-heading {
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .product-heading__title {
+    font-size: 1.75rem; /* 28px */
+    letter-spacing: -0.16px;
+    text-align: center;
+  }
+
+  .product-heading__features {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.625rem;
+    width: 100%;
+  }
+}
+
+/* Mobile: centered title, single-column feature list ----------------------- */
+@media screen and (max-width: 767px) {
+  .product-heading__title {
+    font-size: var(--font-size--2xl); /* 24px */
+    letter-spacing: -0.14px;
+  }
+
+  .product-heading__features {
+    display: flex;
+    flex-flow: column;
+  }
+
+  .product-heading__feature {
+    font-size: var(--font-size--sm); /* 14px */
+  }
+
+  .product-heading__check {
+    width: 20px;
+    height: 20px;
+  }
+
+  .product-heading__flag {
+    width: 20px;
+    font-size: 18px;
+  }
+}
+
+/* --- Apollo promo timer (formerly page-level CSS) ------------------------------- */
+/* ==========================================================================
+   Apollo promo-timer — slim "DISCOUNT ACTIVATED" urgency bar with a
+   countdown pill. Replaces the legacy <promo-timer> web component on checkout.
+   Countdown ticks via checkout.js [data-next-element="timer"]. Colors/sizes use
+   next-core CSS vars where one exists.
+   ========================================================================== */
+
+.promo-timer {
+  background-color: var(--brand--color--black);
+  padding: 0.5rem;
+}
+
+.promo-timer__inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.promo-timer__label {
+  margin: 0;
+  font-size: var(--font-size--base);
+  font-weight: 700;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.promo-timer__label-accent {
+  color: var(--system-colors--success-medium);
+  font-weight: 800;
+}
+
+.promo-timer__label-strong {
+  color: var(--brand--color--white);
+}
+
+.promo-timer__pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 71px;
+  padding: 0.125rem 0.625rem;
+  border-radius: var(--radius-size--sm);
+  background-color: rgba(255, 255, 255, 0.19);
+  color: var(--brand--color--white);
+  font-size: var(--font-size--base);
+  font-weight: 700;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+/* --- Apollo reviews slider (formerly page-level CSS) ------------------------------- */
+/* ==========================================================================
+   Apollo reviews-slider — horizontal Swiper of the existing
+   .checkout-review cards with a progress scrollbar. Card styling is reused
+   from next-core; the only card change (width / equal-height / border) lives
+   on the .checkout-review--slide modifier. Colors/sizes use next-core vars.
+   ========================================================================== */
+
+.reviews-slider {
+  width: 100%;
+}
+
+.reviews-slider .swiper {
+  width: 100%;
+}
+
+.reviews-slider .swiper-slide {
+  width: auto;
+  height: auto;
+}
+
+/* Slider-specific card tweaks (modifier — original .checkout-review unchanged) */
+.checkout-review--slide {
+  width: 340px;
+  max-width: 85vw;
+  height: 100%;
+  border: 1px solid var(--brand--color--border);
+}
+
+/* Progress scrollbar — flows below the cards (override Swiper's absolute
+   positioning; the extra .reviews-slider scope out-specifies
+   .swiper-horizontal > .swiper-scrollbar, which loads after this file). */
+.reviews-slider .swiper-scrollbar.reviews-slider__scrollbar {
+  position: static;
+  left: auto;
+  bottom: auto;
+  width: 100%;
+  height: 6px;
+  margin-top: 1.5rem;
+  background-color: var(--neutral--300);
+  border-radius: 10px;
+}
+
+.reviews-slider .swiper-scrollbar.reviews-slider__scrollbar .swiper-scrollbar-drag {
+  background-color: var(--brand--color--primary-dark);
+  border-radius: 10px;
+}
+
+/* --- Apollo guarantee (formerly page-level CSS) ------------------------------- */
+/* ==========================================================================
+   Apollo guarantee — tinted block with badge + bold header / body.
+   Modifier only; the base .guarantee-section is reused from next-core. Colors/
+   sizes use existing core vars (background = closest var to the design tint).
+   ========================================================================== */
+
+.guarantee-section--apollo {
+  justify-content: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background-color: var(--brand--color--primary-light);
+  border-radius: var(--radius-size--sm);
+}
+
+.guarantee-section--apollo .guarantee-badge {
+  width: 80px;
+  margin-right: 0;
+  flex: 0 0 auto;
+}
+
+.guarantee-section--apollo .guarantee-section__content {
+  display: flex;
+  flex-flow: column;
+  gap: 0.5rem;
+}
+
+.guarantee-section--apollo .guarantee-section__title {
+  margin: 0;
+  font-size: var(--font-size--base);
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--brand--color--foreground);
+}
+
+.guarantee-section--apollo .guarantee-section__text {
+  margin: 0;
+  font-size: var(--font-size--sm);
+  line-height: 1.5;
+  color: var(--brand--color--text-secondary);
+}
+
+/* --- Apollo bundle cards (formerly page-level CSS) ------------------------------- */
+/* ==========================================================================
+   Apollo bundle cards — product-card style, mirroring the
+   bump-check03 layout (badges row · radio + image + title · one price line +
+   savings). The bump styles are scoped to the prepurchase-upsell component, so
+   this restates the look for the bundle selector using existing core vars.
+   Selected state keys off the SDK's .next-selected class on the bundle card.
+   ========================================================================== */
+
+.bundle-cards {
+  display: flex;
+  flex-flow: column;
+  gap: 1rem;
+}
+
+.bundle-card {
+  position: relative;
+  background-color: var(--brand--color--background);
+  border: 2px solid var(--brand--color--border);
+  border-radius: var(--radius--cards);
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.bundle-card.next-selected {
+  background-color: var(--brand--color--primary-lighter);
+  border-color: var(--brand--color--primary);
+}
+
+/* Badges — grouped at the top-right edge; SAVE % sits at the end (rightmost),
+   straddling the card's top border (same edge position as the tier label). */
+.bundle-card__badges {
+  position: absolute;
+  top: 0;
+  right: 1rem;
+  transform: translateY(-50%);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.bundle-card__badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 0.375rem;
+  padding: 0.3rem 0.6rem;
+  font-size: var(--font-size--xs);
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--brand--color--white);
+}
+
+.bundle-card__badge--save {
+  background-color: var(--system-colors--destructive);
+}
+
+/* Tier badges keep their previous pill coloring */
+.bundle-card__badge--popular {
+  background-color: var(--brand--color--pill-primary-surface);
+  color: var(--brand--color--pill-primary);
+}
+
+.bundle-card__badge--deal {
+  background-color: var(--brand--color--pill-secondary-surface);
+  color: var(--brand--color--pill-secondary);
+}
+
+/* Main grid: radio | image | copy | price -------------------------------- */
+.bundle-card__main {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 1.25rem;
+  row-gap: 1rem;
+}
+
+/* Radio — reuses the shared .os-card__radio / .radio-inner markup, sized
+   explicitly here (the shared .radio-inner is 0px since Olympus shows selection
+   via the card border, not a dot). Ring + filled dot on the SDK selected state. */
+.bundle-card .os-card__radio {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 2px var(--brand--color--border);
+}
+
+.bundle-card.next-selected .os-card__radio {
+  box-shadow: 0 0 0 2px var(--brand--color--primary);
+}
+
+.bundle-card .os-card__radio .radio-inner {
+  position: static; /* next-core sets .radio-inner absolute; keep it in flex flow */
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--brand--color--primary);
+  transform: scale(0);
+  transition: transform 0.15s ease;
+}
+
+.bundle-card.next-selected .os-card__radio .radio-inner {
+  transform: scale(1);
+}
+
+.bundle-card__image {
+  width: 84px;
+  height: 84px;
+  border-radius: 0.5rem;
+  object-fit: cover;
+}
+
+/* Copy ------------------------------------------------------------------- */
+.bundle-card__copy {
+  display: flex;
+  flex-flow: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.bundle-card__title {
+  font-size: var(--font-size--lg);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--brand--color--text-primary);
+}
+
+.bundle-card__subtitle {
+  font-size: var(--font-size--sm);
+  line-height: 1.35;
+  color: var(--brand--color--text-secondary);
+}
+
+/* Price + savings -------------------------------------------------------- */
+.bundle-card__price {
+  display: flex;
+  flex-flow: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+  min-width: max-content;
+  text-align: right;
+}
+
+.bundle-card__price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.375rem;
+}
+
+.bundle-card__price-reg {
+  color: var(--brand--color--text-muted);
+  font-size: var(--font-size--base);
+  font-weight: 700;
+  text-decoration: line-through;
+}
+
+.bundle-card__price-total {
+  color: var(--brand--color--text-primary);
+  font-size: var(--font-size--xl);
+  font-weight: 800;
+}
+
+.bundle-card__savings {
+  color: var(--system-colors--success-medium);
+  font-size: var(--font-size--sm);
+  font-weight: 700;
+}
+
+/* Responsive: stack price under copy, smaller image ---------------------- */
+@media screen and (max-width: 991px) {
+  .bundle-card__main {
+    grid-template-columns: auto auto minmax(0, 1fr);
+    column-gap: 1rem;
+    row-gap: 0.175rem;
+  }
+
+  .bundle-card__price {
+    grid-column: 3;
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .bundle-card__image {
+    width: 64px;
+    height: 64px;
+  }
+
+  .bundle-card__title {
+    font-size: var(--font-size--base);
+  }
+
+  .bundle-card__price-total {
+    font-size: var(--font-size--lg);
+  }
+}
+
+/* ==========================================================================
+   Tiles style (card_style: 'tiles') — tile grid.
+   Desktop: vertical tiles in a row. Mobile: tiles stack + go horizontal.
+   Reuses .bundle-card__badge tier pills; selection keys off .next-selected.
+   ========================================================================== */
+
+.bundle-tiles {
+  display: flex;
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.bundle-tile {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1.25rem 1rem 0.9375rem;
+  background-color: var(--brand--color--background);
+  border: 2px solid var(--brand--color--border);
+  border-radius: var(--radius-size--sm);
+  cursor: pointer;
+}
+
+.bundle-tile.next-selected {
+  background-color: var(--brand--color--primary-lighter);
+  border-color: var(--brand--color--primary);
+}
+
+.bundle-tile__body {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.bundle-tile__image {
+  width: 130px;
+  height: 102px;
+  object-fit: contain;
+}
+
+.bundle-tile__info {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 0.125rem;
+  text-align: center;
+}
+
+.bundle-tile__title {
+  font-size: var(--font-size--lg);
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--brand--color--text-primary);
+}
+
+.bundle-tile__price {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.375rem;
+  font-size: var(--font-size--base);
+  font-weight: 500;
+}
+
+.bundle-tile__price-reg {
+  color: var(--brand--color--text-muted);
+  text-decoration: line-through;
+}
+
+.bundle-tile__price-cur {
+  color: var(--system-colors--destructive);
+  font-weight: 700;
+}
+
+/* Badges — centered on the top edge (desktop) */
+.bundle-tile__badges {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Mobile: stack tiles; each tile goes horizontal (image left, title+price row) */
+@media screen and (max-width: 767px) {
+  .bundle-tiles {
+    flex-flow: column;
+  }
+
+  .bundle-tile {
+    flex: 0 0 auto;
+    flex-flow: row;
+    align-items: center;
+    width: 100%;
+    gap: 0.875rem;
+    padding: 0.625rem 1rem;
+  }
+
+  .bundle-tile__body {
+    flex-flow: row;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .bundle-tile__image {
+    width: 92px;
+    height: 72px;
+  }
+
+  .bundle-tile__info {
+    flex: 1 1 0;
+    flex-flow: row;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  /* badges move to the top-right edge on mobile */
+  .bundle-tile__badges {
+    left: auto;
+    right: 1rem;
+    transform: translateY(-50%);
+  }
+}
+
+/* --- Checkout reveal (formerly page-level CSS) ------------------------------- */
+/* ==========================================================================
+   Apollo checkout-reveal UX (opt-in via `checkout_reveal` frontmatter).
+   Initially shows only the bundle selector + an "Add to Cart" button; the rest
+   of the form (shipping, bumps, payment, summary, submit) is revealed on click
+   (JS adds .is-revealed in checkout-apollo.js).
+
+   IMPORTANT: the hidden state is positioned OFF-SCREEN, not display:none. The
+   credit-card fields are Spreedly iframes that the SDK mounts on init — mounting
+   inside a display:none container renders them at zero size and breaks the card
+   form. Off-screen keeps real layout dimensions so Spreedly mounts correctly.
+   Scoped to .checkout-form--reveal so default checkout is unaffected.
+   ========================================================================== */
+
+/* The reveal wrapper is always rendered (it groups the post-bundle form
+   sections), so it always carries the .form-sections column gap — this keeps
+   the layout correct when checkout_reveal is OFF (no .checkout-form--reveal). */
+.checkout-reveal__panel {
+  display: flex;
+  flex-flow: column;
+  gap: 2rem; /* matches .form-sections row gap */
+}
+
+/* Fast mode ON: park the reveal off-screen until the trigger is clicked. */
+.checkout-form--reveal .checkout-reveal__panel {
+  position: absolute;
+  top: 0;
+  left: -99999px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.checkout-form--reveal .checkout-reveal__cta {
+  display: block;
+}
+
+/* "Add to Cart" reuses .submit-button styling but at a smaller size */
+.checkout-reveal__cta .submit-button {
+  min-height: 0;
+  padding: 0.875rem 1.5rem;
+}
+
+.checkout-reveal__cta .submit-button__main-text {
+  font-size: var(--font-size--base);
+  text-transform: uppercase;
+}
+
+.checkout-form--reveal.is-revealed .checkout-reveal__panel {
+  position: static;
+  left: auto;
+  top: auto;
+}
+
+.checkout-form--reveal.is-revealed .checkout-reveal__cta {
+  display: none;
+}
+
+/* --- MV selector layout (formerly page-level CSS) ------------------------------- */
+/* MV selector layout options. Scoped to MV selectors so shared core stays byte-identical. */
+
+.mv-cards--vertical {
+  display: flex;
+  flex-flow: column;
+  gap: 1.5rem;
+}
+
+.mv-cards--vertical .os-card__wrapper.cc-sm {
+  gap: 0.5rem;
+}
+
+.mv-cards--vertical .os-card__content.os-wrap {
+  flex-flow: row;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.mv-cards--vertical .os-card__main-slot {
+  min-width: 0;
+}
+
+.mv-cards--vertical .os-card__bottom-slot.cc-gap {
+  padding-left: 1.75rem;
+}
+
+.mv-cards--vertical .os-card__label-2[os-label-position="top-right"],
+.mv-cards--vertical [os-label-position="top-right"].os-card__label-2 {
+  left: auto;
+  right: 1rem;
+  transform: none;
+}
+
+@media screen and (max-width: 767px) {
+  .mv-cards--vertical {
+    gap: 1.256rem;
+  }
+
+  .mv-cards--vertical .os-card__bottom-slot.cc-gap {
+    padding-left: 1.5rem;
+  }
+}

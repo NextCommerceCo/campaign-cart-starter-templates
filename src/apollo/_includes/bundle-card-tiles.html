@@ -7,7 +7,10 @@
   card border + tint (apollo style). Reads the shared card arg contract.
 {%- endcomment -%}
 <div data-next-bundle-card data-next-bundle-id="{{ bundle_id }}"{% if shipping_id and shipping_id != "" %} data-next-shipping-id="{{ shipping_id }}"{% endif %} data-next-bundle-items='{{ items }}'{% if selected %} data-next-selected="true"{% endif %} role="button" class="bundle-tile">
-  {% if badge_text and badge_text != "" %}<div class="bundle-card__badge bundle-card__badge--{{ badge_tone | default: 'popular' }} bundle-tile__badge">{{ badge_text }}</div>{% endif %}
+  <div class="bundle-tile__badges">
+    {% if badge_text and badge_text != "" %}<div class="bundle-card__badge bundle-card__badge--{{ badge_tone | default: 'popular' }} bundle-tile__badge">{{ badge_text }}</div>{% endif %}
+    <div data-next-discounts="voucher" data-next-show="cart.hasCoupon()" class="bundle-card__badge bundle-card__badge--save" style="display:none"><template><span>+{discount.percentage}</span></template></div>
+  </div>
   <div class="bundle-tile__body" data-next-package-id="{{ package_id }}">
     <img data-next-display="package.image" loading="lazy" alt="" class="bundle-tile__image">
     <div class="bundle-tile__info">

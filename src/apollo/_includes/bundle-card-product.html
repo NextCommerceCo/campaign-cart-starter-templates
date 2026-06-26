@@ -9,6 +9,7 @@
   <div class="bundle-card__badges">
     {% if badge_text and badge_text != "" %}<div class="bundle-card__badge bundle-card__badge--{{ badge_tone | default: 'popular' }}">{{ badge_text }}</div>{% endif %}
     <div data-next-discounts="offer" data-next-bundle-display="hasDiscount" class="bundle-card__badge bundle-card__badge--save"><template><span>{discount.percentage} OFF</span></template></div>
+    <div data-next-discounts="voucher" data-next-show="cart.hasCoupon()" class="bundle-card__badge bundle-card__badge--save" style="display:none"><template><span>+{discount.percentage}</span></template></div>
   </div>
   <div class="bundle-card__main" data-next-package-id="{{ package_id }}">
     <div class="os-card__radio" aria-hidden="true"><div class="radio-inner"></div></div>
