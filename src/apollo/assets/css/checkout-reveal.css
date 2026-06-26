@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Apollo fast-checkout UX (opt-in via `fast_checkout` frontmatter).
+   Apollo checkout-reveal UX (opt-in via `checkout_reveal` frontmatter).
    Initially shows only the bundle selector + an "Add to Cart" button; the rest
    of the form (shipping, bumps, payment, summary, submit) is revealed on click
    (JS adds .is-revealed in checkout-apollo.js).
@@ -8,10 +8,20 @@
    credit-card fields are Spreedly iframes that the SDK mounts on init — mounting
    inside a display:none container renders them at zero size and breaks the card
    form. Off-screen keeps real layout dimensions so Spreedly mounts correctly.
-   Scoped to .checkout-form--fast so default checkout is unaffected.
+   Scoped to .checkout-form--reveal so default checkout is unaffected.
    ========================================================================== */
 
-.checkout-form--fast .fast-checkout__reveal {
+/* The reveal wrapper is always rendered (it groups the post-bundle form
+   sections), so it always carries the .form-sections column gap — this keeps
+   the layout correct when checkout_reveal is OFF (no .checkout-form--reveal). */
+.checkout-reveal__panel {
+  display: flex;
+  flex-flow: column;
+  gap: 2rem; /* matches .form-sections row gap */
+}
+
+/* Fast mode ON: park the reveal off-screen until the trigger is clicked. */
+.checkout-form--reveal .checkout-reveal__panel {
   position: absolute;
   top: 0;
   left: -99999px;
@@ -19,30 +29,27 @@
   max-width: 100%;
 }
 
-.checkout-form--fast .fast-checkout__cta {
+.checkout-form--reveal .checkout-reveal__cta {
   display: block;
 }
 
 /* "Add to Cart" reuses .submit-button styling but at a smaller size */
-.fast-checkout__cta .submit-button {
+.checkout-reveal__cta .submit-button {
   min-height: 0;
   padding: 0.875rem 1.5rem;
 }
 
-.fast-checkout__cta .submit-button__main-text {
+.checkout-reveal__cta .submit-button__main-text {
   font-size: var(--font-size--base);
   text-transform: uppercase;
 }
 
-.checkout-form--fast.is-revealed .fast-checkout__reveal {
+.checkout-form--reveal.is-revealed .checkout-reveal__panel {
   position: static;
   left: auto;
   top: auto;
-  display: flex;
-  flex-flow: column;
-  gap: 2rem; /* matches .form-sections row gap */
 }
 
-.checkout-form--fast.is-revealed .fast-checkout__cta {
+.checkout-form--reveal.is-revealed .checkout-reveal__cta {
   display: none;
 }

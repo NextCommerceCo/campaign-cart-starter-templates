@@ -1,18 +1,18 @@
-// Fast-checkout reveal — show only bundles + "Add to Cart" first; reveal the
+// Checkout reveal — show only bundles + "Add to Cart" first; reveal the
 // rest of the form (shipping/payment/summary/submit) on click. Opt-in via the
-// .checkout-form--fast modifier (set by the fast_checkout frontmatter flag).
-(function initFastCheckout() {
+// .checkout-form--reveal modifier (set by the checkout_reveal frontmatter flag).
+(function initCheckoutReveal() {
   // Make the off-screen (but rendered, for Spreedly) content non-interactive
   // until revealed — keeps it out of tab order and the a11y tree.
-  document.querySelectorAll('.checkout-form--fast:not(.is-revealed) [data-fast-checkout-reveal]').forEach((reveal) => {
+  document.querySelectorAll('.checkout-form--reveal:not(.is-revealed) [data-checkout-reveal-panel]').forEach((reveal) => {
     reveal.setAttribute('inert', '');
   });
-  document.querySelectorAll('[data-fast-checkout-trigger]').forEach((btn) => {
+  document.querySelectorAll('[data-checkout-reveal-trigger]').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const form = btn.closest('.checkout-form--fast');
+      const form = btn.closest('.checkout-form--reveal');
       if (!form) return;
       form.classList.add('is-revealed');
-      const reveal = form.querySelector('[data-fast-checkout-reveal]');
+      const reveal = form.querySelector('[data-checkout-reveal-panel]');
       if (reveal) {
         reveal.removeAttribute('inert');
         reveal.scrollIntoView({ behavior: 'smooth', block: 'start' });
