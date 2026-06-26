@@ -1,0 +1,9 @@
+{%- comment -%}
+  promo-banner.html — slim promo announcement bar (plain markup, no web
+  component). Replaces the legacy <promo-banner> on checkout.
+  Data: promo_banner { emoji, highlight, lead, strong, trail }.
+    {% campaign_include 'promo-banner.html' promo_banner=promo_banner %}
+{%- endcomment -%}
+<div class="promo-banner promo-banner--apollo">
+  <p class="promo-banner__text">{% if promo_banner.emoji %}<span class="promo-banner__emoji">{{ promo_banner.emoji }}</span> {% endif %}<span class="promo-banner__highlight">{{ promo_banner.highlight }}</span> {{ promo_banner.lead }} <span class="promo-banner__strong">{{ promo_banner.strong }}</span> {{ promo_banner.trail }}</p>
+</div>

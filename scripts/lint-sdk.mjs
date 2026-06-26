@@ -43,6 +43,7 @@ const PROMOTED_FAMILIES = [
   'demeter',
   'shop-single-step',
   'shop-three-step',
+  'apollo-mv-single-step',
   'olympus-mv-single-step',
   'olympus-mv-two-step',
 ];

@@ -1,0 +1,40 @@
+/* ==========================================================================
+   Apollo guarantee — tinted block with badge + bold header / body.
+   Modifier only; the base .guarantee-section is reused from next-core. Colors/
+   sizes use existing core vars (background = closest var to the design tint).
+   ========================================================================== */
+
+.guarantee-section--apollo {
+  justify-content: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background-color: var(--brand--color--primary-light);
+  border-radius: var(--radius-size--sm);
+}
+
+.guarantee-section--apollo .guarantee-badge {
+  width: 80px;
+  margin-right: 0;
+  flex: 0 0 auto;
+}
+
+.guarantee-section--apollo .guarantee-section__content {
+  display: flex;
+  flex-flow: column;
+  gap: 0.5rem;
+}
+
+.guarantee-section--apollo .guarantee-section__title {
+  margin: 0;
+  font-size: var(--font-size--base);
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--brand--color--foreground);
+}
+
+.guarantee-section--apollo .guarantee-section__text {
+  margin: 0;
+  font-size: var(--font-size--sm);
+  line-height: 1.5;
+  color: var(--brand--color--text-secondary);
+}

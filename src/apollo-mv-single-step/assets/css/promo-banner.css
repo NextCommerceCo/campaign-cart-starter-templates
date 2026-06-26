@@ -1,0 +1,36 @@
+/* ==========================================================================
+   Apollo promo-banner — slim promo announcement bar.
+   NOTE: next-core already ships a generic `.promo-banner` (urgency strip), so
+   this is scoped under the `.promo-banner--apollo` MODIFIER to avoid colliding
+   when merged into the shared core CSS. Colors/sizes use next-core CSS vars.
+   ========================================================================== */
+
+.promo-banner--apollo {
+  background-color: var(--brand--color--black);
+  border-radius: 0;
+  padding: 0.5rem 1rem;
+  text-align: center;
+}
+
+.promo-banner--apollo .promo-banner__text {
+  margin: 0;
+  font-size: var(--font-size--base);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.32px;
+  color: var(--brand--color--white);
+  text-transform: uppercase;
+}
+
+.promo-banner--apollo .promo-banner__emoji {
+  font-weight: 800;
+}
+
+.promo-banner--apollo .promo-banner__highlight {
+  color: var(--system-colors--success-medium);
+  font-weight: 800;
+}
+
+.promo-banner--apollo .promo-banner__strong {
+  font-weight: 800;
+}

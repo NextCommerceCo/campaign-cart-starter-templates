@@ -17,6 +17,14 @@
       "hidden": false
     },
     {
+      "slug": "apollo-mv-single-step",
+      "name": "Apollo Multi-variant",
+      "description": "Multi-variant Apollo checkout with single-step variant selection",
+      "priority": 92,
+      "deprecated": false,
+      "hidden": false
+    },
+    {
       "slug": "olympus-mv-single-step",
       "name": "Olympus Multi-variant",
       "description": "Multi-variant Bundles Olympus checkout - recommended variant product campaigns",

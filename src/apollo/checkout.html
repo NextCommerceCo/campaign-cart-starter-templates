@@ -4,6 +4,9 @@ page_type: checkout
 promo_sale: "default"
 next_url: upsell-bundle-stepper.html
 cart_summary_variant: "01"
+# Product-card bump shown immediately after the bundle selector. Set to "none" to remove it.
+selector_order_bump_variant: "check03"
+# Later form-section bump rendered after shipping details.
 order_bump_variant: "check01+switch01"
 bundle_card_style: "product"
 checkout_reveal: true
@@ -287,7 +290,10 @@ bundles:
                               </div>
                               {% endcomment %}
                             </div>
+                            {% assign selector_bump_variant = selector_order_bump_variant | default: 'check03' %}
+                            {% if selector_bump_variant == 'check03' %}
                             {% campaign_include 'bump-check03.html' order_bump=order_bump packages=packages %}
+                            {% endif %}
                             {% if checkout_reveal %}
                             <div class="submit-section checkout-reveal__cta" data-checkout-reveal-cta>
                               <div class="submit-section__button"><button type="button" class="submit-button" data-checkout-reveal-trigger>

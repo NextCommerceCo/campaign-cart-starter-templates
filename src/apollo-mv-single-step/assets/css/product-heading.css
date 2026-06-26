@@ -1,0 +1,116 @@
+/* ==========================================================================
+   Apollo product-heading — product title + divider + feature list.
+   Replaces the legacy stars / "trusted by" / subtitle heading block.
+   One partial renders in both the .show-tablet (tablet/mobile) and .hide-tablet
+   (desktop) wrappers; only one is visible per breakpoint, so the media queries
+   below drive the three layouts (desktop left-aligned list, tablet centered
+   2x2 grid, mobile centered list). Colors/sizes use next-core CSS vars.
+   ========================================================================== */
+
+.product-heading {
+  display: flex;
+  flex-flow: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+/* Title -------------------------------------------------------------------- */
+.product-heading__title {
+  margin: 0;
+  font-size: var(--font-size--3xl); /* 32px desktop */
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.2px;
+  color: var(--brand--color--primary-dark);
+  text-align: left;
+}
+
+/* Divider ------------------------------------------------------------------ */
+.product-heading__divider {
+  height: 1px;
+  width: 100%;
+  background-color: var(--brand--color--border);
+}
+
+/* Feature list ------------------------------------------------------------- */
+.product-heading__features {
+  display: flex;
+  flex-flow: column;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.product-heading__feature {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--font-size--base);
+  line-height: 1.5;
+  color: var(--brand--color--text-secondary);
+  padding: 0;
+}
+
+.product-heading__check {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  fill: var(--system-colors--success-medium);
+}
+
+.product-heading__flag {
+  width: 24px;
+  font-size: 22px;
+  line-height: 1;
+  text-align: center;
+  flex: 0 0 auto;
+}
+
+/* Tablet: centered title, 2x2 feature grid --------------------------------- */
+@media screen and (max-width: 991px) {
+  .product-heading {
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .product-heading__title {
+    font-size: 1.75rem; /* 28px */
+    letter-spacing: -0.16px;
+    text-align: center;
+  }
+
+  .product-heading__features {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.625rem;
+    width: 100%;
+  }
+}
+
+/* Mobile: centered title, single-column feature list ----------------------- */
+@media screen and (max-width: 767px) {
+  .product-heading__title {
+    font-size: var(--font-size--2xl); /* 24px */
+    letter-spacing: -0.14px;
+  }
+
+  .product-heading__features {
+    display: flex;
+    flex-flow: column;
+  }
+
+  .product-heading__feature {
+    font-size: var(--font-size--sm); /* 14px */
+  }
+
+  .product-heading__check {
+    width: 20px;
+    height: 20px;
+  }
+
+  .product-heading__flag {
+    width: 20px;
+    font-size: 18px;
+  }
+}

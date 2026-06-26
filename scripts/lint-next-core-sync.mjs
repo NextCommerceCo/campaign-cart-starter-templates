@@ -37,6 +37,7 @@ const REL = 'assets/css/next-core.css';
 const FAMILIES = [
   'olympus',
   'apollo',
+  'apollo-mv-single-step',
   'limos',
   'demeter',
   'shop-single-step',

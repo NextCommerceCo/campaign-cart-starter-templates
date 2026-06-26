@@ -1,0 +1,92 @@
+/* ==========================================================================
+   Apollo as-seen-in — "AS SEEN IN" press-logo strip + divider.
+   Adapted from the landing media-1 section. Static justified row by default;
+   .as-seen-in--scroll renders an auto-scrolling marquee (used on mobile).
+   Colors/sizes use next-core vars.
+   ========================================================================== */
+
+.as-seen-in {
+  display: flex;
+  flex-flow: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.as-seen-in__head {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.as-seen-in__heading {
+  margin: 0;
+  font-size: var(--font-size--base);
+  font-weight: 700;
+  line-height: 1.5;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--brand--color--foreground);
+}
+
+/* Static row -------------------------------------------------------------- */
+.as-seen-in__logos {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  width: 100%;
+}
+
+.as-seen-in__logos .as-seen-in__logo {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.as-seen-in__logo {
+  object-fit: contain;
+}
+
+/* Divider ----------------------------------------------------------------- */
+.as-seen-in__divider {
+  height: 1px;
+  width: 100%;
+  background-color: var(--brand--color--border);
+}
+
+/* Scrolling marquee variant (mobile, mirrors landing media-1) ------------- */
+.as-seen-in__viewport {
+  width: 100%;
+  overflow: hidden;
+}
+
+.as-seen-in__track {
+  display: flex;
+  align-items: center;
+  gap: 2.25rem;
+  width: max-content;
+  animation: as-seen-in-scroll 24s linear infinite;
+  will-change: transform;
+}
+
+.as-seen-in__track:hover {
+  animation-play-state: paused;
+}
+
+.as-seen-in__track .as-seen-in__logo {
+  flex: 0 0 auto;
+  width: auto;
+  height: 44px;
+}
+
+@keyframes as-seen-in-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .as-seen-in__track {
+    animation: none;
+  }
+}

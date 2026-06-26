@@ -1,0 +1,136 @@
+/* ==========================================================================
+   Apollo checkout-header (trust-bar variant)
+   Scoped to .checkout-header--apollo so it never touches the shared next-core
+   .checkout-header rules. Lives as a standalone file (loaded via page
+   frontmatter `styles:`) until propagated to the shared base across families.
+   Colors / sizes pull from next-core CSS vars so it stays themeable.
+   ========================================================================== */
+
+.checkout-header--apollo {
+  background-color: var(--brand--color--background);
+  border-bottom: 1px solid var(--brand--color--border);
+  padding: var(--spacing--1) 0;
+}
+
+.checkout-header--apollo .checkout-header__inner {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing--1);
+}
+
+/* Logo --------------------------------------------------------------------- */
+.checkout-header--apollo .checkout-header__brand {
+  display: flex;
+  align-items: center;
+}
+
+.checkout-header--apollo .checkout-header__logo {
+  display: block;
+  width: 150px;
+  object-fit: contain;
+}
+
+/* Vertical divider (desktop only) ----------------------------------------- */
+.checkout-header--apollo .checkout-header__divider {
+  width: 1px;
+  height: 46px;
+  background-color: var(--brand--color--border);
+  flex: 0 0 auto;
+}
+
+/* Trust block -------------------------------------------------------------- */
+.checkout-header--apollo .checkout-header__trust {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Reviews row -------------------------------------------------------------- */
+.checkout-header--apollo .checkout-header__reviews {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkout-header--apollo .checkout-header__reviews-text {
+  font-size: var(--font-size--lg);
+  font-weight: 500;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--brand--color--primary-dark);
+  white-space: nowrap;
+}
+
+.checkout-header--apollo .checkout-header__reviews-text strong {
+  font-weight: 700;
+}
+
+/* Trust badges row --------------------------------------------------------- */
+.checkout-header--apollo .checkout-header__badges {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checkout-header--apollo .checkout-header__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.625rem; /* 10px — no core var at this size */
+  font-weight: 700;
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: var(--brand--color--primary-dark);
+  white-space: nowrap;
+}
+
+.checkout-header--apollo .checkout-header__badge-icon {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+}
+
+/* Mobile: stack logo above the trust block, hide the divider --------------- */
+@media screen and (max-width: 767px) {
+  .checkout-header--apollo {
+    padding: var(--spacing--0-75) 0;
+  }
+
+  .checkout-header--apollo .checkout-header__inner {
+    flex-flow: column;
+    gap: 0.5rem;
+  }
+
+  .checkout-header--apollo .checkout-header__divider {
+    display: none;
+  }
+
+  .checkout-header--apollo .checkout-header__logo {
+    height: 32px;
+  }
+
+  .checkout-header--apollo .checkout-header__reviews-text {
+    font-size: var(--font-size--base);
+  }
+
+  .checkout-header--apollo .checkout-header__badges {
+    gap: 0.4rem;
+  }
+
+  .checkout-header--apollo .checkout-header__badge {
+    gap: 0.2rem;
+  }
+
+  .checkout-header--apollo .checkout-header__badge-icon {
+    width: 14px;
+    height: 14px;
+  }
+}
