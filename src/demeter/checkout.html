@@ -8,6 +8,10 @@ order_bump_variant: "check01+switch01"
 price_display_variant: "compare-unit-total"
 order_bump:
   check01:
+    # Pre-purchase add-on (checkbox card). Demeter is pricing_mode-driven:
+    #   pricing_mode: full_price|discounted|compare_at|unit_total|unit_only (default full_price)
+    #   sync_quantity: <main packageId> -> add-on qty mirrors the main bundle (omit = fixed qty 1)
+    #   (legacy show_per_unit_price / show_line_total_price honored only when pricing_mode is unset)
     package_id: 7
     sync_quantity: 1
     title: "Get Extended Warranty"
@@ -18,6 +22,9 @@ order_bump:
       - "Express Replacement Service"
       - "24/7 Priority Customer Support"
   switch01:
+    # Pre-purchase add-on (toggle switch). Optional keys:
+    #   show_unit_price: true|false -> append "or $X/ea" after the line total (default true)
+    #   (no quantity sync — switch01 is a single line item by design)
     package_id: 9
     title: "Shipping Insurance & Loss Prevention"
     description_prefix: "Total shipping coverage and extended warranty. Breakage, loss, delays, porch pirates - even defects. 100% protected for just"

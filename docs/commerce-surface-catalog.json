@@ -146,14 +146,16 @@
       "purpose": "Pre-purchase add-on toggle configuration.",
       "canonicalKeys": [
         "order_bump_variant",
+        "selector_order_bump_variant",
         "order_bump.check01",
+        "order_bump.check03",
         "order_bump.switch01"
       ],
       "sourceOfTruth": [
         "CampaignSpec checkout page offers/packages",
         "Campaigns API package refs"
       ],
-      "agentRule": "Enable only when the target campaign has the referenced package or offer. Do not leave warranty/insurance starter modules pointed at missing package refs."
+      "agentRule": "Enable only when the target campaign has the referenced package or offer. Do not leave warranty/insurance starter modules pointed at missing package refs. On Apollo and Apollo MV checkouts, `selector_order_bump_variant` controls the product-card bump immediately below the bundle/MV selector (`check03` or `none`); `order_bump_variant` controls only the later `.order-bumps` form-section slot — do not treat `order_bump_variant` as all bumps on the page."
     },
     "upsell_offer": {
       "purpose": "Single-card post-purchase bundle upsell offer.",
@@ -244,7 +246,7 @@
         "Campaign personalization requirement (per-line custom text)",
         "Template slot partials: mv-configurable-selector.html / mv-slot-stage.html (checkout/select) and upsell-mv-offer.html (upsell)"
       ],
-      "agentRule": "MV/slot-rendering families only — per-line customization requires a slot picker (eng-confirmed); not available on tier-swap families. Same `slot_personalization` contract on MV checkout/select and MV upsell. Shipped enabled on olympus-mv-single-step (checkout.html + upsell-mv.html), disabled on olympus-mv-two-step (one live reference each). To apply on any other MV page, set slot_personalization.enabled:true in that page's frontmatter — the shared partial renders the field from the same contract (no markup copy). property_key becomes the order line-item attribute name. Fill every slot explicitly; do not rely on an order-wide default to fill some slots and override others (same-package overrides drop). When paired with order_personalization, keep property_keys distinct (per-slot overrides the page default on a shared key)."
+      "agentRule": "MV/slot-rendering families only — per-line customization requires a slot picker (eng-confirmed); not available on tier-swap families. Same `slot_personalization` contract on MV checkout/select and MV upsell. Shipped enabled on `apollo-mv-single-step` and `olympus-mv-single-step` (checkout.html + upsell-mv.html), disabled on `olympus-mv-two-step` (one live reference each). To apply on any other MV page, set slot_personalization.enabled:true in that page's frontmatter — the shared partial renders the field from the same contract (no markup copy). property_key becomes the order line-item attribute name. Fill every slot explicitly; do not rely on an order-wide default to fill some slots and override others (same-package overrides drop). When paired with order_personalization, keep property_keys distinct (per-slot overrides the page default on a shared key)."
     },
     "order_personalization": {
       "purpose": "All-lines line-item personalization default (SDK 0.4.27+) via data-next-default-property. One value is applied to every line the active bundle/cart write or upsell accept sends; on a single non-slot upsell this means the one accepted line gets the value.",
@@ -312,7 +314,7 @@
       ],
       "agentContract": {
         "status": "agent-ready",
-        "templateRole": "Reference single-step checkout family with tiered bundle cards and optional pre-purchase bumps.",
+        "templateRole": "Classic single-step checkout family with tiered os-card bundle cards and optional pre-purchase bumps. Prefer `apollo` for new campaigns unless the design explicitly matches the Olympus os-card shape.",
         "sourceOfTruth": {
           "campaignSpec": [
             "campaign currency/language/payment/tracking",
@@ -445,8 +447,267 @@
           "docs/fixtures/campaign-specs/olympus-tiered-standard-free.json"
         ],
         "agentNotes": [
-          "Use this family only when the design really has the Olympus tiered checkout shape; do not default here from a generic checkout.",
+          "Use this family when the design explicitly has the classic Olympus os-card tier shape. For new direct-response checkouts, default to `apollo` unless os-card styling is required.",
           "Olympus bundle upsell pages use include-owned offer partials; replace upsell_offer and upsell_bundle_tiers from the target CampaignSpec/API."
+        ]
+      }
+    },
+    "apollo": {
+      "description": "Single-step checkout with Apollo direct-response layout, include-driven bundle selector with interchangeable card styles, and optional checkout reveal.",
+      "frontmatterStatus": "include-driven",
+      "strongSignals": [
+        "apollo in spec, path, or export metadata",
+        "checkout-apollo.js",
+        "bundle_card_style frontmatter",
+        "bundle-selector.html with bundle-card dispatcher",
+        "promo-banner and promo-timer partials (not web components)",
+        "checkout-reveal CTA and panel",
+        "selector_order_bump_variant for check03 below selector"
+      ],
+      "canonicalSurfaces": {
+        "mainSelector": "tiered-bundle-selector",
+        "bundleCardStyles": "bundle-card-product|bundle-card-classic|bundle-card-tiles",
+        "selectorOrderBump": "bump-check03",
+        "orderSummary": "cart-summary01|cart-summary02|cart-summary03|cart-summary04",
+        "payment": "payment-methods",
+        "expressCheckout": "express-checkout|express-checkout-inline",
+        "orderBump": "bump-check01|bump-check02|bump-check03|bump-switch01",
+        "checkoutReveal": "checkout-form--reveal",
+        "upsell": "bundle-stepper|bundle-tier-pills|bundle-tier-cards",
+        "receipt": "receipt-skeleton"
+      },
+      "frontmatterInputsObserved": [
+        "bundles",
+        "bundle_card_style",
+        "cart_summary_variant",
+        "selector_order_bump_variant",
+        "order_bump",
+        "order_bump_variant",
+        "checkout_reveal",
+        "checkout_reveal_cta",
+        "as_seen_in",
+        "reviews_slider",
+        "guarantee",
+        "promo_timer",
+        "promo_banner",
+        "product_heading",
+        "packages",
+        "shipping_methods",
+        "swiper_slides",
+        "swiper_thumbs",
+        "upsell_offer",
+        "upsell_bundle_tiers"
+      ],
+      "agentContract": {
+        "status": "agent-ready",
+        "templateRole": "Flagship single-step checkout: Apollo direct-response layout, tiered bundle cards via style dispatcher, selector-area check03 bump, optional checkout reveal, and form-section bumps.",
+        "sourceOfTruth": {
+          "campaignSpec": [
+            "campaign currency/language/payment/tracking",
+            "checkout page packages/offers",
+            "shipping_methods[]",
+            "upsell/receipt routing"
+          ],
+          "campaignsApi": [
+            "packages[].ref_id",
+            "shipping_options[].ref_id",
+            "payment method capability"
+          ],
+          "starterTemplate": [
+            "stable SDK DOM shape",
+            "family-local includes",
+            "page frontmatter contract",
+            "promoted checkout component CSS in next-core.css"
+          ]
+        },
+        "frontmatter": {
+          "requiredWhenCloning": [
+            "packages.main_package",
+            "shipping_methods.standard",
+            "bundles[].quantity",
+            "bundles[].shipping_method"
+          ],
+          "optionalWhenSupported": [
+            "bundle_card_style",
+            "cart_summary_variant",
+            "shipping_methods.free",
+            "selector_order_bump_variant",
+            "order_bump_variant",
+            "order_bump",
+            "checkout_reveal",
+            "checkout_reveal_cta",
+            "as_seen_in",
+            "reviews",
+            "guarantee",
+            "promo_banner",
+            "promo_timer",
+            "product_heading",
+            "packages.prepurchase_1",
+            "packages.prepurchase_2",
+            "swiper_slides",
+            "swiper_thumbs",
+            "payment_flags",
+            "upsell_offer",
+            "upsell_bundle_tiers"
+          ],
+          "demoOnlyValues": [
+            "packages.main_package=1",
+            "packages.prepurchase_1=7",
+            "packages.prepurchase_2=9",
+            "shipping_methods.standard=2",
+            "shipping_methods.free=1",
+            "bundle_card_style=product",
+            "selector_order_bump_variant=check03",
+            "order_bump_variant=check01+switch01",
+            "order_bump.check03.sync_quantity=1",
+            "upsell_offer.package_id=3",
+            "upsell_offer.vouchers_json=[\"UP50\"]",
+            "upsell_bundle_tiers packageId=3"
+          ],
+          "replaceFromSpecOrApi": [
+            "packages.*",
+            "shipping_methods.*",
+            "bundles[].shipping_method",
+            "order_bump.*.package_id",
+            "upsell_offer.*",
+            "upsell_bundle_tiers[].items_json",
+            "upsell_bundle_tiers[].vouchers_json"
+          ],
+          "removeWhenUnsupported": [
+            "bundles[].shipping_method when no tier-specific shipping exists",
+            "selector_order_bump_variant when no selector-area bump package exists",
+            "bump includes when prepurchase packages are absent",
+            "unsupported payment method rows",
+            "upsell pages not present in the funnel"
+          ]
+        },
+        "surfaces": [
+          {
+            "name": "tiered bundle selector with card style dispatcher",
+            "partials": [
+              "bundle-selector.html",
+              "bundle-card.html",
+              "bundle-card-product.html",
+              "bundle-card-classic.html",
+              "bundle-card-tiles.html"
+            ],
+            "ownedInputs": [
+              "packages",
+              "shipping_methods",
+              "bundles",
+              "bundle_card_style"
+            ],
+            "sdkRoots": [
+              "data-next-bundle-selector",
+              "data-next-bundle-card"
+            ],
+            "note": "product and tiles card styles show coupon extra savings via data-next-discounts=\"voucher\" gated by cart.hasCoupon(). Styling lives in shared next-core.css — no per-page bundle-card CSS link."
+          },
+          {
+            "name": "selector-area order bump",
+            "partials": [
+              "bump-check03.html"
+            ],
+            "ownedInputs": [
+              "selector_order_bump_variant",
+              "order_bump.check03"
+            ],
+            "sdkRoots": [
+              "data-next-package-toggle",
+              "data-next-toggle-card"
+            ]
+          },
+          {
+            "name": "Apollo checkout layout blocks",
+            "partials": [
+              "checkout-header.html",
+              "product-heading.html",
+              "promo-banner.html",
+              "promo-timer.html",
+              "as-seen-in.html",
+              "reviews-slider.html",
+              "guarantee.html"
+            ],
+            "ownedInputs": [
+              "product_heading",
+              "promo_banner",
+              "promo_timer",
+              "as_seen_in",
+              "reviews",
+              "guarantee"
+            ],
+            "sdkRoots": [],
+            "note": "Checkout component CSS is in shared next-core.css. Checkout page styles: typically Swiper CDN only."
+          },
+          {
+            "name": "checkout reveal",
+            "partials": [],
+            "ownedInputs": [
+              "checkout_reveal",
+              "checkout_reveal_cta"
+            ],
+            "sdkRoots": [
+              "data-checkout-reveal-trigger",
+              "data-checkout-reveal-panel"
+            ],
+            "note": "initCheckoutReveal() in checkout-apollo.js. Hidden panel is off-screen (not display:none) so Spreedly card iframes mount at real size."
+          },
+          {
+            "name": "form-section order bumps",
+            "partials": [
+              "bump-check01.html",
+              "bump-switch01.html"
+            ],
+            "ownedInputs": [
+              "packages",
+              "order_bump",
+              "order_bump_variant"
+            ],
+            "sdkRoots": [
+              "data-next-package-toggle",
+              "data-next-toggle-card"
+            ]
+          },
+          {
+            "name": "payment shell",
+            "partials": [
+              "payment-methods.html",
+              "express-checkout.html"
+            ],
+            "ownedInputs": [
+              "payment_flags"
+            ],
+            "sdkRoots": [
+              "data-next-payment-method",
+              "data-next-payment-form",
+              "data-next-express-checkout"
+            ]
+          },
+          {
+            "name": "Apollo bundle upsell pages",
+            "partials": [
+              "upsell-bundle-stepper-offer.html",
+              "upsell-bundle-tier-pills-offer.html",
+              "upsell-bundle-tier-cards-offer.html"
+            ],
+            "ownedInputs": [
+              "upsell_offer",
+              "upsell_bundle_tiers"
+            ],
+            "sdkRoots": [
+              "data-next-upsell",
+              "data-next-bundle-selector",
+              "data-next-bundle-card"
+            ]
+          }
+        ],
+        "fixtures": [
+          "docs/fixtures/campaign-specs/apollo-tiered-apollo-layout.json"
+        ],
+        "agentNotes": [
+          "Use Apollo when the design has the Apollo checkout shell (trust bar, product heading, promo banner/timer, as-seen-in, reviews slider, guarantee) plus tiered bundle cards — not a generic Olympus clone.",
+          "Two bump slots: selector_order_bump_variant (check03 below selector) vs order_bump_variant (later form-section bumps). check03 config reads order_bump.check03.* frontmatter only.",
+          "Do not add per-page checkout component CSS files; promoted styles live in canonical next-core.css synced across all nine families."
         ]
       }
     },
@@ -981,6 +1242,7 @@
           ],
           "optionalWhenSupported": [
             "shipping_methods.free",
+            "checkout_step.selector_layout",
             "swiper_slides",
             "swiper_thumbs",
             "variant_slots[].label_text",
@@ -1095,6 +1357,287 @@
         ]
       }
     },
+    "apollo-mv-single-step": {
+      "description": "Apollo-layout single-step checkout with configurable multi-variant bundle slots, selector layout toggle, and optional checkout reveal.",
+      "frontmatterStatus": "partial",
+      "strongSignals": [
+        "apollo-mv-single-step in spec, path, or export metadata",
+        "checkout-apollo-mv-full.js",
+        "data-next-bundle-slots-for in checkout",
+        "mv-configurable-selector.html with Apollo layout partials",
+        "selector_order_bump_variant and checkout_reveal frontmatter",
+        "checkout_step.selector_layout"
+      ],
+      "canonicalSurfaces": {
+        "mainSelector": "mv-configurable-selector",
+        "selectorLayout": "grid|vertical",
+        "variantSlots": "bundle-slot-selector",
+        "selectorOrderBump": "bump-check03",
+        "personalization": "per-slot picker (data-next-property per slot, toggled by slot_personalization); order-wide default via mv-configurable-selector order_personalization",
+        "orderSummary": "cart-summary03|cart-summary04",
+        "payment": "payment-methods",
+        "expressCheckout": "express-checkout|express-checkout-inline",
+        "orderBump": "bump-check01|bump-check02|bump-check03|bump-switch01",
+        "checkoutReveal": "checkout-form--reveal",
+        "upsell": "upsell-mv|upsell-bundle-stepper|upsell-bundle-tier-pills|upsell-bundle-tier-cards",
+        "receipt": "receipt-skeleton"
+      },
+      "frontmatterInputsNeeded": [
+        "cart_summary_variant"
+      ],
+      "frontmatterInputsObserved": [
+        "checkout_step",
+        "packages",
+        "shipping_methods",
+        "selector_id",
+        "selector_order_bump_variant",
+        "order_bump_variant",
+        "checkout_reveal",
+        "checkout_reveal_cta",
+        "as_seen_in",
+        "reviews",
+        "guarantee",
+        "promo_timer",
+        "promo_banner",
+        "product_heading",
+        "swiper_slides",
+        "swiper_thumbs",
+        "variant_slots",
+        "slot_personalization",
+        "variant_picker",
+        "upsell_offer",
+        "upsell_mv_tiers",
+        "order_personalization",
+        "upsell_bundle_tiers"
+      ],
+      "agentContract": {
+        "status": "agent-ready",
+        "templateRole": "Flagship Apollo-layout single-step MV checkout where bundle quantity selection, configurable variant slots, and Apollo framing live on one page.",
+        "sourceOfTruth": {
+          "campaignSpec": [
+            "configurable checkout page package",
+            "variant slot expectations",
+            "shipping_methods[]",
+            "payment/routing"
+          ],
+          "campaignsApi": [
+            "configurable package ref_id",
+            "variant product data",
+            "shipping_options[].ref_id"
+          ],
+          "starterTemplate": [
+            "mv-configurable-selector.html",
+            "mv slot DOM contract",
+            "checkout-apollo-mv-full.js",
+            "promoted checkout component CSS in next-core.css"
+          ]
+        },
+        "frontmatter": {
+          "requiredWhenCloning": [
+            "packages.main_package",
+            "shipping_methods.standard",
+            "variant_slots[].id",
+            "variant_slots[].quantity",
+            "variant_slots[].shipping_method"
+          ],
+          "optionalWhenSupported": [
+            "shipping_methods.free",
+            "checkout_step.selector_layout",
+            "selector_order_bump_variant",
+            "order_bump_variant",
+            "checkout_reveal",
+            "checkout_reveal_cta",
+            "as_seen_in",
+            "reviews",
+            "guarantee",
+            "promo_banner",
+            "promo_timer",
+            "product_heading",
+            "swiper_slides",
+            "swiper_thumbs",
+            "variant_slots[].label_text",
+            "upsell_offer",
+            "upsell_mv_tiers",
+            "slot_personalization",
+            "order_personalization",
+            "upsell_bundle_tiers"
+          ],
+          "demoOnlyValues": [
+            "packages.main_package=1",
+            "shipping_methods.standard=2",
+            "shipping_methods.free=1",
+            "checkout_step.selector_layout=grid",
+            "selector_order_bump_variant=check03",
+            "order_bump_variant=check01",
+            "upsell_offer.package_id=1",
+            "upsell_offer.package_id=3",
+            "upsell_mv_tiers vouchers_json=[\"UP80TSHIRT\"]",
+            "upsell_bundle_tiers packageId=3",
+            "upsell_bundle_tiers vouchers_json=[\"UP50\"]"
+          ],
+          "replaceFromSpecOrApi": [
+            "packages.main_package",
+            "shipping_methods.*",
+            "variant_slots[].shipping_method",
+            "upsell_offer.*",
+            "upsell_mv_tiers[].vouchers_json",
+            "slot_personalization",
+            "upsell_bundle_tiers[].items_json",
+            "upsell_bundle_tiers[].vouchers_json"
+          ],
+          "removeWhenUnsupported": [
+            "variant slot rows unsupported by the target spec/API",
+            "selector_order_bump_variant when no selector-area bump package exists",
+            "free shipping row if no free method exists",
+            "upsell pages not present in the funnel"
+          ]
+        },
+        "surfaces": [
+          {
+            "name": "MV configurable selector",
+            "partials": [
+              "mv-configurable-selector.html"
+            ],
+            "ownedInputs": [
+              "packages",
+              "shipping_methods",
+              "variant_slots",
+              "checkout_step"
+            ],
+            "sdkRoots": [
+              "data-next-bundle-selector",
+              "data-next-bundle-slots-for",
+              "data-next-bundle-slot-template-id"
+            ],
+            "note": "checkout_step.selector_layout: grid (default) | vertical adds mv-cards--vertical. MV selector CSS lives in shared next-core.css."
+          },
+          {
+            "name": "selector-area order bump",
+            "partials": [
+              "bump-check03.html"
+            ],
+            "ownedInputs": [
+              "selector_order_bump_variant",
+              "order_bump.check03"
+            ],
+            "sdkRoots": [
+              "data-next-package-toggle",
+              "data-next-toggle-card"
+            ]
+          },
+          {
+            "name": "Apollo checkout layout blocks",
+            "partials": [
+              "checkout-header.html",
+              "product-heading.html",
+              "promo-banner.html",
+              "promo-timer.html",
+              "as-seen-in.html",
+              "reviews-slider.html",
+              "guarantee.html"
+            ],
+            "ownedInputs": [
+              "product_heading",
+              "promo_banner",
+              "promo_timer",
+              "as_seen_in",
+              "reviews",
+              "guarantee"
+            ],
+            "sdkRoots": []
+          },
+          {
+            "name": "checkout reveal",
+            "partials": [],
+            "ownedInputs": [
+              "checkout_reveal",
+              "checkout_reveal_cta"
+            ],
+            "sdkRoots": [
+              "data-checkout-reveal-trigger",
+              "data-checkout-reveal-panel"
+            ],
+            "note": "initCheckoutReveal() in checkout-apollo-mv-full.js alongside guardBumpPersonalization() for check03 personalization fields."
+          },
+          {
+            "name": "MV variant-picker (alternative selector)",
+            "partials": [
+              "variant-picker.html"
+            ],
+            "ownedInputs": [
+              "variant_picker",
+              "shipping_methods"
+            ],
+            "sdkRoots": [
+              "data-next-bundle-selector",
+              "data-next-bundle-slots-for"
+            ],
+            "note": "Additive alternative to mv-configurable-selector. Demoed on variant-picker.html; not wired into checkout.html by default. variant-picker.css remains route-specific."
+          },
+          {
+            "name": "MV payment and summary",
+            "partials": [
+              "payment-methods.html",
+              "cart-summary03.html",
+              "cart-summary04.html"
+            ],
+            "ownedInputs": [
+              "payment_flags"
+            ],
+            "sdkRoots": [
+              "data-next-payment-method",
+              "data-next-cart-summary"
+            ]
+          },
+          {
+            "name": "form-section order bumps",
+            "partials": [
+              "bump-check01.html"
+            ],
+            "ownedInputs": [
+              "packages",
+              "order_bump",
+              "order_bump_variant"
+            ],
+            "sdkRoots": [
+              "data-next-package-toggle",
+              "data-next-toggle-card"
+            ],
+            "note": "MV bump-check01 uses data-next-product-sync for variant-safe quantity sync."
+          },
+          {
+            "name": "MV upsell offers",
+            "partials": [
+              "upsell-mv-offer.html",
+              "upsell-bundle-stepper-offer.html",
+              "upsell-bundle-tier-pills-offer.html",
+              "upsell-bundle-tier-cards-offer.html"
+            ],
+            "ownedInputs": [
+              "upsell_offer",
+              "upsell_mv_tiers",
+              "slot_personalization",
+              "order_personalization",
+              "upsell_bundle_tiers"
+            ],
+            "sdkRoots": [
+              "data-next-upsell",
+              "data-next-bundle-selector",
+              "data-next-bundle-card",
+              "data-next-bundle-slots-for"
+            ]
+          }
+        ],
+        "fixtures": [
+          "docs/fixtures/campaign-specs/apollo-mv-single-step-configurable.json"
+        ],
+        "agentNotes": [
+          "Hybrid of Olympus MV commerce surfaces and Apollo checkout layout. Pick this over olympus-mv-single-step when the design needs Apollo framing (trust bar, reviews slider, checkout reveal, etc.).",
+          "selector_layout grid|vertical on checkout_step. Two bump slots: selector_order_bump_variant vs order_bump_variant.",
+          "Checkout page styles: typically Swiper CDN only; component CSS is in shared next-core.css."
+        ]
+      }
+    },
     "olympus-mv-two-step": {
       "description": "Olympus-style multi-variant flow with a separate variant select step before checkout.",
       "frontmatterStatus": "partial",
@@ -1169,6 +1712,7 @@
           "optionalWhenSupported": [
             "shipping_methods.free",
             "checkout_step.selector_id",
+            "select_step.selector_layout",
             "swiper_slides",
             "swiper_thumbs",
             "upsell_offer",
@@ -1444,7 +1988,7 @@
   "askUserPromptTemplate": "I can map this design to more than one commerce template family: {candidates}. The ambiguous surfaces are {surfaces}. Which family should I use before wiring SDK components?",
   "intentionalVariants": {
     "purpose": "Shared includes that legitimately differ across families. These lineages are DELIBERATE design/structure differences, not drift — do NOT flag or auto-reconcile them in cross-family include-drift audits. Families omitted from an include's lineages do not ship that include.",
-    "verified": "2026-06-15",
+    "verified": "2026-06-26",
     "regenerate": "For each include, hash the body across families with the next_component/HTML-comment header and whitespace stripped; families with the same hash share a lineage.",
     "doNotReconcile": true,
     "includes": {
@@ -1453,13 +1997,15 @@
         "lineages": [
           {
             "families": [
-              "olympus"
+              "olympus",
+              "apollo"
             ],
-            "note": "Olympus single-package check-style bump."
+            "note": "Single-package check-style bump."
           },
           {
             "families": [
               "olympus-mv-single-step",
+              "apollo-mv-single-step",
               "olympus-mv-two-step"
             ],
             "note": "MV/configurable bump: quantity sync via data-next-product-sync (product_id), so it sums across variant swaps (SDK 0.4.25+). See CLAUDE.md."
@@ -1486,9 +2032,11 @@
           {
             "families": [
               "olympus",
+              "apollo",
               "limos",
               "demeter",
               "olympus-mv-single-step",
+              "apollo-mv-single-step",
               "olympus-mv-two-step",
               "shop-single-step",
               "shop-three-step"
@@ -1510,7 +2058,9 @@
           {
             "families": [
               "olympus",
+              "apollo",
               "olympus-mv-single-step",
+              "apollo-mv-single-step",
               "olympus-mv-two-step",
               "shop-single-step",
               "shop-three-step"
@@ -1529,6 +2079,13 @@
               "olympus-mv-two-step"
             ],
             "note": "Olympus/MV header."
+          },
+          {
+            "families": [
+              "apollo",
+              "apollo-mv-single-step"
+            ],
+            "note": "Apollo trust-bar header (promoted checkout CSS in next-core)."
           },
           {
             "families": [
@@ -1556,14 +2113,16 @@
         "lineages": [
           {
             "families": [
+              "apollo",
               "olympus"
             ],
-            "note": "Olympus featured-product order summary (annotated reference)."
+            "note": "Apollo + Olympus featured-product order summary (annotated reference)."
           },
           {
             "families": [
               "limos",
               "olympus-mv-single-step",
+              "apollo-mv-single-step",
               "olympus-mv-two-step",
               "shop-single-step",
               "shop-three-step"
@@ -1584,9 +2143,11 @@
           {
             "families": [
               "olympus",
+              "apollo",
               "demeter",
               "limos",
               "olympus-mv-single-step",
+              "apollo-mv-single-step",
               "olympus-mv-two-step"
             ],
             "note": "Large/image-line order summary (annotated in #73)."
@@ -1624,8 +2185,10 @@
           {
             "families": [
               "olympus",
+              "apollo",
               "limos",
               "olympus-mv-single-step",
+              "apollo-mv-single-step",
               "olympus-mv-two-step",
               "shop-single-step",
               "shop-three-step"

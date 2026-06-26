@@ -1,0 +1,183 @@
+{% comment %}
+  next_component: mv-configurable-selector
+  next_version: 1.0.0
+  next_sdk_min: 0.4.18
+  next_purpose: Apollo MV single-step selector. Renders configurable bundle tier cards, the bundle slot target, and the SDK slot template used by checkout-apollo-mv-full.js.
+  next_params:
+    checkout_step:     object. selector_id, selector_heading, slot_heading, selector_layout ('grid' default | 'vertical').
+    packages:          object, optional. Dict with main_package key used to synthesize bundle item JSON.
+    shipping_methods:  object, optional. Dict of Campaigns App shipping method ref_ids, e.g. standard/free.
+    variant_slots:     array. Bundle card ids, quantity, optional package_id/items_json overrides, shipping method ids, labels, and selected state.
+    selector_id:       string, fallback "main". Override for data-next-selector-id and data-next-bundle-slots-for target.
+  next_sdk_owns:
+    - data-next-bundle-selector
+    - data-next-selector-id
+    - data-next-bundle-slot-template-id
+    - data-next-bundle-card
+    - data-next-bundle-id
+    - data-next-bundle-items
+    - data-next-shipping-id
+    - data-next-selected
+    - data-next-bundle-display
+    - data-next-bundle-slots-for
+    - data-next-variant-selectors
+    - data-next-display (bundle.<selector_id>.*)
+  next_dont_touch:
+    - selector_id must match the data-next-bundle-slots-for target and remote bundle display path.
+    - slot_template_id and slot_stage_id are SDK-owned identifiers with hardcoded defaults, not developer-configurable fields.
+    - Slot rows sit outside data-next-bundle-card; use data-next-display="bundle.<selector_id>.discountPercentage" instead of data-next-bundle-display inside slot rows.
+  next_variants:
+    - single-step-configurable-slots (this)
+{% endcomment %}
+{% assign step = checkout_step -%}
+{% assign sel_id = selector_id | default: step.selector_id | default: 'main' -%}
+{% assign tpl_id = slot_template_id | default: 'mv-slot-template' -%}
+{% assign stage_id = slot_stage_id | default: 'bundle-slots-stage' -%}
+{% assign selector_title = selector_heading | default: step.selector_heading | default: 'Choose your package' -%}
+{% assign slot_title = slot_heading | default: step.slot_heading | default: 'Select your color and size' -%}
+{% assign mv_selector_layout = selector_layout | default: step.selector_layout | default: 'grid' -%}
+{% if mv_selector_layout == 'vertical' %}{% assign mv_cards_class = 'os-cards__grid os--three mv-cards--vertical' %}{% else %}{% assign mv_cards_class = 'os-cards__grid os--three' %}{% endif -%}
+{% assign cards = bundles | default: variant_slots -%}
+<div data-next-catalog-component="mv-configurable-selector">
+  <div class="form-section form-section--first">
+    <h2 class="form-section__title">{{ selector_title }}</h2>
+    <div data-next-bundle-selector data-next-selector-id="{{ sel_id }}" data-next-selection-mode="swap" data-next-bundle-slot-template-id="{{ tpl_id }}" class="os-option">
+      <div class="{{ mv_cards_class }}">
+        {% for b in cards %}
+          {% assign card_id = b.id | default: b.bundle_id -%}
+          {% assign card_package_id = b.package_id | default: packages.main_package | default: 1 -%}
+          {% assign card_quantity = b.quantity | default: 1 -%}
+          {% if b.configurable == false %}{% assign card_configurable = false %}{% else %}{% assign card_configurable = true %}{% endif -%}
+          {% if b.items_json -%}
+            {% assign card_items = b.items_json -%}
+          {% elsif b.items -%}
+            {% assign card_items = b.items -%}
+          {% else -%}
+            {% capture card_items %}[{"packageId":{{ card_package_id }},"quantity":{{ card_quantity }},"configurable":{{ card_configurable }}}]{% endcapture -%}
+          {% endif -%}
+          {% assign shipping_key = b.shipping_method -%}
+          {% assign card_shipping_id = b.shipping_id -%}
+          {% if card_shipping_id == nil and shipping_key %}{% assign card_shipping_id = shipping_methods[shipping_key] %}{% endif -%}
+          {% assign card_title = b.title | default: card_id -%}
+          {% assign card_sup = b.card_sup | default: 'Next Commerce Shirts' -%}
+          {% assign label_class = b.label_class | default: 'os-card__label-2 os-card__label--middle-center os-card__label--pill-primary' -%}
+          <div data-next-bundle-card data-next-bundle-id="{{ card_id }}" data-next-bundle-items='{{ card_items }}'{% if b.selected %} data-next-selected="true"{% endif %} role="button" class="os-card"{% if card_shipping_id %} data-next-shipping-id="{{ card_shipping_id }}"{% endif %}>
+            <div{% unless forloop.first %} os-slot="header"{% endunless %} class="os-card__header-slot"></div>
+            <div class="os-card__wrapper cc-sm">
+              <div class="os-card__content os-wrap">
+                <div class="os-card__radio"><div{% if b.selected %} data-selected="true"{% endif %} class="radio-style-1"><div class="radio-inner"></div></div></div>
+                <div class="os-card__main-slot"><div class="os-card__title-section"><div class="os-card__title-wrapper"><div class="os-card__title-2 os-bold">{{ card_title }}</div></div></div></div>
+              </div>
+              <div os-slot="bottom" class="os-card__bottom-slot cc-gap">
+                <div class="card-sup">{{ card_sup }}</div>
+                {% comment %} <div class="os-card__subtitle-text-2">Save <span data-next-bundle-display="discountPercentage">XX%</span> OFF</div> {% endcomment %}                
+                <div data-next-discounts="offer" class="os-card__subtitle-text-2">
+                  <template><span>Save {discount.percentage} OFF</span></template>
+                </div>
+              
+                <div
+                  data-next-discounts="voucher"
+                  data-next-show="cart.hasCoupon()"
+                  class="os-card__subtitle-text-2"
+                  style="display:none"
+                >
+                  <template><span>+{discount.percentage} extra</span></template>
+                </div>
+              </div>
+            </div>
+            <div os-slot="footer" class="os-card__footer-slot"></div>
+            {% if b.label_text %}
+              <div os-slot="label" class="os-card__label-slot">
+                <div os-label-position="top-right" class="{{ label_class }}">
+                  <div class="os-card__label-text-2">{{ b.label_text }}</div>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="form-section form-section--first">
+    <h2 class="form-section__title">{{ slot_title }}</h2>
+    {% comment %} SDK 0.4.27 — order-wide line-item personalization, rendered ABOVE the per-unit slots.
+         data-next-default-property is collected page-wide and merged onto EVERY cart line the bundle writes
+         (and kept off the check03 order bump via data-next-exclude-property). Uses a DISTINCT key from the per-slot field
+         below, so the shared value and the per-unit value never collide. Opt in via order_personalization
+         passed from the page frontmatter; renders nothing unless enabled. {% endcomment %}
+    {%- if order_personalization and order_personalization.enabled -%}
+    {%- assign op_key = order_personalization.property_key | default: 'custom_text' -%}
+    {%- assign op_label = order_personalization.label | default: 'Custom Text (applied to all items)' -%}
+    {%- assign op_placeholder = order_personalization.placeholder | default: '' -%}
+    {%- assign op_maxlength = order_personalization.maxlength | default: 120 -%}
+    <div class="os-slot__personalization">
+      <label class="os-card__variant-label">{{ op_label }}{% if order_personalization.optional %} <span class="text-muted text-weight-normal">(optional)</span>{% endif %}</label>
+      <input data-next-default-property="{{ op_key }}" name="{{ op_key }}" type="text" maxlength="{{ op_maxlength }}"{% if op_placeholder != "" %} placeholder="{{ op_placeholder }}"{% endif %} class="input-flds">
+    </div>
+    {%- endif -%}
+    <div data-next-bundle-slots-for="{{ sel_id }}" class="os-slots" id="{{ stage_id }}"></div>
+  </div>
+  <template id="{{ tpl_id }}">
+    <div class="next-slot">
+      <div class="next-slot__step"><div># {slot.unitNumber}</div></div>
+      <div class="slot__right">
+        <div class="step__wrap">
+          <div class="next-slot__image"><img loading="lazy" alt="" src="{item.image}"></div>
+          <div class="os-card__pricing">
+            <div class="os-card__price-container os--stacked">
+              <div class="os-card__price diagonal-strike">{item.originalUnitPrice}</div>
+              <div class="os-card__price os--current">{item.unitPrice}/ea</div>
+              <div class="os-card__subtitle-text-2" data-next-discounts="offer" data-next-show="item.hasDiscount">
+                <template><div>Save {discount.percentage} OFF </div></template>
+              </div>
+              <div class="os-card__subtitle-text-2" data-next-discounts="voucher" data-next-show="cart.hasCoupon()">
+                <template><div>+{discount.percentage} extra</div></template>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="os-slot__selection cc-big">
+          <div class="os-card__variant-options">
+            <div class="os-card__variant-grid cc-horiz">
+              <!-- Variant selectors: SDK injects native <select> elements here (barebones),
+                   or checkout-apollo-mv-full.js replaces them with os-dropdown UI (active).
+                   Optional button-style approach (data-next-variant-option-template-id):
+                   .mv-variant-btn { appearance:none; -webkit-appearance:none; font:inherit; cursor:pointer;
+                     display:inline-flex; align-items:center; justify-content:center; gap:0.35rem;
+                     min-height:2rem; padding:0.25rem 0.65rem; border-radius:999px; border:1px solid #ddd;
+                     background:#fff; color:#111; font-size:0.8125rem; font-weight:600; line-height:1.2;
+                     transition:border-color 0.12s ease, background 0.12s ease, box-shadow 0.12s ease; }
+                   .mv-variant-btn:hover { border-color:#bbb; }
+                   .mv-variant-btn.next-variant-selected, .mv-variant-btn[data-selected="true"] {
+                     border-color:var(--component--color--outline,#000);
+                     box-shadow:0 0 0 1px var(--component--color--outline,#000);
+                     background:var(--brand--color--surface,#fff); }
+                   .mv-variant-btn.next-variant-unavailable, .mv-variant-btn[data-available="false"] {
+                     opacity:0.45; cursor:not-allowed; text-decoration:line-through; }
+                   .mv-variant-btn[data-attr-code="color"]::before { content:""; flex:none; width:1rem;
+                     height:1rem; border-radius:50%; background:var(--swatch,transparent);
+                     border:1px solid rgba(0,0,0,0.15); } -->
+              <div data-next-variant-selectors></div>
+            </div>
+          </div>
+          {% comment %} SDK 0.4.27 — per-slot line-item personalization (issue #47 / PR #56).
+               This input lives INSIDE the slot template, which the SDK clones once per unit, so each
+               unit gets its own data-next-property field → two units of the same package with
+               different text become SEPARATE cart + order lines. Captured on input; cart syncs on blur.
+               Toggle + configure via the `slot_personalization` frontmatter object passed as an include
+               arg; renders only when slot_personalization.enabled is true. {% endcomment %}
+          {%- if slot_personalization and slot_personalization.enabled -%}
+          {%- assign sp_key = slot_personalization.property_key | default: 'custom_text' -%}
+          {%- assign sp_label = slot_personalization.label | default: 'Custom text' -%}
+          {%- assign sp_placeholder = slot_personalization.placeholder | default: '' -%}
+          {%- assign sp_maxlength = slot_personalization.maxlength | default: 24 -%}
+          <div class="os-slot__personalization">
+            <label class="os-card__variant-label">{{ sp_label }}{% if slot_personalization.optional %} <span class="text-muted text-weight-normal">(optional)</span>{% endif %}</label>
+            <input data-next-property="{{ sp_key }}" type="text" maxlength="{{ sp_maxlength }}"{% if sp_placeholder != "" %} placeholder="{{ sp_placeholder }}"{% endif %} class="input-flds">
+          </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </template>
+</div>

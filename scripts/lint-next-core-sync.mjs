@@ -8,8 +8,8 @@
 // but not others), so this linter makes the invariant a hard gate.
 //
 // Design notes:
-//   - The canonical family list is pinned (FAMILIES) and `olympus` is the fixed
-//     reference. We do NOT infer "correct" from a majority vote (4 families
+//   - The canonical file path is pinned (CANONICAL = 'olympus') for lint history — not a flagship-family choice.
+//   - The canonical family list is pinned (FAMILIES). We do NOT infer "correct" from a majority vote (4 families
 //     accidentally agreeing on bad content must not redefine the canonical) and
 //     we do NOT infer the family set from "who has the file" (deleting the file
 //     from N families would otherwise shrink the set and pass — a fail-open hole).
@@ -36,6 +36,8 @@ const REL = 'assets/css/next-core.css';
 // tokens.css only and is intentionally absent.)
 const FAMILIES = [
   'olympus',
+  'apollo',
+  'apollo-mv-single-step',
   'limos',
   'demeter',
   'shop-single-step',

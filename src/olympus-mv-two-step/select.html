@@ -3,8 +3,6 @@ title: "Olympus MV — Select"
 page_type: checkout
 next_url: checkout.html
 promo_sale: "default"
-styles:
-  - css/checkout.css
 scripts:
   - js/promo-banner.js
   - js/promo-timer.js
@@ -13,6 +11,8 @@ scripts:
   - js/checkout-olympus-mv-selection.js
 select_step:
   selector_id: "main"
+  # Bundle selector layout: "grid" (3-up desktop, current default) | "vertical" (stacked cards for 4+ options)
+  selector_layout: "grid"
 checkout_step:
   selector_id: "main"
 # SDK 0.4.27 per-slot line-item personalization (MV-only). Off by default here; set enabled:true

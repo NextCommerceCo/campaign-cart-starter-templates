@@ -1,0 +1,35 @@
+<section class="checkout-header checkout-header--apollo">
+  <div class="container">
+    <div class="checkout-header__inner">
+      <div class="checkout-header__brand">
+        <img src="{{ 'images/next-logo.png' | campaign_asset }}" loading="eager" alt="{{ campaign.store_name }}" class="checkout-header__logo">
+      </div>
+      <span class="checkout-header__divider" aria-hidden="true"></span>
+      <div class="checkout-header__trust">
+        <div class="checkout-header__reviews">
+          <div class="star_wrapper" role="img" aria-label="5 out of 5 stars">
+            {% for i in (1..5) %}<div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
+              <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
+            </svg></div>{% endfor %}
+          </div>
+          <span class="checkout-header__reviews-text"><strong>10,000+</strong> 5-Star Reviews</span>
+        </div>
+        <ul class="checkout-header__badges">
+          <li class="checkout-header__badge">
+            <img src="{{ 'images/icon-shipping.svg' | campaign_asset }}" alt="" class="checkout-header__badge-icon" loading="lazy">
+            <span>Free US Shipping</span>
+          </li>
+          <li class="checkout-header__badge">
+            <img src="{{ 'images/icon-dollar.svg' | campaign_asset }}" alt="" class="checkout-header__badge-icon" loading="lazy">
+            <span>60-Day Guarantee</span>
+          </li>
+          <li class="checkout-header__badge">
+            <img src="{{ 'images/icon-guarantee.svg' | campaign_asset }}" alt="" class="checkout-header__badge-icon" loading="lazy">
+            <span>2 Year Warranty</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

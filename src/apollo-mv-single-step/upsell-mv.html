@@ -1,0 +1,118 @@
+---
+title: "Apollo MV Single — Upsell MV"
+page_type: upsell
+next_url: upsell-bundle-stepper.html
+decline_url: upsell-bundle-stepper.html
+styles:
+  - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
+scripts:
+  - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js
+  - js/upsells-mv.js
+upsell_offer:
+  package_id: 1
+  selector_id: "upsell-bundle"
+  display_selector_id: "upsell-bundle-1x"
+  display_bundle_id: "upsell-bundle-1x-card"
+  accept_text: "Yes, Add to My Order"
+  decline_text: "No thank you, I don't want this one-time offer"
+upsell_mv_tiers:
+  - id: "upsell-bundle-1x"
+    quantity: 1
+    vouchers_json: '["UP80TSHIRT"]'
+    selected: true
+  - id: "upsell-bundle-2x"
+    quantity: 2
+    vouchers_json: '["UP80TSHIRT"]'
+  - id: "upsell-bundle-3x"
+    quantity: 3
+    vouchers_json: '["UP80TSHIRT"]'
+  - id: "upsell-bundle-4x"
+    quantity: 4
+    vouchers_json: '["UP80TSHIRT"]'
+  - id: "upsell-bundle-5x"
+    quantity: 5
+    vouchers_json: '["UP80TSHIRT"]'
+# SDK 0.4.27 — per-slot post-purchase upsell personalization. Each upsell slot gets its
+# own data-next-property input, so accepted upsell units can carry distinct text.
+# Uses the same `slot_personalization` contract name as the MV checkout selector.
+slot_personalization:
+  enabled: true
+  property_key: upsell_message
+  label: "Custom text"
+  optional: true
+  placeholder: "e.g. name to print"
+  maxlength: 40
+# Optional shared-value fallback: one data-next-default-property value merged onto every
+# accepted upsell line. Useful for single non-slot upsells or one message across all units.
+# Disabled here because the demo uses per-slot fields above. When enabling it ALONGSIDE the
+# per-slot field, keep a DISTINCT property_key (here gift_message vs the slot's upsell_message):
+# UpsellEnhancer merges { ...default, ...slot }, so a shared key is overridden per line.
+order_personalization:
+  enabled: false
+  property_key: gift_message
+  label: "Personalize your bonus tee"
+  optional: true
+  placeholder: "e.g. name to print"
+  maxlength: 40
+---
+<!--
+  APPROACH B — Bundle upsell (data-next-bundle-selector + data-next-upsell-context + configurable:true)
+  packageId matches checkout bundle. Per-tier vouchers control offer pricing.
+  Variant selection per slot via data-next-bundle-slots-for + upsell-slot-template.
+  upsells-mv.js: setupBundleSlotVariantDropdowns() + initBundleQtyToggle() (no UpsellController).
+  Reference campaigns.json pins sdk_version 0.4.18 (see https://developers.nextcommerce.com/docs/campaigns/upsells). Native bundleQuantity on a single visible card is demo'd on limos checkout and olympus upsell-bundle-stepper, not this tier + hidden-card upsell.
+
+  ARCHITECTURE (Option 3 — per-qty hidden cards):
+    - Display-only selector (upsell-bundle-1x): always 1×; used only to lock header price/%.
+      MUST sit outside [data-next-upsell="offer"]: UpsellEnhancer resolves bundleSelectorId from the
+      first [data-next-bundle-selector] inside the offer only (not data-next-upsell-action-for).
+    - Hidden state-machine selector (upsell-bundle): 1×–5× cards, first selector inside the offer,
+      each with configurable:true items and per-tier vouchers. data-next-bundle-slot-template-id
+      renders configurable slots.
+    - data-next-bundle-slots-for="upsell-bundle" targets #bundle-slots-stage (reuses
+      next-core.css #bundle-slots-stage styles — same ID, different page, no conflict).
+    - Qty buttons use data-bundle-qty-btn / data-bundle-qty-for; initBundleQtyToggle()
+      clicks the matching hidden card → SDK updates slots + remote bundle.upsell-bundle.* display.
+    - Accept: UpsellEnhancer submits _getSelectedBundleItems() from that first-in-offer selector
+      (upsell-bundle), i.e. the same state as qty + slot UI.
+
+  KNOWN LIMITATIONS (same as olympus `upsell-bundle-tier-pills.html`):
+    - Remote bundle.* currency fields may render unformatted; keep data-next-format="currency".
+    - data-next-show does not support bundle.* namespace — always-visible fallback used.
+    - NOTE: data-next-bundle-slots-for on a hidden (display:none) selector is assumed to work;
+      if slots do not render, move the selector off-screen instead of display:none.
+-->
+{% assign offer = upsell_offer -%}
+{% assign package_id = offer.package_id | default: 1 -%}
+{% assign display_selector_id = offer.display_selector_id | default: 'upsell-bundle-1x' -%}
+{% assign package_name_path = 'package.' | append: package_id | append: '.name' -%}
+{% assign display_price_path = 'bundle.' | append: display_selector_id | append: '.price' -%}
+{% assign display_discount_path = 'bundle.' | append: display_selector_id | append: '.discountPercentage' -%}
+<div class="page-wrapper">
+  <div class="main-wrapper">
+    <div class="announcement">
+      <div class="announcement__block">
+        <div class="announcement__text"><strong>Special Offer Unlocked - Do Not Close This Page</strong></div>
+      </div>
+    </div>
+    {% campaign_include 'upsell-header-bar.html' %}
+    <section class="section upsell-header">
+      <div class="container cc-medium">
+        <div class="upsell-header__inner">
+          <div class="upsell-header__title">Wait! Your Order Isn't Complete</div>
+          <!-- bundle.upsell-bundle-1x.price stays locked to 1× regardless of qty selection -->
+          <div class="upsell-header__offer">Special Discount: Get Another <span data-next-display="{{ package_name_path }}">Product Title</span> For Only <span data-next-display="{{ display_price_path }}" data-next-format="currency">$19.99</span></div>
+          <div class="upsell-header__suboffer">Add to your order and get a <span data-next-display="{{ display_discount_path }}" data-next-format="percentage">50%</span> discount<br></div>
+        </div>
+      </div>
+    </section>
+    {% campaign_include 'upsell-mv-offer.html' slot_personalization=slot_personalization order_personalization=order_personalization %}
+    {% campaign_include 'footer.html' %}
+  </div>
+</div>
+
+<script>
+  window.addEventListener('next:initialized', function () {
+    initBundleQtyToggle();
+  });
+</script>

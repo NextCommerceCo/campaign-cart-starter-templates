@@ -1,18 +1,34 @@
 {
   "templates": [
     {
-      "slug": "olympus",
-      "name": "Olympus",
+      "slug": "apollo",
+      "name": "Apollo",
       "description": "One-page checkout funnel — recommended for most campaigns",
       "priority": 100,
       "deprecated": false,
       "hidden": false
     },
     {
+      "slug": "olympus",
+      "name": "Olympus",
+      "description": "One-page checkout funnel — classic tiered os-card layout",
+      "priority": 95,
+      "deprecated": false,
+      "hidden": false
+    },
+    {
+      "slug": "apollo-mv-single-step",
+      "name": "Apollo Multi-variant",
+      "description": "Multi-variant Apollo checkout with single-step variant selection — recommended for variant products",
+      "priority": 92,
+      "deprecated": false,
+      "hidden": false
+    },
+    {
       "slug": "olympus-mv-single-step",
       "name": "Olympus Multi-variant",
-      "description": "Multi-variant Bundles Olympus checkout - recommended variant product campaigns",
-      "priority": 90,
+      "description": "Multi-variant Olympus checkout — classic MV layout (select native dropdowns)",
+      "priority": 88,
       "deprecated": false,
       "hidden": false
     },

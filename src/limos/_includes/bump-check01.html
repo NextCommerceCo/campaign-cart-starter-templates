@@ -29,12 +29,12 @@
 {% assign bump = order_bump.check01 -%}
 {% assign pkg_id = package_id | default: packages.prepurchase_1 | default: bump.package_id | default: 7 -%}
 {% assign sync_qty = sync_quantity | default: bump.sync_quantity | default: packages.main_package | default: 1 -%}
-{% assign bump_title = bump.title | default: 'Order Bump Title' -%}
+{% assign b_title = bump_title | default: bump.title | default: 'Order Bump Title' -%}
 {% assign bump_image = image_src | default: bump.image_src | default: 'images/1x1_1.svg' -%}
 {% assign feature_list = features | default: bump.features -%}
-{% if show_per_unit_price == nil %}{% assign show_per_unit_price = true %}{% endif -%}
-{% if show_compare_price == nil %}{% assign show_compare_price = false %}{% endif -%}
-{% if show_line_total_price == nil %}{% assign show_line_total_price = false %}{% endif -%}
+{% if show_per_unit_price != nil %}{% assign b_unit = show_per_unit_price %}{% elsif bump.show_per_unit_price != nil %}{% assign b_unit = bump.show_per_unit_price %}{% else %}{% assign b_unit = true %}{% endif -%}
+{% if show_compare_price != nil %}{% assign b_compare = show_compare_price %}{% elsif bump.show_compare_price != nil %}{% assign b_compare = bump.show_compare_price %}{% else %}{% assign b_compare = false %}{% endif -%}
+{% if show_line_total_price != nil %}{% assign b_line_total = show_line_total_price %}{% elsif bump.show_line_total_price != nil %}{% assign b_line_total = bump.show_line_total_price %}{% else %}{% assign b_line_total = false %}{% endif -%}
 <!-- Prepurchase upsell: checkbox bump (check01) — SDK 0.4.x
      Pick ONE pricing row — rendering both confuses the customer.
      Option A (per-unit, stable, DEFAULT): unitPrice/ea, with originalUnitPrice/ea only when show_compare_price=true — does not scale with synced qty
@@ -49,7 +49,7 @@
           <div class="bump__checkbox">
             <div os-component="check" class="checkbox__icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--fe" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m6 10l-2 2l6 6L20 8l-2-2l-8 8z"></path></svg></div>
           </div>
-          <div class="bump__title">{{ bump_title }}</div>
+          <div class="bump__title">{{ b_title }}</div>
         </div>
       </div>
       <!-- Bump body: price, list, image -->
@@ -57,14 +57,14 @@
         <div class="bump__content">
           <div class="bump__content-wrap">
             <div class="bump__price">
-              {% if show_per_unit_price %}
+              {% if b_unit %}
               <!-- Option A: per-unit pricing — stable across tier changes (SDK 0.4.14+) -->
               <div class="bump__price-row">
-                {% if show_compare_price %}<div class="bump__price-unit"><span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span></div>{% endif %}
+                {% if b_compare %}<div class="bump__price-unit"><span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span></div>{% endif %}
                 <div class="bump__price-unit"><span data-next-toggle-display="unitPrice" class="bump__price-sale">--</span><span class="text-xl">/ea</span></div>
               </div>
               {% endif %}
-              {% if show_line_total_price %}
+              {% if b_line_total %}
               <!-- Option B: line total pricing — scales with synced qty -->
               <div class="bump__price-row">
                 <div data-next-toggle-display="originalPrice" class="bump__price-reg">--</div>
