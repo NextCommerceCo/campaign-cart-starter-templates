@@ -601,7 +601,7 @@
               "data-next-bundle-selector",
               "data-next-bundle-card"
             ],
-            "note": "product and tiles card styles show coupon extra savings via data-next-discounts=\"voucher\" gated by cart.hasCoupon(). Styling lives in shared next-core.css — no per-page bundle-card CSS link."
+            "note": "product and classic card styles show additive coupon extra savings via data-next-discounts=\"voucher\" gated by cart.hasCoupon(); tiles omits the badge and reflects coupon savings in struck/current pricing. Styling lives in shared next-core.css — no per-page bundle-card CSS link."
           },
           {
             "name": "selector-area order bump",
