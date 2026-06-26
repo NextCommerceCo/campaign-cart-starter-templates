@@ -5,7 +5,8 @@
   the args from the include scope (campaign_include pushes args onto the context
   stack, so this nested include inherits them).
 
-  card_style: 'product' (default, AuraGlow) | 'classic' (Olympus os-card)
+  card_style: 'product' (default, rows) | 'classic' (Olympus os-card)
+            | 'tiles' (tile grid — vertical tiles desktop, horizontal mobile)
 
   Shared card arg contract (set by bundle-selector.html for every style):
     bundle_id      string  — data-next-bundle-id (stable)
@@ -22,4 +23,4 @@
     badge_pill_class string — classic tier pill class (os-card__label--pill-*)
     total_tone_class string — classic total tone class
 {%- endcomment -%}
-{% if card_style == 'classic' %}{% campaign_include 'bundle-card-classic.html' %}{% else %}{% campaign_include 'bundle-card-product.html' %}{% endif %}
+{% if card_style == 'classic' %}{% campaign_include 'bundle-card-classic.html' %}{% elsif card_style == 'tiles' %}{% campaign_include 'bundle-card-tiles.html' %}{% else %}{% campaign_include 'bundle-card-product.html' %}{% endif %}

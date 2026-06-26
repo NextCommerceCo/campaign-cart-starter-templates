@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Apollo reviews-slider (AuraGlow) — horizontal Swiper of the existing
+   Apollo reviews-slider — horizontal Swiper of the existing
    .checkout-review cards with a progress scrollbar. Card styling is reused
    from next-core; the only card change (width / equal-height / border) lives
    on the .checkout-review--slide modifier. Colors/sizes use next-core vars.

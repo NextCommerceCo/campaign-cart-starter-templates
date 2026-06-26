@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Apollo product-heading (AuraGlow) — product title + divider + feature list.
+   Apollo product-heading — product title + divider + feature list.
    Replaces the legacy stars / "trusted by" / subtitle heading block.
    One partial renders in both the .show-tablet (tablet/mobile) and .hide-tablet
    (desktop) wrappers; only one is visible per breakpoint, so the media queries

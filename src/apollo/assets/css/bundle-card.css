@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Apollo bundle cards (AuraGlow) — product-card style, mirroring the
+   Apollo bundle cards — product-card style, mirroring the
    bump-check03 layout (badges row · radio + image + title · one price line +
    savings). The bump styles are scoped to the prepurchase-upsell component, so
    this restates the look for the bundle selector using existing core vars.
@@ -197,5 +197,136 @@
 
   .bundle-card__price-total {
     font-size: var(--font-size--lg);
+  }
+}
+
+/* ==========================================================================
+   Tiles style (card_style: 'tiles') — tile grid.
+   Desktop: vertical tiles in a row. Mobile: tiles stack + go horizontal.
+   Reuses .bundle-card__badge tier pills; selection keys off .next-selected.
+   ========================================================================== */
+
+.bundle-tiles {
+  display: flex;
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.bundle-tile {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1.25rem 1rem 0.9375rem;
+  background-color: var(--brand--color--background);
+  border: 2px solid var(--brand--color--border);
+  border-radius: var(--radius-size--sm);
+  cursor: pointer;
+}
+
+.bundle-tile.next-selected {
+  background-color: var(--brand--color--primary-lighter);
+  border-color: var(--brand--color--primary);
+}
+
+.bundle-tile__body {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.bundle-tile__image {
+  width: 130px;
+  height: 102px;
+  object-fit: contain;
+}
+
+.bundle-tile__info {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 0.125rem;
+  text-align: center;
+}
+
+.bundle-tile__title {
+  font-size: var(--font-size--lg);
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--brand--color--text-primary);
+}
+
+.bundle-tile__price {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.375rem;
+  font-size: var(--font-size--base);
+  font-weight: 500;
+}
+
+.bundle-tile__price-reg {
+  color: var(--brand--color--text-muted);
+  text-decoration: line-through;
+}
+
+.bundle-tile__price-cur {
+  color: var(--system-colors--destructive);
+  font-weight: 700;
+}
+
+/* Tier badge — centered on the top edge (desktop) */
+.bundle-tile .bundle-card__badge {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+/* Mobile: stack tiles; each tile goes horizontal (image left, title+price row) */
+@media screen and (max-width: 767px) {
+  .bundle-tiles {
+    flex-flow: column;
+  }
+
+  .bundle-tile {
+    flex: 0 0 auto;
+    flex-flow: row;
+    align-items: center;
+    width: 100%;
+    gap: 0.875rem;
+    padding: 0.625rem 1rem;
+  }
+
+  .bundle-tile__body {
+    flex-flow: row;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .bundle-tile__image {
+    width: 92px;
+    height: 72px;
+  }
+
+  .bundle-tile__info {
+    flex: 1 1 0;
+    flex-flow: row;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  /* badge moves to the top-right edge on mobile */
+  .bundle-tile .bundle-card__badge {
+    left: auto;
+    right: 1rem;
+    transform: translateY(-50%);
   }
 }

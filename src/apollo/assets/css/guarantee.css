@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Apollo guarantee (AuraGlow) — tinted block with badge + bold header / body.
+   Apollo guarantee — tinted block with badge + bold header / body.
    Modifier only; the base .guarantee-section is reused from next-core. Colors/
    sizes use existing core vars (background = closest var to the design tint).
    ========================================================================== */

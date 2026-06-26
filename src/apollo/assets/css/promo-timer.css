@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Apollo promo-timer (AuraGlow) — slim "DISCOUNT ACTIVATED" urgency bar with a
+   Apollo promo-timer — slim "DISCOUNT ACTIVATED" urgency bar with a
    countdown pill. Replaces the legacy <promo-timer> web component on checkout.
    Countdown ticks via checkout.js [data-next-element="timer"]. Colors/sizes use
    next-core CSS vars where one exists.

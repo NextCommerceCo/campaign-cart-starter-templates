@@ -8,14 +8,15 @@
     is an interchangeable partial chosen via card_style. Each tier renders through
     bundle-card.html (a style dispatcher) so the same selector can present
     different looks. One card design is used for both the loop and the default
-    tiers (DRY). Card styles: 'product' (AuraGlow, default) | 'classic' (Olympus
-    os-card). Add a style by adding bundle-card-<style>.html + a dispatch branch.
+    tiers (DRY). Card styles: 'product' (default, rows) | 'classic' (Olympus
+    os-card) | 'tiles' (tile grid). Add a style by adding bundle-card-<style>.html
+    + a dispatch branch in bundle-card.html.
   next_params:
     selector_id:        string, default "main".
     await:              bool, default true.
     include_shipping:   bool, default true.
     selection_mode:     enum [swap, select], default "swap".
-    card_style:         enum [product, classic], default "product". Picks the card visual.
+    card_style:         enum [product, classic, tiles], default "product". Picks the card visual.
     packages:           object, optional. main_package / prepurchase_* package IDs.
     shipping_methods:   object, optional. Campaigns App shipping method ref_ids.
     bundles:            array of card defs (see card arg contract in bundle-card.html). Defaults to canonical 3-tier.
@@ -34,14 +35,14 @@
     - hasDiscount resolves to a class string ('hide' when no discount) — render on the SAVE badge, struck price and savings line.
     - subtitle_text / shipping_label are FREE TEXT — visual review is the gate.
   next_related:
-    - bundle-card.html (style dispatcher) · bundle-card-product.html · bundle-card-classic.html
+    - bundle-card.html (style dispatcher) · bundle-card-product.html · bundle-card-classic.html · bundle-card-tiles.html
 {% endcomment %}
 {% assign sel_id = selector_id | default: 'main' -%}
 {% assign sel_mode = selection_mode | default: 'swap' -%}
 {% assign card_style = card_style | default: 'product' -%}
 {% if include_shipping == nil %}{% assign include_shipping = true %}{% endif -%}
 {% if await == nil %}{% assign await = true %}{% endif -%}
-{% if card_style == 'classic' %}{% assign cards_class = 'os-cards__vertical os--gap-xl' %}{% else %}{% assign cards_class = 'bundle-cards' %}{% endif -%}
+{% if card_style == 'classic' %}{% assign cards_class = 'os-cards__vertical os--gap-xl' %}{% elsif card_style == 'tiles' %}{% assign cards_class = 'bundle-tiles' %}{% else %}{% assign cards_class = 'bundle-cards' %}{% endif -%}
 <div data-next-catalog-component="bundle-selector" data-component="bundle-selector" data-next-bundle-selector data-next-selector-id="{{ sel_id }}" data-next-selection-mode="{{ sel_mode }}"{% if include_shipping %} data-next-include-shipping="true"{% endif %} class="os-option"{% if await %} data-next-await=""{% endif %}>
   <div class="{{ cards_class }}">
     {% if bundles -%}

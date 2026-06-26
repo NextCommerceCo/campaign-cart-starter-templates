@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Apollo checkout-header (AuraGlow trust-bar variant)
+   Apollo checkout-header (trust-bar variant)
    Scoped to .checkout-header--apollo so it never touches the shared next-core
    .checkout-header rules. Lives as a standalone file (loaded via page
    frontmatter `styles:`) until propagated to the shared base across families.

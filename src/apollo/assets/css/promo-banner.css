@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Apollo promo-banner (AuraGlow) — slim promo announcement bar.
+   Apollo promo-banner — slim promo announcement bar.
    NOTE: next-core already ships a generic `.promo-banner` (urgency strip), so
    this is scoped under the `.promo-banner--apollo` MODIFIER to avoid colliding
    when merged into the shared core CSS. Colors/sizes use next-core CSS vars.
