@@ -43,6 +43,7 @@ order_bump:
       placeholder: "e.g. Name to print"
       maxlength: 24
 styles:
+  - css/mv-selector.css
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
 scripts:
   - js/promo-banner.js
@@ -54,6 +55,8 @@ checkout_step:
   selector_id: "main"
   selector_heading: "Choose your package"
   slot_heading: "Select your color and size"
+  # Bundle selector layout: "grid" (3-up desktop, current default) | "vertical" (stacked cards for 4+ options)
+  selector_layout: "grid"
 # SDK 0.4.27 per-slot line-item personalization (MV-only). Each slot gets its own
 # data-next-property input, so units of the same package with different values become
 # separate order lines. Set enabled:false to remove the field. property_key becomes the

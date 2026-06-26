@@ -4,7 +4,7 @@
   next_sdk_min: 0.4.18
   next_purpose: Olympus MV two-step quantity selector used on select.html before the variant slot step.
   next_params:
-    select_step:       object. selector_id.
+    select_step:       object. selector_id, selector_layout ('grid' default | 'vertical').
     packages:          object, optional. Dict with main_package key used to synthesize bundle item JSON.
     shipping_methods:  object, optional. Dict of Campaigns App shipping method ref_ids, e.g. standard/free.
     variant_slots:     array. Bundle card ids, quantity, optional package_id/items_json overrides, shipping method ids, labels, and selected state.
@@ -28,9 +28,11 @@
 {% assign step = select_step -%}
 {% assign sel_id = selector_id | default: step.selector_id | default: 'main' -%}
 {% assign tpl_id = slot_template_id | default: 'mv-slot-template' -%}
+{% assign mv_selector_layout = selector_layout | default: step.selector_layout | default: 'grid' -%}
+{% if mv_selector_layout == 'vertical' %}{% assign mv_cards_class = 'os-cards__grid os--three mv-cards--vertical' %}{% else %}{% assign mv_cards_class = 'os-cards__grid os--three' %}{% endif -%}
 {% assign cards = bundles | default: variant_slots -%}
 <div data-next-catalog-component="mv-selection-step" data-next-bundle-selector data-next-selector-id="{{ sel_id }}" data-next-selection-mode="swap" data-next-bundle-slot-template-id="{{ tpl_id }}" class="os-option">
-  <div class="os-cards__grid os--three">
+  <div class="{{ mv_cards_class }}">
     {% for b in cards %}
       {% assign card_id = b.id | default: b.bundle_id -%}
       {% assign card_package_id = b.package_id | default: packages.main_package | default: 1 -%}

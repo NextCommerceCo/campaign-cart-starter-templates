@@ -4,7 +4,7 @@
   next_sdk_min: 0.4.18
   next_purpose: Apollo MV single-step selector. Renders configurable bundle tier cards, the bundle slot target, and the SDK slot template used by checkout-apollo-mv-full.js.
   next_params:
-    checkout_step:     object. selector_id, selector_heading, slot_heading.
+    checkout_step:     object. selector_id, selector_heading, slot_heading, selector_layout ('grid' default | 'vertical').
     packages:          object, optional. Dict with main_package key used to synthesize bundle item JSON.
     shipping_methods:  object, optional. Dict of Campaigns App shipping method ref_ids, e.g. standard/free.
     variant_slots:     array. Bundle card ids, quantity, optional package_id/items_json overrides, shipping method ids, labels, and selected state.
@@ -35,12 +35,14 @@
 {% assign stage_id = slot_stage_id | default: 'bundle-slots-stage' -%}
 {% assign selector_title = selector_heading | default: step.selector_heading | default: 'Choose your package' -%}
 {% assign slot_title = slot_heading | default: step.slot_heading | default: 'Select your color and size' -%}
+{% assign mv_selector_layout = selector_layout | default: step.selector_layout | default: 'grid' -%}
+{% if mv_selector_layout == 'vertical' %}{% assign mv_cards_class = 'os-cards__grid os--three mv-cards--vertical' %}{% else %}{% assign mv_cards_class = 'os-cards__grid os--three' %}{% endif -%}
 {% assign cards = bundles | default: variant_slots -%}
 <div data-next-catalog-component="mv-configurable-selector">
   <div class="form-section form-section--first">
     <h2 class="form-section__title">{{ selector_title }}</h2>
     <div data-next-bundle-selector data-next-selector-id="{{ sel_id }}" data-next-selection-mode="swap" data-next-bundle-slot-template-id="{{ tpl_id }}" class="os-option">
-      <div class="os-cards__grid os--three">
+      <div class="{{ mv_cards_class }}">
         {% for b in cards %}
           {% assign card_id = b.id | default: b.bundle_id -%}
           {% assign card_package_id = b.package_id | default: packages.main_package | default: 1 -%}
