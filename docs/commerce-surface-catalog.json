@@ -707,7 +707,7 @@
         "agentNotes": [
           "Use Apollo when the design has the Apollo checkout shell (trust bar, product heading, promo banner/timer, as-seen-in, reviews slider, guarantee) plus tiered bundle cards — not a generic Olympus clone.",
           "Two bump slots: selector_order_bump_variant (check03 below selector) vs order_bump_variant (later form-section bumps). check03 config reads order_bump.check03.* frontmatter only.",
-          "Do not add per-page checkout component CSS files; promoted styles live in canonical next-core.css synced across all nine families."
+          "Do not add per-page checkout component CSS files; promoted styles live in canonical next-core.css synced across all eight families."
         ]
       }
     },

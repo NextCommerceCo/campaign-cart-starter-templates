@@ -229,7 +229,7 @@ scripts:
 - `next_url` is required on checkout pages
 - `next_url` / `decline_url` are required on upsell pages
 - `styles` / `scripts` are page-specific; `next-core.css` and `config.js` are loaded by `base.html` for every page
-- **Apollo / Apollo MV checkout** — promoted checkout component styles (header, bundle cards, promo blocks, checkout reveal, MV selector layout) live in shared `next-core.css` (byte-identical across all nine families). Do not add per-page CSS for those surfaces; typical checkout `styles:` is Swiper CDN only plus any route-specific files (`variant-picker.css`, `exit-intent-popup.css`).
+- **Apollo / Apollo MV checkout** — promoted checkout component styles (header, bundle cards, promo blocks, checkout reveal, MV selector layout) live in shared `next-core.css` (byte-identical across all eight families). Do not add per-page CSS for those surfaces; typical checkout `styles:` is Swiper CDN only plus any route-specific files (`variant-picker.css`, `exit-intent-popup.css`).
 
 ### Apollo and MV checkout knobs
 

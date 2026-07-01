@@ -105,9 +105,9 @@ When adding a new `src/<slug>/` family, update these together or the **`lint-sdk
 2. `scripts/lint-next-core-sync.mjs` — add the slug to the `FAMILIES` list. The `lint:next-core` linter asserts every family ships a **byte-identical** `next-core.css`; an unlisted family that ships one fails with `unknown family … not in the canonical FAMILIES list`, and the new file must match the canonical copy at `src/olympus/assets/css/next-core.css` (lint anchor path — not an Olympus-only stylesheet).
 3. Preview-URL / inventory tables in this file and `README.md`, if you want it listed.
 
-### `next-core.css` — shared across all nine families
+### `next-core.css` — shared across all eight families
 
-Every template family ships a **byte-identical** copy of `src/olympus/assets/css/next-core.css`. The `lint:next-core` CI gate enforces this. To change core for all families: edit that canonical file (lint anchor at `src/olympus/assets/css/next-core.css`), then copy it to every family's `assets/css/next-core.css` (all nine slugs in `scripts/lint-next-core-sync.mjs`).
+Every template family ships a **byte-identical** copy of `src/olympus/assets/css/next-core.css`. The `lint:next-core` CI gate enforces this. To change core for all families: edit that canonical file (lint anchor at `src/olympus/assets/css/next-core.css`), then copy it to every family's `assets/css/next-core.css` (all eight slugs in `scripts/lint-next-core-sync.mjs`).
 
 **Promoted checkout component styles** — Apollo, Apollo MV, and Olympus MV checkout UI (promo banner/timer, checkout header, product heading, as-seen-in, reviews slider, guarantee, checkout reveal, Apollo bundle cards, MV selector layout) lives in the appended block at the end of `next-core.css`. Do **not** add per-page CSS links for these on Apollo/Apollo MV checkout — only CDN deps like Swiper and route-specific files (`variant-picker.css`, `exit-intent-popup.css`, landing/presell `tokens.css`) stay outside core.
 

@@ -173,7 +173,7 @@ Some shared includes legitimately differ across families by design. These lineag
 | Include | Lineages (families that share one body) |
 |---|---|
 | `bump-check01.html` | **olympus + apollo** · **mv-trio** (mv-single + apollo-mv + mv-two; uses `data-next-product-sync` for variant-safe qty sync) · **shop-pair** (shop-single + shop-three) · **demeter** |
-| `bump-check03.html` | **all nine checkout template families** (shared unsynced product-card bump with optional PackageToggle line-item property field) |
+| `bump-check03.html` | **all eight checkout template families** (shared unsynced product-card bump with optional PackageToggle line-item property field) |
 | `bump-switch01.html` | **demeter** · **rest** (olympus, apollo, mv-trio, shop-pair) |
 | `checkout-header.html` | **olympus + mv-pair** · **apollo-pair** (apollo + apollo-mv; trust-bar layout, CSS in next-core) · **demeter** · **shop-pair** (`checkout-header--lg` top bar) |
 | `cart-summary03.html` | **apollo + olympus** (annotated reference) · **mv-trio + shop-pair** (shared body) · **demeter** (parameterized: heading/subtitle/feature_package) |
