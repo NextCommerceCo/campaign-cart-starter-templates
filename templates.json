@@ -71,14 +71,6 @@
       "priority": 1,
       "deprecated": false,
       "hidden": false
-    },
-    {
-      "slug": "limos",
-      "name": "Limos",
-      "description": "Limos checkout funnel",
-      "priority": 60,
-      "deprecated": false,
-      "hidden": false
     }
   ]
 }

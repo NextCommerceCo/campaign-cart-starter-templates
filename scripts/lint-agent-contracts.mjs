@@ -13,7 +13,6 @@ const catalogPath = join(repoRoot, 'docs/commerce-surface-catalog.json');
 const expectedFamilies = [
   'olympus',
   'apollo',
-  'limos',
   'demeter',
   'shop-single-step',
   'shop-three-step',

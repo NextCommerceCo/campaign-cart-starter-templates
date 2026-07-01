@@ -38,7 +38,6 @@ const FAMILIES = [
   'olympus',
   'apollo',
   'apollo-mv-single-step',
-  'limos',
   'demeter',
   'shop-single-step',
   'shop-three-step',
