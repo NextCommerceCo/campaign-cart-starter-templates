@@ -40,7 +40,6 @@ const isCI = process.env.CI === '1' || process.env.CI === 'true';
 const PROMOTED_FAMILIES = [
   'olympus',
   'apollo',
-  'limos',
   'demeter',
   'shop-single-step',
   'shop-three-step',

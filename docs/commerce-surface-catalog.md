@@ -32,7 +32,6 @@ High confidence currently means `>= 0.85`, matching the JSON catalog. If the top
 | `apollo` | Include-driven frontmatter API exists | Tiered bundle selector with card style dispatcher | `cart-summary01-04` | **Flagship** single-step checkout: Apollo direct-response layout, `bundle_card_style`, checkout reveal, two bump slots. Checkout component CSS in shared `next-core.css`. |
 | `apollo-mv-single-step` | Partial frontmatter API exists | MV configurable selector in Apollo checkout shell | `cart-summary01/03/04` | **Flagship** MV checkout: Apollo layout + `checkout_step.selector_layout`, `checkout-apollo-mv-full.js`, selector/form bump slots. |
 | `olympus` | Include-driven frontmatter API exists | Tiered bundle selector (classic os-card) | `cart-summary01-04` | Classic tiered checkout; same `bundle-selector.html` contract as Apollo but os-card visual default. Bundle upsell pages use include-owned offer partials fed by `upsell_offer` / `upsell_bundle_tiers`. |
-| `limos` | Partial include/frontmatter API exists | Single offer card with native quantity stepper | `cart-summary02` accordion | Checkout plus upsell/receipt surfaces are include-owned; upsell exposes `upsell_offer` / `upsell_bundle_tiers`, receipt exposes `receipt_summary`. |
 | `demeter` | Partial include/frontmatter API exists | Editorial tier cards | `cart-summary03` side cart | Checkout plus upsell/receipt surfaces are include-owned; upsell exposes `upsell_offer` / `upsell_bundle_tiers`, receipt exposes `receipt_summary`. |
 | `shop-single-step` | Partial include API exists | Shop checkout with single-step payment | `cart-summary04` checkout summary | Highly used shop flow; checkout, receipt, and upsell SDK surfaces are now include-owned and catalog-wrapped. |
 | `shop-three-step` | Include-driven upsell contract exists | Information -> shipping -> billing checkout | `cart-summary04` checkout/review shape | Shipping methods are rendered dynamically from `sdk.getShippingMethods()`; do not add Olympus-style `shipping_methods` frontmatter for checkout shipping. Bundle upsell pages use include-owned offer partials fed by `upsell_offer` / `upsell_bundle_tiers`. |
@@ -72,7 +71,6 @@ Each first-class checkout family has a small CampaignSpec-shaped fixture:
 | `apollo` | `docs/fixtures/campaign-specs/apollo-tiered-apollo-layout.json` |
 | `apollo-mv-single-step` | `docs/fixtures/campaign-specs/apollo-mv-single-step-configurable.json` |
 | `olympus` | `docs/fixtures/campaign-specs/olympus-tiered-standard-free.json` |
-| `limos` | `docs/fixtures/campaign-specs/limos-single-offer-quantity.json` |
 | `demeter` | `docs/fixtures/campaign-specs/demeter-editorial-tiered.json` |
 | `shop-single-step` | `docs/fixtures/campaign-specs/shop-single-step-upsell-receipt.json` |
 | `shop-three-step` | `docs/fixtures/campaign-specs/shop-three-step-dynamic-shipping.json` |
@@ -94,10 +92,6 @@ These fixtures deliberately include `sdk_hints.frontmatter` so agents can see th
 | `olympus` | Payment shell | Include: `payment-methods.html`; express checkout has a matching component header. | Yes: `show_paypal`, `show_klarna`, `show_apple_pay`, `show_google_pay`. | Yes under promoted/all-page SDK lint. | Keep as shared model for other families. | Done |
 | `olympus` | Order bump | `bump-check01.html`, `bump-check02.html`, `bump-check03.html`, and `bump-switch01.html` have component headers/wrappers; checkout selects via `order_bump_variant`. | Yes: `order_bump_variant` supports `check01`, `check02`, `check03`, `switch01`, combined variants, and `none`; `order_bump.check01`, `order_bump.check02`, `order_bump.check03`, and `order_bump.switch01` control package refs and copy. | Yes under promoted/all-page SDK lint. | No current promotion gap; replace demo bump package refs from CampaignSpec/API or disable bumps. | Done |
 | `olympus` | Bundle upsell pages | Includes: `upsell-bundle-stepper-offer.html`, `upsell-bundle-tier-pills-offer.html`, and `upsell-bundle-tier-cards-offer.html`; used from the matching upsell pages. | Yes: `upsell_offer` controls package/selector/voucher ids and button copy; `upsell_bundle_tiers` controls tier ids, item JSON, vouchers, labels, and selected state. | Yes under promoted/all-page SDK lint. | Monitor future campaign-specific markup changes. | Watch |
-| `limos` | Main selector and quantity stepper | Include: `src/limos/_includes/single-offer-quantity-selector.html`; used from `src/limos/checkout.html`. | Yes: `single_offer` object covers selector/package/shipping method, quantity min/max, image/label text, and `price_display_variant`; `shipping_methods.standard` holds the starter shipping ref to replace from the target CampaignSpec/Campaigns App. | Yes under promoted/all-page SDK lint. | Monitor future campaign-specific markup changes. | Watch |
-| `limos` | Summary, payment, bump | Includes are present for `cart-summary02.html`, `payment-methods.html`, and bumps; checkout summary/payment/bump wrappers are catalog-marked. | Yes for bumps: `order_bump_variant` chooses check/product-card/switch/both/none and `order_bump.check01`, `order_bump.check02`, `order_bump.check03`, and `order_bump.switch01` control package IDs and copy. Payment flags remain include params. | Yes under promoted/all-page SDK lint. | Add summary frontmatter only if Limos gains more than the current accordion summary. | Watch |
-| `limos` | Receipt/order confirmation | Includes: `receipt-skeleton.html`, `receipt-order-summary-mobile.html`, and `receipt-order-summary-desktop.html`; used from `src/limos/receipt.html`. | Yes: `receipt_summary` controls title, scroll hint, and separate mobile/desktop order item template IDs. | Yes under promoted/all-page SDK lint. | Monitor for campaign-specific receipt copy variants. | Watch |
-| `limos` | Upsell selectors/actions | Includes: `upsell-bundle-stepper-offer.html`, `upsell-bundle-tier-pills-offer.html`, and `upsell-bundle-tier-cards-offer.html`; used from the matching upsell pages. | Yes: `upsell_offer` controls package/selector/voucher ids and button copy; `upsell_bundle_tiers` controls tier ids, item JSON, vouchers, labels, and selected state. | Yes under promoted/all-page SDK lint. | Monitor future campaign-specific markup changes. | Watch |
 | `demeter` | Editorial tier selector | Include: `src/demeter/_includes/editorial-tier-selector.html`; used from `src/demeter/checkout.html`. | Yes: selector mode, include shipping, `packages.main_package`, `shipping_methods`, `bundles` array with quantity-driven item JSON, and `price_display_variant`. Starter shipping refs demonstrate standard/free tier wiring and must be replaced from the target CampaignSpec/Campaigns App. | Yes under promoted/all-page SDK lint. | Monitor future campaign-specific markup changes. | Watch |
 | `demeter` | Side summary and bump | Include: `src/demeter/_includes/cart-summary03.html`, selected by `cart_summary_variant` from checkout side cart; bump includes are frontmatter-controlled, including the shared `bump-check03.html` product-card option. | Yes: `cart_summary_variant`, `cart_summary_heading`, `cart_summary_subtitle`, `cart_summary_feature_package`, `order_bump_variant`, and `order_bump.*`. | Yes under promoted/all-page SDK lint. | Add more summary variants only if Demeter gains them. | Watch |
 | `demeter` | Receipt/order confirmation | Includes: `receipt-skeleton.html`, `receipt-order-summary-mobile.html`, and `receipt-order-summary-desktop.html`; used from `src/demeter/receipt.html`. | Yes: `receipt_summary` controls title, scroll hint, and separate mobile/desktop order item template IDs. | Yes under promoted/all-page SDK lint. | Monitor for campaign-specific receipt copy variants. | Watch |
@@ -164,11 +158,10 @@ The goal is not a small fixed set of templates. The goal is a growing library of
 ## Lint Gates
 
 - `npm run lint:sdk` keeps the default single-family scope (`apollo` checkout) when run without flags.
-- `npm run lint:sdk:promoted` covers promoted checkout/select/upsell surfaces for `olympus`, `apollo`, `limos`, `demeter`, `shop-single-step`, `shop-three-step`, `apollo-mv-single-step`, `olympus-mv-single-step`, and `olympus-mv-two-step`.
+- `npm run lint:sdk:promoted` covers promoted checkout/select/upsell surfaces for `olympus`, `apollo`, `demeter`, `shop-single-step`, `shop-three-step`, `apollo-mv-single-step`, `olympus-mv-single-step`, and `olympus-mv-two-step`.
 - `npm run lint:sdk:ci` covers all pages across all template families.
 - `npm run lint:sdk:shop-single-step:all` covers checkout, upsell, and receipt pages for `shop-single-step`.
 - `npm run lint:agent-contracts` validates the JSON catalog agent contracts and fixture shape.
-- `node scripts/lint-sdk.mjs --scope=limos --pages=all` covers checkout, upsell, and receipt pages for `limos`.
 - `node scripts/lint-sdk.mjs --scope=demeter --pages=all` covers checkout, upsell, and receipt pages for `demeter`.
 
 Use `npm run lint:sdk:promoted:all` for a promoted-family all-page check during focused catalog work; CI already runs the full all-family all-page SDK lint.
@@ -179,11 +172,11 @@ Some shared includes legitimately differ across families by design. These lineag
 
 | Include | Lineages (families that share one body) |
 |---|---|
-| `bump-check01.html` | **olympus + apollo** · **mv-trio** (mv-single + apollo-mv + mv-two; uses `data-next-product-sync` for variant-safe qty sync) · **shop-pair** (shop-single + shop-three) · **demeter + limos** |
+| `bump-check01.html` | **olympus + apollo** · **mv-trio** (mv-single + apollo-mv + mv-two; uses `data-next-product-sync` for variant-safe qty sync) · **shop-pair** (shop-single + shop-three) · **demeter** |
 | `bump-check03.html` | **all nine checkout template families** (shared unsynced product-card bump with optional PackageToggle line-item property field) |
-| `bump-switch01.html` | **demeter + limos** · **rest** (olympus, apollo, mv-trio, shop-pair) |
-| `checkout-header.html` | **olympus + mv-pair** · **apollo-pair** (apollo + apollo-mv; trust-bar layout, CSS in next-core) · **demeter** · **limos** · **shop-pair** (`checkout-header--lg` top bar) |
-| `cart-summary03.html` | **apollo + olympus** (annotated reference) · **limos + mv-trio + shop-pair** (shared body) · **demeter** (parameterized: heading/subtitle/feature_package) |
-| `cart-summary04.html` | **olympus + apollo + demeter + limos + mv-trio** · **shop-pair** (shop structural rewrite, 188 vs 143 lines) |
-| `checkout-footer-links.html` | **shop-pair** · **limos** (only these 3 families ship it) |
-| `footer.html` | **rest** (olympus, apollo, limos, mv-trio, shop-pair) · **demeter** (`cc-medium` variant) |
+| `bump-switch01.html` | **demeter** · **rest** (olympus, apollo, mv-trio, shop-pair) |
+| `checkout-header.html` | **olympus + mv-pair** · **apollo-pair** (apollo + apollo-mv; trust-bar layout, CSS in next-core) · **demeter** · **shop-pair** (`checkout-header--lg` top bar) |
+| `cart-summary03.html` | **apollo + olympus** (annotated reference) · **mv-trio + shop-pair** (shared body) · **demeter** (parameterized: heading/subtitle/feature_package) |
+| `cart-summary04.html` | **olympus + apollo + demeter + mv-trio** · **shop-pair** (shop structural rewrite, 188 vs 143 lines) |
+| `checkout-footer-links.html` | **shop-pair** (only these families ship it) |
+| `footer.html` | **rest** (olympus, apollo, mv-trio, shop-pair) · **demeter** (`cc-medium` variant) |

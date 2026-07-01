@@ -70,7 +70,7 @@ High confidence means `>= 0.85` in the commerce surface JSON catalog. If the fam
 
 Reference catalog: [commerce-surface-catalog.md](https://raw.githubusercontent.com/NextCommerceCo/campaign-cart-starter-templates/main/docs/commerce-surface-catalog.md) and [commerce-surface-catalog.json](https://raw.githubusercontent.com/NextCommerceCo/campaign-cart-starter-templates/main/docs/commerce-surface-catalog.json).
 
-Current first-class families include `apollo`, `apollo-mv-single-step`, `olympus`, `olympus-mv-single-step`, `olympus-mv-two-step`, `limos`, `demeter`, `shop-single-step`, and `shop-three-step`. **`apollo`** is the flagship single-step family; **`apollo-mv-single-step`** is the flagship MV family.
+Current first-class families include `apollo`, `apollo-mv-single-step`, `olympus`, `olympus-mv-single-step`, `olympus-mv-two-step`, `demeter`, `shop-single-step`, and `shop-three-step`. **`apollo`** is the flagship single-step family; **`apollo-mv-single-step`** is the flagship MV family.
 
 For each first-class family, read `families[family].agentContract` in the JSON catalog before patching checkout, upsell, or receipt frontmatter. Treat `sharedFrontmatterVocabulary` as the cross-family dictionary:
 
@@ -903,7 +903,7 @@ All templates ship three ready-to-use cart summary partials in `_includes/`. Swa
 | Partial | Style | Notes |
 |---------|-------|-------|
 | `cart-summary01.html` | Tabular, no accordion | Default for `apollo` and `olympus`. Clean item + totals list. |
-| `cart-summary02.html` | Accordion / card | Default for limos. Includes `item.isRecurring` / `item.frequency` row. |
+| `cart-summary02.html` | Accordion / card | Includes `item.isRecurring` / `item.frequency` row. |
 | `cart-summary03.html` | Tabular + feature block | Default for demeter. Cart heading + product image outside `<template>` — no flash on re-render. |
 
 ### `[data-next-cart-summary]` pattern
@@ -1004,7 +1004,7 @@ For single-package upsells without voucher-driven pricing. If the upsell uses Ca
 ### Bundle upsell (SDK 0.4.x) and MV external slots
 
 - **Coupon/voucher-driven** upsell pricing uses **Approach B**: `data-next-bundle-selector` + `data-next-upsell-context`, `data-next-bundle-vouchers`, `data-next-upsell-action-for`. Contrast with simple single-package upsells in the [Upsells](https://developers.nextcommerce.com/docs/campaigns/upsells) documentation (bundle vs selection patterns).
-- **References:** `apollo/checkout.html` (flagship tiered selector + Apollo layout); `limos/checkout.html` (checkout + native **bundleQuantity**, **`.checkout-bundle-offer`** + **`.next-bundle-qty--anchor-br`**, stepper **not** inside **`[data-next-bundle-card]`**); `apollo/upsell-bundle-stepper.html` (same **`.next-bundle-qty*`** stepper on upsell); `upsell-bundle-tier-pills.html` / `upsell-bundle-tier-cards.html` (tiered bundle tiers, same generic qty classes); **`apollo-mv-single-step/upsell-mv.html`** (tier pills + **`data-next-bundle-slots-for`** slot layout; checkout omits native checkout bundle qty — see **limos**). Styles: **`next-core.css`** (not upsell-only).
+- **References:** `apollo/checkout.html` (flagship tiered selector + Apollo layout); `apollo/upsell-bundle-stepper.html` (same **`.next-bundle-qty*`** stepper on upsell); `upsell-bundle-tier-pills.html` / `upsell-bundle-tier-cards.html` (tiered bundle tiers, same generic qty classes); **`apollo-mv-single-step/upsell-mv.html`** (tier pills + **`data-next-bundle-slots-for`** slot layout; checkout omits native checkout bundle qty). Styles: **`next-core.css`** (not upsell-only).
 - **Variant UI in staged bundle slots:** SDK-injected **native `<select>`** works **without** extra JS. **`setupBundleSlotVariantDropdowns()`** (custom **`os-dropdown`** UI) is **opt-in** — see file-header comments in **`checkout-apollo-mv-full.js`** / **`checkout-olympus-mv-full.js`** and **`upsells-mv.js`** on the MV templates.
 
 ---
@@ -1143,7 +1143,7 @@ Use these when implementing or verifying a specific task. Work through each item
 
 **Apollo and Apollo MV** use frontmatter-driven partials (`promo-banner.html`, `promo-timer.html`) — not `<promo-banner>` / `<promo-timer>` web components. Configure via `promo_banner`, `promo_timer`, and optional `promo_sale` frontmatter. The timer reuses `checkout.js` `[data-next-element="timer"]` countdown. No `promo-banner.js` / `promo-timer.js` on Apollo checkout.
 
-**Other families (olympus, limos, demeter, olympus-mv)** still ship the web-component path:
+**Other families (olympus, demeter, olympus-mv)** still ship the web-component path:
 
 - [ ] `promo-banner.js` and `promo-timer.js` added to `scripts:` in page frontmatter
 - [ ] `promo_sale: "default"` set in frontmatter (or a specific sale name to force a promotion year-round)
