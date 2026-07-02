@@ -33,6 +33,9 @@
     "store_phone_tel": "tel:+18888316810",
     "gtm_id": "",
     "fb_pixel_id": "",
+    "ga4_id": "",
+    "ga4_allowed_events": "",
+    "ga4_blocked_events": "",
     "og_image": ""
   },
   "apollo-mv-single-step": {

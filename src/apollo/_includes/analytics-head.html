@@ -1,11 +1,15 @@
 {%- comment -%}
   Analytics loaders (head). Included by base.html, base-presell.html and base-landing.html
-  so the three layouts never drift. Bootstraps the GTM container + Meta Pixel only — the
-  Campaign Cart SDK (config.js analytics providers) sends PageView + ecommerce events, so
+  so the three layouts never drift. Bootstraps the GTM container + Meta Pixel + (Route C) GA4 —
+  the Campaign Cart SDK (config.js analytics providers) sends PageView + ecommerce events, so
   there is intentionally no manual fbq('track','PageView') here (it would double-fire, #79).
   Gated on a non-empty id (`!= ""`, LiquidJS treats "" as truthy) and non-development builds.
-  Set gtm_id / fb_pixel_id to "" in campaigns.json to omit. See
+  Set gtm_id / fb_pixel_id / ga4_id to "" in campaigns.json to omit. See
   docs/campaign-page-kit-template-context.md.
+
+  GA4 (apollo) is a Route C, code-controlled direct integration (no GTM container): gtag bootstrap
+  with send_page_view:false + the shared next-forwarder-core.js and ga4.adapter.js, which map the
+  SDK's dl_* stream to GA4 events. Source of truth: analytics-tracking-docs/examples/direct-ga4/.
 {%- endcomment -%}
 {% unless environment == "development" %}
 {% if campaign.gtm_id != "" %}
@@ -34,5 +38,28 @@
   // analytics.providers.facebook.enabled is true in config.js. Do not add
   // a manual fbq('track', 'PageView') here — it double-fires the PageView.
 </script>
+{% endif %}
+{% if campaign.ga4_id != "" %}
+<!-- Google Analytics 4 (gtag.js) — Route C direct integration, no GTM container. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ campaign.ga4_id }}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date());
+  // send_page_view:false — the SDK owns page_view: ga4.adapter.js forwards it from dl_user_data
+  // (fired every page + on SPA nav). gtag's default (true) would double-count landings.
+  gtag('config', '{{ campaign.ga4_id }}', { send_page_view: false });
+  // Expose the id so ga4.adapter.js knows GA4 is active on this page.
+  window.__ga4MeasurementId = '{{ campaign.ga4_id }}';
+  // Optional per-campaign event toggles (comma-separated dl_* or GA4 names). allowed_events: ""=default
+  // main set, "all"=every mapped event, or a subset; blocked_events removes from whatever's allowed.
+  window.__ga4AllowedEvents = '{{ campaign.ga4_allowed_events }}';
+  window.__ga4BlockedEvents = '{{ campaign.ga4_blocked_events }}';
+</script>
+<!-- Route C forwarder: core first, then GA4 adapter. Plain (non-deferred) so the transformFn hook
+     registers before the SDK module inits and fires events. On every page (this partial is in all 3
+     layouts) so redirect-queued dl_purchase / dl_upsell_purchase are caught on the receipt. -->
+<script src="{{ 'js/next-forwarder-core.js' | campaign_asset }}"></script>
+<script src="{{ 'js/ga4.adapter.js' | campaign_asset }}"></script>
 {% endif %}
 {% endunless %}
