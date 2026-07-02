@@ -36,6 +36,9 @@
     "ga4_id": "",
     "ga4_allowed_events": "",
     "ga4_blocked_events": "",
+    "axon_event_key": "",
+    "axon_allowed_events": "",
+    "axon_blocked_events": "",
     "og_image": ""
   },
   "apollo-mv-single-step": {
