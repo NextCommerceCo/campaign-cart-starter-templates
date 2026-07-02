@@ -39,6 +39,9 @@
     "axon_event_key": "",
     "axon_allowed_events": "",
     "axon_blocked_events": "",
+    "taboola_account_id": "",
+    "taboola_allowed_events": "",
+    "taboola_blocked_events": "",
     "og_image": ""
   },
   "apollo-mv-single-step": {

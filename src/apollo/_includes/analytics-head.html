@@ -1,17 +1,19 @@
 {%- comment -%}
   Analytics loaders (head). Included by base.html, base-presell.html and base-landing.html
-  so the three layouts never drift. Bootstraps the GTM container + Meta Pixel + (Route C) GA4 + (Route C) AppLovin Axon —
+  so the three layouts never drift. Bootstraps the GTM container + Meta Pixel + (Route C) GA4 + AppLovin Axon + Taboola —
   the Campaign Cart SDK (config.js analytics providers) sends PageView + ecommerce events, so
   there is intentionally no manual fbq('track','PageView') here (it would double-fire, #79).
   Gated on a non-empty id (`!= ""`, LiquidJS treats "" as truthy) and non-development builds.
-  Set gtm_id / fb_pixel_id / ga4_id / axon_event_key to "" in campaigns.json to omit. See
-  docs/campaign-page-kit-template-context.md.
+  Set gtm_id / fb_pixel_id / ga4_id / axon_event_key / taboola_account_id to "" in campaigns.json to
+  omit. See docs/campaign-page-kit-template-context.md.
 
-  GA4 and Axon (apollo) are Route C, code-controlled direct integrations (no GTM container): a per-vendor
-  bootstrap here + the shared next-forwarder-core.js loaded once + one adapter per vendor
-  (ga4.adapter.js, axon.adapter.js) mapping the SDK's dl_* stream to each vendor's events. GA4 sends
-  upsells as a distinct `upsell_purchase` custom event; Axon (fixed event list) sends them as `purchase`
-  (Approach B — purchase count inflates). Source of truth: analytics-tracking-docs/examples/.
+  GA4, Axon and Taboola (apollo) are Route C, code-controlled direct integrations (no GTM container): a
+  per-vendor bootstrap here + the shared next-forwarder-core.js loaded once + one adapter per vendor
+  (ga4/axon/taboola.adapter.js) mapping the SDK's dl_* stream to each vendor's events. Upsells: GA4 and
+  Taboola send a distinct `upsell_purchase` custom event (Approach C, clean count); Axon (fixed event
+  list) sends `purchase` (Approach B — count inflates). page_view: GA4/Axon forward it from dl_user_data;
+  Taboola's base pixel fires its own, so that adapter skips dl_user_data. Source of truth:
+  analytics-tracking-docs/examples/.
 {%- endcomment -%}
 {% unless environment == "development" %}
 {% if campaign.gtm_id != "" %}
@@ -73,12 +75,34 @@
   window.__axonBlockedEvents = "{{ campaign.axon_blocked_events }}";
 </script>
 {% endif %}
-{% if campaign.ga4_id != "" or campaign.axon_event_key != "" %}
+{% if campaign.taboola_account_id != "" %}
+<!-- Taboola Pixel — Route C direct integration, no GTM container. Numeric account id. The base pixel
+     below already fires page_view, so taboola.adapter.js does NOT map dl_user_data (no double-count).
+     Supports custom events → upsells are a distinct `upsell_purchase` (Approach C, clean count). -->
+<script type="text/javascript">
+  window._tfa = window._tfa || [];
+  window._tfa.push({ notify: 'event', name: 'page_view', id: {{ campaign.taboola_account_id }} });
+  !function (t, f, a, x) {
+    if (!document.getElementById(x)) {
+      t.async = 1; t.src = a; t.id = x; f.parentNode.insertBefore(t, f);
+    }
+  }(document.createElement('script'),
+    document.getElementsByTagName('script')[0],
+    '//cdn.taboola.com/libtrc/unip/{{ campaign.taboola_account_id }}/tfa.js',
+    'tb_tfa_script');
+  // Exposed for taboola.adapter.js. NUMERIC (not quoted) so the adapter's `id` matches the base pixel.
+  window.__taboolaAccountId = {{ campaign.taboola_account_id }};
+  window.__taboolaAllowedEvents = '{{ campaign.taboola_allowed_events }}';
+  window.__taboolaBlockedEvents = '{{ campaign.taboola_blocked_events }}';
+</script>
+{% endif %}
+{% if campaign.ga4_id != "" or campaign.axon_event_key != "" or campaign.taboola_account_id != "" %}
 <!-- Route C forwarder: shared core once, then each active vendor adapter. Plain (non-deferred) so the
      transformFn hook registers before the SDK module inits and fires events. On every page (this partial
      is in all 3 layouts) so redirect-queued dl_purchase / dl_upsell_purchase are caught on the receipt. -->
 <script src="{{ 'js/next-forwarder-core.js' | campaign_asset }}"></script>
 {% if campaign.ga4_id != "" %}<script src="{{ 'js/ga4.adapter.js' | campaign_asset }}"></script>{% endif %}
 {% if campaign.axon_event_key != "" %}<script src="{{ 'js/axon.adapter.js' | campaign_asset }}"></script>{% endif %}
+{% if campaign.taboola_account_id != "" %}<script src="{{ 'js/taboola.adapter.js' | campaign_asset }}"></script>{% endif %}
 {% endif %}
 {% endunless %}
