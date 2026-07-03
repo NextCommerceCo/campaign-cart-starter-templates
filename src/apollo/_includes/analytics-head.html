@@ -1,11 +1,12 @@
 {%- comment -%}
   Analytics loaders (head). Included by base.html, base-presell.html and base-landing.html
-  so the three layouts never drift. Bootstraps GTM + Meta Pixel + (Route C) GA4 + AppLovin Axon + Taboola + Triple Whale + TikTok —
-  the Campaign Cart SDK (config.js analytics providers) sends PageView + ecommerce events, so
-  there is intentionally no manual fbq('track','PageView') here (it would double-fire, #79).
+  so the three layouts never drift. Bootstraps GTM + Meta Pixel + (Route C) GA4 + AppLovin Axon + Taboola + Triple Whale + TikTok +
+  Northbeam — the Campaign Cart SDK (config.js analytics providers) sends PageView + ecommerce events,
+  so there is intentionally no manual fbq('track','PageView') here (it would double-fire, #79).
   Gated on a non-empty id (`!= ""`, LiquidJS treats "" as truthy) and non-development builds.
   Set gtm_id / fb_pixel_id / ga4_id / axon_event_key / taboola_account_id / triplewhale_name /
-  tiktok_pixel_id to "" in campaigns.json to omit. See docs/campaign-page-kit-template-context.md.
+  tiktok_pixel_id / northbeam_client_id to "" in campaigns.json to omit. See
+  docs/campaign-page-kit-template-context.md.
 
   GA4, Axon, Taboola, Triple Whale and TikTok (apollo) are Route C, code-controlled direct integrations
   (no GTM container): a per-vendor bootstrap here + the shared next-forwarder-core.js loaded once + one
@@ -140,7 +141,23 @@ window.TriplePixelData={TripleName:"{{ campaign.triplewhale_name }}",ver:"2.17",
   window.__tiktokBlockedEvents = '{{ campaign.tiktok_blocked_events }}';
 </script>
 {% endif %}
-{% if campaign.ga4_id != "" or campaign.axon_event_key != "" or campaign.taboola_account_id != "" or campaign.triplewhale_name != "" or campaign.tiktok_pixel_id != "" %}
+{% if campaign.northbeam_client_id != "" %}
+<!-- Northbeam (attribution) — Route C direct integration, no GTM container. Base pixel auto-fires the
+     pageview (trackPageViewInitial), so northbeam.adapter.js does NOT map dl_user_data. Purchase + upsell
+     only (Northbeam is purchase/pageview attribution, not funnel events); upsells → another purchase with
+     a distinct {orderId}-US{n} id (Approach B — count inflates). Identity (Northbeam.identify email) is
+     OFF unless northbeam_identity_enabled is set (core onContact hook, consent-gated). -->
+<script>(function(){var e;(n=e=e||{}).A="identify",n.B="trackPageView",n.C="fireEmailCaptureEvent",n.D="fireCustomGoal",n.E="firePurchaseEvent",n.F="trackPageViewInitial",n.G="fireSlimPurchaseEvent",n.H="identifyCustomerId";var n="//j.northbeam.io/ota-sp/{{ campaign.northbeam_client_id }}.js";function r(n){for(var t=[],e=1;e<arguments.length;e++)t[e-1]=arguments[e];i.push({fnName:n,args:t})}var t,i=[],a=((t={})[e.F]=function(n){r(e.F,n)},(a={_q:i})[e.A]=function(n,t){return r(e.A,n,t)},a[e.B]=function(n){return r(e.B,n)},a[e.C]=function(n,t){return r(e.C,n,t)},a[e.D]=function(n,t){return r(e.D,n,t)},a[e.E]=function(n){return r(e.E,n)},a[e.G]=function(n){return r(e.G,n)},a[e.H]=function(n,t){return r(e.H,n,t)},Object.assign(function(n){for(var t=[],e=1;e<arguments.length;e++)t.push(arguments[e]);return r.apply(null,[n].concat(t))},a));window.Northbeam=a,(a=document.createElement("script")).async=!0,a.src=n,document.head.appendChild(a),t.trackPageViewInitial(window.location.href);})()</script>
+<script>
+  // Exposed for northbeam.adapter.js. Base pixel above already fires the pageview (trackPageViewInitial).
+  window.__northbeamClientId = '{{ campaign.northbeam_client_id }}';
+  // Identity (Northbeam.identify with RAW email) — OFF unless enabled AND consent handled.
+  window.__northbeamIdentity = '{{ campaign.northbeam_identity_enabled }}';
+  window.__northbeamAllowedEvents = '{{ campaign.northbeam_allowed_events }}';
+  window.__northbeamBlockedEvents = '{{ campaign.northbeam_blocked_events }}';
+</script>
+{% endif %}
+{% if campaign.ga4_id != "" or campaign.axon_event_key != "" or campaign.taboola_account_id != "" or campaign.triplewhale_name != "" or campaign.tiktok_pixel_id != "" or campaign.northbeam_client_id != "" %}
 <!-- Route C forwarder: shared core once, then each active vendor adapter. Plain (non-deferred) so the
      transformFn hook registers before the SDK module inits and fires events. On every page (this partial
      is in all 3 layouts) so redirect-queued dl_purchase / dl_upsell_purchase are caught on the receipt. -->
@@ -150,5 +167,6 @@ window.TriplePixelData={TripleName:"{{ campaign.triplewhale_name }}",ver:"2.17",
 {% if campaign.taboola_account_id != "" %}<script src="{{ 'js/taboola.adapter.js' | campaign_asset }}"></script>{% endif %}
 {% if campaign.triplewhale_name != "" %}<script src="{{ 'js/triplewhale.adapter.js' | campaign_asset }}"></script>{% endif %}
 {% if campaign.tiktok_pixel_id != "" %}<script src="{{ 'js/tiktok.adapter.js' | campaign_asset }}"></script>{% endif %}
+{% if campaign.northbeam_client_id != "" %}<script src="{{ 'js/northbeam.adapter.js' | campaign_asset }}"></script>{% endif %}
 {% endif %}
 {% endunless %}

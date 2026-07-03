@@ -51,6 +51,10 @@
     "tiktok_advanced_matching_enabled": "",
     "tiktok_allowed_events": "",
     "tiktok_blocked_events": "",
+    "northbeam_client_id": "",
+    "northbeam_identity_enabled": "",
+    "northbeam_allowed_events": "",
+    "northbeam_blocked_events": "",
     "og_image": ""
   },
   "apollo-mv-single-step": {
