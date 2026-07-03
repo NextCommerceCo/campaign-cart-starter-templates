@@ -47,6 +47,10 @@
     "triplewhale_contact_enabled": "",
     "triplewhale_allowed_events": "",
     "triplewhale_blocked_events": "",
+    "tiktok_pixel_id": "",
+    "tiktok_advanced_matching_enabled": "",
+    "tiktok_allowed_events": "",
+    "tiktok_blocked_events": "",
     "og_image": ""
   },
   "apollo-mv-single-step": {
