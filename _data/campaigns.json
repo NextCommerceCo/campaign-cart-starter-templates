@@ -42,6 +42,11 @@
     "taboola_account_id": "",
     "taboola_allowed_events": "",
     "taboola_blocked_events": "",
+    "triplewhale_name": "",
+    "triplewhale_platform": "",
+    "triplewhale_contact_enabled": "",
+    "triplewhale_allowed_events": "",
+    "triplewhale_blocked_events": "",
     "og_image": ""
   },
   "apollo-mv-single-step": {

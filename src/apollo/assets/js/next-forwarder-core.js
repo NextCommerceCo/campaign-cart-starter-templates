@@ -16,6 +16,9 @@
  *     Adapters that omit allowedEvents default to NextForwarder.DEFAULT_MAIN_EVENTS (main funnel +
  *     conversion; obscure events like login/sign_up off).
  *   - data quality — warns once/event when a value is sent without a currency (vendors drop it)
+ *   - contact/identity — optional onContact hook: fires when the SDK creates a prospect cart
+ *     (next:prospect-cart-created), for identity adapters (e.g. Triple Whale). Consent-gated, once
+ *     per session. Only active if an adapter opts in — non-identity adapters never touch PII.
  *   - debug — one switch (?nfdebug=true or localhost) + NextForwarder.getStatus()
  *
  * Load this BEFORE any adapter. Adapters call NextForwarder.register(adapter).
@@ -27,7 +30,8 @@
  *     map: { dl_add_to_cart: 'add_to_cart', … }, // dl_* event -> vendor event name
  *     send: function (vendorName, ecommerce, event) -> void, // do the vendor call
  *     allowedEvents: ['dl_purchase', 'dl_add_to_cart'], // optional: if set, ONLY these fire (null = all)
- *     blockedEvents: ['dl_login', 'dl_sign_up']         // optional: suppress these (applied after allow)
+ *     blockedEvents: ['dl_login', 'dl_sign_up'],        // optional: suppress these (applied after allow)
+ *     onContact: function ({email?, phone?, acceptsMarketing?, source}) {}  // optional identity hook
  *   }
  */
 (function () {
@@ -68,6 +72,60 @@
           'other vendors drop the monetary value without an ISO-4217 currency. event_id=' + evt.event_id);
       }
     }
+  }
+
+  // ---- contact / identity bridge (opt-in via adapter.onContact) -----------------------
+  // For adapters that resolve identity (e.g. Triple Whale). Fires when the SDK creates a PROSPECT CART
+  // (ProspectCartEnhancer: valid email/phone + first/last name + items in cart) via its
+  // `next:prospect-cart-created` DOM event — emitted ONCE per session. We reuse the SDK's field
+  // detection, validation, debounce, name/cart checks, and accepts_marketing consent rather than
+  // re-scraping fields ourselves. Only active if an adapter opts in with onContact, so non-identity
+  // adapters (GA4/Axon/Taboola) never touch PII.
+  //
+  // Trade-off (see adapter READMEs): fires once with whatever's valid then — in the default emailEntry
+  // mode that's usually email (+name), not a separate phone beacon (the vendor still gets phone via the
+  // prospect PATCH / order + its session cookie). No Contact if the prospect enhancer is disabled. The
+  // alternate "capture on every field entry" path is documented if a merchant needs pre-name capture.
+  var contactAdapters = [];
+  var prospectHooked = false;
+  var contactFired = false;
+
+  function fieldVal(sel) { var el = document.querySelector(sel); return (el && el.value) ? el.value.trim() : ''; }
+
+  // Phone must match the SDK's normalization (E.164 via intl-tel-input) or Triple Whale-style identity
+  // joins against the order/feed silently fail. Prefer the intl-tel-input instance's getNumber(); fall
+  // back to the raw input only if it isn't available. Mirrors ProspectCartEnhancer.getFormattedPhoneNumber.
+  function phoneVal() {
+    var el = document.querySelector('[data-next-checkout-field="phone"], [os-checkout-field="phone"], input[type="tel"]');
+    if (!el) return '';
+    var iti = el.iti || (window.intlTelInput && window.intlTelInput.getInstance && window.intlTelInput.getInstance(el));
+    if (iti && typeof iti.getNumber === 'function') {
+      try { var e164 = iti.getNumber(); if (e164) return e164; } catch (err) {}
+    }
+    return el.value ? el.value.trim() : '';
+  }
+
+  function onProspectCartCreated(e) {
+    if (contactFired) return; // SDK emits once/session; in-memory guard against a stray re-fire
+    var d = (e && e.detail) || {}, pc = d.prospectCart || {}, cart = d.cart || {};
+    var email = pc.email || cart.email || fieldVal('[data-next-checkout-field="email"], [os-checkout-field="email"]');
+    var phone = pc.phone || cart.phone || phoneVal(); // SDK-formatted E.164 preferred; raw only as last resort
+    if (!email && !phone) return;
+    var am = document.querySelector('[data-next-checkout-field="accepts_marketing"], [os-checkout-field="accepts_marketing"]');
+    if (am && !am.checked) { log('contact blocked: accepts_marketing unchecked'); return; }
+    contactFired = true;
+    var contact = { email: email || undefined, phone: phone || undefined,
+      acceptsMarketing: am ? !!am.checked : undefined, source: 'prospect' };
+    for (var i = 0; i < contactAdapters.length; i++) {
+      try { contactAdapters[i].onContact(contact); contactAdapters[i]._contacts++; log(contactAdapters[i].name, 'contact'); }
+      catch (err) { log(contactAdapters[i].name, 'onContact error', err); }
+    }
+  }
+
+  function installProspectHook() {
+    if (prospectHooked || typeof document === 'undefined') return;
+    prospectHooked = true;
+    document.addEventListener('next:prospect-cart-created', onProspectCartCreated);
   }
 
   function processForAdapter(adapter, evt) {
@@ -137,6 +195,8 @@
       adapter._seen = [];
       adapter._seenSet = {};
       adapter._count = 0;
+      adapter._contacts = 0;
+      if (typeof adapter.onContact === 'function') { contactAdapters.push(adapter); installProspectHook(); }
       adapter._allowed = null;
       if (adapter.allowedEvents && adapter.allowedEvents.length) {
         adapter._allowed = {};
@@ -159,7 +219,7 @@
     getStatus: function () {
       return adapters.map(function (a) {
         return {
-          name: a.name, active: a.isActive(), sent: a._count,
+          name: a.name, active: a.isActive(), sent: a._count, contacts: a._contacts,
           allowed: a.allowedEvents || 'all', blocked: a.blockedEvents || []
         };
       });

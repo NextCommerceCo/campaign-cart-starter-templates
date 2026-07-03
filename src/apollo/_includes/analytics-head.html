@@ -1,19 +1,21 @@
 {%- comment -%}
   Analytics loaders (head). Included by base.html, base-presell.html and base-landing.html
-  so the three layouts never drift. Bootstraps the GTM container + Meta Pixel + (Route C) GA4 + AppLovin Axon + Taboola —
+  so the three layouts never drift. Bootstraps the GTM container + Meta Pixel + (Route C) GA4 + AppLovin Axon + Taboola + Triple Whale —
   the Campaign Cart SDK (config.js analytics providers) sends PageView + ecommerce events, so
   there is intentionally no manual fbq('track','PageView') here (it would double-fire, #79).
   Gated on a non-empty id (`!= ""`, LiquidJS treats "" as truthy) and non-development builds.
-  Set gtm_id / fb_pixel_id / ga4_id / axon_event_key / taboola_account_id to "" in campaigns.json to
-  omit. See docs/campaign-page-kit-template-context.md.
+  Set gtm_id / fb_pixel_id / ga4_id / axon_event_key / taboola_account_id / triplewhale_name to "" in
+  campaigns.json to omit. See docs/campaign-page-kit-template-context.md.
 
-  GA4, Axon and Taboola (apollo) are Route C, code-controlled direct integrations (no GTM container): a
-  per-vendor bootstrap here + the shared next-forwarder-core.js loaded once + one adapter per vendor
-  (ga4/axon/taboola.adapter.js) mapping the SDK's dl_* stream to each vendor's events. Upsells: GA4 and
-  Taboola send a distinct `upsell_purchase` custom event (Approach C, clean count); Axon (fixed event
-  list) sends `purchase` (Approach B — count inflates). page_view: GA4/Axon forward it from dl_user_data;
-  Taboola's base pixel fires its own, so that adapter skips dl_user_data. Source of truth:
-  analytics-tracking-docs/examples/.
+  GA4, Axon, Taboola and Triple Whale (apollo) are Route C, code-controlled direct integrations (no GTM
+  container): a per-vendor bootstrap here + the shared next-forwarder-core.js loaded once + one adapter
+  per vendor (ga4/axon/taboola/triplewhale.adapter.js) mapping the SDK's dl_* stream to each vendor.
+  Upsells: GA4/Taboola/Triple Whale send a distinct upsell event (Approach C, clean count); Axon (fixed
+  event list) sends `purchase` (Approach B — count inflates). page_view: GA4/Axon forward it from
+  dl_user_data; Taboola + Triple Whale base pixels fire their own, so those adapters skip dl_user_data.
+  Triple Whale is a page-side function-call API and can send RAW email/phone via the core's onContact
+  identity hook — OFF unless triplewhale_contact_enabled is set (consent-gated on accepts_marketing).
+  Source of truth: analytics-tracking-docs/examples/.
 {%- endcomment -%}
 {% unless environment == "development" %}
 {% if campaign.gtm_id != "" %}
@@ -96,7 +98,27 @@
   window.__taboolaBlockedEvents = '{{ campaign.taboola_blocked_events }}';
 </script>
 {% endif %}
-{% if campaign.ga4_id != "" or campaign.axon_event_key != "" or campaign.taboola_account_id != "" %}
+{% if campaign.triplewhale_name != "" %}
+<!-- Triple Whale (Triple Pixel, headless) — Route C direct integration, no GTM. The headless base
+     snippet below IS the pageload signal (TW has no page_view), so triplewhale.adapter.js does NOT map
+     dl_user_data. Purchase is a function call; upsells → custom `UpsellPurchase` (Approach C).
+     Contact (identity) sends RAW email/phone — OFF unless triplewhale_contact_enabled is set AND consent
+     handled (core gates on accepts_marketing). CSP: pixel uses eval() + api/conf.config-security.com. -->
+<link rel='preconnect dns-prefetch' href='https://api.config-security.com/' crossorigin />
+<link rel='preconnect dns-prefetch' href='https://conf.config-security.com/' crossorigin />
+<script>
+/* >> TriplePixel :: start*/
+window.TriplePixelData={TripleName:"{{ campaign.triplewhale_name }}",ver:"2.17",plat:"{{ campaign.triplewhale_platform | default: 'custom-msp' }}",isHeadless:true},function(W,H,A,L,E,_,B,N){function O(U,T,P,H,R){void 0===R&&(R=!1),H=new XMLHttpRequest,P?(H.open("POST",U,!0),H.setRequestHeader("Content-Type","text/plain")):H.open("GET",U,!0),H.send(JSON.stringify(P||{})),H.onreadystatechange=function(){4===H.readyState&&200===H.status?(R=H.responseText,U.includes("/first")?eval(R):P||(N[B]=R)):(299<H.status||H.status<200)&&T&&!R&&(R=!0,O(U,T-1,P))}}if(N=window,!N[H+"sn"]){N[H+"sn"]=1,L=function(){return Date.now().toString(36)+"_"+Math.random().toString(36)};try{A.setItem(H,1+(0|A.getItem(H)||0)),(E=JSON.parse(A.getItem(H+"U")||"[]")).push({u:location.href,r:document.referrer,t:Date.now(),id:L()}),A.setItem(H+"U",JSON.stringify(E))}catch(e){}var i,m,p;A.getItem('"!nC`')||(_=A,A=N,A[H]||(E=A[H]=function(t,e,a){return void 0===a&&(a=[]),"State"==t?E.s:(W=L(),(E._q=E._q||[]).push([W,t,e].concat(a)),W)},E.s="Installed",E._q=[],E.ch=W,B="configSecurityConfModel",N[B]=1,O("https://conf.config-security.com/model",5),i=L(),m=A[atob("c2NyZWVu")],_.setItem("di_pmt_wt",i),p={id:i,action:"profile",avatar:_.getItem("auth-security_rand_salt_"),time:m[atob("d2lkdGg=")]+":"+m[atob("aGVpZ2h0")],host:A.TriplePixelData.TripleName,plat:A.TriplePixelData.plat,url:window.location.href.slice(0,500),ref:document.referrer,ver:A.TriplePixelData.ver},O("https://api.config-security.com/event",5,p),O("https://api.config-security.com/first?host={{ campaign.triplewhale_name }}&plat={{ campaign.triplewhale_platform | default: 'custom-msp' }}",5)))}}("","TriplePixel",localStorage);
+/* << TriplePixel :: end*/
+  // Exposed for triplewhale.adapter.js.
+  window.__triplewhaleName = '{{ campaign.triplewhale_name }}';
+  // Contact (identity) sends RAW email/phone — OFF unless explicitly enabled AND consent handled. See README.
+  window.__triplewhaleContact = '{{ campaign.triplewhale_contact_enabled }}';
+  window.__triplewhaleAllowedEvents = '{{ campaign.triplewhale_allowed_events }}';
+  window.__triplewhaleBlockedEvents = '{{ campaign.triplewhale_blocked_events }}';
+</script>
+{% endif %}
+{% if campaign.ga4_id != "" or campaign.axon_event_key != "" or campaign.taboola_account_id != "" or campaign.triplewhale_name != "" %}
 <!-- Route C forwarder: shared core once, then each active vendor adapter. Plain (non-deferred) so the
      transformFn hook registers before the SDK module inits and fires events. On every page (this partial
      is in all 3 layouts) so redirect-queued dl_purchase / dl_upsell_purchase are caught on the receipt. -->
@@ -104,5 +126,6 @@
 {% if campaign.ga4_id != "" %}<script src="{{ 'js/ga4.adapter.js' | campaign_asset }}"></script>{% endif %}
 {% if campaign.axon_event_key != "" %}<script src="{{ 'js/axon.adapter.js' | campaign_asset }}"></script>{% endif %}
 {% if campaign.taboola_account_id != "" %}<script src="{{ 'js/taboola.adapter.js' | campaign_asset }}"></script>{% endif %}
+{% if campaign.triplewhale_name != "" %}<script src="{{ 'js/triplewhale.adapter.js' | campaign_asset }}"></script>{% endif %}
 {% endif %}
 {% endunless %}
