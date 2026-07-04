@@ -59,6 +59,10 @@
     "snap_advanced_matching_enabled": "",
     "snap_allowed_events": "",
     "snap_blocked_events": "",
+    "pinterest_tag_id": "",
+    "pinterest_enhanced_match_enabled": "",
+    "pinterest_allowed_events": "",
+    "pinterest_blocked_events": "",
     "og_image": ""
   },
   "apollo-mv-single-step": {
