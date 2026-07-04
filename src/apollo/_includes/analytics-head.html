@@ -1,11 +1,11 @@
 {%- comment -%}
   Analytics loaders (head). Included by base.html, base-presell.html and base-landing.html
   so the three layouts never drift. Bootstraps GTM + Meta Pixel + (Route C) GA4 + AppLovin Axon + Taboola + Triple Whale + TikTok +
-  Northbeam — the Campaign Cart SDK (config.js analytics providers) sends PageView + ecommerce events,
+  Northbeam + Snapchat — the Campaign Cart SDK (config.js analytics providers) sends PageView + ecommerce events,
   so there is intentionally no manual fbq('track','PageView') here (it would double-fire, #79).
   Gated on a non-empty id (`!= ""`, LiquidJS treats "" as truthy) and non-development builds.
   Set gtm_id / fb_pixel_id / ga4_id / axon_event_key / taboola_account_id / triplewhale_name /
-  tiktok_pixel_id / northbeam_client_id to "" in campaigns.json to omit. See
+  tiktok_pixel_id / northbeam_client_id / snap_pixel_id to "" in campaigns.json to omit. See
   docs/campaign-page-kit-template-context.md.
 
   GA4, Axon, Taboola, Triple Whale and TikTok (apollo) are Route C, code-controlled direct integrations
@@ -157,7 +157,31 @@ window.TriplePixelData={TripleName:"{{ campaign.triplewhale_name }}",ver:"2.17",
   window.__northbeamBlockedEvents = '{{ campaign.northbeam_blocked_events }}';
 </script>
 {% endif %}
-{% if campaign.ga4_id != "" or campaign.axon_event_key != "" or campaign.taboola_account_id != "" or campaign.triplewhale_name != "" or campaign.tiktok_pixel_id != "" or campaign.northbeam_client_id != "" %}
+{% if campaign.snap_pixel_id != "" %}
+<!-- Snap Pixel — Route C direct integration, no GTM container. Base snaptr('track','PAGE_VIEW') owns the
+     pageview, so snapchat.adapter.js does NOT map dl_user_data. Events are UPPERCASE; purchase value
+     field is `price` (not value). Upsells → PURCHASE with a distinct {orderId}-US{n} transaction_id
+     (Approach B — count inflates; keeps upsell revenue in Snap's PURCHASE optimization). Advanced Matching
+     (user_email in init) OFF unless snap_advanced_matching_enabled is set (core onContact, consent-gated). -->
+<script type="text/javascript">
+(function (e, t, n) {
+  if (e.snaptr) return; var a = e.snaptr = function () { a.handleRequest ? a.handleRequest.apply(a, arguments) : a.queue.push(arguments); };
+  a.queue = []; var s = 'script'; var r = t.createElement(s); r.async = !0; r.src = n;
+  var u = t.getElementsByTagName(s)[0]; u.parentNode.insertBefore(r, u);
+})(window, document, 'https://sc-static.net/scevent.min.js');
+  snaptr('init', '{{ campaign.snap_pixel_id }}');
+  snaptr('track', 'PAGE_VIEW');
+  // Exposed for snapchat.adapter.js. The base above already fires PAGE_VIEW — the adapter does NOT map
+  // dl_user_data (avoids a double pageview).
+  window.__snapPixelId = '{{ campaign.snap_pixel_id }}';
+  // Advanced Matching (user_email/user_phone_number in init) — OFF unless enabled AND consent handled.
+  window.__snapAdvancedMatching = '{{ campaign.snap_advanced_matching_enabled }}';
+  window.__snapAllowedEvents = '{{ campaign.snap_allowed_events }}';
+  window.__snapBlockedEvents = '{{ campaign.snap_blocked_events }}';
+</script>
+<!-- End Snap Pixel Code -->
+{% endif %}
+{% if campaign.ga4_id != "" or campaign.axon_event_key != "" or campaign.taboola_account_id != "" or campaign.triplewhale_name != "" or campaign.tiktok_pixel_id != "" or campaign.northbeam_client_id != "" or campaign.snap_pixel_id != "" %}
 <!-- Route C forwarder: shared core once, then each active vendor adapter. Plain (non-deferred) so the
      transformFn hook registers before the SDK module inits and fires events. On every page (this partial
      is in all 3 layouts) so redirect-queued dl_purchase / dl_upsell_purchase are caught on the receipt. -->
@@ -168,5 +192,6 @@ window.TriplePixelData={TripleName:"{{ campaign.triplewhale_name }}",ver:"2.17",
 {% if campaign.triplewhale_name != "" %}<script src="{{ 'js/triplewhale.adapter.js' | campaign_asset }}"></script>{% endif %}
 {% if campaign.tiktok_pixel_id != "" %}<script src="{{ 'js/tiktok.adapter.js' | campaign_asset }}"></script>{% endif %}
 {% if campaign.northbeam_client_id != "" %}<script src="{{ 'js/northbeam.adapter.js' | campaign_asset }}"></script>{% endif %}
+{% if campaign.snap_pixel_id != "" %}<script src="{{ 'js/snapchat.adapter.js' | campaign_asset }}"></script>{% endif %}
 {% endif %}
 {% endunless %}

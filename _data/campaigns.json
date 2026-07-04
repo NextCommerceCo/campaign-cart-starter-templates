@@ -55,6 +55,10 @@
     "northbeam_identity_enabled": "",
     "northbeam_allowed_events": "",
     "northbeam_blocked_events": "",
+    "snap_pixel_id": "",
+    "snap_advanced_matching_enabled": "",
+    "snap_allowed_events": "",
+    "snap_blocked_events": "",
     "og_image": ""
   },
   "apollo-mv-single-step": {
