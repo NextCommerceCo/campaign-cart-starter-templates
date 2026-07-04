@@ -31,8 +31,10 @@
     return;
   }
 
-  // dl_* -> Snapchat UPPERCASE event. No dl_user_data (base PAGE_VIEW owns pageview). No Snap standard
-  // event for view_item_list / select_item / view_cart / remove_from_cart / login.
+  // dl_* -> Snapchat UPPERCASE event. Snap's 9 standard events: PAGE_VIEW, VIEW_CONTENT, ADD_CART,
+  // START_CHECKOUT, ADD_BILLING, PURCHASE, SIGN_UP, SEARCH, SAVE. No dl_user_data (base PAGE_VIEW owns
+  // pageview). No Snap standard event for subscribe / view_item_list / select_item / view_cart /
+  // remove_from_cart / login → not mapped. (dl_subscribe: Snap has NO SUBSCRIBE standard event.)
   var MAP = {
     dl_view_item:            'VIEW_CONTENT',
     dl_add_to_cart:          'ADD_CART',
@@ -41,8 +43,7 @@
     dl_purchase:             'PURCHASE',
     dl_upsell_purchase:      'PURCHASE',       // Approach B — distinct transaction_id keeps it separate
     dl_view_search_results:  'SEARCH',
-    dl_sign_up:              'SIGN_UP',
-    dl_subscribe:            'SUBSCRIBE'
+    dl_sign_up:              'SIGN_UP'
   };
 
   var AM_ENABLED = /^(true|1|yes)$/i.test(window.__snapAdvancedMatching || '');
