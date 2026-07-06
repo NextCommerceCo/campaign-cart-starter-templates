@@ -1,4 +1,3 @@
-/* GENERATED from _shared/analytics/js/next-forwarder-core.js — edit the source and run `npm run sync:shared`. Do not edit this copy. */
 /**
  * next-forwarder-core.js — shared plumbing for Route C (code-controlled) analytics forwarders.
  *

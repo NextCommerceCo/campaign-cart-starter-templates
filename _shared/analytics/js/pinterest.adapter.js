@@ -1,4 +1,3 @@
-/* GENERATED from _shared/analytics/js/pinterest.adapter.js — edit the source and run `npm run sync:shared`. Do not edit this copy. */
 /**
  * pinterest.adapter.js — Pinterest Tag adapter for next-forwarder-core.js (Route C, no GTM).
  *

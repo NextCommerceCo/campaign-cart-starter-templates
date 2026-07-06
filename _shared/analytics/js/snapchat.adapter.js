@@ -1,4 +1,3 @@
-/* GENERATED from _shared/analytics/js/snapchat.adapter.js — edit the source and run `npm run sync:shared`. Do not edit this copy. */
 /**
  * snapchat.adapter.js — Snapchat Pixel adapter for next-forwarder-core.js (Route C, no GTM).
  *

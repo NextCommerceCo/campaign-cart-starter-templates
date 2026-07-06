@@ -1,4 +1,3 @@
-/* GENERATED from _shared/analytics/js/taboola.adapter.js — edit the source and run `npm run sync:shared`. Do not edit this copy. */
 /**
  * taboola.adapter.js — Taboola pixel adapter for next-forwarder-core.js (Route C, no GTM).
  *

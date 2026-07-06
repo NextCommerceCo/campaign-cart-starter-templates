@@ -1,4 +1,3 @@
-/* GENERATED from _shared/analytics/js/triplewhale.adapter.js — edit the source and run `npm run sync:shared`. Do not edit this copy. */
 /**
  * triplewhale.adapter.js — Triple Whale adapter for next-forwarder-core.js (Route C, no GTM).
  *
