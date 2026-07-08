@@ -30,7 +30,8 @@
  *     isActive: function () -> boolean,          // is this vendor loaded/configured on the page?
  *     map: { dl_add_to_cart: 'add_to_cart', … }, // dl_* event -> vendor event name
  *     send: function (vendorName, ecommerce, event) -> void, // do the vendor call
- *     allowedEvents: ['dl_purchase', 'dl_add_to_cart'], // optional: if set, ONLY these fire (null = all)
+ *     allowedEvents: ['dl_purchase', 'dl_add_to_cart'], // optional: ONLY these fire. Omitted/[] ->
+ *                                                       //   DEFAULT_MAIN_EVENTS; explicit null -> all
  *     blockedEvents: ['dl_login', 'dl_sign_up'],        // optional: suppress these (applied after allow)
  *     onContact: function ({email?, phone?, acceptsMarketing?, source}) {}  // optional identity hook
  *   }
@@ -198,10 +199,17 @@
       adapter._count = 0;
       adapter._contacts = 0;
       if (typeof adapter.onContact === 'function') { contactAdapters.push(adapter); installProspectHook(); }
+      // Quiet by default, enforced HERE: an adapter that OMITS allowedEvents (or passes an empty
+      // list) gets DEFAULT_MAIN_EVENTS — the core owns the documented default instead of trusting
+      // every adapter to re-implement the fallback. Pass null explicitly to forward every mapped
+      // event. (The shipped adapters parse <vendor>_allowed_events themselves and always set this
+      // property, so their behavior is unchanged.)
+      var allowedList = adapter.allowedEvents;
+      if (allowedList === undefined || (allowedList && !allowedList.length)) allowedList = DEFAULT_MAIN_EVENTS;
       adapter._allowed = null;
-      if (adapter.allowedEvents && adapter.allowedEvents.length) {
+      if (allowedList && allowedList.length) {
         adapter._allowed = {};
-        for (var a2 = 0; a2 < adapter.allowedEvents.length; a2++) adapter._allowed[adapter.allowedEvents[a2]] = true;
+        for (var a2 = 0; a2 < allowedList.length; a2++) adapter._allowed[allowedList[a2]] = true;
       }
       adapter._blocked = null;
       if (adapter.blockedEvents && adapter.blockedEvents.length) {
@@ -221,7 +229,7 @@
       return adapters.map(function (a) {
         return {
           name: a.name, active: a.isActive(), sent: a._count, contacts: a._contacts,
-          allowed: a.allowedEvents || 'all', blocked: a.blockedEvents || []
+          allowed: a._allowed ? Object.keys(a._allowed) : 'all', blocked: a.blockedEvents || []
         };
       });
     },

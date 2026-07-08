@@ -23,7 +23,8 @@
     "lint:next-core": "node scripts/lint-next-core-sync.mjs",
     "lint:agent-contracts": "node scripts/lint-agent-contracts.mjs",
     "sync:shared": "node scripts/sync-shared.mjs",
-    "lint:shared": "node scripts/sync-shared.mjs --check"
+    "lint:shared": "node scripts/sync-shared.mjs --check",
+    "lint:upstream": "node scripts/lint-upstream-analytics.mjs"
   },
   "dependencies": {
     "next-campaign-page-kit": "^0.2.0"

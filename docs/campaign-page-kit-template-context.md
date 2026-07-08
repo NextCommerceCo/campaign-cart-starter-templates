@@ -190,6 +190,35 @@ The layout snippet and SDK provider work together: layout injection initialises 
 
 **Meta Pixel — the layout bootstraps, the SDK tracks.** The GTM + Meta Pixel blocks (in `_includes/analytics-head.html` / `analytics-body.html`) are loaded by every layout that loads `config.js` — `base.html` (checkout/upsell/receipt) and `base-landing.html` / `base-presell.html` (landing/presell). The Meta Pixel block only loads `fbevents.js`, calls `fbq('init', …)`, and keeps the `<noscript>` `PageView` fallback. It does **not** call `fbq('track', 'PageView')` — when `analytics.providers.facebook.enabled` is `true`, the SDK's Facebook adapter sends `PageView` (and `AddToCart`, `Purchase`, etc.) on init via `dl_user_data`. Adding a manual `fbq('track', 'PageView')` to the layout double-fires the PageView, because the adapter does not dedupe it. If a campaign disables the SDK Facebook provider and relies on template-only tracking, add the manual `fbq('track', 'PageView')` back to that layout.
 
+### Direct vendor analytics — Route C (`ga4_id`, `tiktok_pixel_id`, …)
+
+Beyond GTM + Meta Pixel, the same two analytics partials carry **direct, code-controlled ("Route C") integrations** for eight ad/attribution vendors — no GTM container involved. Each block is a per-vendor base pixel bootstrap plus a shared forwarder (`assets/js/next-forwarder-core.js`, loaded once) and one thin adapter per vendor (`assets/js/<vendor>.adapter.js`) that maps the SDK's `dl_*` event stream to that vendor's events.
+
+**Toggle = id presence.** Everything is inert until you set the vendor's id in `campaigns.json`; every gate is the hardened `{% if campaign.<id> and campaign.<id> != "" %}` (absent OR empty = off). Same placeholder warning as GTM: any non-empty value goes live on non-`development` builds.
+
+| Vendor | Set to enable | Optional fields |
+|---|---|---|
+| GA4 | `ga4_id` | `ga4_allowed_events`, `ga4_blocked_events` |
+| AppLovin Axon | `axon_event_key` | `axon_allowed_events`, `axon_blocked_events` |
+| Taboola | `taboola_account_id` — **must be numeric** (it is injected unquoted, matching Taboola's own snippet; a non-numeric value is a JS syntax error that kills the whole block) | `taboola_allowed_events`, `taboola_blocked_events` |
+| Triple Whale | `triplewhale_name` | `triplewhale_platform` (`custom-msp` default; `SHOPIFY` for shop-sync stores), `triplewhale_contact_enabled` (PII), `*_allowed/blocked_events` |
+| TikTok | `tiktok_pixel_id` | `tiktok_advanced_matching_enabled` (PII), `*_allowed/blocked_events` |
+| Northbeam | `northbeam_client_id` | `northbeam_identity_enabled` (PII), `*_allowed/blocked_events` |
+| Snapchat | `snap_pixel_id` | `snap_advanced_matching_enabled` (PII), `*_allowed/blocked_events` |
+| Pinterest | `pinterest_tag_id` | `pinterest_enhanced_match_enabled` (PII), `*_allowed/blocked_events` |
+
+Rules that matter when configuring a campaign:
+
+- **One path per vendor.** Route C is instead of (not alongside) tracking the same vendor through a GTM container or an SDK provider — running two paths double-fires conversions.
+- **Event toggles**: `<vendor>_allowed_events` / `<vendor>_blocked_events` are comma-separated `dl_*` names (preferred; vendor names are matched too but more coarsely — e.g. blocking TikTok's `Purchase` blocks both the main and upsell purchase). Empty allowed = the default main-funnel set; `"all"` = every mapped event.
+- **Identity/PII is opt-in and consent-gated.** The `*_enabled` flags send raw email/phone to the vendor when a prospect cart is created, and only when the `accepts_marketing` checkbox is ticked. Leave them unset unless the campaign has a compliance-reviewed reason.
+- **Upsell counting differs per vendor**: GA4/Taboola/Triple Whale get a distinct upsell event (clean purchase count); Axon/TikTok/Northbeam/Snapchat/Pinterest fire upsells as another purchase with a `{orderId}-US{n}` id (revenue accurate, **purchase count inflates** — brief the media buyer).
+- **Triple Whale on shop-sync stores** (`triplewhale_platform: "SHOPIFY"`): if Triple Whale is natively connected to the Shopify store it already ingests the synced orders — block the client-side purchases (`triplewhale_blocked_events: "dl_purchase, dl_upsell_purchase"`) or you double-count.
+- **Axon attribution on Safari** needs its `_axwrt` cookie re-issued server-side (JS-set cookies expire in ~7 days under ITP) — a static template can't do this alone; see the edge-function pattern in the upstream `analytics-tracking-docs/examples/direct-axon/README.md` (Netlify form shown; any server/edge platform works).
+- **Do not edit the generated copies.** The partials and js files in each template carry a `GENERATED` header — the source of truth is `_shared/analytics/` in the starter repo (upstream reference: `analytics-tracking-docs/examples/`).
+
+Debug on a live/staging page: `?nfdebug=true` in the URL, then `window.NextForwarder.getStatus()` in the console.
+
 ### Social share meta (`og_image`) and resource hints
 
 Open Graph + Twitter Card tags live in one per-template partial, `_includes/meta-social.html`, included by all three shared layouts (`base.html`, `base-presell.html`, `base-landing.html`) via `{% campaign_include 'meta-social.html' %}` — edit the partial once and every page stays in sync. Unlike the analytics blocks, social tags render in **all** environments (not gated on `environment`).
