@@ -37,6 +37,7 @@ copied template with no analytics fields renders nothing). Set the id to turn it
 |---|---|---|
 | GTM | `gtm_id` | — |
 | Meta Pixel | `fb_pixel_id` | — |
+| RudderStack | `rudderstack_write_key` **and** `rudderstack_dataplane_url` (both required) | — |
 | GA4 | `ga4_id` | `ga4_allowed_events`, `ga4_blocked_events` |
 | AppLovin Axon | `axon_event_key` | `axon_allowed_events`, `axon_blocked_events` |
 | Taboola | `taboola_account_id` (numeric) | `taboola_allowed_events`, `taboola_blocked_events` |
@@ -46,7 +47,13 @@ copied template with no analytics fields renders nothing). Set the id to turn it
 | Snapchat | `snap_pixel_id` | `snap_advanced_matching_enabled` (PII), `*_allowed/blocked_events` |
 | Pinterest | `pinterest_tag_id` | `pinterest_enhanced_match_enabled` (PII), `*_allowed/blocked_events` |
 
-The shared forwarder core loads once when **any** id is set; each adapter loads only when its own id is
-set. Identity/PII (raw email/phone) is off unless the vendor's `*_enabled` flag is set, and is then
+The shared forwarder core loads once when **any** Route C id is set; each adapter loads only when its own
+id is set. Identity/PII (raw email/phone) is off unless the vendor's `*_enabled` flag is set, and is then
 consent-gated on the `accepts_marketing` checkbox. Adapter behaviour is regression-tested by
 `analytics-tracking-docs/examples/_harness/`.
+
+**RudderStack is an SDK-provider vendor, not a Route C adapter** — the partial injects only the official
+RudderStack JS SDK v3 loader (no `rudderstack.adapter.js`, no forwarder involvement, and no manual
+`rudderanalytics.page()` — the SDK provider sends page/ecommerce events). Same two-part pattern as
+GTM/Meta: set both `campaigns.json` keys **and** `analytics.providers.rudderstack.enabled: true` in
+`config.js`, or the SDK's RudderStack adapter stays disabled and no events flow.

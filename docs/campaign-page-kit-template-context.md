@@ -198,6 +198,7 @@ Beyond GTM + Meta Pixel, the same two analytics partials carry **direct, code-co
 
 | Vendor | Set to enable | Optional fields |
 |---|---|---|
+| RudderStack | `rudderstack_write_key` **and** `rudderstack_dataplane_url` (both required) — loader-only; see note below | — |
 | GA4 | `ga4_id` | `ga4_allowed_events`, `ga4_blocked_events` |
 | AppLovin Axon | `axon_event_key` | `axon_allowed_events`, `axon_blocked_events` |
 | Taboola | `taboola_account_id` — **must be numeric** (it is injected unquoted, matching Taboola's own snippet; a non-numeric value is a JS syntax error that kills the whole block) | `taboola_allowed_events`, `taboola_blocked_events` |
@@ -209,6 +210,7 @@ Beyond GTM + Meta Pixel, the same two analytics partials carry **direct, code-co
 
 Rules that matter when configuring a campaign:
 
+- **RudderStack is the odd one out — an SDK-provider vendor, not a Route C adapter.** The partial injects only the official RudderStack JS SDK v3 loader (the Campaign Cart SDK's `rudderstack` provider is a pure event forwarder that stays disabled unless the snippet is on the page). Same two-part pattern as GTM/Meta: set both `campaigns.json` keys **and** `analytics.providers.rudderstack.enabled: true` in `config.js`, or no events flow. The snippet deliberately does not call `rudderanalytics.page()` — the SDK provider sends it (same double-fire rationale as the Meta Pixel note above).
 - **One path per vendor.** Route C is instead of (not alongside) tracking the same vendor through a GTM container or an SDK provider — running two paths double-fires conversions.
 - **Event toggles**: `<vendor>_allowed_events` / `<vendor>_blocked_events` are comma-separated `dl_*` names (preferred; vendor names are matched too but more coarsely — e.g. blocking TikTok's `Purchase` blocks both the main and upsell purchase). Empty allowed = the default main-funnel set; `"all"` = every mapped event.
 - **Identity/PII is opt-in and consent-gated.** The `*_enabled` flags send raw email/phone to the vendor when a prospect cart is created, and only when the `accepts_marketing` checkbox is ticked. Leave them unset unless the campaign has a compliance-reviewed reason.

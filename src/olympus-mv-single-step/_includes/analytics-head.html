@@ -1,13 +1,20 @@
 {%- comment -%} GENERATED from _shared/analytics/_includes/analytics-head.html — edit the source and run `npm run sync:shared`. Do not edit this copy. {%- endcomment -%}
 {%- comment -%}
   Analytics loaders (head). Included by base.html, base-presell.html and base-landing.html
-  so the three layouts never drift. Bootstraps GTM + Meta Pixel + (Route C) GA4 + AppLovin Axon + Taboola + Triple Whale + TikTok +
+  so the three layouts never drift. Bootstraps GTM + Meta Pixel + RudderStack + (Route C) GA4 + AppLovin Axon + Taboola + Triple Whale + TikTok +
   Northbeam + Snapchat + Pinterest — the Campaign Cart SDK (config.js analytics providers) sends PageView + ecommerce events,
   so there is intentionally no manual fbq('track','PageView') here (it would double-fire, #79).
   Gated on a non-empty id (`!= ""`, LiquidJS treats "" as truthy) and non-development builds.
-  Set gtm_id / fb_pixel_id / ga4_id / axon_event_key / taboola_account_id / triplewhale_name /
-  tiktok_pixel_id / northbeam_client_id / snap_pixel_id / pinterest_tag_id to "" in campaigns.json to
-  omit. See docs/campaign-page-kit-template-context.md.
+  Set gtm_id / fb_pixel_id / rudderstack_write_key + rudderstack_dataplane_url / ga4_id /
+  axon_event_key / taboola_account_id / triplewhale_name / tiktok_pixel_id / northbeam_client_id /
+  snap_pixel_id / pinterest_tag_id to "" in campaigns.json to omit. See
+  docs/campaign-page-kit-template-context.md.
+
+  RudderStack is an SDK-provider vendor (like GTM/Meta), NOT a Route C forwarder adapter — no
+  rudderstack.adapter.js. This partial only injects the RudderStack JS SDK loader: the Campaign
+  Cart SDK's rudderstack provider is a pure event forwarder whose adapter stays disabled unless
+  the page includes the snippet itself. Two-part pattern, same as GTM/Meta: set BOTH campaigns.json
+  keys here AND analytics.providers.rudderstack.enabled: true in config.js, or no events flow.
 
   GA4, Axon, Taboola, Triple Whale and TikTok (apollo) are Route C, code-controlled direct integrations
   (no GTM container): a per-vendor bootstrap here + the shared next-forwarder-core.js loaded once + one
@@ -46,6 +53,37 @@
   // PageView and ecommerce events are sent by the Campaign Cart SDK when
   // analytics.providers.facebook.enabled is true in config.js. Do not add
   // a manual fbq('track', 'PageView') here — it double-fires the PageView.
+</script>
+{% endif %}
+{% if campaign.rudderstack_write_key and campaign.rudderstack_write_key != "" and campaign.rudderstack_dataplane_url and campaign.rudderstack_dataplane_url != "" %}
+<!-- RudderStack JS SDK (official v3 snippet, SnippetVersion 3.2.0) — loader only. Page/ecommerce
+     events are sent by the Campaign Cart SDK when analytics.providers.rudderstack.enabled is true
+     in config.js (its adapter needs this snippet on the page or it stays disabled). Do not add a
+     manual rudderanalytics.page() here — it would double-fire, same rationale as Meta Pixel above. -->
+<script type="text/javascript">
+  !function(){"use strict";window.RudderSnippetVersion="3.2.0";var e="rudderanalytics";window[e]||(window[e]=[])
+  ;var rudderanalytics=window[e];if(Array.isArray(rudderanalytics)){
+  if(true===rudderanalytics.snippetExecuted&&window.console&&console.error){
+  console.error("RudderStack JavaScript SDK snippet included more than once.")}else{rudderanalytics.snippetExecuted=true,
+  window.rudderAnalyticsBuildType="legacy";var sdkBaseUrl="https://cdn.rudderlabs.com";var sdkVersion="v3"
+  ;var sdkFileName="rsa.min.js";var scriptLoadingMode="async"
+  ;var r=["setDefaultInstanceKey","load","ready","page","track","identify","alias","group","reset","setAnonymousId","startSession","endSession","consent","addCustomIntegration"]
+  ;for(var n=0;n<r.length;n++){var t=r[n];rudderanalytics[t]=function(r){return function(){var n
+  ;Array.isArray(window[e])?rudderanalytics.push([r].concat(Array.prototype.slice.call(arguments))):null===(n=window[e][r])||void 0===n||n.apply(window[e],arguments)
+  }}(t)}try{
+  new Function('class Test{field=()=>{};test({prop=[]}={}){return prop?(prop?.property??[...prop]):import("");}}'),
+  window.rudderAnalyticsBuildType="modern"}catch(i){}var d=document.head||document.getElementsByTagName("head")[0]
+  ;var o=document.body||document.getElementsByTagName("body")[0];window.rudderAnalyticsAddScript=function(e,r,n){
+  var t=document.createElement("script");t.src=e,t.setAttribute("data-loader","RS_JS_SDK"),r&&n&&t.setAttribute(r,n),
+  "async"===scriptLoadingMode?t.async=true:"defer"===scriptLoadingMode&&(t.defer=true),
+  d?d.insertBefore(t,d.firstChild):o.insertBefore(t,o.firstChild)},window.rudderAnalyticsMount=function(){!function(){
+  if("undefined"==typeof globalThis){var e;var r=function getGlobal(){
+  return"undefined"!=typeof self?self:"undefined"!=typeof window?window:null}();r&&Object.defineProperty(r,"globalThis",{
+  value:r,configurable:true})}
+  }(),window.rudderAnalyticsAddScript("".concat(sdkBaseUrl,"/").concat(sdkVersion,"/").concat(window.rudderAnalyticsBuildType,"/").concat(sdkFileName),"data-rsa-write-key","{{ campaign.rudderstack_write_key }}")
+  },
+  "undefined"==typeof Promise||"undefined"==typeof globalThis?window.rudderAnalyticsAddScript("https://polyfill-fastly.io/v3/polyfill.min.js?version=3.111.0&features=Symbol%2CPromise&callback=rudderAnalyticsMount"):window.rudderAnalyticsMount()
+  ;var loadOptions={};rudderanalytics.load("{{ campaign.rudderstack_write_key }}","{{ campaign.rudderstack_dataplane_url }}",loadOptions)}}}();
 </script>
 {% endif %}
 {% if campaign.ga4_id and campaign.ga4_id != "" %}
