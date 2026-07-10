@@ -43,6 +43,7 @@
   var MAX_SEEN = 500;
   var adapters = [];
   var hookInstalled = false;
+  var userTransform = null; // a consent/redaction transform installed before or after us (runs first)
 
   // Default allowlist for adapters that don't specify one: the main funnel + conversion events.
   // Obscure events (login, sign_up, subscribe, search, view_cart, remove_from_cart, item lists) are
@@ -169,20 +170,65 @@
     }
   }
 
+  // The forwarding transform: run any user/consent transform FIRST, forward survivors to adapters,
+  // and return the (possibly transformed) event so NextDataLayer stays consistent.
+  function forwarderTransform(evt) {
+    var kept = userTransform ? userTransform(evt) : evt;
+    if (kept) {
+      preprocess(kept);
+      for (var i = 0; i < adapters.length; i++) processForAdapter(adapters[i], kept);
+    }
+    return kept; // MUST return so NextDataLayer stays consistent
+  }
+
+  // Re-forward everything already queued in NextDataLayer (idempotent: per-adapter event_id dedup).
+  // Only needed on the fallback path below; the accessor keeps the hook live so the common path
+  // never loses an event.
+  function replayQueued() {
+    (window.NextDataLayer || []).forEach(function (evt) {
+      preprocess(evt);
+      for (var i = 0; i < adapters.length; i++) processForAdapter(adapters[i], evt);
+    });
+  }
+
   function installHook() {
     if (hookInstalled) return;
     hookInstalled = true;
-    // Consent ordering: run the prior chain first, forward only survivors, and forward the
-    // (possibly transformed) event so upstream redaction/enrichment reaches every vendor.
-    var prev = window.NextDataLayerTransformFn;
-    window.NextDataLayerTransformFn = function (evt) {
-      var kept = prev ? prev(evt) : evt;
-      if (kept) {
-        preprocess(kept);
-        for (var i = 0; i < adapters.length; i++) processForAdapter(adapters[i], kept);
-      }
-      return kept; // MUST return so NextDataLayer stays consistent
-    };
+
+    // Capture a transform installed before us (consent/redaction) — it keeps running first.
+    var existing = window.NextDataLayerTransformFn;
+    if (typeof existing === 'function' && existing !== forwarderTransform) userTransform = existing;
+
+    // ⚠️ The SDK's NextAnalytics constructor does `window.NextDataLayerTransformFn = null` at init
+    // (campaign-cart src/utils/analytics/index.ts, v0.4.30+). This file loads in <head> BEFORE the
+    // SDK module executes, so a PLAIN ASSIGNMENT here is always wiped and no event reaches the
+    // adapters (Route C forwards zero events, deterministically). Define the global as an ACCESSOR
+    // instead: reads always return the forwarding wrapper (so DataLayerManager.push always invokes
+    // us), and writes land in the user-transform slot — so the SDK's null reset, a config.transformFn,
+    // setTransformFunction(), and any later consent script keep their documented behaviour; they just
+    // can't evict forwarding. Writing null / a non-function clears only the user chain (mirrors what
+    // the SDK's reset intends). configurable:true = deliberate escape hatch for a future redefine.
+    try {
+      Object.defineProperty(window, 'NextDataLayerTransformFn', {
+        configurable: true,
+        get: function () { return forwarderTransform; },
+        set: function (fn) {
+          userTransform = (typeof fn === 'function' && fn !== forwarderTransform) ? fn : null;
+        }
+      });
+    } catch (e) {
+      // Fallback if the property is somehow non-definable: assign now, then re-assert after SDK init
+      // and replay anything pushed in the gap. next:initialized is the SDK's documented init event.
+      window.NextDataLayerTransformFn = forwarderTransform;
+      document.addEventListener('next:initialized', function () {
+        var cur = window.NextDataLayerTransformFn;
+        if (cur !== forwarderTransform) {
+          if (typeof cur === 'function') userTransform = cur;
+          window.NextDataLayerTransformFn = forwarderTransform;
+          replayQueued();
+        }
+      });
+    }
   }
 
   window.NextForwarder = {
