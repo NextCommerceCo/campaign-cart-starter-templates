@@ -196,6 +196,8 @@ Beyond GTM + Meta Pixel, the same two analytics partials carry **direct, code-co
 
 **Toggle = id presence.** Everything is inert until you set the vendor's id in `campaigns.json`; every gate is the hardened `{% if campaign.<id> and campaign.<id> != "" %}` (absent OR empty = off). Same placeholder warning as GTM: any non-empty value goes live on non-`development` builds.
 
+**These keys are not in your `campaigns.json` by default.** Scaffolded entries stay lean (only `gtm_id`/`fb_pixel_id` are present); enabling a vendor means **adding** its keys from the table below to the campaign's entry — absent = off, so add only the vendors the campaign actually uses.
+
 | Vendor | Set to enable | Optional fields |
 |---|---|---|
 | RudderStack | `rudderstack_write_key` **and** `rudderstack_dataplane_url` (both required) — loader-only; see note below | — |

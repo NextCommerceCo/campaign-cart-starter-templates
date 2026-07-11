@@ -31,7 +31,7 @@ Note: the developer renames the folder to their product/campaign name (e.g. `win
 
 ## campaigns.json
 - **Project-level, not template-specific** — accumulates all campaigns a developer adds
-- `_data/campaigns.json` is a reference file showing full field structure for all current templates
+- `_data/campaigns.json` is a reference file for all current templates; entries stay **lean** — no entry carries the optional analytics vendor block (absent = off per the gate idiom); the canonical key list + copy-paste block lives in `_shared/analytics/README.md`, and campaigns add keys at will
 - **Format:** keyed by slug — `{ "my-campaign": { "name": "...", ... } }` (not the old array format `{ "campaigns": [...] }`)
 - Fields: `name`, `description`, `entry_url`, `sdk_version`, `store_name`, `store_url`, `store_terms`, `store_privacy`, `store_contact`, `store_returns`, `store_shipping`, `store_phone`, `store_phone_tel`; optional layout analytics: `gtm_id`, `fb_pixel_id`; optional social share: `og_image` (see `docs/campaign-page-kit-template-context.md`)
 - `description` doubles as the default Open Graph / Twitter description; `og_image` is the share-card image URL (default `""` → image tags omitted, same empty-string convention as `gtm_id`/`fb_pixel_id`)
@@ -84,7 +84,7 @@ Base URL: `https://nextcommerce-campaign-templates.netlify.app` — append the l
 ```
 repo-root/
 ├── _data/
-│   └── campaigns.json          ← reference: all current 0.4.x templates with full field structure
+│   └── campaigns.json          ← reference: all current 0.4.x templates (lean entries; vendor keys documented in _shared/analytics/README.md)
 ├── src/
 │   ├── apollo/
 │   ├── apollo-mv-single-step/
