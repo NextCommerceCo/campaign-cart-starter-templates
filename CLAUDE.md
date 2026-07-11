@@ -31,7 +31,7 @@ Note: the developer renames the folder to their product/campaign name (e.g. `win
 
 ## campaigns.json
 - **Project-level, not template-specific** — accumulates all campaigns a developer adds
-- `_data/campaigns.json` is a reference file showing full field structure for all current templates
+- `_data/campaigns.json` is a reference file for all current templates; entries stay **lean** — no entry carries the optional analytics vendor block (absent = off per the gate idiom); the canonical key list + copy-paste block lives in `_shared/analytics/README.md`, and campaigns add keys at will
 - **Format:** keyed by slug — `{ "my-campaign": { "name": "...", ... } }` (not the old array format `{ "campaigns": [...] }`)
 - Fields: `name`, `description`, `entry_url`, `sdk_version`, `store_name`, `store_url`, `store_terms`, `store_privacy`, `store_contact`, `store_returns`, `store_shipping`, `store_phone`, `store_phone_tel`; optional layout analytics: `gtm_id`, `fb_pixel_id`; optional social share: `og_image` (see `docs/campaign-page-kit-template-context.md`)
 - `description` doubles as the default Open Graph / Twitter description; `og_image` is the share-card image URL (default `""` → image tags omitted, same empty-string convention as `gtm_id`/`fb_pixel_id`)
@@ -84,7 +84,7 @@ Base URL: `https://nextcommerce-campaign-templates.netlify.app` — append the l
 ```
 repo-root/
 ├── _data/
-│   └── campaigns.json          ← reference: all current 0.4.x templates with full field structure
+│   └── campaigns.json          ← reference: all current 0.4.x templates (lean entries; vendor keys documented in _shared/analytics/README.md)
 ├── src/
 │   ├── apollo/
 │   ├── apollo-mv-single-step/
@@ -100,16 +100,29 @@ repo-root/
 ```
 
 ## Adding a new template family
-When adding a new `src/<slug>/` family, update these together or the **`lint-sdk` CI gate** fails. (That CI job — `.github/workflows/lint-sdk.yml` — runs two separate linters as steps: `lint:next-core` → `scripts/lint-next-core-sync.mjs`, and `lint:sdk:ci` → `scripts/lint-sdk.mjs`.)
+When adding a new `src/<slug>/` family, update these together or the **`lint-sdk` CI gate** fails. (That CI job — `.github/workflows/lint-sdk.yml` — runs three linters as steps: `lint:next-core` → `scripts/lint-next-core-sync.mjs`, `lint:shared` → `scripts/sync-shared.mjs --check`, and `lint:sdk:ci` → `scripts/lint-sdk.mjs`.)
 1. `templates.json` — add the picker-registry entry (see File Structure note above).
 2. `scripts/lint-next-core-sync.mjs` — add the slug to the `FAMILIES` list. The `lint:next-core` linter asserts every family ships a **byte-identical** `next-core.css`; an unlisted family that ships one fails with `unknown family … not in the canonical FAMILIES list`, and the new file must match the canonical copy at `src/olympus/assets/css/next-core.css` (lint anchor path — not an Olympus-only stylesheet).
-3. Preview-URL / inventory tables in this file and `README.md`, if you want it listed.
+3. `scripts/sync-shared.mjs` — add the slug to the `FAMILIES` list, then run `npm run sync:shared` so the new family gets the shared analytics files (`_includes/analytics-head.html` + `analytics-body.html` + `assets/js/next-forwarder-core.js` + the 8 `*.adapter.js`). The `lint:shared` gate asserts every family matches the canonical `_shared/analytics/` source. (`src/landing/` is intentionally excluded — its analytics are commented-out examples.)
+4. Preview-URL / inventory tables in this file and `README.md`, if you want it listed.
 
 ### `next-core.css` — shared across all eight families
 
 Every template family ships a **byte-identical** copy of `src/olympus/assets/css/next-core.css`. The `lint:next-core` CI gate enforces this. To change core for all families: edit that canonical file (lint anchor at `src/olympus/assets/css/next-core.css`), then copy it to every family's `assets/css/next-core.css` (all eight slugs in `scripts/lint-next-core-sync.mjs`).
 
 **Promoted checkout component styles** — Apollo, Apollo MV, and Olympus MV checkout UI (promo banner/timer, checkout header, product heading, as-seen-in, reviews slider, guarantee, checkout reveal, Apollo bundle cards, MV selector layout) lives in the appended block at the end of `next-core.css`. Do **not** add per-page CSS links for these on Apollo/Apollo MV checkout — only CDN deps like Swiper and route-specific files (`variant-picker.css`, `exit-intent-popup.css`, landing/presell `tokens.css`) stay outside core.
+
+### `_shared/analytics/` — canonical analytics source (generated into every family)
+
+The Route C analytics capability (GTM + Meta Pixel + the direct **GA4 / Axon / Taboola / Triple Whale / TikTok / Northbeam / Snapchat / Pinterest** adapters) is maintained in **one** place — `_shared/analytics/` at the repo root (outside `src/`, so the build never treats it as a slug) — and **generated into every family** by `scripts/sync-shared.mjs`:
+- `_shared/analytics/_includes/{analytics-head,analytics-body}.html` → each `src/<family>/_includes/`
+- `_shared/analytics/js/{next-forwarder-core,<vendor>.adapter}.js` → each `src/<family>/assets/js/`
+
+Edit the file in `_shared/analytics/`, then `npm run sync:shared` (writes the per-family copies with a `GENERATED …` header) and `npm run lint:shared` (CI drift gate — same discipline as `lint:next-core`). The `js/` files are kept **byte-identical to `analytics-tracking-docs/examples/`** so re-syncing from the upstream reference is a straight copy — enforced by `npm run lint:upstream` (`scripts/lint-upstream-analytics.mjs`; advisory/local-only — it needs the sibling `analytics-tracking-docs` checkout, so it SKIPs when absent, e.g. in CI. Fix upstream first, copy here, then `sync:shared`). `_shared/analytics/README.md` has the vendor→id table.
+
+**Off by default; toggle = id presence.** The capability is inert until a campaign sets the vendor's id in `campaigns.json` (`ga4_id`, `axon_event_key`, `taboola_account_id` — **numeric**, injected unquoted per Taboola's own snippet so a non-numeric value is a JS syntax error, `triplewhale_name` + optional `triplewhale_platform` (default `custom-msp`; `SHOPIFY` for shop-sync stores — then block `dl_purchase, dl_upsell_purchase` via `triplewhale_blocked_events` or TW double-counts against its native Shopify feed), `tiktok_pixel_id`, `northbeam_client_id`, `snap_pixel_id`, `pinterest_tag_id`; plus `gtm_id`/`fb_pixel_id`, and `rudderstack_write_key` + `rudderstack_dataplane_url` — **both** required; RudderStack is an SDK-provider vendor like GTM/Meta, loader-only in the partial (no forwarder adapter), and also needs `analytics.providers.rudderstack.enabled: true` in `config.js`). The shared `next-forwarder-core.js` loads once when **any** id is set; each adapter loads only when its own id is set. Per-campaign `*_allowed_events`/`*_blocked_events` tune which `dl_*` events forward; PII/identity (`*_enabled` flags) is off unless set and then consent-gated on `accepts_marketing`. Authoring intent is *intended* to live upstream in the campaigns-os `AnalyticsContract` and compile to these `campaigns.json` ids — **that compiler is not built yet** (audit 2026-07-08: the contract is validation-only and doesn't model these vendors as first-class providers; design + rationale in `analytics-tracking-docs/campaigns-os-analytics-contract-mapping.md`). The template only ever reads the id (one source of truth, no second runtime flag). Adapter mapping is regression-tested by `analytics-tracking-docs/examples/_harness/`.
+
+**Gate idiom — guard against absent AND empty.** Analytics blocks are gated `{% if campaign.<id> and campaign.<id> != "" %}` (not bare `!= ""`): LiquidJS treats a **missing** field as `undefined`, and `undefined != ""` is **truthy**, so a family/clone without the field would otherwise render a broken empty-id pixel. The existence guard makes absent OR empty = off. The multi-vendor loader uses a `{%- capture -%}` of all ids + a single `!= ""` check because LiquidJS has no parentheses and evaluates `and`/`or` right-to-left (a chained `or` of guarded terms is unreliable).
 
 ### Apollo template family (`apollo`, `apollo-mv-single-step`) — flagship
 
@@ -137,6 +150,10 @@ Apollo checkout `styles:` is typically Swiper CDN only. `checkout-apollo.js` han
 [slug]/
 ├── _layouts/
 │   └── base.html               ← layout shell with Liquid variables
+├── _includes/                  ← shared head/meta partials pulled into all 3 base layouts:
+│   ├── meta-social.html        ←   OG / Twitter Card tags
+│   ├── analytics-head.html     ←   GTM + Meta Pixel loaders (head)
+│   └── analytics-body.html     ←   GTM + Meta Pixel <noscript> fallbacks (top of body)
 ├── assets/
 │   ├── css/
 │   │   └── next-core.css       ← core styles (loaded directly in base.html)
@@ -152,9 +169,10 @@ Apollo checkout `styles:` is typically Swiper CDN only. `checkout-apollo.js` han
 ## base.html Pattern
 - `next-core.css` loaded **directly in base.html** — always needed, not in page frontmatter
 - Per-page CSS/JS injected via frontmatter `styles:` / `scripts:` loops using `campaign_asset`
-- Optional **GTM / Meta Pixel** in reference templates: injected from `campaign.gtm_id` / `campaign.fb_pixel_id` when Liquid `environment != "development"` **and** the value is **non-empty** (`{% if campaign.gtm_id != "" %}` / `{% if campaign.fb_pixel_id != "" %}`). Use **`""`** in `campaigns.json` to disable layout injection; **placeholders like `GTM-XXXXXXX` still load snippets** on non-dev builds (not “off”). Do **not** use bare `{% if campaign.gtm_id %}` — Liquid can treat `""` as truthy.
+- Optional **GTM / Meta Pixel** in reference templates: injected from `campaign.gtm_id` / `campaign.fb_pixel_id` when Liquid `environment != "development"` **and** the value is **non-empty** (`{% if campaign.gtm_id != "" %}` / `{% if campaign.fb_pixel_id != "" %}`). Use **`""`** in `campaigns.json` to disable layout injection; **placeholders like `GTM-XXXXXXX` still load snippets** on non-dev builds (not “off”). Do **not** use bare `{% if campaign.gtm_id %}` — Liquid can treat `""` as truthy. The snippets themselves live in shared partials (see next bullet), not inline in each layout.
+- **Analytics partials — shared across all three layouts (DRY) + generated across families:** the GTM + Meta Pixel + Route C vendor snippets live in two per-template partials, `_includes/analytics-head.html` (head loaders) and `_includes/analytics-body.html` (`<noscript>` fallbacks), pulled into `base.html`, `base-presell.html`, and `base-landing.html` via `{% campaign_include %}` — same pattern as `meta-social.html`, so the three layouts never drift. The partials (and the forwarder core + adapters) are **generated from the canonical `_shared/analytics/` source** by `scripts/sync-shared.mjs` (see the `_shared/analytics/` section above), so all families stay identical without hand-copying. Both partials keep the `{% unless environment == "development" %}` gate and the hardened `{% if campaign.<id> and campaign.<id> != "" %}` per-vendor guards (absent OR empty id = off); `src/landing/` is excluded. When adding a channel, edit `_shared/analytics/` and run `npm run sync:shared` — not the per-family copies.
 - **Social share meta + resource hints — shared across all three layouts:** social Open Graph / Twitter Card tags live in a single per-template partial, `_includes/meta-social.html`, pulled into `base.html`, `base-presell.html`, and `base-landing.html` via `{% campaign_include 'meta-social.html' %}` so the three never drift. `og:title`/`twitter:title` use the page `title`; description falls back frontmatter `og_description` → `campaign.description`; image falls back frontmatter `og_image` → `campaign.og_image` (default `""` → image tags omitted, same `!= ""` guard pattern as analytics — render **always**, not gated on `environment`). Landing/presell are the pages actually shared, so they get the tags too — previously only `base.html` had a bare `og:title`/`twitter:title`. The same three layouts also carry a uniform **resource-hints** block: `preconnect` to `cdn.jsdelivr.net` (SDK loader + Swiper, loaded immediately) plus `dns-prefetch` for `campaigns.apps.29next.com` and the countries worker (hit by the SDK at runtime). (`src/landing/` is excluded from both — its SDK/config are commented-out examples, so it loads none of these hosts.)
-- **Meta Pixel — layout bootstraps, SDK tracks (issue #79):** the GTM + Meta Pixel blocks live in **all three shared layouts** — `base.html` (checkout/upsell/receipt) **and** `base-landing.html` / `base-presell.html` (landing/presell), since all three load `config.js` with the SDK adapters. The Meta Pixel block loads `fbevents.js`, calls `fbq('init', …)`, and keeps the `<noscript>` PageView fallback only. It does **not** call `fbq('track', 'PageView')` — the SDK's Facebook adapter sends PageView (and ecommerce events) on init via `dl_user_data` when `analytics.providers.facebook.enabled` is `true`, and does not dedupe PageView, so a manual layout call double-fires. Add the manual `fbq('track', 'PageView')` back only for a campaign that disables the SDK Facebook provider. GTM is unaffected — keep its layout snippet as-is. (The `src/landing/` section-library layout is the exception: its config/SDK/analytics are commented-out "production hardening" examples, not live.)
+- **Meta Pixel — layout bootstraps, SDK tracks (issue #79):** the GTM + Meta Pixel blocks (in the partials above) are loaded by every layout that loads `config.js` — `base.html` (checkout/upsell/receipt) **and** `base-landing.html` / `base-presell.html` (landing/presell), since all three load `config.js` with the SDK adapters. The Meta Pixel block loads `fbevents.js`, calls `fbq('init', …)`, and keeps the `<noscript>` PageView fallback only. It does **not** call `fbq('track', 'PageView')` — the SDK's Facebook adapter sends PageView (and ecommerce events) on init via `dl_user_data` when `analytics.providers.facebook.enabled` is `true`, and does not dedupe PageView, so a manual layout call double-fires. Add the manual `fbq('track', 'PageView')` back only for a campaign that disables the SDK Facebook provider. GTM is unaffected — keep its layout snippet as-is. (The `src/landing/` section-library layout is the exception: its config/SDK/analytics are commented-out "production hardening" examples, not live.)
 - Liquid conditionals for optional metatags:
   - `{% if next_url %}` → checkout pages only
   - `{% if next_url %}` / `{% if decline_url %}` → upsell pages only

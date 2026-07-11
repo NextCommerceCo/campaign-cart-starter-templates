@@ -21,7 +21,10 @@
     "lint:sdk:ci": "CI=1 node scripts/lint-sdk.mjs --scope=all --pages=all",
     "lint:sdk:promoted:all": "node scripts/lint-sdk.mjs --scope=promoted --pages=all",
     "lint:next-core": "node scripts/lint-next-core-sync.mjs",
-    "lint:agent-contracts": "node scripts/lint-agent-contracts.mjs"
+    "lint:agent-contracts": "node scripts/lint-agent-contracts.mjs",
+    "sync:shared": "node scripts/sync-shared.mjs",
+    "lint:shared": "node scripts/sync-shared.mjs --check",
+    "lint:upstream": "node scripts/lint-upstream-analytics.mjs"
   },
   "dependencies": {
     "next-campaign-page-kit": "^0.2.0"

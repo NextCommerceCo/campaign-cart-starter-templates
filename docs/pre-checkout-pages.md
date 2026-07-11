@@ -99,6 +99,7 @@ Presell and landing pages **must** load the SDK wiring to participate in session
 **Analytics alignment checklist:**
 
 - [ ] `gtm_id` / `fb_pixel_id` in `campaigns.json` set correctly — `""` disables layout injection, any non-empty value enables it on non-`development` builds. Layout injection loads the snippet/pixel on the page.
+- [ ] Direct vendor analytics (Route C: GA4, TikTok, RudderStack, …) fire on landing/presell too — the same shared analytics partials load in `base-landing.html` / `base-presell.html`, so any vendor id set in the campaign's `campaigns.json` entry is live on these pages as well. Keys are not pre-seeded; absent = off. See [Direct vendor analytics — Route C](./campaign-page-kit-template-context.md#direct-vendor-analytics--route-c-ga4_id-tiktok_pixel_id-).
 - [ ] `analytics.providers` in `config.js` enables the SDK to fire events through an already-loaded provider — these are separate concerns. Layout injection loads the snippet; `config.js` providers send SDK events through it. Both are typically needed together.
 
 See [Optional GTM and Meta Pixel](./campaign-page-kit-template-context.md#optional-gtm-and-meta-pixel-gtm_id-fb_pixel_id) and [SDK configuration (config.js)](./campaign-page-kit-template-context.md#sdk-configuration-configjs) in the main AI rules file.

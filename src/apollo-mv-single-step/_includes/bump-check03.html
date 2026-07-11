@@ -28,7 +28,7 @@
       A click/keydown inside the field must NOT toggle the bump; that protection is guardBumpPersonalization(),
       which ships in the MV checkout JS (checkout-apollo-mv-full.js / checkout-olympus-mv-full.js). So personalization is wired safely
       on the MV families. Before enabling order_bump.check03.personalization
-      on any non-MV family (demeter, limos, olympus, shop-single-step, shop-three-step), port
+      on any non-MV family (demeter, olympus, shop-single-step, shop-three-step), port
       guardBumpPersonalization into that template's checkout JS or a field click will toggle the bump.
 {% endcomment %}
 {% assign bump = order_bump.check03 -%}

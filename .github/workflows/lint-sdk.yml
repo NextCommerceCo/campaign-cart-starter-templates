@@ -31,6 +31,8 @@ jobs:
         run: npm ci
       - name: Lint next-core.css sync (all families identical)
         run: npm run lint:next-core
+      - name: Lint shared analytics sync (families match _shared/analytics)
+        run: npm run lint:shared
       - name: Build all template families
         run: npm run build
       - name: Lint SDK markup (all families, source + rendered)

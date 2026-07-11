@@ -91,7 +91,7 @@
   },
   "shop-three-step": {
     "name": "Shop Three Step",
-    "description": "Shop three-step checkout funnel (information → shipping → billing)",
+    "description": "Shop three-step checkout funnel (information \u2192 shipping \u2192 billing)",
     "entry_url": "presell",
     "sdk_version": "0.4.30",
     "store_name": "Next Commerce",
@@ -127,7 +127,7 @@
   },
   "olympus-mv-two-step": {
     "name": "Olympus MV Two Step",
-    "description": "Olympus multi-variant two-step checkout (select → checkout)",
+    "description": "Olympus multi-variant two-step checkout (select \u2192 checkout)",
     "entry_url": "presell",
     "sdk_version": "0.4.30",
     "store_name": "Next Commerce",
@@ -145,7 +145,7 @@
   },
   "landing": {
     "name": "Landing",
-    "description": "Landing page component library — niche example pages (supplement-sleep, skincare-serum, fitness-program) built from modular _includes sections",
+    "description": "Landing page component library \u2014 niche example pages (supplement-sleep, skincare-serum, fitness-program) built from modular _includes sections",
     "sdk_version": "0.4.30",
     "store_name": "Next Commerce",
     "store_url": "https://demo.29next.com/",

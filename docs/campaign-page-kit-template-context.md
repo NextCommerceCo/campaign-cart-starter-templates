@@ -176,7 +176,7 @@ The top-level key is the campaign slug. Add any additional key to a campaign ent
 
 ### Optional GTM and Meta Pixel (`gtm_id`, `fb_pixel_id`)
 
-These starter templates inject **Google Tag Manager** and **Meta Pixel** from each campaign’s `_layouts/base.html` when:
+These starter templates inject **Google Tag Manager** and **Meta Pixel** from two shared per-template partials — `_includes/analytics-head.html` (head loaders) and `_includes/analytics-body.html` (`<noscript>` fallbacks) — pulled into all three base layouts (`base.html`, `base-presell.html`, `base-landing.html`) via `{% campaign_include %}`, the same DRY pattern as `meta-social.html` (so the layouts never drift; edit the partial once, not every layout). The snippets render when:
 
 - `environment` is not `development`, and  
 - `gtm_id` and/or `fb_pixel_id` are **non-empty strings** in `_data/campaigns.json` (checked with `{% if campaign.gtm_id != "" %}` / `{% if campaign.fb_pixel_id != "" %}`).
@@ -188,7 +188,40 @@ These starter templates inject **Google Tag Manager** and **Meta Pixel** from ea
 
 The layout snippet and SDK provider work together: layout injection initialises GTM/Pixel, the SDK provider forwards ecommerce events into it. Enable both — set `gtm_id` / `fb_pixel_id` in `campaigns.json` **and** enable the matching provider in `config.js`.
 
-**Meta Pixel — the layout bootstraps, the SDK tracks.** The GTM + Meta Pixel blocks live in every shared layout that loads `config.js` — `base.html` (checkout/upsell/receipt) and `base-landing.html` / `base-presell.html` (landing/presell). The Meta Pixel block only loads `fbevents.js`, calls `fbq('init', …)`, and keeps the `<noscript>` `PageView` fallback. It does **not** call `fbq('track', 'PageView')` — when `analytics.providers.facebook.enabled` is `true`, the SDK's Facebook adapter sends `PageView` (and `AddToCart`, `Purchase`, etc.) on init via `dl_user_data`. Adding a manual `fbq('track', 'PageView')` to the layout double-fires the PageView, because the adapter does not dedupe it. If a campaign disables the SDK Facebook provider and relies on template-only tracking, add the manual `fbq('track', 'PageView')` back to that layout.
+**Meta Pixel — the layout bootstraps, the SDK tracks.** The GTM + Meta Pixel blocks (in `_includes/analytics-head.html` / `analytics-body.html`) are loaded by every layout that loads `config.js` — `base.html` (checkout/upsell/receipt) and `base-landing.html` / `base-presell.html` (landing/presell). The Meta Pixel block only loads `fbevents.js`, calls `fbq('init', …)`, and keeps the `<noscript>` `PageView` fallback. It does **not** call `fbq('track', 'PageView')` — when `analytics.providers.facebook.enabled` is `true`, the SDK's Facebook adapter sends `PageView` (and `AddToCart`, `Purchase`, etc.) on init via `dl_user_data`. Adding a manual `fbq('track', 'PageView')` to the layout double-fires the PageView, because the adapter does not dedupe it. If a campaign disables the SDK Facebook provider and relies on template-only tracking, add the manual `fbq('track', 'PageView')` back to that layout.
+
+### Direct vendor analytics — Route C (`ga4_id`, `tiktok_pixel_id`, …)
+
+Beyond GTM + Meta Pixel, the same two analytics partials carry **direct, code-controlled ("Route C") integrations** for eight ad/attribution vendors — no GTM container involved. Each block is a per-vendor base pixel bootstrap plus a shared forwarder (`assets/js/next-forwarder-core.js`, loaded once) and one thin adapter per vendor (`assets/js/<vendor>.adapter.js`) that maps the SDK's `dl_*` event stream to that vendor's events.
+
+**Toggle = id presence.** Everything is inert until you set the vendor's id in `campaigns.json`; every gate is the hardened `{% if campaign.<id> and campaign.<id> != "" %}` (absent OR empty = off). Same placeholder warning as GTM: any non-empty value goes live on non-`development` builds.
+
+**These keys are not in your `campaigns.json` by default.** Scaffolded entries stay lean (only `gtm_id`/`fb_pixel_id` are present); enabling a vendor means **adding** its keys from the table below to the campaign's entry — absent = off, so add only the vendors the campaign actually uses.
+
+| Vendor | Set to enable | Optional fields |
+|---|---|---|
+| RudderStack | `rudderstack_write_key` **and** `rudderstack_dataplane_url` (both required) — loader-only; see note below | — |
+| GA4 | `ga4_id` | `ga4_allowed_events`, `ga4_blocked_events` |
+| AppLovin Axon | `axon_event_key` | `axon_allowed_events`, `axon_blocked_events` |
+| Taboola | `taboola_account_id` — **must be numeric** (it is injected unquoted, matching Taboola's own snippet; a non-numeric value is a JS syntax error that kills the whole block) | `taboola_allowed_events`, `taboola_blocked_events` |
+| Triple Whale | `triplewhale_name` | `triplewhale_platform` (`custom-msp` default; `SHOPIFY` for shop-sync stores), `triplewhale_contact_enabled` (PII), `*_allowed/blocked_events` |
+| TikTok | `tiktok_pixel_id` | `tiktok_advanced_matching_enabled` (PII), `*_allowed/blocked_events` |
+| Northbeam | `northbeam_client_id` | `northbeam_identity_enabled` (PII), `*_allowed/blocked_events` |
+| Snapchat | `snap_pixel_id` | `snap_advanced_matching_enabled` (PII), `*_allowed/blocked_events` |
+| Pinterest | `pinterest_tag_id` | `pinterest_enhanced_match_enabled` (PII), `*_allowed/blocked_events` |
+
+Rules that matter when configuring a campaign:
+
+- **RudderStack is the odd one out — an SDK-provider vendor, not a Route C adapter.** The partial injects only the official RudderStack JS SDK v3 loader (the Campaign Cart SDK's `rudderstack` provider is a pure event forwarder that stays disabled unless the snippet is on the page). Same two-part pattern as GTM/Meta: set both `campaigns.json` keys **and** `analytics.providers.rudderstack.enabled: true` in `config.js`, or no events flow. The snippet deliberately does not call `rudderanalytics.page()` — the SDK provider sends it (same double-fire rationale as the Meta Pixel note above).
+- **One path per vendor.** Route C is instead of (not alongside) tracking the same vendor through a GTM container or an SDK provider — running two paths double-fires conversions.
+- **Event toggles**: `<vendor>_allowed_events` / `<vendor>_blocked_events` are comma-separated `dl_*` names (preferred; vendor names are matched too but more coarsely — e.g. blocking TikTok's `Purchase` blocks both the main and upsell purchase). Empty allowed = the default main-funnel set; `"all"` = every mapped event.
+- **Identity/PII is opt-in and consent-gated.** The `*_enabled` flags send raw email/phone to the vendor when a prospect cart is created, and only when the `accepts_marketing` checkbox is ticked. Leave them unset unless the campaign has a compliance-reviewed reason.
+- **Upsell counting differs per vendor**: GA4/Taboola/Triple Whale get a distinct upsell event (clean purchase count); Axon/TikTok/Northbeam/Snapchat/Pinterest fire upsells as another purchase with a `{orderId}-US{n}` id (revenue accurate, **purchase count inflates** — brief the media buyer).
+- **Triple Whale on shop-sync stores** (`triplewhale_platform: "SHOPIFY"`): if Triple Whale is natively connected to the Shopify store it already ingests the synced orders — block the client-side purchases (`triplewhale_blocked_events: "dl_purchase, dl_upsell_purchase"`) or you double-count.
+- **Axon attribution on Safari** needs its `_axwrt` cookie re-issued server-side (JS-set cookies expire in ~7 days under ITP) — a static template can't do this alone; see the edge-function pattern in the upstream `analytics-tracking-docs/examples/direct-axon/README.md` (Netlify form shown; any server/edge platform works).
+- **Do not edit the generated copies.** The partials and js files in each template carry a `GENERATED` header — the source of truth is `_shared/analytics/` in the starter repo (upstream reference: `analytics-tracking-docs/examples/`).
+
+Debug on a live/staging page: `?nfdebug=true` in the URL, then `window.NextForwarder.getStatus()` in the console.
 
 ### Social share meta (`og_image`) and resource hints
 
@@ -370,7 +403,8 @@ It always:
 - Loads `next-core.css` directly (not via frontmatter)
 - Injects per-page `styles` and `scripts` from frontmatter
 - Renders per-page `meta_tags` verbatim when present; otherwise falls back to legacy `page_type`, `next_url`, and `decline_url` frontmatter
-- In these starter templates: may inject GTM / Meta Pixel from `campaign.gtm_id` / `campaign.fb_pixel_id` when not in `development` (see above)
+- In these starter templates: includes the shared `_includes/analytics-head.html` / `analytics-body.html` partials, which inject GTM / Meta Pixel from `campaign.gtm_id` / `campaign.fb_pixel_id` when not in `development` (see above)
+- Includes the shared `_includes/meta-social.html` partial for Open Graph / Twitter Card tags
 
 When CampaignSpec supplies `sdk_hints.meta_tags`, copy that object into page frontmatter as `meta_tags`. These values are runtime-rooted and are not passed through `campaign_link`:
 
@@ -1076,6 +1110,7 @@ Use these when implementing or verifying a specific task. Work through each item
 
 - [ ] Entry exists in `_data/campaigns.json` with `slug`, `name`, `sdk_version`, and all `store_*` fields
 - [ ] Optional: `gtm_id` / `fb_pixel_id` in campaigns.json — real container and pixel IDs for production; omit keys to disable layout-injected tags
+- [ ] Optional: direct vendor analytics (GA4, TikTok, RudderStack, …) — add the vendor's keys to the campaign's entry per [Direct vendor analytics — Route C](#direct-vendor-analytics--route-c-ga4_id-tiktok_pixel_id-); keys are not pre-seeded, absent = off
 - [ ] API key is set in `assets/config.js` (run `npm run config` or edit directly)
 - [ ] All `data-next-package-id` values updated to real package IDs from the Campaigns App
 - [ ] Exactly one selector card per selector group has `data-next-selected="true"`
