@@ -1110,6 +1110,7 @@ Use these when implementing or verifying a specific task. Work through each item
 
 - [ ] Entry exists in `_data/campaigns.json` with `slug`, `name`, `sdk_version`, and all `store_*` fields
 - [ ] Optional: `gtm_id` / `fb_pixel_id` in campaigns.json — real container and pixel IDs for production; omit keys to disable layout-injected tags
+- [ ] Optional: direct vendor analytics (GA4, TikTok, RudderStack, …) — add the vendor's keys to the campaign's entry per [Direct vendor analytics — Route C](#direct-vendor-analytics--route-c-ga4_id-tiktok_pixel_id-); keys are not pre-seeded, absent = off
 - [ ] API key is set in `assets/config.js` (run `npm run config` or edit directly)
 - [ ] All `data-next-package-id` values updated to real package IDs from the Campaigns App
 - [ ] Exactly one selector card per selector group has `data-next-selected="true"`
