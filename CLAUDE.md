@@ -369,3 +369,15 @@ Design decisions:
 - **Auto-delivery shipped in CPK 0.2.0**: `campaign-init --ai-context claude|codex|cursor|copilot` now installs this doc verbatim into developer projects (with a sentinel header, overwritten on re-run unless `--keep-ai-context`). This file is the upstream source — keeping it correct now directly shapes downstream AI context.
 
 README has an "AI development rules" section pointing developers to copy `docs/campaign-page-kit-template-context.md` into their project.
+## Issue tracking
+
+Work in this repo is tracked with GitHub Issues and coordinated on the
+org-level **[Operations](https://github.com/orgs/NextCommerceCo/projects/10)**
+Kanban board (Todo / In Progress / Done). New issues are added to the board
+automatically by the `add-to-project` workflow.
+
+Before starting work on an issue: check it is not assigned to someone else,
+assign yourself (`gh issue edit <n> --add-assignee @me`), and move the card to
+In Progress. Open PRs with `Closes #<n>`; when the issue closes on merge, the
+board's built-in "Item closed" automation moves the card to Done. Contributors
+have a `/next-board` skill that wraps these board operations.
