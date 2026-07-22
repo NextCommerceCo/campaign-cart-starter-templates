@@ -14,6 +14,7 @@ author_name: "Sarah Mitchell"
 author_publication: "Wellness Insider"
 author_date: "March 15, 2026"
 read_time: "6 min read"
+article_rating_text: "4.9/5 (1,247 reviews)"
 
 # Promo bar
 promo_headline: "SPRING SALE"
@@ -101,27 +102,42 @@ footer_copyright: "Copyright ©2026 Next Commerce"
     <h1 class="font-bold text-[32px] md:text-[44px] leading-tight text-[var(--text-primary)] mb-5">
       {{ article_title }}
     </h1>
-    <!-- Author row -->
+    <!-- Author row (renders only when author_name is set) -->
+    {% if author_name and author_name != "" %}
     <div class="flex items-center gap-3 mb-4">
       <img src="{{ 'images/presell/author-avatar.png' | campaign_asset }}" alt="{{ author_name }}" class="w-10 h-10 rounded-full object-cover shrink-0">
       <div class="text-sm text-[var(--text-secondary)]">
         <span class="italic">by</span>
         <strong class="text-[var(--text-primary)] not-italic ml-1">{{ author_name }}</strong>
+        {% if author_publication and author_publication != "" %}
         <span class="mx-1">·</span>
         <span>{{ author_publication }}</span>
+        {% endif %}
+        {% if author_date and author_date != "" %}
         <span class="mx-1">·</span>
         <span>Updated {{ author_date }}</span>
+        {% endif %}
       </div>
     </div>
-    <!-- Star rating + read time -->
+    {% endif %}
+    <!-- Star rating + read time (rating chrome renders only when article_rating_text is set) -->
+    {%- capture _article_meta -%}{{ article_rating_text }}{{ read_time }}{%- endcapture -%}
+    {% if _article_meta != "" %}
     <div class="flex items-center gap-3 mb-5 text-sm">
+      {% if article_rating_text and article_rating_text != "" %}
       <div class="flex items-center gap-0.5 text-[#f59e0b]">
         <span>★★★★★</span>
       </div>
-      <span class="text-[var(--text-secondary)]">4.9/5 (1,247 reviews)</span>
+      <span class="text-[var(--text-secondary)]">{{ article_rating_text }}</span>
+      {% if read_time and read_time != "" %}
       <span class="text-[var(--border-default)]">|</span>
+      {% endif %}
+      {% endif %}
+      {% if read_time and read_time != "" %}
       <span class="text-[var(--text-secondary)]">{{ read_time }}</span>
+      {% endif %}
     </div>
+    {% endif %}
     <!-- Bold summary -->
     <p class="text-[17px] md:text-[18px] font-semibold text-[var(--text-primary)] leading-[1.6]">
       {{ article_subtitle }}
@@ -389,18 +405,29 @@ footer_copyright: "Copyright ©2026 Next Commerce"
             <img src="{{ 'images/presell/_shared/arrow-right.svg' | campaign_asset }}" alt="" class="w-[18px] h-[14px] brightness-0 invert">
           </a>
 
-          <!-- Countdown -->
+          <!-- Countdown (renders only when countdown_label is set) -->
+          {% if countdown_label and countdown_label != "" %}
           <div class="flex items-center gap-1 text-[14px] font-extrabold">
             <span class="text-[var(--text-primary)]">{{ countdown_label }}</span>
             <span class="text-[#b70101]"><span data-countdown-hrs>02</span>:<span data-countdown-min>02</span>:<span data-countdown-sec>09</span></span>
           </div>
+          {% endif %}
 
-          <!-- Sell-out / shipping bar -->
+          <!-- Sell-out / shipping bar (each half renders only when its slots are set; bar absent when both empty) -->
+          {%- capture _urgency_bar -%}{{ sell_out_risk }}{{ shipping_text }}{%- endcapture -%}
+          {% if _urgency_bar != "" %}
           <div class="w-full bg-[#ffe7e7] rounded px-4 py-2 flex items-center justify-center gap-3 text-[14px]">
+            {% if sell_out_risk and sell_out_risk != "" %}
             <span class="font-medium text-[var(--text-primary)]">{{ sell_out_text }} <strong class="text-[#b70101]">{{ sell_out_risk }}</strong></span>
+            {% endif %}
+            {% if sell_out_risk and sell_out_risk != "" and shipping_text and shipping_text != "" %}
             <span class="w-px h-4 bg-[var(--border-default)] shrink-0"></span>
+            {% endif %}
+            {% if shipping_text and shipping_text != "" %}
             <span class="font-medium text-[var(--text-primary)]"><strong>{{ shipping_text }}</strong> {{ shipping_label }}</span>
+            {% endif %}
           </div>
+          {% endif %}
 
           <!-- Guarantee -->
           <div class="flex items-center gap-2">

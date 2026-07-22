@@ -196,6 +196,14 @@ data-watch-overflow  hide controls when locked (default: false)
 Children: `[data-swiper]` (the .swiper el), `[data-swiper-prev]`, `[data-swiper-next]`, `[data-swiper-controls]` (hides when locked), `.swiper-pagination`
 
 ### Countdown timer
+
+The presell countdown block, sell-out bar, byline row, and star-rating row are
+conditional: each renders only when its frontmatter slot is non-empty
+(`countdown_label`, `sell_out_risk`/`shipping_text`, `author_name`,
+`article_rating_text`). An empty slot means the section is absent, not empty
+chrome. Demo values show the shape of typical content; per-slot sourcing rules
+live in the campaigns-os template slot manifest.
+
 ```
 [data-countdown]               wrapper
   data-duration-minutes        timer length (default: 15)
