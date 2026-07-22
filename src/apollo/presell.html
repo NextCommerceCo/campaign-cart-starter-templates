@@ -424,7 +424,7 @@ footer_copyright: "Copyright ©2026 Next Commerce"
             <span class="w-px h-4 bg-[var(--border-default)] shrink-0"></span>
             {% endif %}
             {% if shipping_text and shipping_text != "" %}
-            <span class="font-medium text-[var(--text-primary)]"><strong>{{ shipping_text }}</strong> {{ shipping_label }}</span>
+            <span class="font-medium text-[var(--text-primary)]"><strong>{{ shipping_text }}</strong>{% if shipping_label and shipping_label != "" %} {{ shipping_label }}{% endif %}</span>
             {% endif %}
           </div>
           {% endif %}
