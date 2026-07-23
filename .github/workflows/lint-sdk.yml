@@ -1,10 +1,11 @@
 name: lint:sdk
 
-# Template discipline gate. Runs two checks so drift across any family fails the
+# Template discipline gate. Runs three checks so drift across any family fails the
 # PR instead of slipping in silently:
 #   1. next-core.css sync — every family must ship a byte-identical shared base
 #      stylesheet (lint:next-core); no build needed, so it runs first / fails fast.
-#   2. SDK markup — builds all families and runs the catalog linter
+#   2. NEXT logo sync — every public surface must ship the byte-identical canonical asset.
+#   3. SDK markup — builds all families and runs the catalog linter
 #      (lint:sdk:ci = lint-sdk.mjs --scope=all --pages=all) in source + rendered modes.
 # This job (`lint-sdk`) is a required status check in branch protection — keep the
 # job name stable so the required-check binding does not break.
@@ -31,6 +32,8 @@ jobs:
         run: npm ci
       - name: Lint next-core.css sync (all families identical)
         run: npm run lint:next-core
+      - name: Lint canonical NEXT logo sync (all surfaces identical)
+        run: npm run lint:next-logo
       - name: Lint shared analytics sync (families match _shared/analytics)
         run: npm run lint:shared
       - name: Build all template families

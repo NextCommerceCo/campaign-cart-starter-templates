@@ -6459,6 +6459,7 @@ figcaption {
 
 .brand-logo {
   width: 150px;
+  height: auto;
 }
 
 .brand-logo.cc-small {
@@ -15321,6 +15322,7 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 .checkout-header--apollo .checkout-header__logo {
   display: block;
   width: 150px;
+  height: auto;
   object-fit: contain;
 }
 
@@ -15406,7 +15408,8 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   }
 
   .checkout-header--apollo .checkout-header__logo {
-    height: 32px;
+    width: 120px;
+    height: auto;
   }
 
   .checkout-header--apollo .checkout-header__reviews-text {
