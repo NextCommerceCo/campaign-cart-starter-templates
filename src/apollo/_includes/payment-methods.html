@@ -35,7 +35,7 @@
     - Method visibility gated by paymentConfig.expressCheckout in nextConfig — flag mismatches between this partial and config.js
     - data-next-payment-form="credit" wrapper carries os-shipping-method-same="true" for billing-address default; do not remove
     - Card brand <img> tags use campaign_asset for path resolution; replace with brand SVGs by overriding the image, not the data-next-* attrs
-    - Klarna / Apple Pay / Google Pay / Twint / Affirm / Bancontact / iDEAL / SEPA info-text panels ship a generic SVG placeholder; designer can swap to a brand-aligned graphic
+    - Klarna / Apple Pay / Google Pay / Twint / Affirm / Bancontact / iDEAL / SEPA / Link info-text panels ship a generic SVG placeholder; designer can swap to a brand-aligned graphic
     - Twint / Affirm / Bancontact / iDEAL / SEPA Direct Debit are redirect-only methods (no express button exists for them) — the radio here is the only way to offer them; Link also supports an express button (separate surface)
     - Method identifiers follow the Admin API payment-methods guide (twint, affirm, bancontact, ideal, sepa_direct, link); SDK-side mapping for these values ships separately — verify the campaign SDK version supports them before enabling
   next_variants:
