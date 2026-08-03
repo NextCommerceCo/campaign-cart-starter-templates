@@ -9,7 +9,7 @@ selector_order_bump_variant: "check03"
 # Later form-section bump rendered after shipping details.
 order_bump_variant: "check01+switch01"
 bundle_card_style: "product"
-checkout_reveal: true
+checkout_reveal: false
 checkout_reveal_cta: "Add to Cart"
 as_seen_in:
   heading: "As seen in"
@@ -329,7 +329,7 @@ bundles:
 
                               </div>
                               {% campaign_include 'express-checkout.html' show_title=false %}
-                              {% campaign_include 'payment-methods.html' show_paypal=true show_klarna=true show_google_pay=true show_apple_pay=true %}
+                              {% campaign_include 'payment-methods.html' show_paypal=true show_klarna=true show_google_pay=true show_apple_pay=true show_twint=true show_affirm=true show_bancontact=true show_ideal=true show_sepa_direct=true show_link=true %}
                             </div>
                             <div class="form-section form-section--last">
                               <div class="cart-box cart-box--card">
