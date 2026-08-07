@@ -21,9 +21,9 @@
                               <div data-next-accordion-text="order-summary" class="summary-toggle__text show_text">Show Order Summary</div><img os-summary-icon="" loading="lazy" alt="" src="{{ 'images/arrow-down.svg' | campaign_asset }}" class="summary-toggle__icon">
                             </div>
                           </div>
-                          <div data-next-show="cart.hasItems" class="order-summary__mobile-right">
-                            <div data-next-show="cart.hasDiscounts" data-next-display="cart.subtotal" class="summary_price price--crossed cc-sm"></div>
-                            <div data-next-display="cart.total" class="summary_price price--total"></div>
+                          <div data-next-show="order.hasItems" class="order-summary__mobile-right">
+                            <div data-next-show="order.hasDiscounts" data-next-display="order.subtotal" class="summary_price price--crossed cc-sm"></div>
+                            <div data-next-display="order.total" class="summary_price price--total"></div>
                           </div>
                         </div>
                       </div>
@@ -38,7 +38,7 @@
                                     <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z"></path>
                                   </svg></div>
                               </div>
-                              <div data-next-hide="cart.isEmpty"><template id="{{ tpl_id }}" class="item-template os-show">
+                              <div data-next-show="order.hasItems"><template id="{{ tpl_id }}" class="item-template os-show">
                                   <div data-order-line-id="{item.id}" class="cart-item">
                                     <div class="cart-item__wrapper">
                                       <div class="cart-item__image-container">

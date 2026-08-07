@@ -646,6 +646,8 @@ bundles:
 
 `cart.hasCoupon()` (SDK 0.4.20+): truthy when any coupon is applied. `cart.hasCoupon("CODE")` matches a specific code (case-insensitive, quotes stripped). Use to show banners or messaging only when a coupon is active.
 
+**Receipt pages must bind to `order.*`, never `cart.*`.** SDK ≥0.4.17 clears cart and coupon session state before the post-checkout redirect, so on a receipt page `cart.isEmpty` is always true and `cart.hasItems`/`cart.total` are always empty — a cart-gated element hides or blanks a correctly loaded order. Use `data-next-show="order.hasItems"` / `order.hasDiscounts` and `data-next-display="order.subtotal"` / `order.total` instead (the order-item-list enhancer also exposes `order-loading` / `order-has-items` / `order-empty` / `order-error` state classes and `data-empty-template` for finer control).
+
 ### Cart item list
 
 ```html

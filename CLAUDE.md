@@ -225,7 +225,8 @@ scripts:
 | `data-next-display="cart.total"` | Renders a dynamic value |
 | `data-next-show="cart.hasDiscounts"` | Conditional visibility (0.4.x cart / receipt; prefer over legacy `cart.hasSavings`) |
 | `data-next-display="cart.originalPrice"` | **Unsupported** on `cart.*` in current `CartDisplayEnhancer` (unresolved path / no DOM update). For crossed pricing with `cart.total`, use `data-next-display="cart.subtotal"` with `data-next-show="cart.hasDiscounts"`. |
-| `data-next-hide="cart.isEmpty"` | Inverse conditional |
+| `data-next-hide="cart.isEmpty"` | Inverse conditional (checkout/upsell only — never on receipt pages, see below) |
+| `data-next-show="order.hasItems"` | **Receipt gating.** Receipt surfaces must bind to `order.*` (`order.hasItems`, `order.hasDiscounts`, `order.subtotal`, `order.total`), never `cart.*`: SDK ≥0.4.17 clears cart/coupon session state before the post-checkout redirect, so `cart.isEmpty` is always true on the receipt and a cart-gated wrapper hides the populated `data-next-order-items` list. `order.hasItems`/`order.isEmpty` are source-verified in `ConditionalDisplayEnhancer` of the pinned SDK (v0.4.30) even though the typedoc attribute index doesn't enumerate condition paths. The order-item-list enhancer is self-contained (its own `order-loading`/`order-has-items`/`order-empty`/`order-error` classes + `data-empty-template`) — no wrapper is load-bearing for it. |
 | `data-next-cart-summary` + `data-summary-lines` | Cart summary v2 (0.4.x); replaces legacy `data-next-cart-items` |
 | `data-next-bump` | Order bump toggle |
 | `data-next-express-checkout="container"` | Express checkout (PayPal/Apple/Google Pay) |
