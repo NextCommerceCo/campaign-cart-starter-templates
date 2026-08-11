@@ -146,7 +146,7 @@ Registers every campaign. The `campaign` object in Liquid templates comes from h
   "my-campaign": {
     "name": "My Campaign",
     "entry_url": "presell",
-    "sdk_version": "0.4.33",
+    "sdk_version": "0.4.34",
     "store_name": "Acme Store",
     "store_url": "https://acme.com",
     "store_phone": "1-800-555-0100",
@@ -168,7 +168,9 @@ The top-level key is the campaign slug. Add any additional key to a campaign ent
 
 **`entry_url`** — optional. The page slug `npm run dev` opens in the browser (e.g. `"presell"`). Omit to use the kit default.
 
-**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.33"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
+**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.34"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
+
+**Per-campaign storage scope (SDK 0.4.34+)** — the SDK scopes cart/funnel/voucher storage per campaign automatically. The scope is a hash of the API key plus a **base-path token derived from page depth**: on a page **two or more** path segments deep (`/hu/checkout/`), the token is the first segment (`hu`); on a page **zero or one** segment deep (`/`, `/hu/`, `/checkout/`), the token is empty — the scope hashes the API key alone. The kit's `/<slug>/<page>/` URL shape is consistently two segments deep, so every page of a campaign derives the same scope with no extra config. The layout that breaks the derivation is a funnel that **mixes those depth buckets** — e.g. a landing page at `/hu/` (one segment → empty token) with its checkout at `/hu/checkout` (two segments → token `hu`) — which resolves to two different scopes and silently drops the cart mid-funnel (no build or console error). If you deploy a funnel shaped like that, declare the scope explicitly with `window.nextConfig.storageScope` (in `config.js`, which loads before the SDK) or `<meta name="next-storage-scope" content="...">` — the declared value must be identical on every page of the funnel.
 
 ### Build environment (`environment`)
 
@@ -435,6 +437,12 @@ Lives at `assets/config.js`. Sets `window.nextConfig` before the SDK loads. The 
 window.nextConfig = {
   // Required
   apiKey: 'your-api-key-here',
+
+  // Optional (SDK 0.4.34+): override the derived per-campaign storage scope.
+  // Only needed for funnels that mix path depths (see campaigns.json section);
+  // must be identical on every page of the funnel and set before the SDK loads
+  // (config.js already is).
+  // storageScope: 'my-campaign',
 
   currencyBehavior: 'auto', // 'auto' | 'manual'
 
@@ -1105,6 +1113,7 @@ Use these when implementing or verifying a specific task. Work through each item
 - [ ] `analytics.providers.gtm.enabled` — set `true` and add `containerId` to match the `gtm_id` in `campaigns.json`; the layout snippet loads GTM, the SDK provider forwards ecommerce events into it
 - [ ] `analytics.providers.facebook.enabled` — set `true` and add `pixelId` to match the `fb_pixel_id` in `campaigns.json`; same two-part pattern as GTM
 - [ ] Address autocomplete — choose one option: (1) NextCommerce: `addressConfig.enableAutocomplete: true`, leave `googleMaps.apiKey` empty. (2) Google Maps: set `googleMaps.apiKey`; Google Maps takes priority when non-empty. (3) Disabled: remove `enableAutocomplete` from `addressConfig` and leave `googleMaps.apiKey` empty.
+- [ ] `storageScope` — leave unset for the kit's standard `/<slug>/<page>/` URL shape; set it (same value on every page of the funnel) only when the deployed funnel mixes path depths (see the campaigns.json section)
 - [ ] `discounts` block — uncomment and configure if the campaign uses promo codes, otherwise leave commented out
 - [ ] `profiles` block — uncomment and configure if the campaign uses dynamic pricing (e.g. exit intent), otherwise leave commented out
 
