@@ -1,34 +1,39 @@
 {% comment %}
   next_component: order-bump-card
   next_params:
+    package_id: number, default 77 (demo add-on). data-next-package-id (the bump's package). Also settable via order_bump.check01.package_id.
+    product_sync: number|false, default 400 (demo "T Shirt" product_id). data-next-product-sync — sums qty across every variant of the product (see comment below). Set false to disable sync. Also settable via order_bump.check01.product_sync.
     show_compare_price: bool, default false. Explicitly render struck originalUnitPrice in Option A.
     show_per_unit_price: bool, default true. Render Option A row (unitPrice/ea).
     show_line_total_price: bool, default false. Render Option B row (originalPrice + price).
 {% endcomment %}
+{% assign bump = order_bump.check01 -%}
+{% assign pkg_id = package_id | default: bump.package_id | default: 77 -%}
+{% if product_sync != nil %}{% assign b_sync = product_sync %}{% elsif bump.product_sync != nil %}{% assign b_sync = bump.product_sync %}{% else %}{% assign b_sync = 400 %}{% endif -%}
 {% if show_per_unit_price != nil %}{% assign b_unit = show_per_unit_price %}{% elsif bump.show_per_unit_price != nil %}{% assign b_unit = bump.show_per_unit_price %}{% else %}{% assign b_unit = true %}{% endif -%}
 {% if show_compare_price != nil %}{% assign b_compare = show_compare_price %}{% elsif bump.show_compare_price != nil %}{% assign b_compare = bump.show_compare_price %}{% else %}{% assign b_compare = false %}{% endif -%}
 {% if show_line_total_price != nil %}{% assign b_line_total = show_line_total_price %}{% elsif bump.show_line_total_price != nil %}{% assign b_line_total = bump.show_line_total_price %}{% else %}{% assign b_line_total = false %}{% endif -%}
-{% assign bump = order_bump.check01 -%}
 {% assign t = bump_title | default: bump.title | default: 'Order Bump Title' -%}
 {% assign feature_list = features | default: bump.features -%}
-<!-- Prepurchase upsell: checkbox bump (check01) — SDK 0.4.x
+{% comment %} Prepurchase upsell: checkbox bump (check01) — SDK 0.4.x
      Uses data-next-package-toggle / data-next-toggle-card / data-next-toggle-display
      Pick ONE pricing row — rendering both confuses the customer.
      Option A (per-unit, stable, DEFAULT): unitPrice/ea, with originalUnitPrice/ea only when show_compare_price=true — does not scale with synced qty
      Option B (line total, scales, opt-in): originalPrice + price — multiplies with data-next-package-sync qty
-       To switch: pass show_per_unit_price=false show_line_total_price=true to {% campaign_include %} -->
+       To switch: pass show_per_unit_price=false show_line_total_price=true to the campaign_include {% endcomment -%}
 <div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="check01" data-next-await="">
   <div data-next-package-toggle>
-    <!-- QTY SYNC ON MV / CONFIGURABLE PRODUCTS — data-next-product-sync (SDK 0.4.25+).
+    {% comment %} QTY SYNC ON MV / CONFIGURABLE PRODUCTS — data-next-product-sync (SDK 0.4.25+).
          data-next-package-sync matches cart lines by packageId, which under-counts on a configurable
          MV bundle: each variant (color/size) is its own package, and on variant swap the SDK rebuilds
          the line under the new variant's packageId. data-next-product-sync matches by product_id instead,
          which every variant of a product shares, so one id sums quantity across all variants — present
          and future. 400 is this demo campaign's "T Shirt" product_id (verified: variant ref_ids 1-9 and
-         66-74 all return product_id 400). Replace with your product's id when cloning — find it under
-         packages[].product_id in the campaign API response (same value for every variant). -->
-    <div class="bump-card" data-next-toggle-card data-next-is-upsell="true" data-next-product-sync="400" data-next-package-id="77">
-      <!-- Bump header — visual only, whole card is the toggle target -->
+         66-74 all return product_id 400). When cloning, set order_bump.check01.product_sync (and
+         .package_id) in the page frontmatter — no need to edit this partial. Find the id under
+         packages[].product_id in the campaign API response (same value for every variant). {% endcomment -%}
+    <div class="bump-card" data-next-toggle-card data-next-is-upsell="true"{% if b_sync %} data-next-product-sync="{{ b_sync }}"{% endif %} data-next-package-id="{{ pkg_id }}">
+      {% comment %} Bump header — visual only, whole card is the toggle target {% endcomment -%}
       <div class="bump__header-left">
         <div class="bump__header-content">
           <div class="bump__checkbox">
@@ -37,20 +42,20 @@
           <div class="bump__title">{{ t }}</div>
         </div>
       </div>
-      <!-- Bump body: price, list, image -->
+      {% comment %} Bump body: price, list, image {% endcomment -%}
       <div class="bump__body">
         <div class="bump__content">
           <div class="bump__content-wrap">
             <div class="bump__price">
               {% if b_unit %}
-              <!-- Option A: per-unit pricing — stable across tier changes (SDK 0.4.14+) -->
+              {% comment %} Option A: per-unit pricing — stable across tier changes (SDK 0.4.14+) {% endcomment -%}
               <div class="bump__price-row">
                 {% if b_compare %}<div class="bump__price-unit"><span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span></div>{% endif %}
                 <div class="bump__price-unit"><span data-next-toggle-display="unitPrice" class="bump__price-sale">--</span><span class="text-xl">/ea</span></div>
               </div>
               {% endif %}
               {% if b_line_total %}
-              <!-- Option B: line total pricing — scales with synced qty -->
+              {% comment %} Option B: line total pricing — scales with synced qty {% endcomment -%}
               <div class="bump__price-row">
                 <div data-next-toggle-display="originalPrice" class="bump__price-reg">--</div>
                 <div data-next-toggle-display="price" class="bump__price-total">--</div>
