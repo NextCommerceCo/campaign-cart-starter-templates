@@ -97,7 +97,10 @@ packages:
 order_bump:
   check01:
     # Pre-purchase add-on (checkbox card). Optional keys (full list: _includes/bump-check01.html):
-    #   sync_quantity: <main packageId>    -> add-on qty mirrors the main bundle (omit = fixed qty 1)
+    #   package_id: <packageId>            -> the add-on package this bump adds (default 77, the demo add-on)
+    #   product_sync: <product_id>|false   -> add-on qty mirrors the main product across ALL its variants, matched by
+    #                                         product_id (default 400, the demo "T Shirt"; false = fixed qty 1).
+    #                                         MV mains need product_sync, not packageId sync — see _includes/bump-check01.html
     #   show_per_unit_price:   true|false  -> per-unit "$X/ea" row, stable across qty (default true)
     #   show_compare_price:    true|false  -> struck originalUnitPrice beside it (default false)
     #   show_line_total_price: true|false  -> line totals instead (scales with qty); pick this OR per-unit
