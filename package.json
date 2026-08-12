@@ -12,13 +12,14 @@
     "compress": "npx campaign-compress",
     "compress:preview": "npx campaign-compress --preview",
     "lint:sdk": "node scripts/lint-sdk.mjs",
+    "test:sdk-template-tokens": "node --test scripts/sdk-template-token-lint.test.mjs",
     "lint:sdk:source": "node scripts/lint-sdk.mjs --source",
     "lint:sdk:rendered": "node scripts/lint-sdk.mjs --rendered",
     "lint:sdk:promoted": "node scripts/lint-sdk.mjs --scope=promoted --pages=checkout,select,upsell-bundle-stepper,upsell-bundle-tier-pills,upsell-bundle-tier-cards,upsell-mv",
     "lint:sdk:promoted:source": "node scripts/lint-sdk.mjs --source --scope=promoted --pages=checkout,select,upsell-bundle-stepper,upsell-bundle-tier-pills,upsell-bundle-tier-cards,upsell-mv",
     "lint:sdk:promoted:rendered": "node scripts/lint-sdk.mjs --rendered --scope=promoted --pages=checkout,select,upsell-bundle-stepper,upsell-bundle-tier-pills,upsell-bundle-tier-cards,upsell-mv",
     "lint:sdk:shop-single-step:all": "node scripts/lint-sdk.mjs --scope=shop-single-step --pages=all",
-    "lint:sdk:ci": "CI=1 node scripts/lint-sdk.mjs --scope=all --pages=all",
+    "lint:sdk:ci": "npm run test:sdk-template-tokens && CI=1 node scripts/lint-sdk.mjs --scope=all --pages=all",
     "lint:sdk:promoted:all": "node scripts/lint-sdk.mjs --scope=promoted --pages=all",
     "lint:next-core": "node scripts/lint-next-core-sync.mjs",
     "lint:next-logo": "node scripts/lint-next-logo-sync.mjs",
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.2.4",
+    "parse5": "7.3.0",
     "tailwindcss": "^4.2.4"
   }
 }
