@@ -8,7 +8,7 @@ function preserveLines(match) {
 
 function blankLiquidComments(content) {
   return content.replace(
-    /\{%\s*comment\s*%\}[\s\S]*?\{%\s*endcomment\s*%\}/gi,
+    /\{%-?\s*comment\s*-?%\}[\s\S]*?\{%-?\s*endcomment\s*-?%\}/gi,
     preserveLines,
   );
 }

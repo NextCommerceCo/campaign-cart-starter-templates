@@ -115,7 +115,7 @@ function pageMatches(filePath) {
 function blankIgnoredMarkup(content) {
   const preserveLines = (match) => '\n'.repeat(match.split('\n').length - 1);
   return content
-    .replace(/\{%\s*comment\s*%\}[\s\S]*?\{%\s*endcomment\s*%\}/g, preserveLines)
+    .replace(/\{%-?\s*comment\s*-?%\}[\s\S]*?\{%-?\s*endcomment\s*-?%\}/g, preserveLines)
     .replace(/<!--[\s\S]*?-->/g, preserveLines);
 }
 
@@ -124,7 +124,8 @@ function lintSource() {
   const families = scopedFamilies();
   for (const fam of families) {
     const dir = join(repoRoot, 'src', fam);
-    for (const file of walk(dir)) {
+    const familyFiles = walk(dir);
+    for (const file of familyFiles) {
       const content = readFileSync(file, 'utf8');
       for (const violation of findLiveSdkTemplateTokens(content)) {
         violations.push({
@@ -135,7 +136,7 @@ function lintSource() {
         });
       }
     }
-    const files = walk(dir).filter((f) => !f.includes('/_includes/') && pageMatches(f));
+    const files = familyFiles.filter((f) => !f.includes('/_includes/') && pageMatches(f));
     for (const file of files) {
       const content = readFileSync(file, 'utf8');
       // Strip Liquid/HTML comments so reference-block notes don't trip the linter.

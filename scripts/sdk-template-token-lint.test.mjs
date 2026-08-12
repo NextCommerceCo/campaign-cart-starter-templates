@@ -34,11 +34,28 @@ test('allows SDK tokens inside inert template fragments, including nested templa
 test('ignores documentation tokens in Liquid and HTML comments', () => {
   const source = [
     '{% comment %}{item.price}{% endcomment %}',
+    '{%- comment -%}',
+    '  {shipping}',
+    '{%- endcomment -%}',
     '<!-- {total} -->',
     '<div>{{ liquid_value }}</div>',
   ].join('\n');
 
   assert.deepEqual(findLiveSdkTemplateTokens(source), []);
+});
+
+test('resumes enforcement after a whitespace-controlled Liquid comment', () => {
+  const source = [
+    '{%- comment -%}',
+    '  {item.price}',
+    '{%- endcomment -%}',
+    '<div>{total}</div>',
+  ].join('\n');
+
+  assert.deepEqual(
+    findLiveSdkTemplateTokens(source),
+    [{ token: '{total}', line: 4 }],
+  );
 });
 
 test('ignores non-rendered script and style text', () => {
