@@ -14,8 +14,19 @@
     return;
   }
   try {
-    // Try to get checkout store from sessionStorage
+    // Try to get checkout store from sessionStorage. SDK 0.4.34+ scopes storage keys
+    // per campaign (e.g. "next-checkout-store__of7f2o"), so fall back to a prefix scan
+    // when the unscoped legacy key is absent.
     var storeData = sessionStorage.getItem('next-checkout-store');
+    if (!storeData) {
+      for (var i = 0; i < sessionStorage.length; i++) {
+        var key = sessionStorage.key(i);
+        if (key && key.indexOf('next-checkout-store__') === 0) {
+          storeData = sessionStorage.getItem(key);
+          break;
+        }
+      }
+    }
     // If no store exists, redirect to first step
     if (!storeData) {
       console.warn('[CheckoutGuard] No checkout store found, redirecting to:', redirectUrl);
