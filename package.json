@@ -12,6 +12,7 @@
     "compress": "npx campaign-compress",
     "compress:preview": "npx campaign-compress --preview",
     "lint:sdk": "node scripts/lint-sdk.mjs",
+    "check:template-verification": "node --test scripts/template-verification.test.mjs && node scripts/check-template-verification.mjs",
     "test:sdk-template-tokens": "node --test scripts/sdk-template-token-lint.test.mjs",
     "lint:sdk:source": "node scripts/lint-sdk.mjs --source",
     "lint:sdk:rendered": "node scripts/lint-sdk.mjs --rendered",

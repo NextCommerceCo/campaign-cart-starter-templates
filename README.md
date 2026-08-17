@@ -150,6 +150,21 @@ For other AI tools: Cursor loads rules from `.cursor/rules/`, Windsurf from `.wi
 - [Official docs](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/)
 - [SDK source](https://github.com/NextCommerceCo/campaign-cart)
 
+## Verified template versions
+
+[`template-verification.json`](template-verification.json) is the machine-readable source of truth for each family's latest SDK-verified version. It records the exact source digest, evidence links, Campaigns OS status, and picker distribution. Public portals should consume this manifest instead of copying SDK versions into page content.
+
+The manifest covers `_data/campaigns.json`, `templates.json`, the commerce surface catalog, and every file under `src/`. Any covered change makes the digest stale and fails CI until the corpus is verified again and the manifest is refreshed.
+
+To certify a new SDK version:
+
+1. Update and propagate the SDK/template changes across the affected families.
+2. Run `npm run lint:next-core`, `npm run lint:next-logo`, `npm run lint:shared`, `npm run build`, and `npm run lint:sdk:ci`.
+3. Record the exact verified source commit and successful CI/deploy-preview evidence in `template-verification.json`.
+4. Refresh `source.digest` with the value reported by `npm run check:template-verification`, then rerun that command.
+
+An SDK release existing upstream is not sufficient to update this file: the recorded version means this template corpus passed its contract gates against that release.
+
 ---
 
 ## Adding more templates or variants

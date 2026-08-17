@@ -36,6 +36,8 @@ jobs:
         run: npm run lint:next-logo
       - name: Lint shared analytics sync (families match _shared/analytics)
         run: npm run lint:shared
+      - name: Check template verification manifest
+        run: npm run check:template-verification
       - name: Build all template families
         run: npm run build
       - name: Lint SDK markup (all families, source + rendered)

@@ -1,0 +1,102 @@
+{
+  "$schema": "./schemas/template-verification-manifest.v0.schema.json",
+  "schema_version": "template-verification-manifest/v0",
+  "repository": "NextCommerceCo/campaign-cart-starter-templates",
+  "visibility": "public",
+  "source": {
+    "sha": "f3db1c6af4b9d0201316af03cf63f95054e9f9dd",
+    "digest": "sha256:d070a69530701a6ed4c7e0f80f25520eba5d581f7e98e9525605e920212a56e0",
+    "verified_at": "2026-08-12T06:12:06Z"
+  },
+  "verification": {
+    "scope": "template_contract_ci",
+    "checks": [
+      {
+        "name": "lint-sdk",
+        "status": "passed",
+        "url": "https://github.com/NextCommerceCo/campaign-cart-starter-templates/actions/runs/31569116320/job/94027132521",
+        "completed_at": "2026-08-12T06:12:06Z"
+      },
+      {
+        "name": "netlify-deploy-preview",
+        "status": "passed",
+        "url": "https://deploy-preview-126--nextcommerce-campaign-templates.netlify.app",
+        "completed_at": "2026-08-12T06:11:59Z"
+      }
+    ]
+  },
+  "families": {
+    "apollo": {
+      "kind": "commerce_family",
+      "sdk_version": "0.4.34",
+      "verification_status": "verified",
+      "campaigns_os_status": "certified",
+      "distribution": "public_picker",
+      "source_path": "src/apollo"
+    },
+    "olympus": {
+      "kind": "commerce_family",
+      "sdk_version": "0.4.34",
+      "verification_status": "verified",
+      "campaigns_os_status": "certified",
+      "distribution": "public_picker",
+      "source_path": "src/olympus"
+    },
+    "apollo-mv-single-step": {
+      "kind": "commerce_family",
+      "sdk_version": "0.4.34",
+      "verification_status": "verified",
+      "campaigns_os_status": "certified",
+      "distribution": "public_picker",
+      "source_path": "src/apollo-mv-single-step"
+    },
+    "olympus-mv-single-step": {
+      "kind": "commerce_family",
+      "sdk_version": "0.4.34",
+      "verification_status": "verified",
+      "campaigns_os_status": "certified",
+      "distribution": "public_picker",
+      "source_path": "src/olympus-mv-single-step"
+    },
+    "olympus-mv-two-step": {
+      "kind": "commerce_family",
+      "sdk_version": "0.4.34",
+      "verification_status": "verified",
+      "campaigns_os_status": "certified",
+      "distribution": "public_picker",
+      "source_path": "src/olympus-mv-two-step"
+    },
+    "demeter": {
+      "kind": "commerce_family",
+      "sdk_version": "0.4.34",
+      "verification_status": "verified",
+      "campaigns_os_status": "certified",
+      "distribution": "public_picker",
+      "source_path": "src/demeter"
+    },
+    "shop-single-step": {
+      "kind": "commerce_family",
+      "sdk_version": "0.4.34",
+      "verification_status": "verified",
+      "campaigns_os_status": "certified",
+      "distribution": "public_picker",
+      "source_path": "src/shop-single-step"
+    },
+    "shop-three-step": {
+      "kind": "commerce_family",
+      "sdk_version": "0.4.34",
+      "verification_status": "verified",
+      "campaigns_os_status": "certified",
+      "distribution": "public_picker",
+      "source_path": "src/shop-three-step"
+    },
+    "landing": {
+      "kind": "section_library",
+      "sdk_version": "0.4.34",
+      "verification_status": "verified",
+      "campaigns_os_status": "not_applicable",
+      "distribution": "public_picker",
+      "source_path": "src/landing"
+    }
+  }
+}
