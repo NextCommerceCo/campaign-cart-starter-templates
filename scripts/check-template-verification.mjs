@@ -45,4 +45,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`Template verification manifest is current (${Object.keys(manifest.families).length} families, ${manifest.source.digest}).`);
+console.log(`Template verification manifest is current (${Object.keys(manifest.families).length} families, source ${manifest.source.sha.slice(0, 12)}).`);

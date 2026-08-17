@@ -91,7 +91,9 @@ export function validateVerificationManifest({
     if (source.digest !== expectedDigest) {
       errors.push(`source.digest is stale: expected ${expectedDigest}, got ${source.digest || '(missing)'}`);
     }
-    if (!sourceMatchesCurrent) errors.push('source.sha does not match the current tracked verification inputs');
+    if (SHA_RE.test(source.sha || '') && !sourceMatchesCurrent) {
+      errors.push('source.sha does not match the current tracked verification inputs');
+    }
     if (!isDateTime(source.verified_at)) errors.push('source.verified_at must be an ISO date-time');
   }
 

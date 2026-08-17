@@ -37,7 +37,7 @@ const base = {
   },
 };
 
-function validate(manifest, pickerOverride = picker) {
+function validate(manifest, pickerOverride = picker, { sourceMatchesCurrent = true } = {}) {
   return validateVerificationManifest({
     manifest,
     repository: base.repository,
@@ -45,6 +45,7 @@ function validate(manifest, pickerOverride = picker) {
     registry,
     picker: pickerOverride,
     expectedDigest: base.source.digest,
+    sourceMatchesCurrent,
   });
 }
 
@@ -91,6 +92,20 @@ test('requires https evidence URLs', () => {
   const manifest = structuredClone(base);
   manifest.verification.checks[0].url = 'http://example.com/run';
   assert.ok(validate(manifest).some((error) => error.includes('must use https')));
+});
+
+test('reports a tracked source mismatch for a well-formed SHA', () => {
+  const manifest = structuredClone(base);
+  assert.ok(validate(manifest, picker, { sourceMatchesCurrent: false })
+    .some((error) => error.includes('source.sha does not match')));
+});
+
+test('does not report a source mismatch until the SHA is well formed', () => {
+  const manifest = structuredClone(base);
+  manifest.source.sha = 'HEAD';
+  const errors = validate(manifest, picker, { sourceMatchesCurrent: false });
+  assert.ok(errors.some((error) => error.includes('40-character lowercase git SHA')));
+  assert.ok(!errors.some((error) => error.includes('source.sha does not match')));
 });
 
 test('ignores untracked files when computing the source digest', (t) => {
