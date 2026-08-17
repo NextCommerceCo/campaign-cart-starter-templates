@@ -4,7 +4,7 @@
   "repository": "NextCommerceCo/campaign-cart-starter-templates",
   "visibility": "public",
   "source": {
-    "sha": "f3db1c6af4b9d0201316af03cf63f95054e9f9dd",
+    "sha": "8efd350f6fca6719d7c9f50977b3f26c087e4e0f",
     "digest": "sha256:d070a69530701a6ed4c7e0f80f25520eba5d581f7e98e9525605e920212a56e0",
     "verified_at": "2026-08-12T06:12:06Z"
   },
@@ -16,12 +16,6 @@
         "status": "passed",
         "url": "https://github.com/NextCommerceCo/campaign-cart-starter-templates/actions/runs/31569116320/job/94027132521",
         "completed_at": "2026-08-12T06:12:06Z"
-      },
-      {
-        "name": "netlify-deploy-preview",
-        "status": "passed",
-        "url": "https://deploy-preview-126--nextcommerce-campaign-templates.netlify.app",
-        "completed_at": "2026-08-12T06:11:59Z"
       }
     ]
   },

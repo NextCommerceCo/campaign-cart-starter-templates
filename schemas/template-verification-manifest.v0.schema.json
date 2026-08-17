@@ -43,7 +43,7 @@
             "properties": {
               "name": { "type": "string", "minLength": 1 },
               "status": { "const": "passed" },
-              "url": { "type": "string", "format": "uri" },
+              "url": { "type": "string", "format": "uri", "pattern": "^https://" },
               "completed_at": { "type": "string", "format": "date-time" }
             }
           }

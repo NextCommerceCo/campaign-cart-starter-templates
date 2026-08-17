@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { execFileSync, spawnSync } from 'node:child_process';
+import { lstatSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 export const TEMPLATE_VERIFICATION_SCHEMA = 'template-verification-manifest/v0';
@@ -7,17 +8,38 @@ export const SDK_VERSION_RE = /^0\.4\.\d+$/;
 export const DIGEST_RE = /^sha256:[0-9a-f]{64}$/;
 export const SHA_RE = /^[0-9a-f]{40}$/;
 
+const REQUIRED_INPUTS = [
+  '_data/campaigns.json',
+  'templates.json',
+  'docs/commerce-surface-catalog.json',
+];
+const INPUT_PATHS = [...REQUIRED_INPUTS, 'src'];
+
 export function collectVerificationInputs(root, extraPaths = []) {
-  const inputs = [
-    join(root, '_data', 'campaigns.json'),
-    join(root, 'templates.json'),
-    join(root, 'docs', 'commerce-surface-catalog.json'),
-    ...walk(join(root, 'src')),
-    ...extraPaths.map((path) => join(root, path)),
-  ];
-  return [...new Set(inputs)]
-    .filter((path) => statSync(path).isFile())
-    .sort((a, b) => relative(root, a).localeCompare(relative(root, b)));
+  const requiredInputs = [...REQUIRED_INPUTS, ...extraPaths];
+  const trackedInputs = execFileSync(
+    'git',
+    ['-C', root, 'ls-files', '-z', '--', ...INPUT_PATHS, ...extraPaths],
+    { encoding: 'utf8' },
+  ).split('\0').filter(Boolean);
+  const trackedSet = new Set(trackedInputs);
+
+  for (const input of requiredInputs) {
+    if (!trackedSet.has(input)) throw new Error(`required verification input is not tracked: ${input}`);
+  }
+
+  return [...new Set(trackedInputs)].sort((a, b) => a.localeCompare(b)).map((input) => {
+    const path = join(root, input);
+    let stats;
+    try {
+      stats = lstatSync(path);
+    } catch (error) {
+      throw new Error(`tracked verification input is missing: ${input}`, { cause: error });
+    }
+    if (stats.isSymbolicLink()) throw new Error(`verification inputs cannot be symbolic links: ${input}`);
+    if (!stats.isFile()) throw new Error(`verification input is not a file: ${input}`);
+    return path;
+  });
 }
 
 export function computeVerificationDigest(root, extraPaths = []) {
@@ -32,6 +54,18 @@ export function computeVerificationDigest(root, extraPaths = []) {
   return `sha256:${hash.digest('hex')}`;
 }
 
+export function verificationInputsMatchRef(root, ref, extraPaths = []) {
+  if (!SHA_RE.test(ref || '')) return false;
+  const result = spawnSync(
+    'git',
+    ['-C', root, 'diff', '--quiet', ref, '--', ...INPUT_PATHS, ...extraPaths],
+    { encoding: 'utf8' },
+  );
+  if (result.status === 0) return true;
+  if (result.status === 1) return false;
+  throw new Error(result.stderr.trim() || `could not compare verification inputs with ${ref}`);
+}
+
 export function validateVerificationManifest({
   manifest,
   repository,
@@ -39,6 +73,7 @@ export function validateVerificationManifest({
   registry,
   picker,
   expectedDigest,
+  sourceMatchesCurrent = true,
 }) {
   const errors = [];
   if (!isObject(manifest)) return ['manifest must be a JSON object'];
@@ -56,6 +91,7 @@ export function validateVerificationManifest({
     if (source.digest !== expectedDigest) {
       errors.push(`source.digest is stale: expected ${expectedDigest}, got ${source.digest || '(missing)'}`);
     }
+    if (!sourceMatchesCurrent) errors.push('source.sha does not match the current tracked verification inputs');
     if (!isDateTime(source.verified_at)) errors.push('source.verified_at must be an ISO date-time');
   }
 
@@ -73,7 +109,7 @@ export function validateVerificationManifest({
       }
       if (!check.name) errors.push(`verification.checks[${index}].name is required`);
       if (check.status !== 'passed') errors.push(`verification.checks[${index}].status must be passed`);
-      if (!isHttpUrl(check.url)) errors.push(`verification.checks[${index}].url must be http(s)`);
+      if (!isHttpsUrl(check.url)) errors.push(`verification.checks[${index}].url must use https`);
       if (!isDateTime(check.completed_at)) errors.push(`verification.checks[${index}].completed_at must be an ISO date-time`);
     }
   }
@@ -94,10 +130,16 @@ export function validateVerificationManifest({
   }
 
   const pickerEntries = Array.isArray(picker?.templates) ? picker.templates : [];
-  const pickerFamilies = new Set(pickerEntries.map((entry) => entry.slug));
+  const pickerFamilies = new Set();
   for (const entry of pickerEntries) {
+    if (!entry?.slug) {
+      errors.push('templates.json entry is missing slug');
+      continue;
+    }
     if (!families[entry.slug]) errors.push(`picker family ${entry.slug} is missing from manifest`);
-    else if (families[entry.slug].distribution === 'not_in_picker') {
+    const isActive = entry.hidden !== true && entry.deprecated !== true;
+    if (isActive) pickerFamilies.add(entry.slug);
+    if (isActive && families[entry.slug]?.distribution === 'not_in_picker') {
       errors.push(`picker family ${entry.slug} is marked not_in_picker`);
     }
   }
@@ -132,17 +174,6 @@ export function validateVerificationManifest({
   return errors;
 }
 
-function walk(root) {
-  const files = [];
-  for (const entry of readdirSync(root, { withFileTypes: true })) {
-    if (entry.name === '.DS_Store') continue;
-    const path = join(root, entry.name);
-    if (entry.isDirectory()) files.push(...walk(path));
-    else if (entry.isFile()) files.push(path);
-  }
-  return files;
-}
-
 function difference(left, right) {
   const rightSet = new Set(right);
   return left.filter((value) => !rightSet.has(value));
@@ -153,13 +184,15 @@ function isObject(value) {
 }
 
 function isDateTime(value) {
-  return typeof value === 'string' && !Number.isNaN(Date.parse(value));
+  return typeof value === 'string'
+    && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(value)
+    && !Number.isNaN(Date.parse(value));
 }
 
-function isHttpUrl(value) {
+function isHttpsUrl(value) {
   try {
     const url = new URL(value);
-    return url.protocol === 'https:' || url.protocol === 'http:';
+    return url.protocol === 'https:';
   } catch {
     return false;
   }

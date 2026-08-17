@@ -24,6 +24,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          # The verification checker compares the current corpus with the
+          # previously certified source SHA, so that commit must be available.
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 20
