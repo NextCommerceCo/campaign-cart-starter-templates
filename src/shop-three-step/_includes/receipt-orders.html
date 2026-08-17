@@ -1,13 +1,13 @@
 {% comment %}
   next_component: receipt-orders
-  next_version: 1.0.0
-  next_sdk_min: 0.4.18
+  next_version: 1.0.1
+  next_sdk_min: 0.4.18 (order.* condition paths incl. order.hasItems source-verified in ConditionalDisplayEnhancer at v0.4.18 and unchanged through v0.4.36)
   next_purpose: Receipt page order line items. Hosts the SDK template + list for rendering ordered items after payment. SDK populates [data-next-order-items] from OrderItemsEnhancer.
   next_params: (none today; parameterization deferred to v1 if cart-item template variants emerge across receipts)
   next_sdk_owns:
     - data-next-order-items
     - data-item-template-id (must match the inner <template id>)
-    - data-next-hide="cart.isEmpty"
+    - data-next-show="order.hasItems"
     - data-next-quantity (decrease/increase) inside template (currently hidden but kept for symmetry with cart-item markup)
     - Single-brace tokens inside <template> are SDK syntax, not Liquid: {item.id}, {item.image}, {item.quantity}, {item.name}, {item.packageId}, {item.lineTotal}
   next_theming:
@@ -16,7 +16,8 @@
   next_dont_touch:
     - Do not change single-brace tokens to Liquid {{ }} — SDK templating, not Liquid
     - data-item-template-id on the list MUST match the <template id> exactly ("order-item-template")
-    - Do not remove data-next-hide="cart.isEmpty" wrapper — SDK relies on it for empty-state suppression
+    - Do not remove the data-next-show="order.hasItems" wrapper — it suppresses the empty-state box until the order loads with items
+    - Never gate receipt visibility on cart.* state: SDK >=0.4.17 clears cart/coupon session state before the post-checkout redirect, so cart.isEmpty is always true on the receipt and a cart-gated wrapper hides the populated order-items list
   next_gotchas:
     - This partial is rendered twice per receipt page (desktop summary + mobile summary). Keep both invocations identical
   next_variants:
@@ -32,7 +33,7 @@
         <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z"></path>
       </svg></div>
   </div>
-  <div data-next-hide="cart.isEmpty"><template id="order-item-template" class="item-template os-show">
+  <div data-next-show="order.hasItems"><template id="order-item-template" class="item-template os-show">
       <div data-order-line-id="{item.id}" class="cart-item">
         <div class="cart-item__wrapper">
           <div class="cart-item__image-container">

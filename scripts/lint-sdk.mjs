@@ -26,6 +26,7 @@
 
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
+import { findLiveSdkTemplateTokens } from './lib/sdk-template-token-lint.mjs';
 
 const repoRoot = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
 const args = new Set(process.argv.slice(2));
@@ -114,7 +115,7 @@ function pageMatches(filePath) {
 function blankIgnoredMarkup(content) {
   const preserveLines = (match) => '\n'.repeat(match.split('\n').length - 1);
   return content
-    .replace(/\{%\s*comment\s*%\}[\s\S]*?\{%\s*endcomment\s*%\}/g, preserveLines)
+    .replace(/\{%-?\s*comment\s*-?%\}[\s\S]*?\{%-?\s*endcomment\s*-?%\}/g, preserveLines)
     .replace(/<!--[\s\S]*?-->/g, preserveLines);
 }
 
@@ -123,7 +124,19 @@ function lintSource() {
   const families = scopedFamilies();
   for (const fam of families) {
     const dir = join(repoRoot, 'src', fam);
-    const files = walk(dir).filter((f) => !f.includes('/_includes/') && pageMatches(f));
+    const familyFiles = walk(dir);
+    for (const file of familyFiles) {
+      const content = readFileSync(file, 'utf8');
+      for (const violation of findLiveSdkTemplateTokens(content)) {
+        violations.push({
+          kind: 'live-sdk-template-token',
+          file: relative(repoRoot, file),
+          line: violation.line,
+          token: violation.token,
+        });
+      }
+    }
+    const files = familyFiles.filter((f) => !f.includes('/_includes/') && pageMatches(f));
     for (const file of files) {
       const content = readFileSync(file, 'utf8');
       // Strip Liquid/HTML comments so reference-block notes don't trip the linter.
@@ -252,6 +265,9 @@ function lineOf(content, charIdx) {
 }
 
 function fmt(v) {
+  if (v.kind === 'live-sdk-template-token') {
+    return `  ${v.file}:${v.line}\n    SDK token [${v.token}] can paint before hydration\n    required:  move the token into a real <template> fragment`;
+  }
   if (v.kind === 'inlined-sdk-root') {
     return `  ${v.file}:${v.line}\n    SDK attr [${v.attr}] inlined in page template\n    suggested: ${v.suggestion}\n    snippet:   ${v.snippet}`;
   }
@@ -262,7 +278,9 @@ const all = [];
 if (wantSource) {
   console.log(`[lint-sdk] mode=source  scope=${scope}`);
   const v = lintSource();
-  if (v.length === 0) console.log('  ✓ no inlined SDK roots in page templates\n');
+  if (v.length === 0) {
+    console.log('  ✓ no inlined SDK roots or live pre-hydration template tokens\n');
+  }
   else {
     console.log(`  ✗ ${v.length} violation(s):`);
     for (const it of v) console.log(fmt(it));
@@ -293,6 +311,8 @@ console.log('');
 console.log('Background: v0 catalog requires SDK markup to live in canonical partials');
 console.log('under family _includes/, called via {% campaign_include %}. Inlined SDK');
 console.log('attributes break the agentic build assumption that partials own SDK contracts.');
+console.log('SDK template tokens outside real <template> fragments can also paint literally');
+console.log('before cart hydration, so the source gate rejects them.');
 console.log('See: next-campaigns-ops/docs/checkout-components-inventory-2026-05-01.md');
 
 if (isCI) process.exit(1);
