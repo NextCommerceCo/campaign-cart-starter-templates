@@ -1,15 +1,25 @@
 {% comment %}
   next_component: payment-method-presentation
-  next_version: 1.0.0
-  next_sdk_min: 0.4.18
-  next_purpose: Customer-facing payment method picker (credit card + optional PayPal/Klarna/Apple Pay/Google Pay) with Spreedly iframe-mounted credit card form. Includes billing-address-form via campaign_include.
+  next_version: 2.0.0
+  next_sdk_min: 0.4.35 (redirect payment methods; 0.4.18 for the card/PayPal/Klarna/Apple Pay/Google Pay subset)
+  next_purpose: Customer-facing payment method picker (credit card + optional PayPal/Klarna/Apple Pay/Google Pay/Twint/Affirm/Bancontact/iDEAL/SEPA Direct Debit/Link) with Spreedly iframe-mounted credit card form. Includes billing-address-form via campaign_include.
   next_params:
-    show_paypal:        bool, default false. Renders PayPal radio + form.
-    show_klarna:        bool, default false. Renders Klarna radio + form.
-    show_apple_pay:     bool, default false. Renders Apple Pay radio + form.
-    show_google_pay:    bool, default false. Renders Google Pay radio + form.
+    show_paypal:        bool, default true. Pass false to omit the PayPal radio + form.
+    show_klarna:        bool, default true. Pass false to omit the Klarna radio + form.
+    show_apple_pay:     bool, default true. Pass false to omit the Apple Pay radio + form.
+    show_google_pay:    bool, default true. Pass false to omit the Google Pay radio + form.
+    show_twint:         bool, default true. Pass false to omit the TWINT radio + form.
+    show_affirm:        bool, default true. Pass false to omit the Affirm radio + form.
+    show_bancontact:    bool, default true. Pass false to omit the Bancontact radio + form.
+    show_ideal:         bool, default true. Pass false to omit the iDEAL radio + form.
+    show_sepa_debit:    bool, default true. Pass false to omit the SEPA Direct Debit radio + form.
+    show_link:          bool, default true. Pass false to omit the Link radio + form.
+    # All method radios render by default; the SDK (0.4.35+) hides any the campaign's
+    # available_payment_methods can't charge, so campaign config is the source of truth.
+    # Pass show_<method>=false only for a deliberate presentation choice — e.g. a method
+    # offered via its express button where the radio would be a duplicate surface.
   next_sdk_owns:
-    - data-next-payment-method (values: credit, paypal, klarna, apple-pay, google-pay)
+    - data-next-payment-method (values: credit, paypal, klarna, apple_pay, google_pay, twint, affirm, bancontact, ideal, sepa_debit, link — underscore spellings are canonical per SDK 0.4.35; legacy apple-pay/google-pay still accepted)
     - data-next-payment-form
     - data-next-component (values: credit-error, credit-error-text, paypal-error, etc.)
     - data-next-checkout-field (values: cc-number, exp-month, exp-year, cvv)
@@ -23,17 +33,21 @@
   next_dont_touch:
     - Spreedly iframe sizing/styling is handled INSIDE the iframe via Spreedly's own API; only the outer mount is in our control surface
     - Method-specific error containers (data-next-component="<method>-error") MUST exist before SDK init or errors silently no-op
-    - Each enabled method must be backed by Campaigns API support; enabling here without API match causes silent checkout failure
     - The radio input name="payment_method" MUST be consistent across all enabled methods so they form one mutually-exclusive group
   next_gotchas:
-    - Method visibility gated by paymentConfig.expressCheckout in nextConfig — flag mismatches between this partial and config.js
+    - Radio visibility is filtered at runtime (SDK 0.4.35+) against the campaign's available_payment_methods — radios for methods the campaign can't charge get display:none + .next-hidden; the card radio is never hidden, and an EMPTY/absent availability list hides nothing (all rendered radios show)
+    - paymentConfig.expressCheckout in config.js governs the express BUTTON bar only (separate express-checkout partial) — it has no effect on these radios
     - data-next-payment-form="credit" wrapper carries os-shipping-method-same="true" for billing-address default; do not remove
     - Card brand <img> tags use campaign_asset for path resolution; replace with brand SVGs by overriding the image, not the data-next-* attrs
-    - Klarna / Apple Pay / Google Pay info-text iframes ship a generic SVG placeholder; designer can swap to a brand-aligned graphic
+    - Klarna / Apple Pay / Google Pay / Twint / Affirm / Bancontact / iDEAL / SEPA / Link info-text panels ship a generic SVG placeholder; designer can swap to a brand-aligned graphic
+    - Twint / Affirm / Bancontact / iDEAL / SEPA Direct Debit are redirect-only methods (no express button exists for them) — the radio here is the only way to offer them
+    - Link ALSO ships as an express button (SDK 0.4.35+): a page enabling both the express-checkout Link button and show_link renders Link twice — pick one surface per page
+    - Method identifiers follow the campaigns API (twint, affirm, bancontact, ideal, sepa_debit, link); SEPA is sepa_debit ONLY — the platform payment-methods guide's sepa_direct is refused by the orders API and the SDK
+    - Redirect-flow mapping for these methods requires SDK 0.4.35+ (campaign-cart#74); on older SDKs any unmapped radio value falls back to the card path and never redirects
   next_variants:
-    - card-only (default; show_* flags all false)
-    - card + 1 express (typically PayPal)
-    - card + multiple express (full bar)
+    - all methods (default; no args — SDK filters to campaign availability at runtime)
+    - card-only (all show_* flags passed false)
+    - express-first (show_<method>=false for methods offered via the express button bar)
   next_related:
     - billing-address-form (included inside the credit form section here)
     - express-checkout / express-checkout-inline (parallel express button bar surfaces)
@@ -113,7 +127,7 @@
       </div>
     </div>
   </div>
-  {% if show_paypal %}
+  {% unless show_paypal == false %}
   <div data-next-payment-method="paypal" class="payment-method">
     <div class="payment-method__header"><label for="combo_mode_paypal" combo_mode="paypal" class="payment-method__label"><input type="radio" name="payment_method" id="combo_mode_paypal" data-name="Combo Mode" class="payment-method__input" value="paypal">
         <div class="payment-method__title">PayPal</div>
@@ -135,8 +149,8 @@
       </div>
     </div>
   </div>
-  {% endif %}
-  {% if show_klarna %}
+  {% endunless %}
+  {% unless show_klarna == false %}
   <div data-next-payment-method="klarna" class="payment-method">
     <div class="payment-method__header">
       <label for="combo_mode_klarna" combo_mode="klarna" class="payment-method__label">
@@ -171,19 +185,19 @@
       </div>
     </div>
   </div>
-  {% endif %}
-  {% if show_apple_pay %}
-  <div data-next-payment-method="apple-pay" class="payment-method">
+  {% endunless %}
+  {% unless show_apple_pay == false %}
+  <div data-next-payment-method="apple_pay" class="payment-method">
     <div class="payment-method__header">
       <label for="combo_mode_apple_pay" combo_mode="apple_pay" class="payment-method__label">
-        <input type="radio" name="payment_method" id="combo_mode_apple_pay" data-name="Combo Mode" class="payment-method__input" value="apple-pay">
+        <input type="radio" name="payment_method" id="combo_mode_apple_pay" data-name="Combo Mode" class="payment-method__input" value="apple_pay">
         <div class="payment-method__title">Apple Pay</div>
         <div class="payment-method__icons">
           <img loading="lazy" src="{{ 'images/apple-pay-logo.svg' | campaign_asset }}" alt="" class="payment-method__icon--apple-pay-logo">
         </div>
       </label>
     </div>
-    <div data-next-payment-form="apple-pay" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
+    <div data-next-payment-form="apple_pay" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
       <div class="payment-method__content">
         <div data-next-component="apple_pay-error" class="next-toast-handler">
           <div class="tip1_bar is-warning">
@@ -207,19 +221,19 @@
       </div>
     </div>
   </div>
-  {% endif %}
-  {% if show_google_pay %}
-  <div data-next-payment-method="google-pay" class="payment-method">
+  {% endunless %}
+  {% unless show_google_pay == false %}
+  <div data-next-payment-method="google_pay" class="payment-method">
     <div class="payment-method__header">
       <label for="combo_mode_google_pay" combo_mode="google_pay" class="payment-method__label">
-        <input type="radio" name="payment_method" id="combo_mode_google_pay" data-name="Combo Mode" class="payment-method__input" value="google-pay">
+        <input type="radio" name="payment_method" id="combo_mode_google_pay" data-name="Combo Mode" class="payment-method__input" value="google_pay">
         <div class="payment-method__title">Google Pay</div>
         <div class="payment-method__icons">
           <img loading="lazy" src="{{ 'images/google-pay-logo.svg' | campaign_asset }}" alt="" class="payment-method__icon--google-pay-logo">
         </div>
       </label>
     </div>
-    <div data-next-payment-form="google-pay" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
+    <div data-next-payment-form="google_pay" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
       <div class="payment-method__content">
         <div data-next-component="google_pay-error" class="next-toast-handler">
           <div class="tip1_bar is-warning">
@@ -243,5 +257,221 @@
       </div>
     </div>
   </div>
-  {% endif %}
+  {% endunless %}
+  {% unless show_twint == false %}
+  <div data-next-payment-method="twint" class="payment-method">
+    <div class="payment-method__header">
+      <label for="combo_mode_twint" combo_mode="twint" class="payment-method__label">
+        <input type="radio" name="payment_method" id="combo_mode_twint" data-name="Combo Mode" class="payment-method__input" value="twint">
+        <div class="payment-method__title">TWINT</div>
+        <div class="payment-method__icons">
+          <img loading="lazy" src="{{ 'images/twint-logo.svg' | campaign_asset }}" alt="" class="payment-method__icon--twint-logo">
+        </div>
+      </label>
+    </div>
+    <div data-next-payment-form="twint" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
+      <div class="payment-method__content">
+        <div data-next-component="twint-error" class="next-toast-handler">
+          <div class="tip1_bar is-warning">
+            <div data-next-component="twint-error-text" class="text-sm">Error message</div>
+          </div>
+        </div>
+        <div class="payment-method__info">
+          <div class="payment-method__info-image">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-252.3 356.1 163 80.9" preserveAspectRatio="xMidYMid meet" width="100%" height="100%" class="zjrzY">
+              <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2" d="M-108.9 404.1v30c0 1.1-.9 2-2 2H-231c-1.1 0-2-.9-2-2v-75c0-1.1.9-2 2-2h120.1c1.1 0 2 .9 2 2v37m-124.1-29h124.1"></path>
+              <circle cx="-227.8" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <circle cx="-222.2" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <circle cx="-216.6" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2" d="M-128.7 400.1H-92m-3.6-4.1 4 4.1-4 4.1"></path>
+            </svg>
+          </div>
+          <h4 class="payment-method__info-title">
+            After clicking "Complete Purchase", you will be redirected to complete your purchase securely.
+          </h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endunless %}
+  {% unless show_affirm == false %}
+  <div data-next-payment-method="affirm" class="payment-method">
+    <div class="payment-method__header">
+      <label for="combo_mode_affirm" combo_mode="affirm" class="payment-method__label">
+        <input type="radio" name="payment_method" id="combo_mode_affirm" data-name="Combo Mode" class="payment-method__input" value="affirm">
+        <div class="payment-method__title">Affirm - Flexible Payments</div>
+        <div class="payment-method__icons">
+          <img loading="lazy" src="{{ 'images/affirm-logo.svg' | campaign_asset }}" alt="" class="payment-method__icon--affirm-logo">
+        </div>
+      </label>
+    </div>
+    <div data-next-payment-form="affirm" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
+      <div class="payment-method__content">
+        <div data-next-component="affirm-error" class="next-toast-handler">
+          <div class="tip1_bar is-warning">
+            <div data-next-component="affirm-error-text" class="text-sm">Error message</div>
+          </div>
+        </div>
+        <div class="payment-method__info">
+          <div class="payment-method__info-image">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-252.3 356.1 163 80.9" preserveAspectRatio="xMidYMid meet" width="100%" height="100%" class="zjrzY">
+              <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2" d="M-108.9 404.1v30c0 1.1-.9 2-2 2H-231c-1.1 0-2-.9-2-2v-75c0-1.1.9-2 2-2h120.1c1.1 0 2 .9 2 2v37m-124.1-29h124.1"></path>
+              <circle cx="-227.8" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <circle cx="-222.2" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <circle cx="-216.6" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2" d="M-128.7 400.1H-92m-3.6-4.1 4 4.1-4 4.1"></path>
+            </svg>
+          </div>
+          <h4 class="payment-method__info-title">
+            After clicking "Complete Purchase", you will be redirected to complete your purchase securely.
+          </h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endunless %}
+  {% unless show_bancontact == false %}
+  <div data-next-payment-method="bancontact" class="payment-method">
+    <div class="payment-method__header">
+      <label for="combo_mode_bancontact" combo_mode="bancontact" class="payment-method__label">
+        <input type="radio" name="payment_method" id="combo_mode_bancontact" data-name="Combo Mode" class="payment-method__input" value="bancontact">
+        <div class="payment-method__title">Bancontact</div>
+        <div class="payment-method__icons">
+          <img loading="lazy" src="{{ 'images/bancontact-logo.svg' | campaign_asset }}" alt="" class="payment-method__icon--bancontact-logo">
+        </div>
+      </label>
+    </div>
+    <div data-next-payment-form="bancontact" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
+      <div class="payment-method__content">
+        <div data-next-component="bancontact-error" class="next-toast-handler">
+          <div class="tip1_bar is-warning">
+            <div data-next-component="bancontact-error-text" class="text-sm">Error message</div>
+          </div>
+        </div>
+        <div class="payment-method__info">
+          <div class="payment-method__info-image">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-252.3 356.1 163 80.9" preserveAspectRatio="xMidYMid meet" width="100%" height="100%" class="zjrzY">
+              <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2" d="M-108.9 404.1v30c0 1.1-.9 2-2 2H-231c-1.1 0-2-.9-2-2v-75c0-1.1.9-2 2-2h120.1c1.1 0 2 .9 2 2v37m-124.1-29h124.1"></path>
+              <circle cx="-227.8" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <circle cx="-222.2" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <circle cx="-216.6" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2" d="M-128.7 400.1H-92m-3.6-4.1 4 4.1-4 4.1"></path>
+            </svg>
+          </div>
+          <h4 class="payment-method__info-title">
+            After clicking "Complete Purchase", you will be redirected to complete your purchase securely.
+          </h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endunless %}
+  {% unless show_ideal == false %}
+  <div data-next-payment-method="ideal" class="payment-method">
+    <div class="payment-method__header">
+      <label for="combo_mode_ideal" combo_mode="ideal" class="payment-method__label">
+        <input type="radio" name="payment_method" id="combo_mode_ideal" data-name="Combo Mode" class="payment-method__input" value="ideal">
+        <div class="payment-method__title">iDEAL</div>
+        <div class="payment-method__icons">
+          <img loading="lazy" src="{{ 'images/ideal-logo.svg' | campaign_asset }}" alt="" class="payment-method__icon--ideal-logo">
+        </div>
+      </label>
+    </div>
+    <div data-next-payment-form="ideal" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
+      <div class="payment-method__content">
+        <div data-next-component="ideal-error" class="next-toast-handler">
+          <div class="tip1_bar is-warning">
+            <div data-next-component="ideal-error-text" class="text-sm">Error message</div>
+          </div>
+        </div>
+        <div class="payment-method__info">
+          <div class="payment-method__info-image">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-252.3 356.1 163 80.9" preserveAspectRatio="xMidYMid meet" width="100%" height="100%" class="zjrzY">
+              <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2" d="M-108.9 404.1v30c0 1.1-.9 2-2 2H-231c-1.1 0-2-.9-2-2v-75c0-1.1.9-2 2-2h120.1c1.1 0 2 .9 2 2v37m-124.1-29h124.1"></path>
+              <circle cx="-227.8" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <circle cx="-222.2" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <circle cx="-216.6" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2" d="M-128.7 400.1H-92m-3.6-4.1 4 4.1-4 4.1"></path>
+            </svg>
+          </div>
+          <h4 class="payment-method__info-title">
+            After clicking "Complete Purchase", you will be redirected to complete your purchase securely.
+          </h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endunless %}
+  {% unless show_sepa_debit == false %}
+  <div data-next-payment-method="sepa_debit" class="payment-method">
+    <div class="payment-method__header">
+      <label for="combo_mode_sepa_debit" combo_mode="sepa_debit" class="payment-method__label">
+        <input type="radio" name="payment_method" id="combo_mode_sepa_debit" data-name="Combo Mode" class="payment-method__input" value="sepa_debit">
+        <div class="payment-method__title">SEPA Direct Debit</div>
+        <div class="payment-method__icons">
+          <img loading="lazy" src="{{ 'images/sepa-logo.svg' | campaign_asset }}" alt="" class="payment-method__icon--sepa-logo">
+        </div>
+      </label>
+    </div>
+    <div data-next-payment-form="sepa_debit" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
+      <div class="payment-method__content">
+        <div data-next-component="sepa_debit-error" class="next-toast-handler">
+          <div class="tip1_bar is-warning">
+            <div data-next-component="sepa_debit-error-text" class="text-sm">Error message</div>
+          </div>
+        </div>
+        <div class="payment-method__info">
+          <div class="payment-method__info-image">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-252.3 356.1 163 80.9" preserveAspectRatio="xMidYMid meet" width="100%" height="100%" class="zjrzY">
+              <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2" d="M-108.9 404.1v30c0 1.1-.9 2-2 2H-231c-1.1 0-2-.9-2-2v-75c0-1.1.9-2 2-2h120.1c1.1 0 2 .9 2 2v37m-124.1-29h124.1"></path>
+              <circle cx="-227.8" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <circle cx="-222.2" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <circle cx="-216.6" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2" d="M-128.7 400.1H-92m-3.6-4.1 4 4.1-4 4.1"></path>
+            </svg>
+          </div>
+          <h4 class="payment-method__info-title">
+            After clicking "Complete Purchase", you will be redirected to complete your purchase securely.
+          </h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endunless %}
+  {% unless show_link == false %}
+  <div data-next-payment-method="link" class="payment-method">
+    <div class="payment-method__header">
+      <label for="combo_mode_link" combo_mode="link" class="payment-method__label">
+        <input type="radio" name="payment_method" id="combo_mode_link" data-name="Combo Mode" class="payment-method__input" value="link">
+        <div class="payment-method__title">Link</div>
+        <div class="payment-method__icons">
+          <img loading="lazy" src="{{ 'images/link-logo.svg' | campaign_asset }}" alt="" class="payment-method__icon--link-logo">
+        </div>
+      </label>
+    </div>
+    <div data-next-payment-form="link" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
+      <div class="payment-method__content">
+        <div data-next-component="link-error" class="next-toast-handler">
+          <div class="tip1_bar is-warning">
+            <div data-next-component="link-error-text" class="text-sm">Error message</div>
+          </div>
+        </div>
+        <div class="payment-method__info">
+          <div class="payment-method__info-image">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-252.3 356.1 163 80.9" preserveAspectRatio="xMidYMid meet" width="100%" height="100%" class="zjrzY">
+              <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2" d="M-108.9 404.1v30c0 1.1-.9 2-2 2H-231c-1.1 0-2-.9-2-2v-75c0-1.1.9-2 2-2h120.1c1.1 0 2 .9 2 2v37m-124.1-29h124.1"></path>
+              <circle cx="-227.8" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <circle cx="-222.2" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <circle cx="-216.6" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2" d="M-128.7 400.1H-92m-3.6-4.1 4 4.1-4 4.1"></path>
+            </svg>
+          </div>
+          <h4 class="payment-method__info-title">
+            After clicking "Complete Purchase", you will be redirected to complete your purchase securely.
+          </h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endunless %}
 </div>
