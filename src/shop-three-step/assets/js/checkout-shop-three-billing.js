@@ -21,7 +21,7 @@
     if (!storeData) {
       for (var i = 0; i < sessionStorage.length; i++) {
         var key = sessionStorage.key(i);
-        if (key && key.indexOf('next-checkout-store') === 0) {
+        if (key && key.indexOf('next-checkout-store__') === 0) {
           storeData = sessionStorage.getItem(key);
           break;
         }
