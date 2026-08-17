@@ -146,7 +146,7 @@ Registers every campaign. The `campaign` object in Liquid templates comes from h
   "my-campaign": {
     "name": "My Campaign",
     "entry_url": "presell",
-    "sdk_version": "0.4.34",
+    "sdk_version": "0.4.36",
     "store_name": "Acme Store",
     "store_url": "https://acme.com",
     "store_phone": "1-800-555-0100",
@@ -168,7 +168,7 @@ The top-level key is the campaign slug. Add any additional key to a campaign ent
 
 **`entry_url`** — optional. The page slug `npm run dev` opens in the browser (e.g. `"presell"`). Omit to use the kit default.
 
-**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.34"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
+**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.36"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
 
 **Per-campaign storage scope (SDK 0.4.34+)** — the SDK scopes cart/funnel/voucher storage per campaign automatically. The scope is a hash of the API key plus a **base-path token derived from page depth**: on a page **two or more** path segments deep (`/hu/checkout/`), the token is the first segment (`hu`); on a page **zero or one** segment deep (`/`, `/hu/`, `/checkout/`), the token is empty — the scope hashes the API key alone. The kit's `/<slug>/<page>/` URL shape is consistently two segments deep, so every page of a campaign derives the same scope with no extra config. The layout that breaks the derivation is a funnel that **mixes those depth buckets** — e.g. a landing page at `/hu/` (one segment → empty token) with its checkout at `/hu/checkout` (two segments → token `hu`) — which resolves to two different scopes and silently drops the cart mid-funnel (no build or console error). If you deploy a funnel shaped like that, declare the scope explicitly with `window.nextConfig.storageScope` (in `config.js`, which loads before the SDK) or `<meta name="next-storage-scope" content="...">` — the declared value must be identical on every page of the funnel.
 
