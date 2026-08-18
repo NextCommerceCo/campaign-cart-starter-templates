@@ -165,6 +165,71 @@ export function assessVerificationFreshness({ manifest, registry, currentFingerp
   return { fresh: warnings.length === 0, warnings };
 }
 
+export function refreshVerificationManifest({
+  manifest,
+  registry,
+  sha,
+  fingerprint,
+  runUrl,
+  completedAt,
+  checkName = 'lint-sdk',
+}) {
+  if (!SHA_RE.test(sha || '')) throw new Error('refresh requires a 40-character lowercase git SHA');
+  if (!FINGERPRINT_RE.test(fingerprint || '')) throw new Error('refresh requires a git-index-sha256 fingerprint');
+  if (!isHttpsUrl(runUrl)) throw new Error('refresh requires an https CI run URL');
+  if (!isDateTime(completedAt)) throw new Error('refresh requires an ISO date-time completion timestamp');
+
+  const versions = new Set(Object.values(registry || {}).map((record) => record?.sdk_version));
+  if (versions.size !== 1) {
+    throw new Error(`registry families disagree on sdk_version (${[...versions].join(', ')}); refresh needs one uniform version`);
+  }
+  const sdkVersion = [...versions][0];
+  if (!SDK_VERSION_RE.test(sdkVersion || '')) {
+    throw new Error(`registry sdk_version ${sdkVersion} does not match the supported pattern`);
+  }
+
+  // Families without an evidence reference are deliberately "not yet
+  // verified" (a state the validator permits for new families); their first
+  // evidence pointer is a human decision, so the refresh neither counts them
+  // as stale nor repoints them.
+  const verifiedFamilies = Object.entries(manifest.families || {})
+    .filter(([, record]) => record?.evidence !== undefined);
+  const current = verifiedFamilies.every(([, record]) => {
+    const evidence = Object.hasOwn(manifest.evidence || {}, record.evidence)
+      && manifest.evidence[record.evidence];
+    return evidence
+      && evidence.sdk_version === sdkVersion
+      && evidence.source?.fingerprint === fingerprint;
+  });
+  if (current || verifiedFamilies.length === 0) return { manifest, evidenceId: null, changed: false };
+
+  const date = completedAt.slice(0, 10);
+  let evidenceId = `sdk-${sdkVersion}-${date}`;
+  let reuseExisting = false;
+  for (let suffix = 2; Object.hasOwn(manifest.evidence || {}, evidenceId); suffix += 1) {
+    const existing = manifest.evidence[evidenceId];
+    if (existing.source?.sha === sha && existing.source?.fingerprint === fingerprint) {
+      reuseExisting = true;
+      break;
+    }
+    evidenceId = `sdk-${sdkVersion}-${date}.${suffix}`;
+  }
+
+  const next = structuredClone(manifest);
+  if (!reuseExisting) {
+    next.evidence[evidenceId] = {
+      sdk_version: sdkVersion,
+      source: { sha, fingerprint },
+      verified_at: completedAt,
+      checks: [{ name: checkName, status: 'passed', url: runUrl, completed_at: completedAt }],
+    };
+  }
+  for (const record of Object.values(next.families)) {
+    if (record?.evidence !== undefined) record.evidence = evidenceId;
+  }
+  return { manifest: next, evidenceId, changed: true };
+}
+
 function verificationIndex(root, extraPaths) {
   const output = execFileSync(
     'git',

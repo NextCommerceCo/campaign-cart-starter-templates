@@ -100,7 +100,7 @@ repo-root/
 ```
 
 ## Adding a new template family
-When adding a new `src/<slug>/` family, update these together or the **`lint-sdk` CI gate** fails. That job checks next-core and NEXT logo parity, generated shared assets, verification-evidence shape and coverage, the built SDK markup, and finally reports verification freshness as an informational warning.
+When adding a new `src/<slug>/` family, update these together or the **`lint-sdk` CI gate** fails. That job checks next-core and NEXT logo parity, generated shared assets, verification-evidence shape and coverage, the built SDK markup, and finally reports verification freshness as an informational warning. Freshness warnings self-heal: the `refresh-template-verification` workflow (`.github/workflows/refresh-template-verification.yml`) fires after every green `lint:sdk` run on `main` and, when the recorded evidence is stale, opens an automated re-certification PR updating `template-verification.json` (mechanical facts only — `campaigns_os_status` stays a human decision; manual path: `npm run refresh:template-verification`).
 1. `_data/campaigns.json` — add the current campaign metadata and SDK version. This is the canonical SDK-version source.
 2. `templates.json` — add the picker-registry entry (see File Structure note above). This is the canonical distribution source.
 3. `docs/commerce-surface-catalog.json` — add the family when it is a commerce template rather than a section library.

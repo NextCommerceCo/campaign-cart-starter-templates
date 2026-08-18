@@ -15,6 +15,7 @@
     "test:template-verification": "node --test scripts/template-verification.test.mjs",
     "validate:template-verification": "node scripts/check-template-verification.mjs",
     "report:template-verification:freshness": "node scripts/report-template-verification-freshness.mjs",
+    "refresh:template-verification": "node scripts/refresh-template-verification.mjs",
     "check:template-verification": "npm run test:template-verification && npm run validate:template-verification && npm run report:template-verification:freshness",
     "test:sdk-template-tokens": "node --test scripts/sdk-template-token-lint.test.mjs",
     "lint:sdk:source": "node scripts/lint-sdk.mjs --source",

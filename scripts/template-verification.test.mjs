@@ -8,6 +8,7 @@ import {
   assessVerificationFreshness,
   computeVerificationFingerprint,
   hasTrackedVerificationChanges,
+  refreshVerificationManifest,
   validateVerificationManifest,
 } from './lib/template-verification.mjs';
 
@@ -131,6 +132,106 @@ test('fingerprint changes after a tracked file is staged', (t) => {
   assert.equal(hasTrackedVerificationChanges(root), true);
   execFileSync('git', ['-C', root, 'add', 'src/olympus/index.html']);
   assert.notEqual(computeVerificationFingerprint(root), before);
+});
+
+const refreshInput = {
+  sha: 'd'.repeat(40),
+  fingerprint: `git-index-sha256:${'e'.repeat(64)}`,
+  runUrl: 'https://example.com/run/2',
+  completedAt: '2026-08-18T09:00:00Z',
+};
+
+test('refresh records new evidence and repoints families without touching status', () => {
+  const manifest = structuredClone(base);
+  const { manifest: next, evidenceId, changed } = refreshVerificationManifest({
+    manifest,
+    registry,
+    ...refreshInput,
+  });
+  assert.equal(changed, true);
+  assert.equal(evidenceId, 'sdk-0.4.36-2026-08-18');
+  assert.equal(next.evidence[evidenceId].source.sha, refreshInput.sha);
+  assert.equal(next.families.olympus.evidence, evidenceId);
+  assert.equal(next.families.olympus.campaigns_os_status, 'certified');
+  assert.ok(next.evidence[evidenceId], 'historical evidence is preserved alongside the new record');
+  assert.ok(next.evidence['sdk-0.4.34-2026-08-12']);
+  assert.deepEqual(validate(next), []);
+});
+
+test('refresh is a no-op when evidence already matches the current corpus', () => {
+  const manifest = structuredClone(base);
+  const first = refreshVerificationManifest({ manifest, registry, ...refreshInput });
+  const second = refreshVerificationManifest({ manifest: first.manifest, registry, ...refreshInput });
+  assert.equal(second.changed, false);
+  assert.equal(second.manifest, first.manifest);
+});
+
+test('refresh suffixes the evidence id on a same-day re-certification of a different commit', () => {
+  const manifest = structuredClone(base);
+  const first = refreshVerificationManifest({ manifest, registry, ...refreshInput });
+  const second = refreshVerificationManifest({
+    manifest: first.manifest,
+    registry,
+    ...refreshInput,
+    sha: 'f'.repeat(40),
+    fingerprint: `git-index-sha256:${'0'.repeat(64)}`,
+  });
+  assert.equal(second.evidenceId, 'sdk-0.4.36-2026-08-18.2');
+  assert.deepEqual(validate(second.manifest), []);
+});
+
+test('refresh never repoints a family that has no evidence reference', () => {
+  const manifest = structuredClone(base);
+  manifest.families.demeter = { campaigns_os_status: 'candidate' };
+  const { manifest: next, changed } = refreshVerificationManifest({
+    manifest,
+    registry: { ...registry, demeter: { sdk_version: '0.4.36' } },
+    ...refreshInput,
+  });
+  assert.equal(changed, true, 'stale verified families still trigger a refresh');
+  assert.equal(next.families.olympus.evidence, 'sdk-0.4.36-2026-08-18');
+  assert.equal(Object.hasOwn(next.families.demeter, 'evidence'), false,
+    'unverified family stays unverified until a human points it at evidence');
+});
+
+test('refresh treats an unverified family as current when verified families match', () => {
+  const manifest = structuredClone(base);
+  const first = refreshVerificationManifest({ manifest, registry, ...refreshInput });
+  first.manifest.families.demeter = { campaigns_os_status: 'candidate' };
+  const second = refreshVerificationManifest({
+    manifest: first.manifest,
+    registry: { ...registry, demeter: { sdk_version: '0.4.36' } },
+    ...refreshInput,
+  });
+  assert.equal(second.changed, false,
+    'a family awaiting its first human-assigned evidence must not force refresh churn');
+});
+
+test('refresh reuses an identical same-day evidence record instead of rewriting it', () => {
+  const manifest = structuredClone(base);
+  const first = refreshVerificationManifest({ manifest, registry, ...refreshInput });
+  // Point one family back at old evidence so the manifest is stale again,
+  // while the matching same-day record already exists.
+  first.manifest.families.olympus.evidence = evidenceId;
+  const recordBefore = structuredClone(first.manifest.evidence['sdk-0.4.36-2026-08-18']);
+  const second = refreshVerificationManifest({ manifest: first.manifest, registry, ...refreshInput });
+  assert.equal(second.changed, true);
+  assert.equal(second.evidenceId, 'sdk-0.4.36-2026-08-18');
+  assert.equal(Object.keys(second.manifest.evidence).length, 2, 'no duplicate record appended');
+  assert.deepEqual(second.manifest.evidence['sdk-0.4.36-2026-08-18'], recordBefore,
+    'existing record content is untouched');
+  assert.equal(second.manifest.families.olympus.evidence, 'sdk-0.4.36-2026-08-18');
+});
+
+test('refresh refuses a registry with mixed SDK versions', () => {
+  assert.throws(
+    () => refreshVerificationManifest({
+      manifest: structuredClone(base),
+      registry: { olympus: { sdk_version: '0.4.36' }, apollo: { sdk_version: '0.4.35' } },
+      ...refreshInput,
+    }),
+    /disagree on sdk_version/,
+  );
 });
 
 function createGitFixture(t) {
