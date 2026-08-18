@@ -54,7 +54,6 @@ else document.addEventListener('DOMContentLoaded', guardBumpPersonalization);
 })();
 
 window.addEventListener('next:initialized', function() {
-  initFomo();
 
   // Image-only exit intent — replace with your own image URL
   // Coupon must exist on the campaign (Campaigns app → discount code offer, e.g. EXIT10)

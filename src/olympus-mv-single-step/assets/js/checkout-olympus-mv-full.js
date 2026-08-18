@@ -300,7 +300,6 @@ function setupBundleSlotVariantDropdowns() {
 }
 
 window.addEventListener('next:initialized', function () {
-  initFomo();
   setupBundleSlotVariantDropdowns(); // comment out to use barebones native <select> UI instead
 
   // Image-only exit intent — replace with your own image URL
