@@ -1,0 +1,35 @@
+{
+  "$schema": "./schemas/template-verification-manifest.v1.schema.json",
+  "schema_version": "template-verification-manifest/v1",
+  "repository": "NextCommerceCo/campaign-cart-starter-templates",
+  "visibility": "public",
+  "evidence": {
+    "sdk-0.4.34-2026-08-12": {
+      "sdk_version": "0.4.34",
+      "source": {
+        "sha": "8efd350f6fca6719d7c9f50977b3f26c087e4e0f",
+        "fingerprint": "git-index-sha256:99b0abbfaed4699c6203e7a2179091750adc1ac7515557601b0548ffc677a166"
+      },
+      "verified_at": "2026-08-12T06:12:06Z",
+      "checks": [
+        {
+          "name": "lint-sdk",
+          "status": "passed",
+          "url": "https://github.com/NextCommerceCo/campaign-cart-starter-templates/actions/runs/31569116320/job/94027132521",
+          "completed_at": "2026-08-12T06:12:06Z"
+        }
+      ]
+    }
+  },
+  "families": {
+    "apollo": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
+    "olympus": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
+    "apollo-mv-single-step": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
+    "olympus-mv-single-step": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
+    "olympus-mv-two-step": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
+    "demeter": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
+    "shop-single-step": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
+    "shop-three-step": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
+    "landing": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "not_applicable" }
+  }
+}

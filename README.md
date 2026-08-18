@@ -150,6 +150,23 @@ For other AI tools: Cursor loads rules from `.cursor/rules/`, Windsurf from `.wi
 - [Official docs](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/)
 - [SDK source](https://github.com/NextCommerceCo/campaign-cart)
 
+## Template verification evidence
+
+[`template-verification.json`](template-verification.json) records historical proof that named template families passed the SDK contract gates on a specific source commit. It is evidence, not the source of truth for current template metadata.
+
+Current SDK versions come from `_data/campaigns.json`; public picker availability comes from `templates.json`; commerce-family membership comes from `docs/commerce-surface-catalog.json`; and source paths are derived as `src/<family>`. The evidence manifest stores only facts unique to verification: the verified SDK version, source SHA and Git-index fingerprint, durable CI links, verification time, and Campaigns OS status.
+
+The required CI gate validates the manifest schema, evidence references, and complete family coverage. It does not require the current corpus to match historical evidence. After build and SDK lint finish, `npm run report:template-verification:freshness` compares the current Git-index fingerprint and SDK metadata with the recorded evidence and emits informational warnings when development has moved ahead. A stale evidence record therefore means “not re-verified since this source,” not “templates are broken.”
+
+To record new verification evidence:
+
+1. Update and propagate the SDK/template changes across the affected families.
+2. Run `npm run lint:next-core`, `npm run lint:next-logo`, `npm run lint:shared`, `npm run build`, and `npm run lint:sdk:ci`.
+3. After those checks pass on a committed source, add one evidence record with the verified SDK version, exact source SHA, `git-index-sha256` fingerprint, completion time, and durable HTTPS CI URL.
+4. Point each covered family at that evidence record and run `npm run check:template-verification`.
+
+New families may be present without an evidence reference; consumers must describe them as not yet verified. Short-lived deploy-preview URLs are not valid evidence.
+
 ---
 
 ## Adding more templates or variants

@@ -100,11 +100,14 @@ repo-root/
 ```
 
 ## Adding a new template family
-When adding a new `src/<slug>/` family, update these together or the **`lint-sdk` CI gate** fails. (That CI job — `.github/workflows/lint-sdk.yml` — runs three linters as steps: `lint:next-core` → `scripts/lint-next-core-sync.mjs`, `lint:shared` → `scripts/sync-shared.mjs --check`, and `lint:sdk:ci` → `scripts/lint-sdk.mjs`.)
-1. `templates.json` — add the picker-registry entry (see File Structure note above).
-2. `scripts/lint-next-core-sync.mjs` — add the slug to the `FAMILIES` list. The `lint:next-core` linter asserts every family ships a **byte-identical** `next-core.css`; an unlisted family that ships one fails with `unknown family … not in the canonical FAMILIES list`, and the new file must match the canonical copy at `src/olympus/assets/css/next-core.css` (lint anchor path — not an Olympus-only stylesheet).
-3. `scripts/sync-shared.mjs` — add the slug to the `FAMILIES` list, then run `npm run sync:shared` so the new family gets the shared analytics files (`_includes/analytics-head.html` + `analytics-body.html` + `assets/js/next-forwarder-core.js` + the 8 `*.adapter.js`). The `lint:shared` gate asserts every family matches the canonical `_shared/analytics/` source. (`src/landing/` is intentionally excluded — its analytics are commented-out examples.)
-4. Preview-URL / inventory tables in this file and `README.md`, if you want it listed.
+When adding a new `src/<slug>/` family, update these together or the **`lint-sdk` CI gate** fails. That job checks next-core and NEXT logo parity, generated shared assets, verification-evidence shape and coverage, the built SDK markup, and finally reports verification freshness as an informational warning.
+1. `_data/campaigns.json` — add the current campaign metadata and SDK version. This is the canonical SDK-version source.
+2. `templates.json` — add the picker-registry entry (see File Structure note above). This is the canonical distribution source.
+3. `docs/commerce-surface-catalog.json` — add the family when it is a commerce template rather than a section library.
+4. `template-verification.json` — add the family with its Campaigns OS status. An evidence reference is optional until the family has passed a recorded verification run.
+5. `scripts/lint-next-core-sync.mjs` and `scripts/lint-next-logo-sync.mjs` — add the slug to their family lists and match the canonical shared assets.
+6. `scripts/sync-shared.mjs` — add the slug to the `FAMILIES` list, then run `npm run sync:shared` so the new family gets the shared analytics and checkout files. The `lint:shared` gate asserts every family matches the canonical `_shared/` source. (`src/landing/` is intentionally excluded where its files are commented-out examples.)
+7. Preview-URL / inventory tables in this file and `README.md`, if you want it listed.
 
 ### `next-core.css` — shared across all eight families
 

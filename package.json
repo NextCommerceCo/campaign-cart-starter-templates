@@ -12,6 +12,10 @@
     "compress": "npx campaign-compress",
     "compress:preview": "npx campaign-compress --preview",
     "lint:sdk": "node scripts/lint-sdk.mjs",
+    "test:template-verification": "node --test scripts/template-verification.test.mjs",
+    "validate:template-verification": "node scripts/check-template-verification.mjs",
+    "report:template-verification:freshness": "node scripts/report-template-verification-freshness.mjs",
+    "check:template-verification": "npm run test:template-verification && npm run validate:template-verification && npm run report:template-verification:freshness",
     "test:sdk-template-tokens": "node --test scripts/sdk-template-token-lint.test.mjs",
     "lint:sdk:source": "node scripts/lint-sdk.mjs --source",
     "lint:sdk:rendered": "node scripts/lint-sdk.mjs --rendered",
@@ -33,6 +37,8 @@
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.2.4",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
     "parse5": "7.3.0",
     "tailwindcss": "^4.2.4"
   }
