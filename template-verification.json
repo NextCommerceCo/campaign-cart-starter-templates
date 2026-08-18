@@ -19,17 +19,60 @@
           "completed_at": "2026-08-12T06:12:06Z"
         }
       ]
+    },
+    "sdk-0.4.36-2026-08-18": {
+      "sdk_version": "0.4.36",
+      "source": {
+        "sha": "39c5a8edbb8e77d9f2356c66461961f72dc74f08",
+        "fingerprint": "git-index-sha256:f1510ad66e0490efa5dc122e196a9f3d282f8633773f128849abcae0f55680ea"
+      },
+      "verified_at": "2026-08-18T17:14:06Z",
+      "checks": [
+        {
+          "name": "lint-sdk",
+          "status": "passed",
+          "url": "https://github.com/NextCommerceCo/campaign-cart-starter-templates/actions/runs/32164481681",
+          "completed_at": "2026-08-18T17:14:06Z"
+        }
+      ]
     }
   },
   "families": {
-    "apollo": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
-    "olympus": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
-    "apollo-mv-single-step": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
-    "olympus-mv-single-step": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
-    "olympus-mv-two-step": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
-    "demeter": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
-    "shop-single-step": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
-    "shop-three-step": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
-    "landing": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "not_applicable" }
+    "apollo": {
+      "evidence": "sdk-0.4.36-2026-08-18",
+      "campaigns_os_status": "certified"
+    },
+    "olympus": {
+      "evidence": "sdk-0.4.36-2026-08-18",
+      "campaigns_os_status": "certified"
+    },
+    "apollo-mv-single-step": {
+      "evidence": "sdk-0.4.36-2026-08-18",
+      "campaigns_os_status": "certified"
+    },
+    "olympus-mv-single-step": {
+      "evidence": "sdk-0.4.36-2026-08-18",
+      "campaigns_os_status": "certified"
+    },
+    "olympus-mv-two-step": {
+      "evidence": "sdk-0.4.36-2026-08-18",
+      "campaigns_os_status": "certified"
+    },
+    "demeter": {
+      "evidence": "sdk-0.4.36-2026-08-18",
+      "campaigns_os_status": "certified"
+    },
+    "shop-single-step": {
+      "evidence": "sdk-0.4.36-2026-08-18",
+      "campaigns_os_status": "certified"
+    },
+    "shop-three-step": {
+      "evidence": "sdk-0.4.36-2026-08-18",
+      "campaigns_os_status": "certified"
+    },
+    "landing": {
+      "evidence": "sdk-0.4.36-2026-08-18",
+      "campaigns_os_status": "not_applicable"
+    }
   }
 }

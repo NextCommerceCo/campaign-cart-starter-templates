@@ -158,12 +158,13 @@ Current SDK versions come from `_data/campaigns.json`; public picker availabilit
 
 The required CI gate validates the manifest schema, evidence references, and complete family coverage. It does not require the current corpus to match historical evidence. After build and SDK lint finish, `npm run report:template-verification:freshness` compares the current Git-index fingerprint and SDK metadata with the recorded evidence and emits informational warnings when development has moved ahead. A stale evidence record therefore means “not re-verified since this source,” not “templates are broken.”
 
-To record new verification evidence:
+Re-certification is automated: when `lint:sdk` passes on `main` and the recorded evidence is stale, the `refresh-template-verification` workflow regenerates the manifest against that exact commit and opens a small re-certification PR — merging it clears the freshness warnings. The refresh records mechanical facts only (SDK version, source SHA, fingerprint, CI run link); `campaigns_os_status` is never changed automatically.
 
-1. Update and propagate the SDK/template changes across the affected families.
-2. Run `npm run lint:next-core`, `npm run lint:next-logo`, `npm run lint:shared`, `npm run build`, and `npm run lint:sdk:ci`.
-3. After those checks pass on a committed source, add one evidence record with the verified SDK version, exact source SHA, `git-index-sha256` fingerprint, completion time, and durable HTTPS CI URL.
-4. Point each covered family at that evidence record and run `npm run check:template-verification`.
+To record evidence by hand (e.g. from a local checkout of a commit that passed CI):
+
+1. Check out the exact commit the CI run verified, with no uncommitted changes to the verification inputs.
+2. Run `npm run refresh:template-verification -- --sha <commit> --run-url <CI run URL> --completed-at <ISO time>`.
+3. Run `npm run check:template-verification` and commit the updated manifest.
 
 New families may be present without an evidence reference; consumers must describe them as not yet verified. Short-lived deploy-preview URLs are not valid evidence.
 

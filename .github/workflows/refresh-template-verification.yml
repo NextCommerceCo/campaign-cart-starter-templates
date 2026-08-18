@@ -1,0 +1,74 @@
+name: refresh-template-verification
+
+# Closes the certification loop: whenever lint:sdk passes on main and the
+# recorded verification evidence is stale (SDK bump or template change), this
+# workflow regenerates template-verification.json against that exact commit and
+# opens a small re-certification PR. Merging the PR clears the freshness
+# warnings; the PR *is* the notification that re-certification happened.
+#
+# Only mechanical facts are refreshed (SDK version, source SHA, fingerprint,
+# CI run link). campaigns_os_status is never touched — that stays a human call.
+#
+# Token note: with the default GITHUB_TOKEN, GitHub does not trigger CI on the
+# bot PR (anti-recursion rule), so the required lint-sdk check stays "expected"
+# until a maintainer closes/reopens the PR or pushes to its branch. To make the
+# bot PR run checks automatically, add a fine-grained PAT (contents + pull
+# requests: write) as the RECERTIFY_TOKEN repo secret.
+
+on:
+  workflow_run:
+    workflows: ['lint:sdk']
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          token: ${{ secrets.RECERTIFY_TOKEN || github.token }}
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Refresh verification evidence
+        run: >
+          node scripts/refresh-template-verification.mjs
+          --sha '${{ github.event.workflow_run.head_sha }}'
+          --run-url '${{ github.event.workflow_run.html_url }}'
+          --completed-at '${{ github.event.workflow_run.updated_at }}'
+      - name: Validate refreshed manifest
+        run: npm run validate:template-verification
+      - name: Open re-certification PR
+        env:
+          GH_TOKEN: ${{ secrets.RECERTIFY_TOKEN || github.token }}
+        run: |
+          if git diff --quiet template-verification.json; then
+            echo 'Evidence already current; no PR needed.'
+            exit 0
+          fi
+          sdk="$(node -p "Object.values(JSON.parse(require('fs').readFileSync('_data/campaigns.json','utf8')))[0].sdk_version")"
+          branch='bot/recertify-template-evidence'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git checkout -B "$branch"
+          git add template-verification.json
+          git commit -m "chore: record template verification evidence for SDK $sdk"
+          git push -f origin "$branch"
+          if gh pr list --head "$branch" --state open --json number --jq length | grep -qx 0; then
+            gh pr create \
+              --head "$branch" \
+              --title "chore: record template verification evidence for SDK $sdk" \
+              --body "Automated re-certification. lint:sdk passed on main at \`${{ github.event.workflow_run.head_sha }}\` ([run](${{ github.event.workflow_run.html_url }})), so this records that commit as the current verification evidence in \`template-verification.json\`. Merging clears the freshness warnings. campaigns_os_status is untouched."
+          else
+            echo 'Re-certification PR already open; branch updated.'
+          fi

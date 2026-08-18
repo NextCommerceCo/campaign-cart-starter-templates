@@ -8,6 +8,7 @@ import {
   assessVerificationFreshness,
   computeVerificationFingerprint,
   hasTrackedVerificationChanges,
+  refreshVerificationManifest,
   validateVerificationManifest,
 } from './lib/template-verification.mjs';
 
@@ -131,6 +132,63 @@ test('fingerprint changes after a tracked file is staged', (t) => {
   assert.equal(hasTrackedVerificationChanges(root), true);
   execFileSync('git', ['-C', root, 'add', 'src/olympus/index.html']);
   assert.notEqual(computeVerificationFingerprint(root), before);
+});
+
+const refreshInput = {
+  sha: 'd'.repeat(40),
+  fingerprint: `git-index-sha256:${'e'.repeat(64)}`,
+  runUrl: 'https://example.com/run/2',
+  completedAt: '2026-08-18T09:00:00Z',
+};
+
+test('refresh records new evidence and repoints families without touching status', () => {
+  const manifest = structuredClone(base);
+  const { manifest: next, evidenceId, changed } = refreshVerificationManifest({
+    manifest,
+    registry,
+    ...refreshInput,
+  });
+  assert.equal(changed, true);
+  assert.equal(evidenceId, 'sdk-0.4.36-2026-08-18');
+  assert.equal(next.evidence[evidenceId].source.sha, refreshInput.sha);
+  assert.equal(next.families.olympus.evidence, evidenceId);
+  assert.equal(next.families.olympus.campaigns_os_status, 'certified');
+  assert.ok(next.evidence[evidenceId], 'historical evidence is preserved alongside the new record');
+  assert.ok(next.evidence['sdk-0.4.34-2026-08-12']);
+  assert.deepEqual(validate(next), []);
+});
+
+test('refresh is a no-op when evidence already matches the current corpus', () => {
+  const manifest = structuredClone(base);
+  const first = refreshVerificationManifest({ manifest, registry, ...refreshInput });
+  const second = refreshVerificationManifest({ manifest: first.manifest, registry, ...refreshInput });
+  assert.equal(second.changed, false);
+  assert.equal(second.manifest, first.manifest);
+});
+
+test('refresh suffixes the evidence id on a same-day re-certification of a different commit', () => {
+  const manifest = structuredClone(base);
+  const first = refreshVerificationManifest({ manifest, registry, ...refreshInput });
+  const second = refreshVerificationManifest({
+    manifest: first.manifest,
+    registry,
+    ...refreshInput,
+    sha: 'f'.repeat(40),
+    fingerprint: `git-index-sha256:${'0'.repeat(64)}`,
+  });
+  assert.equal(second.evidenceId, 'sdk-0.4.36-2026-08-18.2');
+  assert.deepEqual(validate(second.manifest), []);
+});
+
+test('refresh refuses a registry with mixed SDK versions', () => {
+  assert.throws(
+    () => refreshVerificationManifest({
+      manifest: structuredClone(base),
+      registry: { olympus: { sdk_version: '0.4.36' }, apollo: { sdk_version: '0.4.35' } },
+      ...refreshInput,
+    }),
+    /disagree on sdk_version/,
+  );
 });
 
 function createGitFixture(t) {
