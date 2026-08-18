@@ -188,32 +188,45 @@ export function refreshVerificationManifest({
     throw new Error(`registry sdk_version ${sdkVersion} does not match the supported pattern`);
   }
 
-  const current = Object.values(manifest.families || {}).every((record) => {
-    const evidence = record?.evidence !== undefined
-      && Object.hasOwn(manifest.evidence || {}, record.evidence)
+  // Families without an evidence reference are deliberately "not yet
+  // verified" (a state the validator permits for new families); their first
+  // evidence pointer is a human decision, so the refresh neither counts them
+  // as stale nor repoints them.
+  const verifiedFamilies = Object.entries(manifest.families || {})
+    .filter(([, record]) => record?.evidence !== undefined);
+  const current = verifiedFamilies.every(([, record]) => {
+    const evidence = Object.hasOwn(manifest.evidence || {}, record.evidence)
       && manifest.evidence[record.evidence];
     return evidence
       && evidence.sdk_version === sdkVersion
       && evidence.source?.fingerprint === fingerprint;
   });
-  if (current) return { manifest, evidenceId: null, changed: false };
+  if (current || verifiedFamilies.length === 0) return { manifest, evidenceId: null, changed: false };
 
   const date = completedAt.slice(0, 10);
   let evidenceId = `sdk-${sdkVersion}-${date}`;
+  let reuseExisting = false;
   for (let suffix = 2; Object.hasOwn(manifest.evidence || {}, evidenceId); suffix += 1) {
     const existing = manifest.evidence[evidenceId];
-    if (existing.source?.sha === sha && existing.source?.fingerprint === fingerprint) break;
+    if (existing.source?.sha === sha && existing.source?.fingerprint === fingerprint) {
+      reuseExisting = true;
+      break;
+    }
     evidenceId = `sdk-${sdkVersion}-${date}.${suffix}`;
   }
 
   const next = structuredClone(manifest);
-  next.evidence[evidenceId] = {
-    sdk_version: sdkVersion,
-    source: { sha, fingerprint },
-    verified_at: completedAt,
-    checks: [{ name: checkName, status: 'passed', url: runUrl, completed_at: completedAt }],
-  };
-  for (const record of Object.values(next.families)) record.evidence = evidenceId;
+  if (!reuseExisting) {
+    next.evidence[evidenceId] = {
+      sdk_version: sdkVersion,
+      source: { sha, fingerprint },
+      verified_at: completedAt,
+      checks: [{ name: checkName, status: 'passed', url: runUrl, completed_at: completedAt }],
+    };
+  }
+  for (const record of Object.values(next.families)) {
+    if (record?.evidence !== undefined) record.evidence = evidenceId;
+  }
   return { manifest: next, evidenceId, changed: true };
 }
 

@@ -25,6 +25,12 @@ permissions:
   contents: write
   pull-requests: write
 
+# Serialize runs: two green main runs in quick succession must not race on the
+# shared bot branch (force-push clobber) or the open-PR existence check.
+concurrency:
+  group: refresh-template-verification
+  cancel-in-progress: false
+
 jobs:
   refresh:
     if: github.event.workflow_run.conclusion == 'success'
@@ -40,6 +46,10 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
+      # Timestamp note: workflow_run.updated_at is read at trigger time, i.e.
+      # effectively the completion time of the run being recorded. Re-runs of
+      # an already-recorded SHA no-op at the "already current" check, so a
+      # recorded verified_at never shifts after the fact.
       - name: Refresh verification evidence
         run: >
           node scripts/refresh-template-verification.mjs
@@ -63,6 +73,8 @@ jobs:
           git checkout -B "$branch"
           git add template-verification.json
           git commit -m "chore: record template verification evidence for SDK $sdk"
+          # Forced push is safe here: the bot branch is owned by this workflow
+          # and the concurrency group serializes writers.
           git push -f origin "$branch"
           if gh pr list --head "$branch" --state open --json number --jq length | grep -qx 0; then
             gh pr create \

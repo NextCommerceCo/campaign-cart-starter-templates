@@ -180,6 +180,49 @@ test('refresh suffixes the evidence id on a same-day re-certification of a diffe
   assert.deepEqual(validate(second.manifest), []);
 });
 
+test('refresh never repoints a family that has no evidence reference', () => {
+  const manifest = structuredClone(base);
+  manifest.families.demeter = { campaigns_os_status: 'candidate' };
+  const { manifest: next, changed } = refreshVerificationManifest({
+    manifest,
+    registry: { ...registry, demeter: { sdk_version: '0.4.36' } },
+    ...refreshInput,
+  });
+  assert.equal(changed, true, 'stale verified families still trigger a refresh');
+  assert.equal(next.families.olympus.evidence, 'sdk-0.4.36-2026-08-18');
+  assert.equal(Object.hasOwn(next.families.demeter, 'evidence'), false,
+    'unverified family stays unverified until a human points it at evidence');
+});
+
+test('refresh treats an unverified family as current when verified families match', () => {
+  const manifest = structuredClone(base);
+  const first = refreshVerificationManifest({ manifest, registry, ...refreshInput });
+  first.manifest.families.demeter = { campaigns_os_status: 'candidate' };
+  const second = refreshVerificationManifest({
+    manifest: first.manifest,
+    registry: { ...registry, demeter: { sdk_version: '0.4.36' } },
+    ...refreshInput,
+  });
+  assert.equal(second.changed, false,
+    'a family awaiting its first human-assigned evidence must not force refresh churn');
+});
+
+test('refresh reuses an identical same-day evidence record instead of rewriting it', () => {
+  const manifest = structuredClone(base);
+  const first = refreshVerificationManifest({ manifest, registry, ...refreshInput });
+  // Point one family back at old evidence so the manifest is stale again,
+  // while the matching same-day record already exists.
+  first.manifest.families.olympus.evidence = evidenceId;
+  const recordBefore = structuredClone(first.manifest.evidence['sdk-0.4.36-2026-08-18']);
+  const second = refreshVerificationManifest({ manifest: first.manifest, registry, ...refreshInput });
+  assert.equal(second.changed, true);
+  assert.equal(second.evidenceId, 'sdk-0.4.36-2026-08-18');
+  assert.equal(Object.keys(second.manifest.evidence).length, 2, 'no duplicate record appended');
+  assert.deepEqual(second.manifest.evidence['sdk-0.4.36-2026-08-18'], recordBefore,
+    'existing record content is untouched');
+  assert.equal(second.manifest.families.olympus.evidence, 'sdk-0.4.36-2026-08-18');
+});
+
 test('refresh refuses a registry with mixed SDK versions', () => {
   assert.throws(
     () => refreshVerificationManifest({
