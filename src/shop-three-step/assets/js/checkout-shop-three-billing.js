@@ -24,26 +24,27 @@
     if (!storeData) {
       var funnelMeta = document.querySelector('meta[name="next-funnel"]');
       var funnelName = funnelMeta ? funnelMeta.getAttribute('content') : '';
-      var soleCandidate = null;
-      var scopedCount = 0;
+      var scopes = [];
       for (var i = 0; i < sessionStorage.length; i++) {
         var key = sessionStorage.key(i);
         if (key && key.indexOf('next-checkout-store__') === 0) {
-          scopedCount++;
-          soleCandidate = sessionStorage.getItem(key);
-          var scope = key.slice('next-checkout-store__'.length);
-          var scopeFunnel = sessionStorage.getItem('next_funnel_name__' + scope)
-            || localStorage.getItem('next_funnel_name__' + scope);
-          if (funnelName && scopeFunnel === funnelName) {
-            storeData = soleCandidate;
-            break;
-          }
+          scopes.push(key.slice('next-checkout-store__'.length));
         }
       }
-      // With exactly one scoped store the scan is unambiguous even without a
-      // funnel-name match (e.g. the funnel-name key was cleared). With several
-      // and no match, this funnel has no store — fall through to the redirect.
-      if (!storeData && scopedCount === 1) storeData = soleCandidate;
+      for (var j = 0; j < scopes.length && !storeData; j++) {
+        var scopeFunnel = sessionStorage.getItem('next_funnel_name__' + scopes[j])
+          || localStorage.getItem('next_funnel_name__' + scopes[j]);
+        if (funnelName && scopeFunnel === funnelName) {
+          storeData = sessionStorage.getItem('next-checkout-store__' + scopes[j]);
+        }
+      }
+      // A page that declares its funnel and finds no match must treat the scan
+      // as empty (safe redirect to step 1) — never trust another campaign's
+      // store. Only a page with no funnel signal may take the one unambiguous
+      // candidate.
+      if (!storeData && !funnelName && scopes.length === 1) {
+        storeData = sessionStorage.getItem('next-checkout-store__' + scopes[0]);
+      }
     }
     // If no store exists, redirect to first step
     if (!storeData) {
