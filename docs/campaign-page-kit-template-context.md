@@ -1164,14 +1164,6 @@ Use these when implementing or verifying a specific task. Work through each item
 - [ ] **Custom dropdown path:** if you call **`setupBundleSlotVariantDropdowns()`** from **`checkout-apollo-mv-full.js`** / **`checkout-olympus-mv-full.js`** / **`upsells-mv.js`**, keep **`initBundleQtyToggle()`** (or equivalent) in sync on upsell when using quantity toggles + Approach B
 - [ ] **Per-tier vouchers** on bundle upsell cards exist in Campaigns and match **`data-next-bundle-vouchers`** on each **`data-next-bundle-card`**
 
-### Configuring FOMO popups
-
-- [ ] `initFomo()` is called inside the `next:initialized` event handler in the checkout JS file
-- [ ] `items` array — if the default (campaign products) isn't right, supply a custom array with `{ text, image }` entries specific to this campaign's products/bundles
-- [ ] `customers` object — if the default name list isn't right, supply region-keyed arrays (e.g. `US: ['Sarah from Dallas']`) matched to the campaign's target market
-- [ ] Timing values reviewed: `initialDelay`, `displayDuration`, `delayBetween` — adjust if the defaults don't suit the page length or flow
-- [ ] `maxMobileShows` reviewed — default is 5; lower it if mobile experience feels intrusive
-
 ### Configuring the exit intent popup
 
 - [ ] Decide on approach: **image-only** (`initExitIntentImage`) or **template** (`initExitIntentTemplate`) — choose one and remove the other

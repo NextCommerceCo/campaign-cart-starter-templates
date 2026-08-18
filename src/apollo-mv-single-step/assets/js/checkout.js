@@ -55,29 +55,6 @@ document.querySelectorAll('[data-next-element="timer"]').forEach(timer => {
   }, 1000);
 });
 
-// ─── FOMO popup ────────────────────────────────────────────────────────────
-// Call inside a next:initialized event handler
-function initFomo() {
-  next.fomo({
-    // initialDelay: 5000,      // ms before first popup (default: 5000)
-    // displayDuration: 5000,   // ms popup stays visible (default: 5000)
-    // delayBetween: 10000,     // ms between popups (default: 10000)
-    // maxMobileShows: 5,       // max times to show on mobile (default: 5)
-    // items: [                 // custom products — defaults to campaign products
-    //   { text: 'Premium Bundle — Save 30%', image: 'https://...' }
-    // ],
-    // customers: {             // names by region — defaults to built-in list
-    //   US: ['Sarah from Dallas', 'Mike from Austin'],
-    //   CA: ['Jean from Montreal'],
-    // },
-  });
-  next.on('fomo:shown', () => {
-    // available: data.customer, data.product, data.image
-  });
-  // next.on('fomo:clicked', (data) => {});
-  // next.on('fomo:closed', (data) => {});
-}
-
 // ─── Exit intent — image only ───────────────────────────────────────────────
 // Simplest approach: pass an image URL. Clicking the image fires action().
 // Call inside a next:initialized event handler.

@@ -335,7 +335,7 @@ Inside `<template>` elements the SDK uses single-brace tokens (not Liquid):
 | olympus-mv-single-step | checkout.js, checkout-olympus-mv-full.js, upsells-mv.js, upsells.js, promo-banner.js, promo-timer.js, variant-picker.js, variant-picker-fixture.js |
 | olympus-mv-two-step | checkout.js, checkout-olympus-mv-full.js, checkout-olympus-mv-selection.js, upsells-mv.js, upsells.js, promo-banner.js, promo-timer.js, variant-picker.js, variant-picker-fixture.js |
 | shop-single-step | checkout.js, upsells.js, promo-banner.js, promo-timer.js |
-| shop-three-step | checkout.js, checkout-shop-three.js, checkout-shop-three-billing.js, checkout-shop-three-shipping.js, upsells.js, promo-banner.js, promo-timer.js |
+| shop-three-step | checkout.js, checkout-shop-three-billing.js, checkout-shop-three-shipping.js, upsells.js, promo-banner.js, promo-timer.js |
 
 The 0.3.x archive is out of scope for this repository.
 

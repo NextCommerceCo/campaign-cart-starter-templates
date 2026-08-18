@@ -60,7 +60,6 @@ function resetButtonSpinners() {
 }
 
 window.addEventListener('next:initialized', () => {
-  initFomo();
   handleStepTransition();
   handleCheckoutNavigate();
   initExitIntentImage('https://placehold.co/600x400', async () => {
