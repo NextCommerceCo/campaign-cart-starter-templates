@@ -15,17 +15,35 @@
   }
   try {
     // Try to get checkout store from sessionStorage. SDK 0.4.34+ scopes storage keys
-    // per campaign (e.g. "next-checkout-store__of7f2o"), so fall back to a prefix scan
-    // when the unscoped legacy key is absent.
+    // per campaign (e.g. "next-checkout-store__of7f2o"), so fall back to a scan when
+    // the unscoped legacy key is absent. Several campaigns on one origin each write
+    // their own scoped store, so the scan must pick THIS campaign's scope: the SDK
+    // records next_funnel_name__<scope> alongside each store, and the page carries
+    // the same value in <meta name="next-funnel">.
     var storeData = sessionStorage.getItem('next-checkout-store');
     if (!storeData) {
+      var funnelMeta = document.querySelector('meta[name="next-funnel"]');
+      var funnelName = funnelMeta ? funnelMeta.getAttribute('content') : '';
+      var soleCandidate = null;
+      var scopedCount = 0;
       for (var i = 0; i < sessionStorage.length; i++) {
         var key = sessionStorage.key(i);
         if (key && key.indexOf('next-checkout-store__') === 0) {
-          storeData = sessionStorage.getItem(key);
-          break;
+          scopedCount++;
+          soleCandidate = sessionStorage.getItem(key);
+          var scope = key.slice('next-checkout-store__'.length);
+          var scopeFunnel = sessionStorage.getItem('next_funnel_name__' + scope)
+            || localStorage.getItem('next_funnel_name__' + scope);
+          if (funnelName && scopeFunnel === funnelName) {
+            storeData = soleCandidate;
+            break;
+          }
         }
       }
+      // With exactly one scoped store the scan is unambiguous even without a
+      // funnel-name match (e.g. the funnel-name key was cleared). With several
+      // and no match, this funnel has no store — fall through to the redirect.
+      if (!storeData && scopedCount === 1) storeData = soleCandidate;
     }
     // If no store exists, redirect to first step
     if (!storeData) {
