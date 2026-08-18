@@ -15,16 +15,36 @@
   }
   try {
     // Try to get checkout store from sessionStorage. SDK 0.4.34+ scopes storage keys
-    // per campaign (e.g. "next-checkout-store__of7f2o"), so fall back to a prefix scan
-    // when the unscoped legacy key is absent.
+    // per campaign (e.g. "next-checkout-store__of7f2o"), so fall back to a scan when
+    // the unscoped legacy key is absent. Several campaigns on one origin each write
+    // their own scoped store, so the scan must pick THIS campaign's scope: the SDK
+    // records next_funnel_name__<scope> alongside each store, and the page carries
+    // the same value in <meta name="next-funnel">.
     var storeData = sessionStorage.getItem('next-checkout-store');
     if (!storeData) {
+      var storePrefix = 'next-checkout-store__';
+      var funnelMeta = document.querySelector('meta[name="next-funnel"]');
+      var funnelName = funnelMeta ? funnelMeta.getAttribute('content') : '';
+      var scopes = [];
       for (var i = 0; i < sessionStorage.length; i++) {
         var key = sessionStorage.key(i);
-        if (key && key.indexOf('next-checkout-store__') === 0) {
-          storeData = sessionStorage.getItem(key);
-          break;
+        if (key && key.indexOf(storePrefix) === 0) {
+          scopes.push(key.slice(storePrefix.length));
         }
+      }
+      for (var j = 0; j < scopes.length && !storeData; j++) {
+        var scopeFunnel = sessionStorage.getItem('next_funnel_name__' + scopes[j])
+          || localStorage.getItem('next_funnel_name__' + scopes[j]);
+        if (funnelName && scopeFunnel === funnelName) {
+          storeData = sessionStorage.getItem(storePrefix + scopes[j]);
+        }
+      }
+      // A page that declares its funnel and finds no match must treat the scan
+      // as empty (safe redirect to step 1) — never trust another campaign's
+      // store. Only a page with no funnel signal may take the one unambiguous
+      // candidate.
+      if (!storeData && !funnelName && scopes.length === 1) {
+        storeData = sessionStorage.getItem(storePrefix + scopes[0]);
       }
     }
     // If no store exists, redirect to first step
