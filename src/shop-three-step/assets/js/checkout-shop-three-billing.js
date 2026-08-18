@@ -22,20 +22,21 @@
     // the same value in <meta name="next-funnel">.
     var storeData = sessionStorage.getItem('next-checkout-store');
     if (!storeData) {
+      var storePrefix = 'next-checkout-store__';
       var funnelMeta = document.querySelector('meta[name="next-funnel"]');
       var funnelName = funnelMeta ? funnelMeta.getAttribute('content') : '';
       var scopes = [];
       for (var i = 0; i < sessionStorage.length; i++) {
         var key = sessionStorage.key(i);
-        if (key && key.indexOf('next-checkout-store__') === 0) {
-          scopes.push(key.slice('next-checkout-store__'.length));
+        if (key && key.indexOf(storePrefix) === 0) {
+          scopes.push(key.slice(storePrefix.length));
         }
       }
       for (var j = 0; j < scopes.length && !storeData; j++) {
         var scopeFunnel = sessionStorage.getItem('next_funnel_name__' + scopes[j])
           || localStorage.getItem('next_funnel_name__' + scopes[j]);
         if (funnelName && scopeFunnel === funnelName) {
-          storeData = sessionStorage.getItem('next-checkout-store__' + scopes[j]);
+          storeData = sessionStorage.getItem(storePrefix + scopes[j]);
         }
       }
       // A page that declares its funnel and finds no match must treat the scan
@@ -43,7 +44,7 @@
       // store. Only a page with no funnel signal may take the one unambiguous
       // candidate.
       if (!storeData && !funnelName && scopes.length === 1) {
-        storeData = sessionStorage.getItem('next-checkout-store__' + scopes[0]);
+        storeData = sessionStorage.getItem(storePrefix + scopes[0]);
       }
     }
     // If no store exists, redirect to first step
