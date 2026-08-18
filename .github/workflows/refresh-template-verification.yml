@@ -9,11 +9,23 @@ name: refresh-template-verification
 # Only mechanical facts are refreshed (SDK version, source SHA, fingerprint,
 # CI run link). campaigns_os_status is never touched — that stays a human call.
 #
-# Token note: with the default GITHUB_TOKEN, GitHub does not trigger CI on the
-# bot PR (anti-recursion rule), so the required lint-sdk check stays "expected"
-# until a maintainer closes/reopens the PR or pushes to its branch. To make the
-# bot PR run checks automatically, add a fine-grained PAT (contents + pull
-# requests: write) as the RECERTIFY_TOKEN repo secret.
+# CURRENT OPERATING MODE (verified live 2026-08-18, first run — see issue #131):
+# this repo does not grant Actions the "create and approve pull requests"
+# permission, so the final `gh pr create` step FAILS after the branch is
+# pushed. That red run is the notification. The maintainer flow is:
+#
+#   1. A red refresh-template-verification run appears after a green main push.
+#   2. Open a PR from the already-pushed `bot/recertify-template-evidence`
+#      branch (gh pr create --head bot/recertify-template-evidence, or the
+#      GitHub UI banner). A human-opened PR runs CI normally — no
+#      close/reopen dance needed.
+#   3. Review the one-file diff and merge; freshness warnings clear.
+#
+# This is deliberately the low-setup sweet spot. Alternatives (issue #131):
+# flipping the repo Actions setting lets the bot open the PR itself, but a
+# default-token bot PR does NOT trigger CI (anti-recursion rule) and needs a
+# close/reopen; a fine-grained PAT (contents + pull requests: write) stored
+# as the RECERTIFY_TOKEN secret — or a GitHub App — makes it fully automatic.
 
 on:
   workflow_run:

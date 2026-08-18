@@ -158,7 +158,9 @@ Current SDK versions come from `_data/campaigns.json`; public picker availabilit
 
 The required CI gate validates the manifest schema, evidence references, and complete family coverage. It does not require the current corpus to match historical evidence. After build and SDK lint finish, `npm run report:template-verification:freshness` compares the current Git-index fingerprint and SDK metadata with the recorded evidence and emits informational warnings when development has moved ahead. A stale evidence record therefore means “not re-verified since this source,” not “templates are broken.”
 
-Re-certification is automated: when `lint:sdk` passes on `main` and the recorded evidence is stale, the `refresh-template-verification` workflow regenerates the manifest against that exact commit and opens a small re-certification PR — merging it clears the freshness warnings. The refresh records mechanical facts only (SDK version, source SHA, fingerprint, CI run link); `campaigns_os_status` is never changed automatically.
+Re-certification is automated: when `lint:sdk` passes on `main` and the recorded evidence is stale, the `refresh-template-verification` workflow regenerates the manifest against that exact commit and pushes it to the `bot/recertify-template-evidence` branch. The refresh records mechanical facts only (SDK version, source SHA, fingerprint, CI run link); `campaigns_os_status` is never changed automatically.
+
+**If you change templates or bump the SDK, expect this follow-up:** the refresh run shows **red** on the Actions tab — this repo doesn't allow Actions to open PRs, so the run fails at its final step *after* preparing the branch. That red run is your cue: open a PR from `bot/recertify-template-evidence` (UI banner or `gh pr create --head bot/recertify-template-evidence`), review the one-file diff, and merge. A human-opened PR runs CI normally. Trade-offs of automating this last step further are documented in [issue #131](https://github.com/NextCommerceCo/campaign-cart-starter-templates/issues/131).
 
 To record evidence by hand (e.g. from a local checkout of a commit that passed CI):
 
