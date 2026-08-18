@@ -150,22 +150,22 @@ For other AI tools: Cursor loads rules from `.cursor/rules/`, Windsurf from `.wi
 - [Official docs](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/)
 - [SDK source](https://github.com/NextCommerceCo/campaign-cart)
 
-## Verified template versions
+## Template verification evidence
 
-[`template-verification.json`](template-verification.json) is the machine-readable source of truth for each family's latest SDK-verified version. It records the exact source digest, evidence links, Campaigns OS status, and picker distribution. Public portals should consume this manifest instead of copying SDK versions into page content.
+[`template-verification.json`](template-verification.json) records historical proof that named template families passed the SDK contract gates on a specific source commit. It is evidence, not the source of truth for current template metadata.
 
-The manifest covers the tracked copies of `_data/campaigns.json`, `templates.json`, the commerce surface catalog, and every tracked file under `src/`. Local build output and other untracked files do not change the digest. Any covered source change makes the digest stale and fails CI until the corpus is verified again and the manifest is refreshed.
+Current SDK versions come from `_data/campaigns.json`; public picker availability comes from `templates.json`; commerce-family membership comes from `docs/commerce-surface-catalog.json`; and source paths are derived as `src/<family>`. The evidence manifest stores only facts unique to verification: the verified SDK version, source SHA and Git-index fingerprint, durable CI links, verification time, and Campaigns OS status.
 
-Certification is intentionally a two-step process. First, the template corpus must pass on a specific commit. A later manifest-only commit can then record that source SHA, its digest, and the durable HTTPS URL for the successful CI run. The source SHA must be the CI run's head SHA and must still match the current tracked template corpus. Short-lived deploy-preview URLs are not valid evidence.
+The required CI gate validates the manifest schema, evidence references, and complete family coverage. It does not require the current corpus to match historical evidence. After build and SDK lint finish, `npm run report:template-verification:freshness` compares the current Git-index fingerprint and SDK metadata with the recorded evidence and emits informational warnings when development has moved ahead. A stale evidence record therefore means “not re-verified since this source,” not “templates are broken.”
 
-To certify a new SDK version:
+To record new verification evidence:
 
 1. Update and propagate the SDK/template changes across the affected families.
 2. Run `npm run lint:next-core`, `npm run lint:next-logo`, `npm run lint:shared`, `npm run build`, and `npm run lint:sdk:ci`.
-3. Record the verified CI run's exact head SHA and durable HTTPS evidence URL in `template-verification.json`.
-4. Refresh `source.digest` with the value reported by `npm run check:template-verification`, then rerun that command.
+3. After those checks pass on a committed source, add one evidence record with the verified SDK version, exact source SHA, `git-index-sha256` fingerprint, completion time, and durable HTTPS CI URL.
+4. Point each covered family at that evidence record and run `npm run check:template-verification`.
 
-An SDK release existing upstream is not sufficient to update this file: the recorded version means this template corpus passed its contract gates against that release.
+New families may be present without an evidence reference; consumers must describe them as not yet verified. Short-lived deploy-preview URLs are not valid evidence.
 
 ---
 

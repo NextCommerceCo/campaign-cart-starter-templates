@@ -1,96 +1,35 @@
 {
-  "$schema": "./schemas/template-verification-manifest.v0.schema.json",
-  "schema_version": "template-verification-manifest/v0",
+  "$schema": "./schemas/template-verification-manifest.v1.schema.json",
+  "schema_version": "template-verification-manifest/v1",
   "repository": "NextCommerceCo/campaign-cart-starter-templates",
   "visibility": "public",
-  "source": {
-    "sha": "8efd350f6fca6719d7c9f50977b3f26c087e4e0f",
-    "digest": "sha256:d070a69530701a6ed4c7e0f80f25520eba5d581f7e98e9525605e920212a56e0",
-    "verified_at": "2026-08-12T06:12:06Z"
-  },
-  "verification": {
-    "scope": "template_contract_ci",
-    "checks": [
-      {
-        "name": "lint-sdk",
-        "status": "passed",
-        "url": "https://github.com/NextCommerceCo/campaign-cart-starter-templates/actions/runs/31569116320/job/94027132521",
-        "completed_at": "2026-08-12T06:12:06Z"
-      }
-    ]
+  "evidence": {
+    "sdk-0.4.34-2026-08-12": {
+      "sdk_version": "0.4.34",
+      "source": {
+        "sha": "8efd350f6fca6719d7c9f50977b3f26c087e4e0f",
+        "fingerprint": "git-index-sha256:99b0abbfaed4699c6203e7a2179091750adc1ac7515557601b0548ffc677a166"
+      },
+      "verified_at": "2026-08-12T06:12:06Z",
+      "checks": [
+        {
+          "name": "lint-sdk",
+          "status": "passed",
+          "url": "https://github.com/NextCommerceCo/campaign-cart-starter-templates/actions/runs/31569116320/job/94027132521",
+          "completed_at": "2026-08-12T06:12:06Z"
+        }
+      ]
+    }
   },
   "families": {
-    "apollo": {
-      "kind": "commerce_family",
-      "sdk_version": "0.4.34",
-      "verification_status": "verified",
-      "campaigns_os_status": "certified",
-      "distribution": "public_picker",
-      "source_path": "src/apollo"
-    },
-    "olympus": {
-      "kind": "commerce_family",
-      "sdk_version": "0.4.34",
-      "verification_status": "verified",
-      "campaigns_os_status": "certified",
-      "distribution": "public_picker",
-      "source_path": "src/olympus"
-    },
-    "apollo-mv-single-step": {
-      "kind": "commerce_family",
-      "sdk_version": "0.4.34",
-      "verification_status": "verified",
-      "campaigns_os_status": "certified",
-      "distribution": "public_picker",
-      "source_path": "src/apollo-mv-single-step"
-    },
-    "olympus-mv-single-step": {
-      "kind": "commerce_family",
-      "sdk_version": "0.4.34",
-      "verification_status": "verified",
-      "campaigns_os_status": "certified",
-      "distribution": "public_picker",
-      "source_path": "src/olympus-mv-single-step"
-    },
-    "olympus-mv-two-step": {
-      "kind": "commerce_family",
-      "sdk_version": "0.4.34",
-      "verification_status": "verified",
-      "campaigns_os_status": "certified",
-      "distribution": "public_picker",
-      "source_path": "src/olympus-mv-two-step"
-    },
-    "demeter": {
-      "kind": "commerce_family",
-      "sdk_version": "0.4.34",
-      "verification_status": "verified",
-      "campaigns_os_status": "certified",
-      "distribution": "public_picker",
-      "source_path": "src/demeter"
-    },
-    "shop-single-step": {
-      "kind": "commerce_family",
-      "sdk_version": "0.4.34",
-      "verification_status": "verified",
-      "campaigns_os_status": "certified",
-      "distribution": "public_picker",
-      "source_path": "src/shop-single-step"
-    },
-    "shop-three-step": {
-      "kind": "commerce_family",
-      "sdk_version": "0.4.34",
-      "verification_status": "verified",
-      "campaigns_os_status": "certified",
-      "distribution": "public_picker",
-      "source_path": "src/shop-three-step"
-    },
-    "landing": {
-      "kind": "section_library",
-      "sdk_version": "0.4.34",
-      "verification_status": "verified",
-      "campaigns_os_status": "not_applicable",
-      "distribution": "public_picker",
-      "source_path": "src/landing"
-    }
+    "apollo": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
+    "olympus": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
+    "apollo-mv-single-step": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
+    "olympus-mv-single-step": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
+    "olympus-mv-two-step": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
+    "demeter": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
+    "shop-single-step": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
+    "shop-three-step": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "certified" },
+    "landing": { "evidence": "sdk-0.4.34-2026-08-12", "campaigns_os_status": "not_applicable" }
   }
 }

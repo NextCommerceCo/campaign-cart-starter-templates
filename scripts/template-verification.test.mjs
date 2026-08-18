@@ -1,126 +1,136 @@
-import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import test from 'node:test';
 import {
-  computeVerificationDigest,
+  assessVerificationFreshness,
+  computeVerificationFingerprint,
+  hasTrackedVerificationChanges,
   validateVerificationManifest,
-  verificationInputsMatchRef,
 } from './lib/template-verification.mjs';
 
-const registry = { olympus: { sdk_version: '0.4.34' } };
-const picker = { templates: [{ slug: 'olympus' }] };
+const evidenceId = 'sdk-0.4.34-2026-08-12';
+const registry = { olympus: { sdk_version: '0.4.36' } };
+const picker = { templates: [{ slug: 'olympus', hidden: false, deprecated: false }] };
+const commerceCatalog = { families: { olympus: {} } };
 const base = {
-  schema_version: 'template-verification-manifest/v0',
+  schema_version: 'template-verification-manifest/v1',
   repository: 'NextCommerceCo/campaign-cart-starter-templates',
   visibility: 'public',
-  source: {
-    sha: 'a'.repeat(40),
-    digest: `sha256:${'b'.repeat(64)}`,
-    verified_at: '2026-08-12T06:12:06Z',
-  },
-  verification: {
-    scope: 'template_contract_ci',
-    checks: [{ name: 'lint-sdk', status: 'passed', url: 'https://example.com/run', completed_at: '2026-08-12T06:12:06Z' }],
+  evidence: {
+    [evidenceId]: {
+      sdk_version: '0.4.34',
+      source: {
+        sha: 'a'.repeat(40),
+        fingerprint: `git-index-sha256:${'b'.repeat(64)}`,
+      },
+      verified_at: '2026-08-12T06:12:06Z',
+      checks: [{
+        name: 'lint-sdk',
+        status: 'passed',
+        url: 'https://example.com/run',
+        completed_at: '2026-08-12T06:12:06Z',
+      }],
+    },
   },
   families: {
-    olympus: {
-      kind: 'commerce_family',
-      sdk_version: '0.4.34',
-      verification_status: 'verified',
-      campaigns_os_status: 'certified',
-      distribution: 'public_picker',
-      source_path: 'src/olympus',
-    },
+    olympus: { evidence: evidenceId, campaigns_os_status: 'certified' },
   },
 };
 
-function validate(manifest, pickerOverride = picker, { sourceMatchesCurrent = true } = {}) {
+function validate(manifest, overrides = {}) {
   return validateVerificationManifest({
     manifest,
     repository: base.repository,
-    visibility: 'public',
     registry,
-    picker: pickerOverride,
-    expectedDigest: base.source.digest,
-    sourceMatchesCurrent,
+    picker,
+    commerceCatalog,
+    ...overrides,
   });
 }
 
-test('accepts a current public verification manifest', () => {
+test('accepts historical evidence when the current SDK has advanced', () => {
   assert.deepEqual(validate(structuredClone(base)), []);
 });
 
-test('rejects a stale source digest', () => {
+test('rejects a repository mismatch only when an expected repository is supplied', () => {
   const manifest = structuredClone(base);
-  manifest.source.digest = `sha256:${'c'.repeat(64)}`;
-  assert.ok(validate(manifest).some((error) => error.includes('source.digest is stale')));
+  assert.deepEqual(validateVerificationManifest({ manifest, registry, picker, commerceCatalog }), []);
+  assert.ok(validate(manifest, { repository: 'Example/fork' })
+    .some((error) => error.includes('GITHUB_REPOSITORY')));
 });
 
-test('rejects a registry SDK mismatch', () => {
+test('rejects a registry family omitted from the manifest', () => {
   const manifest = structuredClone(base);
-  manifest.families.olympus.sdk_version = '0.4.35';
-  assert.ok(validate(manifest).some((error) => error.includes('must match _data/campaigns.json')));
+  manifest.families = { landing: { campaigns_os_status: 'not_applicable' } };
+  assert.ok(validate(manifest).some((error) => error.includes('registry family olympus is missing')));
 });
 
-test('rejects a picker family omitted from the manifest', () => {
+test('uses own-property checks for picker slugs and evidence references', () => {
   const manifest = structuredClone(base);
-  const pickerWithUnknownFamily = { templates: [...picker.templates, { slug: 'demeter' }] };
-  assert.ok(validate(manifest, pickerWithUnknownFamily).some((error) => error.includes('picker family demeter is missing from manifest')));
+  manifest.families.olympus.evidence = 'constructor';
+  const maliciousPicker = { templates: [{ slug: 'constructor', hidden: false, deprecated: false }] };
+  const errors = validate(manifest, { picker: maliciousPicker });
+  assert.ok(errors.some((error) => error.includes('public picker family constructor is missing')));
+  assert.ok(errors.some((error) => error.includes('references unknown evidence constructor')));
 });
 
-test('rejects picker entries without a slug', () => {
-  const manifest = structuredClone(base);
-  assert.ok(validate(manifest, { templates: [{}] }).some((error) => error.includes('entry is missing slug')));
+test('rejects malformed current SDK metadata', () => {
+  const errors = validate(structuredClone(base), { registry: { olympus: { sdk_version: 'latest' } } });
+  assert.ok(errors.some((error) => error.includes('sdk_version must match 0.4.x')));
 });
 
-test('rejects a hidden family marked public_picker', () => {
+test('reports corpus and SDK drift without turning it into a validation error', () => {
   const manifest = structuredClone(base);
-  const hiddenPicker = { templates: [{ slug: 'olympus', hidden: true }] };
-  assert.ok(validate(manifest, hiddenPicker).some((error) => error.includes('marked for a picker but missing')));
+  assert.deepEqual(validate(manifest), []);
+  const assessment = assessVerificationFreshness({
+    manifest,
+    registry,
+    currentFingerprint: `git-index-sha256:${'c'.repeat(64)}`,
+  });
+  assert.equal(assessment.fresh, false);
+  assert.ok(assessment.warnings.some((warning) => warning.includes('corpus differs')));
+  assert.ok(assessment.warnings.some((warning) => warning.includes('0.4.34 → 0.4.36')));
 });
 
-test('requires strict ISO date-times', () => {
+test('reports fresh when current metadata and fingerprint match evidence', () => {
   const manifest = structuredClone(base);
-  manifest.source.verified_at = 'August 12, 2026';
-  assert.ok(validate(manifest).some((error) => error.includes('must be an ISO date-time')));
+  const assessment = assessVerificationFreshness({
+    manifest,
+    registry: { olympus: { sdk_version: '0.4.34' } },
+    currentFingerprint: manifest.evidence[evidenceId].source.fingerprint,
+  });
+  assert.deepEqual(assessment, { fresh: true, warnings: [] });
 });
 
-test('requires https evidence URLs', () => {
+test('allows a newly registered family to exist without evidence', () => {
   const manifest = structuredClone(base);
-  manifest.verification.checks[0].url = 'http://example.com/run';
-  assert.ok(validate(manifest).some((error) => error.includes('must use https')));
+  delete manifest.families.olympus.evidence;
+  assert.deepEqual(validate(manifest), []);
+  const assessment = assessVerificationFreshness({
+    manifest,
+    registry,
+    currentFingerprint: manifest.evidence[evidenceId].source.fingerprint,
+  });
+  assert.ok(assessment.warnings.some((warning) => warning.includes('no verification evidence')));
 });
 
-test('reports a tracked source mismatch for a well-formed SHA', () => {
-  const manifest = structuredClone(base);
-  assert.ok(validate(manifest, picker, { sourceMatchesCurrent: false })
-    .some((error) => error.includes('source.sha does not match')));
-});
-
-test('does not report a source mismatch until the SHA is well formed', () => {
-  const manifest = structuredClone(base);
-  manifest.source.sha = 'HEAD';
-  const errors = validate(manifest, picker, { sourceMatchesCurrent: false });
-  assert.ok(errors.some((error) => error.includes('40-character lowercase git SHA')));
-  assert.ok(!errors.some((error) => error.includes('source.sha does not match')));
-});
-
-test('ignores untracked files when computing the source digest', (t) => {
+test('fingerprint uses tracked index entries and ignores untracked files', (t) => {
   const root = createGitFixture(t);
-  const before = computeVerificationDigest(root);
+  const before = computeVerificationFingerprint(root);
   writeFileSync(join(root, 'src', 'olympus', 'local-build.css'), 'untracked build output');
-  assert.equal(computeVerificationDigest(root), before);
+  assert.equal(computeVerificationFingerprint(root), before);
 });
 
-test('detects when tracked verification inputs differ from the source SHA', (t) => {
+test('fingerprint changes after a tracked file is staged', (t) => {
   const root = createGitFixture(t);
-  const sourceSha = execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
-  assert.equal(verificationInputsMatchRef(root, sourceSha), true);
+  const before = computeVerificationFingerprint(root);
   writeFileSync(join(root, 'src', 'olympus', 'index.html'), 'changed template');
-  assert.equal(verificationInputsMatchRef(root, sourceSha), false);
+  assert.equal(hasTrackedVerificationChanges(root), true);
+  execFileSync('git', ['-C', root, 'add', 'src/olympus/index.html']);
+  assert.notEqual(computeVerificationFingerprint(root), before);
 });
 
 function createGitFixture(t) {

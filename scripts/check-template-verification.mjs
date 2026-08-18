@@ -5,17 +5,12 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
-import {
-  computeVerificationDigest,
-  SHA_RE,
-  validateVerificationManifest,
-  verificationInputsMatchRef,
-} from './lib/template-verification.mjs';
+import { validateVerificationManifest } from './lib/template-verification.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const readJson = (path) => JSON.parse(readFileSync(join(root, path), 'utf8'));
 const manifest = readJson('template-verification.json');
-const schema = readJson('schemas/template-verification-manifest.v0.schema.json');
+const schema = readJson('schemas/template-verification-manifest.v1.schema.json');
 const ajv = new Ajv2020({ allErrors: true });
 addFormats(ajv);
 const validateSchema = ajv.compile(schema);
@@ -30,13 +25,10 @@ if (!validateSchema(manifest)) {
 
 const errors = validateVerificationManifest({
   manifest,
-  repository: 'NextCommerceCo/campaign-cart-starter-templates',
-  visibility: 'public',
+  repository: process.env.GITHUB_REPOSITORY,
   registry: readJson('_data/campaigns.json'),
   picker: readJson('templates.json'),
-  expectedDigest: computeVerificationDigest(root),
-  sourceMatchesCurrent: SHA_RE.test(manifest.source?.sha || '')
-    && verificationInputsMatchRef(root, manifest.source.sha),
+  commerceCatalog: readJson('docs/commerce-surface-catalog.json'),
 });
 
 if (errors.length) {
@@ -45,4 +37,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`Template verification manifest is current (${Object.keys(manifest.families).length} families, source ${manifest.source.sha.slice(0, 12)}).`);
+console.log(`Template verification evidence is valid (${Object.keys(manifest.families).length} families, ${Object.keys(manifest.evidence).length} evidence record).`);

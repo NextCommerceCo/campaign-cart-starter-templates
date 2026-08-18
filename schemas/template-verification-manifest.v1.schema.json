@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/NextCommerceCo/campaign-cart-starter-templates/main/schemas/template-verification-manifest.v1.schema.json",
+  "title": "NEXT template verification evidence manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "repository", "visibility", "evidence", "families"],
+  "properties": {
+    "$schema": { "type": "string", "format": "uri-reference" },
+    "schema_version": { "const": "template-verification-manifest/v1" },
+    "repository": { "type": "string", "pattern": "^[^/]+/[^/]+$" },
+    "visibility": { "const": "public" },
+    "evidence": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "pattern": "^[a-z0-9.-]+$" },
+      "additionalProperties": { "$ref": "#/$defs/evidence" }
+    },
+    "families": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "pattern": "^[a-z0-9-]+$" },
+      "additionalProperties": { "$ref": "#/$defs/family" }
+    }
+  },
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sdk_version", "source", "verified_at", "checks"],
+      "properties": {
+        "sdk_version": { "type": "string", "pattern": "^0\\.4\\.[0-9]+$" },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["sha", "fingerprint"],
+          "properties": {
+            "sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+            "fingerprint": { "type": "string", "pattern": "^git-index-sha256:[0-9a-f]{64}$" }
+          }
+        },
+        "verified_at": { "type": "string", "format": "date-time" },
+        "checks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "status", "url", "completed_at"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "status": { "const": "passed" },
+              "url": { "type": "string", "format": "uri", "pattern": "^https://" },
+              "completed_at": { "type": "string", "format": "date-time" }
+            }
+          }
+        }
+      }
+    },
+    "family": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["campaigns_os_status"],
+      "properties": {
+        "evidence": { "type": "string", "pattern": "^[a-z0-9.-]+$" },
+        "campaigns_os_status": { "enum": ["certified", "candidate", "not_applicable"] }
+      }
+    }
+  }
+}

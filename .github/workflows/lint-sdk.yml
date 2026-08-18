@@ -1,12 +1,15 @@
 name: lint:sdk
 
-# Template discipline gate. Runs three checks so drift across any family fails the
-# PR instead of slipping in silently:
+# Template discipline gate. Keeps structural and runtime failures blocking while
+# reporting historical verification drift without blocking routine template work:
 #   1. next-core.css sync — every family must ship a byte-identical shared base
 #      stylesheet (lint:next-core); no build needed, so it runs first / fails fast.
 #   2. NEXT logo sync — every public surface must ship the byte-identical canonical asset.
-#   3. SDK markup — builds all families and runs the catalog linter
+#   3. shared generated assets — every family matches the canonical shared sources.
+#   4. verification evidence — schema, references, and canonical family coverage stay valid.
+#   5. SDK markup — builds all families and runs the catalog linter
 #      (lint:sdk:ci = lint-sdk.mjs --scope=all --pages=all) in source + rendered modes.
+#   6. verification freshness — warns when current sources have advanced beyond evidence.
 # This job (`lint-sdk`) is a required status check in branch protection — keep the
 # job name stable so the required-check binding does not break.
 
@@ -24,10 +27,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-        with:
-          # The verification checker compares the current corpus with the
-          # previously certified source SHA, so that commit must be available.
-          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -40,9 +39,13 @@ jobs:
         run: npm run lint:next-logo
       - name: Lint shared analytics sync (families match _shared/analytics)
         run: npm run lint:shared
-      - name: Check template verification manifest
-        run: npm run check:template-verification
+      - name: Test template verification evidence
+        run: npm run test:template-verification
+      - name: Validate template verification evidence
+        run: npm run validate:template-verification
       - name: Build all template families
         run: npm run build
       - name: Lint SDK markup (all families, source + rendered)
         run: npm run lint:sdk:ci
+      - name: Report template verification freshness (informational)
+        run: npm run report:template-verification:freshness

@@ -1,11 +1,9 @@
 import { createHash } from 'node:crypto';
-import { execFileSync, spawnSync } from 'node:child_process';
-import { lstatSync, readFileSync } from 'node:fs';
-import { join, relative } from 'node:path';
+import { execFileSync } from 'node:child_process';
 
-export const TEMPLATE_VERIFICATION_SCHEMA = 'template-verification-manifest/v0';
+export const TEMPLATE_VERIFICATION_SCHEMA = 'template-verification-manifest/v1';
 export const SDK_VERSION_RE = /^0\.4\.\d+$/;
-export const DIGEST_RE = /^sha256:[0-9a-f]{64}$/;
+export const FINGERPRINT_RE = /^git-index-sha256:[0-9a-f]{64}$/;
 export const SHA_RE = /^[0-9a-f]{40}$/;
 
 const REQUIRED_INPUTS = [
@@ -15,104 +13,71 @@ const REQUIRED_INPUTS = [
 ];
 const INPUT_PATHS = [...REQUIRED_INPUTS, 'src'];
 
-export function collectVerificationInputs(root, extraPaths = []) {
-  const requiredInputs = [...REQUIRED_INPUTS, ...extraPaths];
-  const trackedInputs = execFileSync(
-    'git',
-    ['-C', root, 'ls-files', '-z', '--', ...INPUT_PATHS, ...extraPaths],
-    { encoding: 'utf8' },
-  ).split('\0').filter(Boolean);
-  const trackedSet = new Set(trackedInputs);
-
-  for (const input of requiredInputs) {
-    if (!trackedSet.has(input)) throw new Error(`required verification input is not tracked: ${input}`);
-  }
-
-  return [...new Set(trackedInputs)].sort((a, b) => a.localeCompare(b)).map((input) => {
-    const path = join(root, input);
-    let stats;
-    try {
-      stats = lstatSync(path);
-    } catch (error) {
-      throw new Error(`tracked verification input is missing: ${input}`, { cause: error });
-    }
-    if (stats.isSymbolicLink()) throw new Error(`verification inputs cannot be symbolic links: ${input}`);
-    if (!stats.isFile()) throw new Error(`verification input is not a file: ${input}`);
-    return path;
-  });
+export function computeVerificationFingerprint(root, extraPaths = []) {
+  const index = verificationIndex(root, extraPaths);
+  const hash = createHash('sha256').update(index).digest('hex');
+  return `git-index-sha256:${hash}`;
 }
 
-export function computeVerificationDigest(root, extraPaths = []) {
-  const hash = createHash('sha256');
-  for (const path of collectVerificationInputs(root, extraPaths)) {
-    const name = relative(root, path).split('\\').join('/');
-    hash.update(name);
-    hash.update('\0');
-    hash.update(readFileSync(path));
-    hash.update('\0');
-  }
-  return `sha256:${hash.digest('hex')}`;
-}
-
-export function verificationInputsMatchRef(root, ref, extraPaths = []) {
-  if (!SHA_RE.test(ref || '')) return false;
-  const result = spawnSync(
+export function hasTrackedVerificationChanges(root, extraPaths = []) {
+  const output = execFileSync(
     'git',
-    ['-C', root, 'diff', '--quiet', ref, '--', ...INPUT_PATHS, ...extraPaths],
-    { encoding: 'utf8' },
+    ['-C', root, 'status', '--porcelain=v1', '-z', '--untracked-files=no', '--', ...INPUT_PATHS, ...extraPaths],
+    { encoding: 'buffer' },
   );
-  if (result.status === 0) return true;
-  if (result.status === 1) return false;
-  throw new Error(result.stderr.trim() || `could not compare verification inputs with ${ref}`);
+  return output.length > 0;
 }
 
 export function validateVerificationManifest({
   manifest,
   repository,
-  visibility,
   registry,
   picker,
-  expectedDigest,
-  sourceMatchesCurrent = true,
+  commerceCatalog,
 }) {
   const errors = [];
   if (!isObject(manifest)) return ['manifest must be a JSON object'];
   if (manifest.schema_version !== TEMPLATE_VERIFICATION_SCHEMA) {
     errors.push(`schema_version must be ${TEMPLATE_VERIFICATION_SCHEMA}`);
   }
-  if (manifest.repository !== repository) errors.push(`repository must be ${repository}`);
-  if (manifest.visibility !== visibility) errors.push(`visibility must be ${visibility}`);
-
-  const source = manifest.source;
-  if (!isObject(source)) errors.push('source must be an object');
-  else {
-    if (!SHA_RE.test(source.sha || '')) errors.push('source.sha must be a 40-character lowercase git SHA');
-    if (!DIGEST_RE.test(source.digest || '')) errors.push('source.digest must be sha256:<64 lowercase hex>');
-    if (source.digest !== expectedDigest) {
-      errors.push(`source.digest is stale: expected ${expectedDigest}, got ${source.digest || '(missing)'}`);
-    }
-    if (SHA_RE.test(source.sha || '') && !sourceMatchesCurrent) {
-      errors.push('source.sha does not match the current tracked verification inputs');
-    }
-    if (!isDateTime(source.verified_at)) errors.push('source.verified_at must be an ISO date-time');
+  if (repository && manifest.repository !== repository) {
+    errors.push(`repository must match GITHUB_REPOSITORY (${repository})`);
   }
+  if (manifest.visibility !== 'public') errors.push('visibility must be public');
 
-  const verification = manifest.verification;
-  if (!isObject(verification) || verification.scope !== 'template_contract_ci') {
-    errors.push('verification.scope must be template_contract_ci');
-  }
-  const checks = verification?.checks;
-  if (!Array.isArray(checks) || checks.length === 0) errors.push('verification.checks must contain at least one check');
-  else {
-    for (const [index, check] of checks.entries()) {
-      if (!isObject(check)) {
-        errors.push(`verification.checks[${index}] must be an object`);
-        continue;
+  const evidence = isObject(manifest.evidence) ? manifest.evidence : {};
+  for (const [evidenceId, record] of Object.entries(evidence)) {
+    if (!isObject(record)) {
+      errors.push(`evidence.${evidenceId} must be an object`);
+      continue;
+    }
+    if (!SDK_VERSION_RE.test(record.sdk_version || '')) {
+      errors.push(`evidence.${evidenceId}.sdk_version must match 0.4.x`);
+    }
+    if (!isDateTime(record.verified_at)) {
+      errors.push(`evidence.${evidenceId}.verified_at must be an ISO date-time`);
+    }
+    if (!SHA_RE.test(record.source?.sha || '')) {
+      errors.push(`evidence.${evidenceId}.source.sha must be a 40-character lowercase git SHA`);
+    }
+    if (!FINGERPRINT_RE.test(record.source?.fingerprint || '')) {
+      errors.push(`evidence.${evidenceId}.source.fingerprint must use git-index-sha256`);
+    }
+    if (!Array.isArray(record.checks) || record.checks.length === 0) {
+      errors.push(`evidence.${evidenceId}.checks must contain at least one check`);
+    } else {
+      for (const [index, check] of record.checks.entries()) {
+        if (!isObject(check)) {
+          errors.push(`evidence.${evidenceId}.checks[${index}] must be an object`);
+          continue;
+        }
+        if (!check.name) errors.push(`evidence.${evidenceId}.checks[${index}].name is required`);
+        if (check.status !== 'passed') errors.push(`evidence.${evidenceId}.checks[${index}].status must be passed`);
+        if (!isHttpsUrl(check.url)) errors.push(`evidence.${evidenceId}.checks[${index}].url must use https`);
+        if (!isDateTime(check.completed_at)) {
+          errors.push(`evidence.${evidenceId}.checks[${index}].completed_at must be an ISO date-time`);
+        }
       }
-      if (!check.name) errors.push(`verification.checks[${index}].name is required`);
-      if (check.status !== 'passed') errors.push(`verification.checks[${index}].status must be passed`);
-      if (!isHttpsUrl(check.url)) errors.push(`verification.checks[${index}].url must use https`);
-      if (!isDateTime(check.completed_at)) errors.push(`verification.checks[${index}].completed_at must be an ISO date-time`);
     }
   }
 
@@ -131,18 +96,26 @@ export function validateVerificationManifest({
     errors.push(`manifest family ${family} is missing from _data/campaigns.json`);
   }
 
+  for (const [family, current] of Object.entries(registry || {})) {
+    if (!SDK_VERSION_RE.test(current?.sdk_version || '')) {
+      errors.push(`_data/campaigns.json ${family}.sdk_version must match 0.4.x`);
+    }
+  }
+
   const pickerEntries = Array.isArray(picker?.templates) ? picker.templates : [];
-  const pickerFamilies = new Set();
   for (const entry of pickerEntries) {
     if (!entry?.slug) {
       errors.push('templates.json entry is missing slug');
       continue;
     }
-    if (!families[entry.slug]) errors.push(`picker family ${entry.slug} is missing from manifest`);
-    const isActive = entry.hidden !== true && entry.deprecated !== true;
-    if (isActive) pickerFamilies.add(entry.slug);
-    if (isActive && families[entry.slug]?.distribution === 'not_in_picker') {
-      errors.push(`picker family ${entry.slug} is marked not_in_picker`);
+    if (entry.hidden !== true && entry.deprecated !== true && !Object.hasOwn(families, entry.slug)) {
+      errors.push(`public picker family ${entry.slug} is missing from manifest`);
+    }
+  }
+
+  for (const family of Object.keys(commerceCatalog?.families || {})) {
+    if (!Object.hasOwn(families, family)) {
+      errors.push(`commerce catalog family ${family} is missing from manifest`);
     }
   }
 
@@ -151,29 +124,67 @@ export function validateVerificationManifest({
       errors.push(`families.${family} must be an object`);
       continue;
     }
-    if (!['commerce_family', 'section_library'].includes(record.kind)) errors.push(`families.${family}.kind is invalid`);
-    if (!SDK_VERSION_RE.test(record.sdk_version || '')) errors.push(`families.${family}.sdk_version must match 0.4.x`);
-    if (registry?.[family]?.sdk_version !== record.sdk_version) {
-      errors.push(`families.${family}.sdk_version must match _data/campaigns.json (${registry?.[family]?.sdk_version || 'missing'})`);
-    }
-    if (!['verified', 'candidate', 'superseded'].includes(record.verification_status)) {
-      errors.push(`families.${family}.verification_status is invalid`);
+    if (record.evidence !== undefined && !Object.hasOwn(evidence, record.evidence)) {
+      errors.push(`families.${family}.evidence references unknown evidence ${record.evidence}`);
     }
     if (!['certified', 'candidate', 'not_applicable'].includes(record.campaigns_os_status)) {
       errors.push(`families.${family}.campaigns_os_status is invalid`);
     }
-    if (!['public_picker', 'private_picker', 'not_in_picker'].includes(record.distribution)) {
-      errors.push(`families.${family}.distribution is invalid`);
-    }
-    if (visibility === 'public' && record.distribution === 'private_picker') {
-      errors.push(`families.${family} cannot be private_picker in a public manifest`);
-    }
-    if (record.distribution !== 'not_in_picker' && !pickerFamilies.has(family)) {
-      errors.push(`families.${family} is marked for a picker but missing from templates.json`);
-    }
-    if (record.source_path !== `src/${family}`) errors.push(`families.${family}.source_path must be src/${family}`);
   }
   return errors;
+}
+
+export function assessVerificationFreshness({ manifest, registry, currentFingerprint }) {
+  const warnings = [];
+  const evidenceIds = new Set();
+  const neverVerified = [];
+  const sdkDrift = [];
+
+  for (const [family, record] of Object.entries(manifest.families || {})) {
+    if (!record?.evidence) {
+      neverVerified.push(family);
+      continue;
+    }
+    const evidence = manifest.evidence?.[record.evidence];
+    if (!evidence) continue;
+    evidenceIds.add(record.evidence);
+    const currentSdk = registry?.[family]?.sdk_version;
+    if (currentSdk && currentSdk !== evidence.sdk_version) {
+      sdkDrift.push(`${family} (${evidence.sdk_version} → ${currentSdk})`);
+    }
+  }
+
+  const fingerprintDrift = [...evidenceIds]
+    .filter((id) => manifest.evidence[id].source.fingerprint !== currentFingerprint);
+  if (fingerprintDrift.length) {
+    warnings.push(`tracked template corpus differs from evidence: ${fingerprintDrift.join(', ')}`);
+  }
+  if (sdkDrift.length) warnings.push(`current SDK differs from verified SDK: ${sdkDrift.join(', ')}`);
+  if (neverVerified.length) warnings.push(`families have no verification evidence: ${neverVerified.join(', ')}`);
+
+  return { fresh: warnings.length === 0, warnings };
+}
+
+function verificationIndex(root, extraPaths) {
+  const output = execFileSync(
+    'git',
+    ['-C', root, 'ls-files', '--stage', '-z', '--', ...INPUT_PATHS, ...extraPaths],
+    { encoding: 'buffer' },
+  );
+  const entries = output.toString('utf8').split('\0').filter(Boolean);
+  const paths = new Set(entries.map((entry) => entry.slice(entry.indexOf('\t') + 1)));
+  for (const input of [...REQUIRED_INPUTS, ...extraPaths]) {
+    if (!paths.has(input)) throw new Error(`required verification input is not tracked: ${input}`);
+  }
+  if (![...paths].some((path) => path.startsWith('src/'))) {
+    throw new Error('no tracked verification inputs found under src/');
+  }
+  for (const entry of entries) {
+    if (!/^[0-9]{6} [0-9a-f]+ 0\t/.test(entry)) {
+      throw new Error(`verification input has a non-zero index stage: ${entry.slice(entry.indexOf('\t') + 1)}`);
+    }
+  }
+  return output;
 }
 
 function difference(left, right) {
@@ -193,8 +204,7 @@ function isDateTime(value) {
 
 function isHttpsUrl(value) {
   try {
-    const url = new URL(value);
-    return url.protocol === 'https:';
+    return new URL(value).protocol === 'https:';
   } catch {
     return false;
   }
