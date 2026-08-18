@@ -59,7 +59,7 @@ test('rejects a repository mismatch only when an expected repository is supplied
   const manifest = structuredClone(base);
   assert.deepEqual(validateVerificationManifest({ manifest, registry, picker, commerceCatalog }), []);
   assert.ok(validate(manifest, { repository: 'Example/fork' })
-    .some((error) => error.includes('GITHUB_REPOSITORY')));
+    .some((error) => error.includes('expected repository (Example/fork)')));
 });
 
 test('rejects a registry family omitted from the manifest', () => {

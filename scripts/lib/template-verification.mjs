@@ -41,7 +41,7 @@ export function validateVerificationManifest({
     errors.push(`schema_version must be ${TEMPLATE_VERIFICATION_SCHEMA}`);
   }
   if (repository && manifest.repository !== repository) {
-    errors.push(`repository must match GITHUB_REPOSITORY (${repository})`);
+    errors.push(`repository must match the expected repository (${repository})`);
   }
   if (manifest.visibility !== 'public') errors.push('visibility must be public');
 
@@ -180,8 +180,8 @@ function verificationIndex(root, extraPaths) {
     throw new Error('no tracked verification inputs found under src/');
   }
   for (const entry of entries) {
-    if (!/^[0-9]{6} [0-9a-f]+ 0\t/.test(entry)) {
-      throw new Error(`verification input has a non-zero index stage: ${entry.slice(entry.indexOf('\t') + 1)}`);
+    if (!/^[0-9]{6} (?:[0-9a-f]{40}|[0-9a-f]{64}) 0\t/.test(entry)) {
+      throw new Error(`verification input has a malformed or non-zero index entry: ${entry.slice(entry.indexOf('\t') + 1)}`);
     }
   }
   return output;

@@ -37,4 +37,5 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`Template verification evidence is valid (${Object.keys(manifest.families).length} families, ${Object.keys(manifest.evidence).length} evidence record).`);
+const evidenceCount = Object.keys(manifest.evidence).length;
+console.log(`Template verification evidence is valid (${Object.keys(manifest.families).length} families, ${evidenceCount} evidence record${evidenceCount === 1 ? '' : 's'}).`);
