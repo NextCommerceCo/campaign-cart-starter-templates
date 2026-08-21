@@ -267,13 +267,20 @@
   },
   "campaignSpecFixturePolicy": {
     "directory": "docs/fixtures/campaign-specs",
-    "purpose": "Small CampaignSpec-shaped examples for agent contract reasoning. They are not live Campaigns App exports.",
+    "purpose": "Small CampaignSpec-shaped examples for agent contract reasoning, authored in the real Map Builder export dialect (schema_version 4.3). They are not live Campaigns App exports.",
     "requiredShape": [
       "campaign.id",
       "campaign.name",
       "campaign.currency",
       "campaign.language",
       "funnels[].pages[]"
+    ],
+    "exportDialect": [
+      "schema_version is \"4.3\" and global_config.sdk_version pins the SDK.",
+      "Page packages[] use qty plus boolean is_upsell / is_order_bump role flags; there is no role field.",
+      "Offers (page-level and root catalog) are identified by ref_id.",
+      "Every page carries sdk_hints.sdk_page_type (product | checkout | upsell | receipt); type \"thankyou\" maps to sdk_page_type \"receipt\".",
+      "Shipping methods live only in the root shipping_methods[] catalog, never on pages."
     ],
     "fixtureOnlyConventions": [
       "sdk_hints.template_family names the starter family for the fixture only.",
