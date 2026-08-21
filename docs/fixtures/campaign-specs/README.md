@@ -11,9 +11,9 @@ What they are for:
 Fixture conventions (real-export dialect):
 
 - Specs are stamped `"schema_version": "4.3"` and pin the SDK via `global_config.sdk_version`.
-- Page `packages[]` use `qty` and the boolean role flags `is_upsell` / `is_order_bump` (no `role` field).
+- Page `packages[]` use `qty` and the boolean role flags `is_upsell` / `is_order_bump` (mutually exclusive; a package with neither flag is the main product; no `role` field).
 - Offers — page-level and root catalog — are identified by `ref_id`.
-- Every page carries `sdk_hints.sdk_page_type` (`product` | `checkout` | `upsell` | `receipt`). Pages with `type: "thankyou"` map to `sdk_page_type: "receipt"`.
+- Every page carries `sdk_hints.sdk_page_type` (`product` | `checkout` | `upsell` | `receipt`): `presell` and `landing` pages (including variant-selection pages) map to `product`, `thankyou` maps to `receipt`.
 - Shipping methods live only in the root `shipping_methods[]` catalog, not on pages.
 - `sdk_hints.template_family` and `sdk_hints.frontmatter` are template-handoff extensions, not part of a live export. `template_family` names the intended starter family for the fixture only; `frontmatter` shows the values an agent would write into the template.
 - Numeric `ref_id` values are illustrative. Replace them from the target Campaigns API.
