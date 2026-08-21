@@ -267,7 +267,7 @@
   },
   "campaignSpecFixturePolicy": {
     "directory": "docs/fixtures/campaign-specs",
-    "purpose": "Small CampaignSpec-shaped examples for agent contract reasoning. They are not live Campaigns App exports.",
+    "purpose": "Small CampaignSpec-shaped examples for agent contract reasoning, authored in the real Map Builder export dialect (schema_version 4.3). They are not live Campaigns App exports.",
     "requiredShape": [
       "campaign.id",
       "campaign.name",
