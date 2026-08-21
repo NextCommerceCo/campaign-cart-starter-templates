@@ -11,7 +11,7 @@ What they are for:
 Fixture conventions (real-export dialect):
 
 - Specs are stamped `"schema_version": "4.3"` and pin the SDK via `global_config.sdk_version`.
-- Page `packages[]` use `qty` and boolean role flags `is_upsell` / `is_order_bump`. There is no `role` field.
+- Page `packages[]` use `qty` and the boolean role flags `is_upsell` / `is_order_bump` (no `role` field).
 - Offers — page-level and root catalog — are identified by `ref_id`.
 - Every page carries `sdk_hints.sdk_page_type` (`product` | `checkout` | `upsell` | `receipt`). Pages with `type: "thankyou"` map to `sdk_page_type: "receipt"`.
 - Shipping methods live only in the root `shipping_methods[]` catalog, not on pages.
