@@ -60,6 +60,7 @@ function requireArray(value, label) {
 
 function pngDimensions(path) {
   const bytes = readFileSync(path);
+  if (bytes.length < 24) return null;
   const signature = bytes.subarray(0, 8).toString('hex');
   if (signature !== '89504e470d0a1a0a' || bytes.subarray(12, 16).toString('ascii') !== 'IHDR') return null;
   return { width: bytes.readUInt32BE(16), height: bytes.readUInt32BE(20) };
@@ -131,6 +132,17 @@ function validateTemplateReference(family, reference) {
   if (reference.family !== family) {
     errors.push(`${label}.family: expected "${family}", got ${JSON.stringify(reference.family)}`);
   }
+  if (typeof reference.source_commit !== 'string' || !/^[0-9a-f]{40}$/.test(reference.source_commit)) {
+    errors.push(`${label}.source_commit: expected a full 40-character commit SHA`);
+  }
+  if (typeof reference.provenance_path !== 'string' || !reference.provenance_path.trim()) {
+    errors.push(`${label}.provenance_path: expected a non-empty string`);
+  } else if (!existsSync(join(repoRoot, reference.provenance_path))) {
+    errors.push(`${label}.provenance_path: ${reference.provenance_path} does not exist`);
+  }
+  if (typeof reference.provenance_url !== 'string' || !reference.provenance_url.startsWith('https://')) {
+    errors.push(`${label}.provenance_url: expected an HTTPS URL`);
+  }
   if (!reference.contract_path && !reference.artifact_path) {
     errors.push(`${label}: expected contract_path or artifact_path`);
   }
@@ -162,7 +174,8 @@ function validateTemplateReference(family, reference) {
     if (!ref.path && !ref.url) errors.push(`${refLabel}: expected path or url`);
     if (!Number.isInteger(ref.width) || ref.width < 1) errors.push(`${refLabel}.width: expected a positive integer`);
     if (!Number.isInteger(ref.height) || ref.height < 1) errors.push(`${refLabel}.height: expected a positive integer`);
-    if (typeof ref.sha256 !== 'string' || !/^[0-9a-f]{64}$/.test(ref.sha256)) {
+    const validSha256 = typeof ref.sha256 === 'string' && /^[0-9a-f]{64}$/.test(ref.sha256);
+    if (!validSha256) {
       errors.push(`${refLabel}.sha256: expected 64 lowercase hex characters`);
     }
 
@@ -185,7 +198,7 @@ function validateTemplateReference(family, reference) {
               `${ref.path} (${dimensions.width}x${dimensions.height})`
           );
         }
-        if (/^[0-9a-f]{64}$/.test(ref.sha256 || '')) {
+        if (validSha256) {
           const actual = createHash('sha256').update(readFileSync(artifactPath)).digest('hex');
           if (actual !== ref.sha256) errors.push(`${refLabel}.sha256: expected ${actual} for ${ref.path}`);
         }
