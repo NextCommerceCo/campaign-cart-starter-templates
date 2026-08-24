@@ -12,7 +12,17 @@ The reference images in this directory capture `/apollo/checkout/` from starter-
    Because the capture is full-page, the PNG width matches the viewport while its height matches the rendered document. The committed captures are therefore `1440x1491` and `390x2650`, respectively.
 4. Store the captures as `checkout-desktop.png` and `checkout-mobile.png`.
 5. Update the rendered dimensions and SHA-256 values in `docs/commerce-surface-catalog.json`.
-6. Run `npm run lint:agent-contracts`; the lint verifies the files are PNGs and checks their actual dimensions and hashes against the catalog.
+6. Update `source_commit` to the commit the captures were taken from.
+7. Run `npm run lint:agent-contracts`; the lint verifies the files are PNGs, checks their actual dimensions and hashes against the catalog, and reports whether render-affecting sources have moved since `source_commit`.
+
+## When to recapture
+
+`npm run lint:agent-contracts` warns when `src/apollo/`, the shared sources under `_shared/`, or the canonical `next-core.css` have changed since `source_commit`. The warning does not fail CI — it only says the reference *may* be stale. Resolve it one of two ways:
+
+- The render changed: redo the capture above, including step 6.
+- The render did not change (a non-visual edit): re-stamp `source_commit` to the current commit, leaving the PNGs and their hashes as they are.
+
+Either way the warning clears, and the next reader sees a reference whose provenance is honest about what it was checked against.
 
 The committed capture used Playwright Chromium with reduced motion and the following injected style before the screenshot:
 

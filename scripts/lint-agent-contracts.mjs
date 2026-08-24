@@ -5,6 +5,7 @@
 // template runtime. This is not a campaign readiness gate: it only checks that
 // the catalog and CampaignSpec-shaped fixtures stay coherent.
 
+import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { extname, join, relative } from 'node:path';
@@ -21,6 +22,8 @@ const expectedFamilies = [
   'apollo-mv-single-step',
   'olympus-mv-two-step',
 ];
+
+const CANONICAL_NEXT_CORE = 'src/olympus/assets/css/next-core.css';
 
 const errors = [];
 const warnings = [];
@@ -134,6 +137,8 @@ function validateTemplateReference(family, reference) {
   }
   if (typeof reference.source_commit !== 'string' || !/^[0-9a-f]{40}$/.test(reference.source_commit)) {
     errors.push(`${label}.source_commit: expected a full 40-character commit SHA`);
+  } else {
+    reportTemplateReferenceStaleness(family, reference, label);
   }
   if (typeof reference.provenance_path !== 'string' || !reference.provenance_path.trim()) {
     errors.push(`${label}.provenance_path: expected a non-empty string`);
@@ -209,6 +214,68 @@ function validateTemplateReference(family, reference) {
   for (const viewport of ['desktop', 'mobile']) {
     if (!viewports.has(viewport)) errors.push(`${label}.standard_viewport_refs: missing ${viewport} proof`);
   }
+}
+
+// Render-affecting sources for a family's committed visual reference.
+//
+// The hash/dimension checks above only prove the committed PNGs are the files
+// the catalog says they are. They cannot tell whether those PNGs still look
+// like the template: a later PR can change Apollo's markup and leave the
+// reference untouched, and every hard gate stays green while Campaigns OS QAs
+// template-backed pages against an outdated baseline. That drift is silent by
+// construction, so it needs a mechanical signal rather than a docs note.
+//
+// src/<family> is the family's own source. _shared/ and the canonical
+// next-core.css are the shared sources that SYNC into it, so a change there
+// reaches the rendered page in a commit that never touches src/<family>.
+// Kept in step with scripts/sync-shared.mjs and scripts/lint-next-core-sync.mjs.
+function renderAffectingPaths(family) {
+  return [...new Set([`src/${family}`, '_shared', CANONICAL_NEXT_CORE])];
+}
+
+function git(args) {
+  return execFileSync('git', ['-C', repoRoot, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+}
+
+// Warn-only, matching the template-verification freshness reporter: a
+// render-affecting change is not automatically a visual change, so a
+// non-visual edit must not turn CI red. Tighten later if the warnings get
+// ignored.
+function reportTemplateReferenceStaleness(family, reference, label) {
+  const commit = reference.source_commit;
+  const recapture = `docs/template-references/${family}/README.md`;
+
+  try {
+    git(['cat-file', '-e', `${commit}^{commit}`]);
+  } catch {
+    warnings.push(
+      `${label}: source_commit ${commit.slice(0, 12)} is not present in this clone ` +
+        `(shallow checkout, or the commit was never fetched), so ${family} reference staleness could not be assessed`
+    );
+    return;
+  }
+
+  let changed;
+  try {
+    changed = git(['diff', '--name-only', commit, '--', ...renderAffectingPaths(family)]);
+  } catch (error) {
+    warnings.push(`${label}: could not assess ${family} reference staleness (${error.message.trim().split('\n')[0]})`);
+    return;
+  }
+
+  // Markdown under these roots is provenance and notes, never rendered output:
+  // no template family ships a .md page, and _shared/analytics/README.md
+  // documents the sync rather than feeding it. Flagging those would spend the
+  // warning on a change that cannot move a pixel.
+  const files = changed.split('\n').filter(Boolean).filter((path) => !path.endsWith('.md'));
+  if (!files.length) return;
+
+  const sample = files.slice(0, 3).join(', ');
+  warnings.push(
+    `${label}: ${files.length} render-affecting file(s) changed since source_commit ${commit.slice(0, 12)} ` +
+      `(${sample}${files.length > 3 ? `, +${files.length - 3} more` : ''}). ` +
+      `The committed ${family} reference captures may no longer match the rendered page — recapture per ${recapture}.`
+  );
 }
 
 validateIntentionalVariants();
@@ -313,7 +380,19 @@ function validateFixture(spec, fixturePath, family) {
 
 if (warnings.length) {
   console.log(`[lint-agent-contracts] ${warnings.length} warning(s):`);
-  for (const warning of warnings) console.log(`  - ${warning}`);
+  for (const warning of warnings) emitWarning(warning);
+}
+
+// Annotate on GitHub so a warning surfaces on the PR instead of only in the log
+// of a green job. Mirrors report-template-verification-freshness.mjs.
+function emitWarning(message) {
+  if (process.env.GITHUB_ACTIONS === 'true') {
+    console.warn(
+      `::warning title=Agent contract warning::${message.replaceAll('%', '%25').replaceAll('\r', '%0D').replaceAll('\n', '%0A')}`
+    );
+  } else {
+    console.log(`  - ${message}`);
+  }
 }
 
 if (errors.length) {

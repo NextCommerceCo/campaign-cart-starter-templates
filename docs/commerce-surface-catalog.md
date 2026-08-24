@@ -62,6 +62,8 @@ The reference must name the family and version, link a contract or artifact path
 
 Apollo is the first published reference: `template-reference-apollo` at `sdk-0.4.37-2026-08-21`, with checkout captures at 1440px desktop and 390px mobile.
 
+Hash verification proves the committed PNGs are the files the catalog names; it cannot prove they still look like the template. So the same lint also reports staleness: for each family with a `templateReference`, it asks git whether render-affecting sources — `src/<family>/`, the shared sources under `_shared/` that sync into it, and the canonical `next-core.css` — have changed since `source_commit`. If any have, it warns and points at the family's recapture steps. The warning is informational and does not fail CI, because a render-affecting change is not automatically a visual one; when it fires, recapture the references or confirm the render is unchanged and re-stamp `source_commit`.
+
 ## Market-Sensitive Copy Review
 
 Starter templates include demo copy for shipping, carrier, warehouse, address, and manufacturing claims. Treat those claims as replace-or-confirm campaign copy when the CampaignSpec declares additional currencies, non-US shipping countries, `available_shipping_countries: "all"`, or the builder records the campaign as country-specific or multi-market.
