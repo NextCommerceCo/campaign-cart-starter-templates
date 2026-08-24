@@ -54,6 +54,16 @@ The important boundary is: CampaignSpec/API owns package refs, shipping refs, vo
 
 Catalog component names should be generic by default. Use names like `upsell-bundle-stepper-offer`, `upsell-bundle-tier-pills-offer`, and `upsell-bundle-tier-cards-offer` when the SDK attributes and frontmatter contract are shared across families. Reserve family-specific names for surfaces with genuinely different SDK ownership or frontmatter contracts, such as MV configurable upsells.
 
+## Template Reference Proof
+
+A family may publish a `templateReference` when it has a versioned contract plus real desktop and mobile render evidence. Campaigns OS uses this proof to cover commerce pages that intentionally inherit the selected template instead of receiving bespoke HTML source.
+
+The reference must name the family and version, link a contract or artifact path, and provide one hash-verified screenshot for each standard viewport. Screenshot files live under `docs/template-references/<family>/`; `npm run lint:agent-contracts` verifies their paths, dimensions metadata, unique viewport coverage, and SHA-256 hashes. A family without this block remains usable as a starter template, but Campaigns OS must report missing Template Reference proof rather than inventing a design baseline.
+
+Apollo is the first published reference: `template-reference-apollo` at `sdk-0.4.37-2026-08-21`, with checkout captures at 1440px desktop and 390px mobile.
+
+Hash verification proves the committed PNGs are the files the catalog names; it cannot prove they still look like the template. So the same lint also reports staleness: for each family with a `templateReference`, it asks git whether render-affecting sources — `src/<family>/`, the shared sources under `_shared/` that sync into it, and the canonical `next-core.css` — have changed since `source_commit`. If any have, it warns and points at the family's recapture steps. The warning is informational and does not fail CI, because a render-affecting change is not automatically a visual one; when it fires, recapture the references or confirm the render is unchanged and re-stamp `source_commit`.
+
 ## Market-Sensitive Copy Review
 
 Starter templates include demo copy for shipping, carrier, warehouse, address, and manufacturing claims. Treat those claims as replace-or-confirm campaign copy when the CampaignSpec declares additional currencies, non-US shipping countries, `available_shipping_countries: "all"`, or the builder records the campaign as country-specific or multi-market.

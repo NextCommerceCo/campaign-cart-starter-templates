@@ -10,6 +10,8 @@ name: lint:sdk
 #   5. SDK markup — builds all families and runs the catalog linter
 #      (lint:sdk:ci = lint-sdk.mjs --scope=all --pages=all) in source + rendered modes.
 #   6. verification freshness — warns when current sources have advanced beyond evidence.
+#   7. agent contracts — catalog/fixture coherence and Template Reference proof are
+#      hard gates; reference staleness against source_commit warns without blocking.
 # This job (`lint-sdk`) is a required status check in branch protection — keep the
 # job name stable so the required-check binding does not break.
 
@@ -27,6 +29,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          # Template Reference staleness diffs against templateReference.source_commit,
+          # which a depth-1 checkout does not contain.
+          fetch-depth: 0
       - uses: actions/setup-node@v5
         with:
           node-version: 20
@@ -49,3 +55,5 @@ jobs:
         run: npm run lint:sdk:ci
       - name: Report template verification freshness (informational)
         run: npm run report:template-verification:freshness
+      - name: Lint agent contracts (Template Reference staleness is informational)
+        run: npm run lint:agent-contracts

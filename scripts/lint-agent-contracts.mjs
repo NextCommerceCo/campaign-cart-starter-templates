@@ -5,6 +5,8 @@
 // template runtime. This is not a campaign readiness gate: it only checks that
 // the catalog and CampaignSpec-shaped fixtures stay coherent.
 
+import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { extname, join, relative } from 'node:path';
 
@@ -20,6 +22,8 @@ const expectedFamilies = [
   'apollo-mv-single-step',
   'olympus-mv-two-step',
 ];
+
+const CANONICAL_NEXT_CORE = 'src/olympus/assets/css/next-core.css';
 
 const errors = [];
 const warnings = [];
@@ -57,6 +61,14 @@ function requireArray(value, label) {
   return true;
 }
 
+function pngDimensions(path) {
+  const bytes = readFileSync(path);
+  if (bytes.length < 24) return null;
+  const signature = bytes.subarray(0, 8).toString('hex');
+  if (signature !== '89504e470d0a1a0a' || bytes.subarray(12, 16).toString('ascii') !== 'IHDR') return null;
+  return { width: bytes.readUInt32BE(16), height: bytes.readUInt32BE(20) };
+}
+
 const catalog = readJson(catalogPath);
 if (!catalog) process.exit(1);
 
@@ -92,6 +104,7 @@ for (const family of expectedFamilies) {
 
   requireArray(contract.fixtures, `catalog.families.${family}.agentContract.fixtures`);
   requireArray(contract.surfaces, `catalog.families.${family}.agentContract.surfaces`);
+  validateTemplateReference(family, entry.templateReference);
   validateFamilyAssetReferences(family, srcDir);
 
   for (const fixture of contract.fixtures || []) {
@@ -104,6 +117,172 @@ for (const family of expectedFamilies) {
     if (!spec) continue;
     validateFixture(spec, fixturePath, family);
   }
+}
+
+function validateTemplateReference(family, reference) {
+  if (reference == null) return;
+  const label = `catalog.families.${family}.templateReference`;
+  if (typeof reference !== 'object' || Array.isArray(reference)) {
+    errors.push(`${label}: expected an object`);
+    return;
+  }
+
+  for (const key of ['id', 'family', 'version']) {
+    if (typeof reference[key] !== 'string' || !reference[key].trim()) {
+      errors.push(`${label}.${key}: expected a non-empty string`);
+    }
+  }
+  if (reference.family !== family) {
+    errors.push(`${label}.family: expected "${family}", got ${JSON.stringify(reference.family)}`);
+  }
+  if (typeof reference.source_commit !== 'string' || !/^[0-9a-f]{40}$/.test(reference.source_commit)) {
+    errors.push(`${label}.source_commit: expected a full 40-character commit SHA`);
+  } else {
+    reportTemplateReferenceStaleness(family, reference, label);
+  }
+  if (typeof reference.provenance_path !== 'string' || !reference.provenance_path.trim()) {
+    errors.push(`${label}.provenance_path: expected a non-empty string`);
+  } else if (!existsSync(join(repoRoot, reference.provenance_path))) {
+    errors.push(`${label}.provenance_path: ${reference.provenance_path} does not exist`);
+  }
+  if (typeof reference.provenance_url !== 'string' || !reference.provenance_url.startsWith('https://')) {
+    errors.push(`${label}.provenance_url: expected an HTTPS URL`);
+  }
+  if (!reference.contract_path && !reference.artifact_path) {
+    errors.push(`${label}: expected contract_path or artifact_path`);
+  }
+  if (reference.contract_path && !existsSync(join(repoRoot, reference.contract_path))) {
+    errors.push(`${label}.contract_path: ${reference.contract_path} does not exist`);
+  }
+
+  if (!requireArray(reference.standard_viewport_refs, `${label}.standard_viewport_refs`)) return;
+  const viewports = new Set();
+  const ids = new Set();
+  for (const [index, ref] of reference.standard_viewport_refs.entries()) {
+    const refLabel = `${label}.standard_viewport_refs[${index}]`;
+    if (!ref || typeof ref !== 'object' || Array.isArray(ref)) {
+      errors.push(`${refLabel}: expected an object`);
+      continue;
+    }
+    if (typeof ref.id !== 'string' || !ref.id.trim()) errors.push(`${refLabel}.id: expected a non-empty string`);
+    else if (ids.has(ref.id)) errors.push(`${refLabel}.id: duplicate id "${ref.id}"`);
+    else ids.add(ref.id);
+
+    if (!['desktop', 'mobile', 'tablet'].includes(ref.viewport)) {
+      errors.push(`${refLabel}.viewport: expected desktop, mobile, or tablet`);
+    } else if (viewports.has(ref.viewport)) {
+      errors.push(`${refLabel}.viewport: duplicate ${ref.viewport} proof`);
+    } else {
+      viewports.add(ref.viewport);
+    }
+
+    if (!ref.path && !ref.url) errors.push(`${refLabel}: expected path or url`);
+    if (!Number.isInteger(ref.width) || ref.width < 1) errors.push(`${refLabel}.width: expected a positive integer`);
+    if (!Number.isInteger(ref.height) || ref.height < 1) errors.push(`${refLabel}.height: expected a positive integer`);
+    const validSha256 = typeof ref.sha256 === 'string' && /^[0-9a-f]{64}$/.test(ref.sha256);
+    if (!validSha256) {
+      errors.push(`${refLabel}.sha256: expected 64 lowercase hex characters`);
+    }
+
+    if (ref.path) {
+      const requiredPrefix = `docs/template-references/${family}/`;
+      if (!ref.path.startsWith(requiredPrefix)) {
+        errors.push(`${refLabel}.path: expected a path under ${requiredPrefix}`);
+        continue;
+      }
+      const artifactPath = join(repoRoot, ref.path);
+      if (!existsSync(artifactPath)) {
+        errors.push(`${refLabel}.path: ${ref.path} does not exist`);
+      } else {
+        const dimensions = pngDimensions(artifactPath);
+        if (!dimensions) {
+          errors.push(`${refLabel}.path: ${ref.path} must be a PNG screenshot`);
+        } else if (dimensions.width !== ref.width || dimensions.height !== ref.height) {
+          errors.push(
+            `${refLabel}: dimensions metadata ${ref.width}x${ref.height} does not match ` +
+              `${ref.path} (${dimensions.width}x${dimensions.height})`
+          );
+        }
+        if (validSha256) {
+          const actual = createHash('sha256').update(readFileSync(artifactPath)).digest('hex');
+          if (actual !== ref.sha256) errors.push(`${refLabel}.sha256: expected ${actual} for ${ref.path}`);
+        }
+      }
+    }
+  }
+
+  for (const viewport of ['desktop', 'mobile']) {
+    if (!viewports.has(viewport)) errors.push(`${label}.standard_viewport_refs: missing ${viewport} proof`);
+  }
+}
+
+// Render-affecting sources for a family's committed visual reference.
+//
+// The hash/dimension checks above only prove the committed PNGs are the files
+// the catalog says they are. They cannot tell whether those PNGs still look
+// like the template: a later PR can change Apollo's markup and leave the
+// reference untouched, and every hard gate stays green while Campaigns OS QAs
+// template-backed pages against an outdated baseline. That drift is silent by
+// construction, so it needs a mechanical signal rather than a docs note.
+//
+// src/<family> is the family's own source. _shared/ and the canonical
+// next-core.css are the shared sources that SYNC into it, so a change there
+// reaches the rendered page in a commit that never touches src/<family>.
+// Kept in step with scripts/sync-shared.mjs and scripts/lint-next-core-sync.mjs.
+//
+// _shared is watched whole rather than as its currently-synced subroots
+// (analytics/, checkout/). Naming the subroots is more precise, but it means a
+// shared root added later escapes the signal until someone remembers this list
+// — a silent miss, which is the exact failure this check exists to prevent. The
+// cost of the broad watch is a possible warning from a shared file that turns
+// out not to sync anywhere, which is warn-only and self-evident when read.
+function renderAffectingPaths(family) {
+  return [...new Set([`src/${family}`, '_shared', CANONICAL_NEXT_CORE])];
+}
+
+function git(args) {
+  return execFileSync('git', ['-C', repoRoot, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+}
+
+// Warn-only, matching the template-verification freshness reporter: a
+// render-affecting change is not automatically a visual change, so a
+// non-visual edit must not turn CI red. Tighten later if the warnings get
+// ignored.
+function reportTemplateReferenceStaleness(family, reference, label) {
+  const commit = reference.source_commit;
+  const recapture = `docs/template-references/${family}/README.md`;
+
+  try {
+    git(['cat-file', '-e', `${commit}^{commit}`]);
+  } catch {
+    warnings.push(
+      `${label}: source_commit ${commit.slice(0, 12)} is not present in this clone ` +
+        `(shallow checkout, or the commit was never fetched), so ${family} reference staleness could not be assessed`
+    );
+    return;
+  }
+
+  let changed;
+  try {
+    changed = git(['diff', '--name-only', commit, '--', ...renderAffectingPaths(family)]);
+  } catch (error) {
+    warnings.push(`${label}: could not assess ${family} reference staleness (${error.message.trim().split('\n')[0]})`);
+    return;
+  }
+
+  // Markdown under these roots is provenance and notes, never rendered output:
+  // no template family ships a .md page, and _shared/analytics/README.md
+  // documents the sync rather than feeding it. Flagging those would spend the
+  // warning on a change that cannot move a pixel.
+  const files = changed.split('\n').filter(Boolean).filter((path) => !path.endsWith('.md'));
+  if (!files.length) return;
+
+  const sample = files.slice(0, 3).join(', ');
+  warnings.push(
+    `${label}: ${files.length} render-affecting file(s) changed since source_commit ${commit.slice(0, 12)} ` +
+      `(${sample}${files.length > 3 ? `, +${files.length - 3} more` : ''}). ` +
+      `The committed ${family} reference captures may no longer match the rendered page — recapture per ${recapture}.`
+  );
 }
 
 validateIntentionalVariants();
@@ -208,7 +387,19 @@ function validateFixture(spec, fixturePath, family) {
 
 if (warnings.length) {
   console.log(`[lint-agent-contracts] ${warnings.length} warning(s):`);
-  for (const warning of warnings) console.log(`  - ${warning}`);
+  for (const warning of warnings) emitWarning(warning);
+}
+
+// Annotate on GitHub so a warning surfaces on the PR instead of only in the log
+// of a green job. Mirrors report-template-verification-freshness.mjs.
+function emitWarning(message) {
+  if (process.env.GITHUB_ACTIONS === 'true') {
+    console.warn(
+      `::warning title=Agent contract warning::${message.replaceAll('%', '%25').replaceAll('\r', '%0D').replaceAll('\n', '%0A')}`
+    );
+  } else {
+    console.log(`  - ${message}`);
+  }
 }
 
 if (errors.length) {
