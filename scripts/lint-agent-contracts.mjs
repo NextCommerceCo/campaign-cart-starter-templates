@@ -229,6 +229,13 @@ function validateTemplateReference(family, reference) {
 // next-core.css are the shared sources that SYNC into it, so a change there
 // reaches the rendered page in a commit that never touches src/<family>.
 // Kept in step with scripts/sync-shared.mjs and scripts/lint-next-core-sync.mjs.
+//
+// _shared is watched whole rather than as its currently-synced subroots
+// (analytics/, checkout/). Naming the subroots is more precise, but it means a
+// shared root added later escapes the signal until someone remembers this list
+// — a silent miss, which is the exact failure this check exists to prevent. The
+// cost of the broad watch is a possible warning from a shared file that turns
+// out not to sync anywhere, which is warn-only and self-evident when read.
 function renderAffectingPaths(family) {
   return [...new Set([`src/${family}`, '_shared', CANONICAL_NEXT_CORE])];
 }
