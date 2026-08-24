@@ -109,6 +109,20 @@ When adding a new `src/<slug>/` family, update these together or the **`lint-sdk
 6. `scripts/sync-shared.mjs` — add the slug to the `FAMILIES` list, then run `npm run sync:shared` so the new family gets the shared analytics and checkout files. The `lint:shared` gate asserts every family matches the canonical `_shared/` source. (`src/landing/` is intentionally excluded where its files are commented-out examples.)
 7. Preview-URL / inventory tables in this file and `README.md`, if you want it listed.
 
+### Template Reference proof — recapture on UI change (PR #138)
+
+`docs/template-references/<family>/` holds hash-pinned, full-page screenshots that **Campaigns OS consumes as the design baseline** for template-backed pages — pages whose spec says "use the template as-is" with no bespoke HTML source. Each published family registers a `templateReference` block in `docs/commerce-surface-catalog.json` (family, `version`, `source_commit`, per-viewport paths, dimensions, SHA-256 hashes). Campaigns OS fails closed: a family without published proof gets a "missing Template Reference proof" report, never an invented baseline. Currently published: **`apollo`** (checkout, desktop 1440 + mobile 390).
+
+`npm run lint:agent-contracts` (a step in the required `lint-sdk` CI job, full-depth checkout) enforces two layers:
+- **Hard gate:** the committed PNGs must match their recorded dimensions and SHA-256 hashes — the catalog and the artifacts cannot drift apart silently.
+- **Staleness warning (informational, surfaces as a PR annotation):** for each family with a `templateReference`, git is asked whether render-affecting sources — `src/<family>/`, `_shared/` (watched whole, deliberately over-broad), and the canonical `next-core.css` — changed since `source_commit`. Markdown is filtered out. The hard gate **cannot detect** a UI change that makes the screenshots lie; only this warning does.
+
+**When the warning fires on your PR**, resolve it one of two ways (full steps in `docs/template-references/<family>/README.md`):
+- The render changed → recapture per the README (headless Chromium, animations frozen, full-page at 1440×900 / 390×844 viewports), update dimensions/hashes/`source_commit`/`version` in the catalog.
+- The render did not change (non-visual edit) → re-stamp `source_commit` to the current commit and leave the PNGs alone.
+
+The live Netlify demo URLs are conveniences for humans, **never** the baseline — the live page is non-deterministic (countdown timer, API-priced bundles, CDN SDK) and moves with every merge, so it can't witness a regression. The pinned image is the contract.
+
 ### `next-core.css` — shared across all eight families
 
 Every template family ships a **byte-identical** copy of `src/olympus/assets/css/next-core.css`. The `lint:next-core` CI gate enforces this. To change core for all families: edit that canonical file (lint anchor at `src/olympus/assets/css/next-core.css`), then copy it to every family's `assets/css/next-core.css` (all eight slugs in `scripts/lint-next-core-sync.mjs`).
