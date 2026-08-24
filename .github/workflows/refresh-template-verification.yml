@@ -9,23 +9,27 @@ name: refresh-template-verification
 # Only mechanical facts are refreshed (SDK version, source SHA, fingerprint,
 # CI run link). campaigns_os_status is never touched — that stays a human call.
 #
-# CURRENT OPERATING MODE (verified live 2026-08-18, first run — see issue #131):
-# this repo does not grant Actions the "create and approve pull requests"
-# permission, so the final `gh pr create` step FAILS after the branch is
-# pushed. That red run is the notification. The maintainer flow is:
+# CURRENT OPERATING MODE (see issue #131): this repo does not grant Actions
+# the "create and approve pull requests" permission, so `gh pr create` is
+# expected to be refused. When that happens the run stays GREEN and instead
+# posts a comment on the source PR (the one whose merge made the evidence
+# stale) telling its author the re-certification branch is ready, with a
+# one-click compare link to open the PR. The maintainer flow is:
 #
-#   1. A red refresh-template-verification run appears after a green main push.
-#   2. Open a PR from the already-pushed `bot/recertify-template-evidence`
-#      branch (gh pr create --head bot/recertify-template-evidence, or the
-#      GitHub UI banner). A human-opened PR runs CI normally — no
-#      close/reopen dance needed.
-#   3. Review the one-file diff and merge; freshness warnings clear.
+#   1. Merge a PR that changes templates or bumps the SDK.
+#   2. A bot comment appears on that PR: "evidence stale, branch ready" with
+#      an open-a-PR link for `bot/recertify-template-evidence`. (Direct
+#      pushes to main have no PR to ping; the link lands in the run's step
+#      summary instead.)
+#   3. Open the PR from the link — a human-opened PR runs CI normally, no
+#      close/reopen dance — review the one-file diff, and merge.
 #
-# This is deliberately the low-setup sweet spot. Alternatives (issue #131):
-# flipping the repo Actions setting lets the bot open the PR itself, but a
-# default-token bot PR does NOT trigger CI (anti-recursion rule) and needs a
-# close/reopen; a fine-grained PAT (contents + pull requests: write) stored
-# as the RECERTIFY_TOKEN secret — or a GitHub App — makes it fully automatic.
+# Fully automatic alternative (issue #131): a fine-grained PAT (contents +
+# pull requests: write) stored as the RECERTIFY_TOKEN secret — or a GitHub
+# App — lets the `gh pr create` attempt below succeed, and the comment
+# fallback never fires. Flipping the repo Actions setting alone is NOT
+# enough: a default-token bot PR does not trigger CI (anti-recursion rule)
+# and needs a close/reopen.
 
 on:
   workflow_run:
@@ -88,11 +92,28 @@ jobs:
           # Forced push is safe here: the bot branch is owned by this workflow
           # and the concurrency group serializes writers.
           git push -f origin "$branch"
-          if gh pr list --head "$branch" --state open --json number --jq length | grep -qx 0; then
-            gh pr create \
+          if ! gh pr list --head "$branch" --state open --json number --jq length | grep -qx 0; then
+            echo 'Re-certification PR already open; branch updated.'
+            exit 0
+          fi
+          if gh pr create \
               --head "$branch" \
               --title "chore: record template verification evidence for SDK $sdk" \
-              --body "Automated re-certification. lint:sdk passed on main at \`${{ github.event.workflow_run.head_sha }}\` ([run](${{ github.event.workflow_run.html_url }})), so this records that commit as the current verification evidence in \`template-verification.json\`. Merging clears the freshness warnings. campaigns_os_status is untouched."
-          else
-            echo 'Re-certification PR already open; branch updated.'
+              --body "Automated re-certification. lint:sdk passed on main at \`${{ github.event.workflow_run.head_sha }}\` ([run](${{ github.event.workflow_run.html_url }})), so this records that commit as the current verification evidence in \`template-verification.json\`. Merging clears the freshness warnings. campaigns_os_status is untouched."; then
+            echo 'Re-certification PR opened automatically.'
+            exit 0
           fi
+          # Expected without RECERTIFY_TOKEN: Actions may not open PRs here
+          # (issue #131). Ping the PR whose merge staled the evidence instead
+          # of failing the run — the branch is ready, a human opens the PR.
+          echo 'gh pr create refused; notifying the source PR instead.'
+          compare_url="https://github.com/${{ github.repository }}/compare/main...$branch?expand=1"
+          note="⚠️ **Re-certification needed:** this merge made the template verification evidence stale. The refresh workflow has already regenerated \`template-verification.json\` and pushed it to \`$branch\` — it just cannot open the PR itself (issue #131). **[Open the one-file PR]($compare_url)**, review, and merge to clear the freshness warnings."
+          src_pr="$(gh api "repos/${{ github.repository }}/commits/${{ github.event.workflow_run.head_sha }}/pulls" --jq '.[0].number' 2>/dev/null || true)"
+          if [ -n "$src_pr" ] && [ "$src_pr" != "null" ]; then
+            gh pr comment "$src_pr" --body "$note"
+            echo "Pinged source PR #$src_pr."
+          else
+            echo "No source PR found for this push; see the step summary for the link."
+          fi
+          printf '%s\n' "$note" >> "$GITHUB_STEP_SUMMARY"
