@@ -54,6 +54,14 @@ The important boundary is: CampaignSpec/API owns package refs, shipping refs, vo
 
 Catalog component names should be generic by default. Use names like `upsell-bundle-stepper-offer`, `upsell-bundle-tier-pills-offer`, and `upsell-bundle-tier-cards-offer` when the SDK attributes and frontmatter contract are shared across families. Reserve family-specific names for surfaces with genuinely different SDK ownership or frontmatter contracts, such as MV configurable upsells.
 
+## Template Reference Proof
+
+A family may publish a `templateReference` when it has a versioned contract plus real desktop and mobile render evidence. Campaigns OS uses this proof to cover commerce pages that intentionally inherit the selected template instead of receiving bespoke HTML source.
+
+The reference must name the family and version, link a contract or artifact path, and provide one hash-verified screenshot for each standard viewport. Screenshot files live under `docs/template-references/<family>/`; `npm run lint:agent-contracts` verifies their paths, dimensions metadata, unique viewport coverage, and SHA-256 hashes. A family without this block remains usable as a starter template, but Campaigns OS must report missing Template Reference proof rather than inventing a design baseline.
+
+Apollo is the first published reference: `template-reference-apollo` at `sdk-0.4.37-2026-08-21`, with checkout captures at 1440px desktop and 390px mobile.
+
 ## Market-Sensitive Copy Review
 
 Starter templates include demo copy for shipping, carrier, warehouse, address, and manufacturing claims. Treat those claims as replace-or-confirm campaign copy when the CampaignSpec declares additional currencies, non-US shipping countries, `available_shipping_countries: "all"`, or the builder records the campaign as country-specific or multi-market.

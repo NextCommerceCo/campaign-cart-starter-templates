@@ -5,6 +5,7 @@
 // template runtime. This is not a campaign readiness gate: it only checks that
 // the catalog and CampaignSpec-shaped fixtures stay coherent.
 
+import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { extname, join, relative } from 'node:path';
 
@@ -57,6 +58,13 @@ function requireArray(value, label) {
   return true;
 }
 
+function pngDimensions(path) {
+  const bytes = readFileSync(path);
+  const signature = bytes.subarray(0, 8).toString('hex');
+  if (signature !== '89504e470d0a1a0a' || bytes.subarray(12, 16).toString('ascii') !== 'IHDR') return null;
+  return { width: bytes.readUInt32BE(16), height: bytes.readUInt32BE(20) };
+}
+
 const catalog = readJson(catalogPath);
 if (!catalog) process.exit(1);
 
@@ -92,6 +100,7 @@ for (const family of expectedFamilies) {
 
   requireArray(contract.fixtures, `catalog.families.${family}.agentContract.fixtures`);
   requireArray(contract.surfaces, `catalog.families.${family}.agentContract.surfaces`);
+  validateTemplateReference(family, entry.templateReference);
   validateFamilyAssetReferences(family, srcDir);
 
   for (const fixture of contract.fixtures || []) {
@@ -103,6 +112,89 @@ for (const family of expectedFamilies) {
     const spec = readJson(fixturePath);
     if (!spec) continue;
     validateFixture(spec, fixturePath, family);
+  }
+}
+
+function validateTemplateReference(family, reference) {
+  if (reference == null) return;
+  const label = `catalog.families.${family}.templateReference`;
+  if (typeof reference !== 'object' || Array.isArray(reference)) {
+    errors.push(`${label}: expected an object`);
+    return;
+  }
+
+  for (const key of ['id', 'family', 'version']) {
+    if (typeof reference[key] !== 'string' || !reference[key].trim()) {
+      errors.push(`${label}.${key}: expected a non-empty string`);
+    }
+  }
+  if (reference.family !== family) {
+    errors.push(`${label}.family: expected "${family}", got ${JSON.stringify(reference.family)}`);
+  }
+  if (!reference.contract_path && !reference.artifact_path) {
+    errors.push(`${label}: expected contract_path or artifact_path`);
+  }
+  if (reference.contract_path && !existsSync(join(repoRoot, reference.contract_path))) {
+    errors.push(`${label}.contract_path: ${reference.contract_path} does not exist`);
+  }
+
+  if (!requireArray(reference.standard_viewport_refs, `${label}.standard_viewport_refs`)) return;
+  const viewports = new Set();
+  const ids = new Set();
+  for (const [index, ref] of reference.standard_viewport_refs.entries()) {
+    const refLabel = `${label}.standard_viewport_refs[${index}]`;
+    if (!ref || typeof ref !== 'object' || Array.isArray(ref)) {
+      errors.push(`${refLabel}: expected an object`);
+      continue;
+    }
+    if (typeof ref.id !== 'string' || !ref.id.trim()) errors.push(`${refLabel}.id: expected a non-empty string`);
+    else if (ids.has(ref.id)) errors.push(`${refLabel}.id: duplicate id "${ref.id}"`);
+    else ids.add(ref.id);
+
+    if (!['desktop', 'mobile', 'tablet'].includes(ref.viewport)) {
+      errors.push(`${refLabel}.viewport: expected desktop, mobile, or tablet`);
+    } else if (viewports.has(ref.viewport)) {
+      errors.push(`${refLabel}.viewport: duplicate ${ref.viewport} proof`);
+    } else {
+      viewports.add(ref.viewport);
+    }
+
+    if (!ref.path && !ref.url) errors.push(`${refLabel}: expected path or url`);
+    if (!Number.isInteger(ref.width) || ref.width < 1) errors.push(`${refLabel}.width: expected a positive integer`);
+    if (!Number.isInteger(ref.height) || ref.height < 1) errors.push(`${refLabel}.height: expected a positive integer`);
+    if (typeof ref.sha256 !== 'string' || !/^[0-9a-f]{64}$/.test(ref.sha256)) {
+      errors.push(`${refLabel}.sha256: expected 64 lowercase hex characters`);
+    }
+
+    if (ref.path) {
+      const requiredPrefix = `docs/template-references/${family}/`;
+      if (!ref.path.startsWith(requiredPrefix)) {
+        errors.push(`${refLabel}.path: expected a path under ${requiredPrefix}`);
+        continue;
+      }
+      const artifactPath = join(repoRoot, ref.path);
+      if (!existsSync(artifactPath)) {
+        errors.push(`${refLabel}.path: ${ref.path} does not exist`);
+      } else {
+        const dimensions = pngDimensions(artifactPath);
+        if (!dimensions) {
+          errors.push(`${refLabel}.path: ${ref.path} must be a PNG screenshot`);
+        } else if (dimensions.width !== ref.width || dimensions.height !== ref.height) {
+          errors.push(
+            `${refLabel}: dimensions metadata ${ref.width}x${ref.height} does not match ` +
+              `${ref.path} (${dimensions.width}x${dimensions.height})`
+          );
+        }
+        if (/^[0-9a-f]{64}$/.test(ref.sha256 || '')) {
+          const actual = createHash('sha256').update(readFileSync(artifactPath)).digest('hex');
+          if (actual !== ref.sha256) errors.push(`${refLabel}.sha256: expected ${actual} for ${ref.path}`);
+        }
+      }
+    }
+  }
+
+  for (const viewport of ['desktop', 'mobile']) {
+    if (!viewports.has(viewport)) errors.push(`${label}.standard_viewport_refs: missing ${viewport} proof`);
   }
 }
 
