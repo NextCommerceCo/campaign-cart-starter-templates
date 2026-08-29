@@ -115,6 +115,8 @@ function pageMatches(filePath) {
 
 function blankIgnoredMarkup(content) {
   const preserveLines = (match) => '\n'.repeat(match.split('\n').length - 1);
+  // Only a byte-zero fence (after an optional BOM) is real page frontmatter. Do not use a
+  // multiline match here: a later `---` block is template content and must remain lintable.
   return content
     .replace(/^\uFEFF?---\r?\n[\s\S]*?\r?\n---(?=\r?\n)/, preserveLines)
     .replace(/\{%-?\s*comment\s*-?%\}[\s\S]*?\{%-?\s*endcomment\s*-?%\}/g, preserveLines)
