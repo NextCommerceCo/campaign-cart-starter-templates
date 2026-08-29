@@ -28,7 +28,7 @@
 {%- assign op_label = order_personalization.label | default: 'Add a gift message' -%}
 {%- assign op_placeholder = order_personalization.placeholder | default: '' -%}
 {%- assign op_maxlength = order_personalization.maxlength | default: 120 -%}
-<div class="form-section grid-row-gap2">
+<div class="form-section grid-row-gap2" data-next-catalog-component="personalization-field">
   <h2 class="form-section__title">{{ op_label }}{% if order_personalization.optional %} <span class="text-muted">(optional)</span>{% endif %}</h2>
   <div class="form-grid">
     <div class="form-grid__row">
