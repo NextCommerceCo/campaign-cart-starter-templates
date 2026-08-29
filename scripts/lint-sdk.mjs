@@ -116,7 +116,7 @@ function pageMatches(filePath) {
 function blankIgnoredMarkup(content) {
   const preserveLines = (match) => '\n'.repeat(match.split('\n').length - 1);
   return content
-    .replace(/^---\r?\n[\s\S]*?\r?\n---(?=\r?\n)/, preserveLines)
+    .replace(/^\uFEFF?---\r?\n[\s\S]*?\r?\n---(?=\r?\n)/, preserveLines)
     .replace(/\{%-?\s*comment\s*-?%\}[\s\S]*?\{%-?\s*endcomment\s*-?%\}/g, preserveLines)
     .replace(/<!--[\s\S]*?-->/g, preserveLines);
 }
