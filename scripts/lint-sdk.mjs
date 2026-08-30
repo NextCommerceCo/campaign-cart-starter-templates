@@ -73,6 +73,7 @@ const SDK_ATTR_ROOTS = [
   'data-next-quantity-decrease',
   'data-next-quantity-increase',
   'data-next-quantity-display',
+  'data-next-default-property',
 ];
 
 // Required-for-checkout attribute fields. Their absence (or wrong location) is a
@@ -114,7 +115,10 @@ function pageMatches(filePath) {
 
 function blankIgnoredMarkup(content) {
   const preserveLines = (match) => '\n'.repeat(match.split('\n').length - 1);
+  // Only a byte-zero fence (after an optional BOM) is real page frontmatter. Do not use a
+  // multiline match here: a later `---` block is template content and must remain lintable.
   return content
+    .replace(/^\uFEFF?---\r?\n[\s\S]*?\r?\n---(?=\r?\n)/, preserveLines)
     .replace(/\{%-?\s*comment\s*-?%\}[\s\S]*?\{%-?\s*endcomment\s*-?%\}/g, preserveLines)
     .replace(/<!--[\s\S]*?-->/g, preserveLines);
 }
@@ -256,6 +260,7 @@ function includeSuggestion(attr) {
     'data-next-quantity-decrease': "{% campaign_include 'single-offer-quantity-selector.html' %}",
     'data-next-quantity-increase': "{% campaign_include 'single-offer-quantity-selector.html' %}",
     'data-next-quantity-display': "{% campaign_include 'single-offer-quantity-selector.html' %}",
+    'data-next-default-property': "{% campaign_include 'personalization-field.html' order_personalization=order_personalization %}",
   };
   return map[attr] ?? '(see catalog: apollo/_includes/)';
 }

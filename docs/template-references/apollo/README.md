@@ -1,6 +1,6 @@
 # Apollo Template Reference provenance
 
-The reference images in this directory capture `/apollo/checkout/` from starter-template source commit `e9a2fc17beefe572b8ddc0c4f9b1b8e2f97f9a59` with Campaign Cart SDK `0.4.37`.
+The reference images in this directory originally captured `/apollo/checkout/` from starter-template source commit `e9a2fc17beefe572b8ddc0c4f9b1b8e2f97f9a59` with Campaign Cart SDK `0.4.37`. Their rendered checkout baseline was revalidated as unchanged with SDK `0.4.38` through source commit `8f5c2fc89b190917d05a4251a9244fd79cc42f75`, including the unwired personalization partial's catalog wrapper.
 
 ## Reproduce
 
