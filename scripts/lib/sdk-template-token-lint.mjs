@@ -17,6 +17,10 @@ function tokensIn(value) {
   return [...value.matchAll(new RegExp(SDK_TEMPLATE_TOKEN_SOURCE, 'gi'))];
 }
 
+function rawTaxTokensIn(value) {
+  return [...value.matchAll(/\{tax\}/gi)];
+}
+
 export function findLiveSdkTemplateTokens(content) {
   const source = blankLiquidComments(content);
   const document = parse(source, { sourceCodeLocationInfo: true });
@@ -49,6 +53,43 @@ export function findLiveSdkTemplateTokens(content) {
     }
 
     for (const child of node.childNodes ?? []) visit(child);
+  }
+
+  visit(document);
+  return violations;
+}
+
+export function findRawCartSummaryTaxTokens(content) {
+  const source = blankLiquidComments(content);
+  const document = parse(source, { sourceCodeLocationInfo: true });
+  const violations = [];
+
+  function visit(node) {
+    if (node.tagName === 'script' || node.tagName === 'style') return;
+
+    if (node.nodeName === '#text') {
+      for (const match of rawTaxTokensIn(node.value)) {
+        const prefix = node.value.slice(0, match.index);
+        violations.push({
+          token: match[0],
+          line: (node.sourceCodeLocation?.startLine ?? 1) + prefix.split('\n').length - 1,
+        });
+      }
+    }
+
+    for (const attribute of node.attrs ?? []) {
+      for (const match of rawTaxTokensIn(attribute.value)) {
+        violations.push({
+          token: match[0],
+          line: node.sourceCodeLocation?.attrs?.[attribute.name]?.startLine
+            ?? node.sourceCodeLocation?.startLine
+            ?? 1,
+        });
+      }
+    }
+
+    for (const child of node.childNodes ?? []) visit(child);
+    if (node.content) visit(node.content);
   }
 
   visit(document);
