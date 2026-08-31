@@ -166,13 +166,15 @@
         "items_json",
         "vouchers_json",
         "accept_text",
-        "decline_text"
+        "decline_text",
+        "retail_shipping",
+        "offer_shipping"
       ],
       "sourceOfTruth": [
         "CampaignSpec upsell/downsell pages",
         "Campaigns API package refs and vouchers/offers"
       ],
-      "agentRule": "Post-purchase upsells do not use shipping_methods. Package refs and vouchers must come from the upsell page contract."
+      "agentRule": "Post-purchase upsells do not use shipping_methods. Package refs and vouchers must come from the upsell page contract. `retail_shipping` and `offer_shipping` are display copy for the offer price block (the struck retail shipping line and the offer shipping line), not shipping method refs. The starter defaults claim `+$4.95 SHIPPING` and `+ FREE SHIPPING`; set both from the target campaign's real shipping figures whenever they differ."
     },
     "upsell_bundle_tiers": {
       "purpose": "Tiered post-purchase bundle upsell rows.",
