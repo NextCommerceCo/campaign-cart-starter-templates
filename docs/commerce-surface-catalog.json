@@ -460,7 +460,7 @@
         "id": "template-reference-apollo",
         "family": "apollo",
         "version": "sdk-0.4.38-revalidated-2026-08-29",
-        "source_commit": "8f5c2fc89b190917d05a4251a9244fd79cc42f75",
+        "source_commit": "38f5693a2839cb3a3f8587f0dffee841f13d6114",
         "provenance_path": "docs/template-references/apollo/README.md",
         "provenance_url": "https://raw.githubusercontent.com/NextCommerceCo/campaign-cart-starter-templates/main/docs/template-references/apollo/README.md",
         "contract_path": "docs/commerce-surface-catalog.json",
