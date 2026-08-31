@@ -18,7 +18,7 @@
     - {item.variantName} is intentional for multi-variant carts; use {item.name} only for single-variant summaries
     - {item.hasDiscount} resolves to CSS class string ("hide" or empty), not boolean
   next_gotchas:
-    - Tax row uses order.hasTax and order.tax bindings; keep it conditional so tax-free carts do not show an empty row
+    - Tax row binds order.hasTax/order.tax — order-scoped, so it never renders on checkout (no order exists pre-purchase; the cart /calculate API returns no tax breakdown). Dormant row; do not expect a checkout tax line on any current SDK.
   next_variants:
     - 01 (stacked default)
     - 02 (accordion variant)
