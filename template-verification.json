@@ -163,43 +163,59 @@
           "completed_at": "2026-08-31T18:15:37Z"
         }
       ]
+    },
+    "sdk-0.4.38-2026-08-31.4": {
+      "sdk_version": "0.4.38",
+      "source": {
+        "sha": "5312e9459c041857c32a92116ce903a8085480f4",
+        "fingerprint": "git-index-sha256:f22ae6a8f30a46c5ec6f835bd03ff33020acfa0e1035e6fdac013c361e8c4dc7"
+      },
+      "verified_at": "2026-08-31T22:26:45Z",
+      "checks": [
+        {
+          "name": "lint-sdk",
+          "status": "passed",
+          "url": "https://github.com/NextCommerceCo/campaign-cart-starter-templates/actions/runs/33446208541",
+          "completed_at": "2026-08-31T22:26:45Z"
+        }
+      ]
     }
   },
   "families": {
     "apollo": {
-      "evidence": "sdk-0.4.38-2026-08-31.3",
+      "evidence": "sdk-0.4.38-2026-08-31.4",
       "campaigns_os_status": "certified"
     },
     "olympus": {
-      "evidence": "sdk-0.4.38-2026-08-31.3",
+      "evidence": "sdk-0.4.38-2026-08-31.4",
       "campaigns_os_status": "certified"
     },
     "apollo-mv-single-step": {
-      "evidence": "sdk-0.4.38-2026-08-31.3",
+      "evidence": "sdk-0.4.38-2026-08-31.4",
       "campaigns_os_status": "certified"
     },
     "olympus-mv-single-step": {
-      "evidence": "sdk-0.4.38-2026-08-31.3",
+      "evidence": "sdk-0.4.38-2026-08-31.4",
       "campaigns_os_status": "certified"
     },
     "olympus-mv-two-step": {
-      "evidence": "sdk-0.4.38-2026-08-31.3",
+      "evidence": "sdk-0.4.38-2026-08-31.4",
       "campaigns_os_status": "certified"
     },
     "demeter": {
-      "evidence": "sdk-0.4.38-2026-08-31.3",
+      "evidence": "sdk-0.4.38-2026-08-31.4",
       "campaigns_os_status": "certified"
     },
     "shop-single-step": {
-      "evidence": "sdk-0.4.38-2026-08-31.3",
+      "evidence": "sdk-0.4.38-2026-08-31.4",
       "campaigns_os_status": "certified"
     },
     "shop-three-step": {
-      "evidence": "sdk-0.4.38-2026-08-31.3",
+      "evidence": "sdk-0.4.38-2026-08-31.4",
       "campaigns_os_status": "certified"
     },
     "landing": {
-      "evidence": "sdk-0.4.38-2026-08-31.3",
+      "evidence": "sdk-0.4.38-2026-08-31.4",
       "campaigns_os_status": "not_applicable"
     }
   }
