@@ -64,6 +64,7 @@ export function findRawCartSummaryTaxTokens(content) {
   const document = parse(source, { sourceCodeLocationInfo: true });
   const violations = [];
 
+  // Cart-summary partials define rendered totals inside <template>, so tax enforcement must descend into template content.
   function visit(node) {
     if (node.tagName === 'script' || node.tagName === 'style') return;
 

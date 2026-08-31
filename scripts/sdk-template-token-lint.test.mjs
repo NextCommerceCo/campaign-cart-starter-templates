@@ -109,6 +109,15 @@ test('flags raw tax tokens inside rendered cart-summary templates', () => {
   );
 });
 
+test('flags raw tax tokens in live cart-summary markup', () => {
+  const source = '<div class="order-totals__value">{tax}</div>';
+
+  assert.deepEqual(
+    findRawCartSummaryTaxTokens(source),
+    [{ token: '{tax}', line: 1 }],
+  );
+});
+
 test('allows tax references in cart-summary documentation comments', () => {
   const source = [
     '{% comment %}{tax}{% endcomment %}',
