@@ -6,6 +6,7 @@ const expressCheckoutPath = new URL(
   '../src/olympus/_includes/express-checkout.html',
   import.meta.url,
 );
+const expectedComponentName = 'express-checkout';
 
 test('Olympus express checkout metadata matches its catalog wrapper', () => {
   const source = readFileSync(expressCheckoutPath, 'utf8');
@@ -14,6 +15,7 @@ test('Olympus express checkout metadata matches its catalog wrapper', () => {
 
   assert.ok(metadataName, 'expected express-checkout.html to declare next_component metadata');
   assert.ok(wrapperName, 'expected express-checkout.html to declare a catalog wrapper');
-  assert.equal(metadataName, 'express-checkout');
+  assert.equal(metadataName, expectedComponentName);
+  assert.equal(wrapperName, expectedComponentName);
   assert.equal(metadataName, wrapperName);
 });
