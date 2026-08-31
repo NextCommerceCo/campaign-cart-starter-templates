@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { findLiveSdkTemplateTokens } from './lib/sdk-template-token-lint.mjs';
+import {
+  findLiveSdkTemplateTokens,
+  findRawCartSummaryTaxTokens,
+} from './lib/sdk-template-token-lint.mjs';
 
 test('flags SDK template tokens that can paint in the live DOM', () => {
   assert.deepEqual(
@@ -91,4 +94,35 @@ test('resumes enforcement after a template closes and preserves line numbers', (
     findLiveSdkTemplateTokens(source),
     [{ token: '{shipping}', line: 3 }],
   );
+});
+
+test('flags raw tax tokens inside rendered cart-summary templates', () => {
+  const source = [
+    '<template>',
+    '  <div class="order-totals__value">{tax}</div>',
+    '</template>',
+  ].join('\n');
+
+  assert.deepEqual(
+    findRawCartSummaryTaxTokens(source),
+    [{ token: '{tax}', line: 2 }],
+  );
+});
+
+test('flags raw tax tokens in live cart-summary markup', () => {
+  const source = '<div class="order-totals__value">{tax}</div>';
+
+  assert.deepEqual(
+    findRawCartSummaryTaxTokens(source),
+    [{ token: '{tax}', line: 1 }],
+  );
+});
+
+test('allows tax references in cart-summary documentation comments', () => {
+  const source = [
+    '{% comment %}{tax}{% endcomment %}',
+    '<!-- {tax} -->',
+  ].join('\n');
+
+  assert.deepEqual(findRawCartSummaryTaxTokens(source), []);
 });

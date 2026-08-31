@@ -18,7 +18,7 @@
     - data-next-package-id="1" is the featured preview package, not the cart summary line item id
     - {item.hasDiscount} resolves to CSS class string ("hide" or empty), not boolean
   next_gotchas:
-    - Tax token {tax} is intentionally not rendered — not wired in CartSummaryEnhancer (BS-017)
+    - Tax row uses order.hasTax and order.tax bindings; keep it conditional so tax-free carts do not show an empty row
   next_variants:
     - 01 (stacked default)
     - 02 (accordion variant)
@@ -158,9 +158,9 @@
             -->
           </div>
 
-          <div class="order-totals__line os-cart-summary-row--tax">
+          <div data-next-show="order.hasTax" class="order-totals__line os-cart-summary-row--tax">
             <div class="order-totals__label">Tax</div>
-            <div class="order-totals__value">{tax}</div>
+            <div data-next-display="order.tax" class="order-totals__value"></div>
           </div>
 
           <div class="order-totals__section">

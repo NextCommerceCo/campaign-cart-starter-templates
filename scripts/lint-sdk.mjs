@@ -26,7 +26,10 @@
 
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
-import { findLiveSdkTemplateTokens } from './lib/sdk-template-token-lint.mjs';
+import {
+  findLiveSdkTemplateTokens,
+  findRawCartSummaryTaxTokens,
+} from './lib/sdk-template-token-lint.mjs';
 
 const repoRoot = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
 const args = new Set(process.argv.slice(2));
@@ -131,13 +134,24 @@ function lintSource() {
     const familyFiles = walk(dir);
     for (const file of familyFiles) {
       const content = readFileSync(file, 'utf8');
+      const repoPath = relative(repoRoot, file);
       for (const violation of findLiveSdkTemplateTokens(content)) {
         violations.push({
           kind: 'live-sdk-template-token',
-          file: relative(repoRoot, file),
+          file: repoPath,
           line: violation.line,
           token: violation.token,
         });
+      }
+      if (/\/_includes\/cart-summary\d+\.html$/.test(file)) {
+        for (const violation of findRawCartSummaryTaxTokens(content)) {
+          violations.push({
+            kind: 'raw-cart-summary-tax-token',
+            file: repoPath,
+            line: violation.line,
+            token: violation.token,
+          });
+        }
       }
     }
     const files = familyFiles.filter((f) => !f.includes('/_includes/') && pageMatches(f));
@@ -276,6 +290,9 @@ function fmt(v) {
   if (v.kind === 'inlined-sdk-root') {
     return `  ${v.file}:${v.line}\n    SDK attr [${v.attr}] inlined in page template\n    suggested: ${v.suggestion}\n    snippet:   ${v.snippet}`;
   }
+  if (v.kind === 'raw-cart-summary-tax-token') {
+    return `  ${v.file}:${v.line}\n    unsupported raw tax token [${v.token}] in checkout cart summary\n    required:  bind the row with order.hasTax and order.tax`;
+  }
   return `  ${v.file}:${v.line}\n    SDK attr [${v.attr}] outside data-next-catalog-component wrapper\n    suggested: ${v.suggestion}\n    note:      ${v.note}`;
 }
 
@@ -284,7 +301,7 @@ if (wantSource) {
   console.log(`[lint-sdk] mode=source  scope=${scope}`);
   const v = lintSource();
   if (v.length === 0) {
-    console.log('  ✓ no inlined SDK roots or live pre-hydration template tokens\n');
+    console.log('  ✓ no inlined SDK roots, live pre-hydration template tokens, or visible raw tax tokens\n');
   }
   else {
     console.log(`  ✗ ${v.length} violation(s):`);
@@ -318,6 +335,8 @@ console.log('under family _includes/, called via {% campaign_include %}. Inlined
 console.log('attributes break the agentic build assumption that partials own SDK contracts.');
 console.log('SDK template tokens outside real <template> fragments can also paint literally');
 console.log('before cart hydration, so the source gate rejects them.');
+console.log('Raw {tax} is unsupported in checkout cart-summary templates; bind tax rows');
+console.log('with order.hasTax and order.tax so only supported values can render.');
 console.log('See: next-campaigns-ops/docs/checkout-components-inventory-2026-05-01.md');
 
 if (isCI) process.exit(1);
