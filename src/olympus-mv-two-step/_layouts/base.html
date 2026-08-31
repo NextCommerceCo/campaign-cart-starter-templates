@@ -7,11 +7,16 @@
     {% campaign_include 'meta-social.html' %}
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <!-- Resource hints: SDK CDN + campaign API + next-page prefetch -->
+    <!-- Resource hints: SDK CDN + campaign API + next-page prefetch (accept + decline paths on upsells).
+         rel=prefetch issues a real low-priority GET, so prefetched pages appear in CDN/server access
+         logs even when the visitor never navigates; client-side analytics (GTM, pixels, SDK) never run
+         on a prefetched document, and the cached bytes are the same static template HTML every visitor
+         receives (form/personal data is entered client-side and is never in the prefetched bytes). -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://campaigns.apps.29next.com" crossorigin>
     <link rel="dns-prefetch" href="//cdn-countries.muddy-wind-c7ca.workers.dev">
     {% if next_url %}<link rel="prefetch" href="{{ next_url | campaign_link }}" as="document">{% endif %}
+    {% if decline_url and decline_url != next_url %}<link rel="prefetch" href="{{ decline_url | campaign_link }}" as="document">{% endif %}
 
     <!-- Campaign Configuration -->
     <script src="{{ 'config.js' | campaign_asset }}"></script>

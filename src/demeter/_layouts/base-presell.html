@@ -8,7 +8,10 @@
   <!-- Social share meta -->
   {% campaign_include 'meta-social.html' %}
 
-  <!-- Resource hints: SDK CDN + campaign API + next-page prefetch -->
+  <!-- Resource hints: SDK CDN + campaign API + next-page prefetch.
+       rel=prefetch issues a real low-priority GET, so the prefetched page appears in CDN/server
+       access logs even when the visitor never navigates; client-side analytics (GTM, pixels, SDK)
+       never run on a prefetched document. -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://campaigns.apps.29next.com" crossorigin>
   <link rel="dns-prefetch" href="//cdn-countries.muddy-wind-c7ca.workers.dev">
