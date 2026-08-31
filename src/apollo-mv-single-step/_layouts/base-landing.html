@@ -8,10 +8,11 @@
   <!-- Social share meta -->
   {% campaign_include 'meta-social.html' %}
 
-  <!-- Resource hints: SDK CDN + campaign API -->
+  <!-- Resource hints: SDK CDN + campaign API + next-page prefetch -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="dns-prefetch" href="//campaigns.apps.29next.com">
+  <link rel="preconnect" href="https://campaigns.apps.29next.com" crossorigin>
   <link rel="dns-prefetch" href="//cdn-countries.muddy-wind-c7ca.workers.dev">
+  {% if next_url %}<link rel="prefetch" href="{{ next_url | campaign_link }}" as="document">{% endif %}
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
