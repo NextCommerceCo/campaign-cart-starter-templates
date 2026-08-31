@@ -33,7 +33,7 @@ jobs:
           # Template Reference staleness diffs against templateReference.source_commit,
           # which a depth-1 checkout does not contain.
           fetch-depth: 0
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v7
         with:
           node-version: 20
           cache: npm
