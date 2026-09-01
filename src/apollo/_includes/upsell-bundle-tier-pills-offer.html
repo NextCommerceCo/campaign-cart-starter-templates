@@ -27,7 +27,7 @@
             in-offer [data-next-bundle-selector] for AddUpsellLine; if this lived inside offer,
             submit would always use 1× upsell-bundle-1x and ignore qty selection.
           -->
-          <div data-next-bundle-selector data-next-selector-id="{{ display_selector_id }}" style="display:none">
+          <div data-next-bundle-selector data-next-upsell-context data-next-selector-id="{{ display_selector_id }}" style="display:none">
             <div role="button"
                  data-next-bundle-card
                  data-next-bundle-id="{{ display_bundle_id }}"
