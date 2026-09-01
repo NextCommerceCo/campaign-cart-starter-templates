@@ -166,13 +166,15 @@
         "items_json",
         "vouchers_json",
         "accept_text",
-        "decline_text"
+        "decline_text",
+        "retail_shipping",
+        "offer_shipping"
       ],
       "sourceOfTruth": [
         "CampaignSpec upsell/downsell pages",
         "Campaigns API package refs and vouchers/offers"
       ],
-      "agentRule": "Post-purchase upsells do not use shipping_methods. Package refs and vouchers must come from the upsell page contract."
+      "agentRule": "Post-purchase upsells do not use shipping_methods. Package refs and vouchers must come from the upsell page contract. `retail_shipping` and `offer_shipping` are display copy for the offer price block (the struck retail shipping line and the offer shipping line), not shipping method refs. The starter defaults claim `+$4.95 SHIPPING` and `+ FREE SHIPPING`; set both from the target campaign's real shipping figures whenever they differ."
     },
     "upsell_bundle_tiers": {
       "purpose": "Tiered post-purchase bundle upsell rows.",
@@ -458,7 +460,7 @@
         "id": "template-reference-apollo",
         "family": "apollo",
         "version": "sdk-0.4.38-revalidated-2026-08-29",
-        "source_commit": "8f5c2fc89b190917d05a4251a9244fd79cc42f75",
+        "source_commit": "38f5693a2839cb3a3f8587f0dffee841f13d6114",
         "provenance_path": "docs/template-references/apollo/README.md",
         "provenance_url": "https://raw.githubusercontent.com/NextCommerceCo/campaign-cart-starter-templates/main/docs/template-references/apollo/README.md",
         "contract_path": "docs/commerce-surface-catalog.json",

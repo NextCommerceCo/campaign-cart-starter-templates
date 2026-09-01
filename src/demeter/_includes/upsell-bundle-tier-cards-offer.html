@@ -4,7 +4,7 @@
   next_sdk_owns: bundle selector, bundle cards, quantity control, upsell add/skip actions
   next_sdk_surface: upsell offer
   next_params:
-    upsell_offer: object. package_id, selector_id, display selector ids, accept/decline text, pricing_mode.
+    upsell_offer: object. package_id, selector_id, display selector ids, accept/decline text, retail/offer shipping strings, pricing_mode.
     upsell_bundle_tiers: array. Visible bundle card ids, item JSON, vouchers, labels, hints, selected state.
     pricing_mode: enum [full_price, discounted, compare_at, unit_total, unit_only], default "full_price".
                   Include arg wins over upsell_offer.pricing_mode. Controls which .price-wrapper rows render
@@ -123,7 +123,7 @@
                       <div class="price-wrapper">
                         <div class="text-sm tw-600">Retail Price</div>
                         <div class="upsell-offer__price diagonal-strike color-muted" data-next-display="{{ bundle_original_price_path }}" data-next-format="currency">$49.99</div>
-                        <div class="text-xs font-bold"><strike>+$4.95 SHIPPING</strike></div>
+                        <div class="text-xs font-bold"><strike>{{ offer.retail_shipping | default: '+$4.95 SHIPPING' }}</strike></div>
                       </div>
                       <div class="upsell-offer__divider"></div>
                       <div class="price-wrapper">
@@ -132,7 +132,7 @@
                           <div class="text-sm font-bold color-primary">(<span data-next-display="{{ bundle_discount_path }}" data-next-format="percentage"></span> OFF)</div>
                         </div>
                         <div class="upsell-offer__price" data-next-display="{{ bundle_price_path }}" data-next-format="currency">$24.95</div>
-                        <div class="text-xs font-bold color-primary">+ FREE SHIPPING</div>
+                        <div class="text-xs font-bold color-primary">{{ offer.offer_shipping | default: '+ FREE SHIPPING' }}</div>
                       </div>
                     </div>
                     {% when 'compare_at' %}
