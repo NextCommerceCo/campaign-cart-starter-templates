@@ -480,7 +480,10 @@ window.nextConfig = {
     mode: 'auto', // 'auto' | 'manual' | 'disabled'
     providers: {
       nextCampaign: { enabled: true },
-      gtm: { enabled: false, settings: { containerId: 'GTM-XXXXXX' } },
+      // GTM: the SDK does not load GTM and reads no settings here — the layout
+      // injects the container from gtm_id in campaigns.json; enabled: true only
+      // pushes dl_* events to window.dataLayer (and window.ElevarDataLayer)
+      gtm: { enabled: false },
       facebook: { enabled: false, settings: { pixelId: 'YOUR_PIXEL_ID' } },
       rudderstack: { enabled: false, settings: {} },
       custom: { enabled: false, settings: { endpoint: 'https://...', apiKey: '...' } }
@@ -1110,7 +1113,7 @@ Use these when implementing or verifying a specific task. Work through each item
 - [ ] `storeName` set — required for Facebook purchase deduplication
 - [ ] `addressConfig.defaultCountry` set to the primary target market
 - [ ] `paymentConfig.expressCheckout.enabled` — set `true` to show PayPal/Apple Pay/Google Pay buttons, `false` to hide
-- [ ] `analytics.providers.gtm.enabled` — set `true` and add `containerId` to match the `gtm_id` in `campaigns.json`; the layout snippet loads GTM, the SDK provider forwards ecommerce events into it
+- [ ] `analytics.providers.gtm.enabled` — set `true` when the campaign uses GTM; the container itself comes from `gtm_id` in `campaigns.json` (the layout injects the snippet — the SDK never loads GTM and reads no other `gtm` settings), and the SDK provider then pushes `dl_*` events to `window.dataLayer` for that container to consume
 - [ ] `analytics.providers.facebook.enabled` — set `true` and add `pixelId` to match the `fb_pixel_id` in `campaigns.json`; same two-part pattern as GTM
 - [ ] Address autocomplete — choose one option: (1) NextCommerce: `addressConfig.enableAutocomplete: true`, leave `googleMaps.apiKey` empty. (2) Google Maps: set `googleMaps.apiKey`; Google Maps takes priority when non-empty. (3) Disabled: remove `enableAutocomplete` from `addressConfig` and leave `googleMaps.apiKey` empty.
 - [ ] `storageScope` — leave unset for the kit's standard `/<slug>/<page>/` URL shape; set it (same value on every page of the funnel) only when the deployed funnel mixes path depths (see the campaigns.json section)

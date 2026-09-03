@@ -102,13 +102,13 @@ window.nextConfig = {
           enabled: true
       },
       // Google Tag Manager
+      // The SDK does not load GTM. Set gtm_id in _data/campaigns.json and the
+      // layout injects the container snippet. With enabled: true the SDK pushes
+      // dl_* events to window.dataLayer (and window.ElevarDataLayer) for that
+      // container to consume. There are no other settings.
       gtm: {
         enabled: false,
-        settings: {
-          containerId: "GTM-XXXXXX",
-          dataLayerName: "dataLayer"
-        },
-        // Optional: blockedEvents: ["PageView"]
+        // Optional: blockedEvents: ["dl_purchase"]  (dl_* names only)
       },
       // Facebook Pixel
       facebook: {
