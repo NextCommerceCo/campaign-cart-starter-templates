@@ -105,7 +105,7 @@ window.nextConfig = {
       // The SDK does not load GTM. Set gtm_id in _data/campaigns.json and the
       // layout injects the container snippet. With enabled: true the SDK pushes
       // dl_* events to window.dataLayer (and window.ElevarDataLayer) for that
-      // container to consume. There are no other settings.
+      // container to consume. There is no `settings` object for this provider.
       gtm: {
         enabled: false,
         // Optional: blockedEvents: ["dl_purchase"]  (dl_* names only)
