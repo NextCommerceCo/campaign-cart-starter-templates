@@ -9,27 +9,21 @@ name: refresh-template-verification
 # Only mechanical facts are refreshed (SDK version, source SHA, fingerprint,
 # CI run link). campaigns_os_status is never touched — that stays a human call.
 #
-# CURRENT OPERATING MODE (see issue #131): this repo does not grant Actions
-# the "create and approve pull requests" permission, so `gh pr create` is
-# expected to be refused. When that happens the run stays GREEN and instead
-# posts a comment on the source PR (the one whose merge made the evidence
-# stale) telling its author the re-certification branch is ready, with a
-# one-click compare link to open the PR. The maintainer flow is:
+# CURRENT OPERATING MODE (issues #131/#163): the workflow authenticates as
+# the org-owned `next-recertify-bot` GitHub App, minting a short-lived
+# installation token from the RECERTIFY_APP_ID / RECERTIFY_APP_PRIVATE_KEY
+# secrets. App tokens have no expiry to rotate, PRs show as authored by
+# next-recertify-bot[bot], and — unlike the default github.token, which
+# GitHub's anti-recursion rule excludes — PRs opened with them trigger CI
+# normally, so `gh pr create` below succeeds and the source-PR comment
+# fallback should never fire. (The fallback is kept as a safety net: if PR
+# creation is ever refused again, the run stays GREEN and posts a comment on
+# the PR whose merge staled the evidence, with a one-click compare link to
+# open the re-certification PR from `bot/recertify-template-evidence`.)
 #
-#   1. Merge a PR that changes templates or bumps the SDK.
-#   2. A bot comment appears on that PR: "evidence stale, branch ready" with
-#      an open-a-PR link for `bot/recertify-template-evidence`. (Direct
-#      pushes to main have no PR to ping; the link lands in the run's step
-#      summary instead.)
-#   3. Open the PR from the link — a human-opened PR runs CI normally, no
-#      close/reopen dance — review the one-file diff, and merge.
-#
-# Fully automatic alternative (issue #131): a fine-grained PAT (contents +
-# pull requests: write) stored as the RECERTIFY_TOKEN secret — or a GitHub
-# App — lets the `gh pr create` attempt below succeed, and the comment
-# fallback never fires. Flipping the repo Actions setting alone is NOT
-# enough: a default-token bot PR does not trigger CI (anti-recursion rule)
-# and needs a close/reopen.
+# History: before the App this ran on the default token (Actions may not
+# open PRs here, so the comment fallback was the normal path), then briefly
+# on a fine-grained PAT (RECERTIFY_TOKEN — the expiring stopgap from #131).
 
 on:
   workflow_run:
@@ -52,10 +46,16 @@ jobs:
     if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
+      - name: Mint App installation token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.RECERTIFY_APP_ID }}
+          private-key: ${{ secrets.RECERTIFY_APP_PRIVATE_KEY }}
       - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
-          token: ${{ secrets.RECERTIFY_TOKEN || github.token }}
+          token: ${{ steps.app-token.outputs.token }}
       - uses: actions/setup-node@v7
         with:
           node-version: 20
@@ -76,7 +76,7 @@ jobs:
         run: npm run validate:template-verification
       - name: Open re-certification PR
         env:
-          GH_TOKEN: ${{ secrets.RECERTIFY_TOKEN || github.token }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           if git diff --quiet template-verification.json; then
             echo 'Evidence already current; no PR needed.'
@@ -84,8 +84,12 @@ jobs:
           fi
           sdk="$(node -p "Object.values(JSON.parse(require('fs').readFileSync('_data/campaigns.json','utf8')))[0].sdk_version")"
           branch='bot/recertify-template-evidence'
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          # Author commits as the App's bot user so history matches the PR
+          # author (the numeric prefix is the bot user's id, required for
+          # GitHub to link the email to the bot account).
+          app='${{ steps.app-token.outputs.app-slug }}'
+          git config user.name "${app}[bot]"
+          git config user.email "$(gh api "users/${app}%5Bbot%5D" --jq .id)+${app}[bot]@users.noreply.github.com"
           git checkout -B "$branch"
           git add template-verification.json
           git commit -m "chore: record template verification evidence for SDK $sdk"
@@ -103,9 +107,10 @@ jobs:
             echo 'Re-certification PR opened automatically.'
             exit 0
           fi
-          # Expected without RECERTIFY_TOKEN: Actions may not open PRs here
-          # (issue #131). Ping the PR whose merge staled the evidence instead
-          # of failing the run — the branch is ready, a human opens the PR.
+          # Should not happen on the App token, but kept as a safety net
+          # (issues #131/#163): ping the PR whose merge staled the evidence
+          # instead of failing the run — the branch is ready, a human opens
+          # the PR.
           echo 'gh pr create refused; notifying the source PR instead.'
           compare_url="https://github.com/${{ github.repository }}/compare/main...$branch?expand=1"
           note="⚠️ **Re-certification needed:** this merge made the template verification evidence stale. The refresh workflow has already regenerated \`template-verification.json\` and pushed it to \`$branch\` — it just cannot open the PR itself (issue #131). **[Open the one-file PR]($compare_url)**, review, and merge to clear the freshness warnings."
