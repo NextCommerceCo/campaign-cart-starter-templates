@@ -22,9 +22,9 @@
    - Fixture specs: https://github.com/NextCommerceCo/campaign-cart-starter-templates/tree/main/docs/fixtures/campaign-specs
 
 4. **Include `gtm_id` and `fb_pixel_id` keys on every `campaigns.json` entry** — set them intentionally:
-   - **`""` (empty string)** — layout **does not** inject GTM / Meta snippets in these starter templates (`base.html` uses `{% if campaign.gtm_id != "" %}` / `{% if campaign.fb_pixel_id != "" %}`).
+   - **`""` (empty string) or absent key** — layout **does not** inject GTM / Meta snippets in these starter templates (the analytics partials use the hardened guard `{% if campaign.gtm_id and campaign.gtm_id != "" %}` / `{% if campaign.fb_pixel_id and campaign.fb_pixel_id != "" %}`, so absent OR empty = off).
    - **Any non-empty value** (including placeholders like `"GTM-XXXXXXX"` or `"123456789012345"`) — in **non-`development`** builds, the **snippets still load** and hit GTM / Facebook with that ID. Placeholders are **not** the same as “off”; they are “on with dummy IDs.” Use real production IDs when you want tracking; use `""` when you want layout-driven tags disabled.
-   - **Omitting the keys** — may behave like missing data depending on your CPK/Liquid defaults; **prefer explicit `""`** when disabling so behavior matches these templates.
+   - **Omitting the keys** — same as `""`: the hardened guard treats an absent key as off, so lean entries without the keys are safe. Keep explicit `""` keys when you want the entry to signpost that tracking was considered and intentionally disabled.
 
 Do not proceed with code generation until you have completed all four steps above.
 
@@ -181,11 +181,11 @@ The top-level key is the campaign slug. Add any additional key to a campaign ent
 These starter templates inject **Google Tag Manager** and **Meta Pixel** from two shared per-template partials — `_includes/analytics-head.html` (head loaders) and `_includes/analytics-body.html` (`<noscript>` fallbacks) — pulled into all three base layouts (`base.html`, `base-presell.html`, `base-landing.html`) via `{% campaign_include %}`, the same DRY pattern as `meta-social.html` (so the layouts never drift; edit the partial once, not every layout). The snippets render when:
 
 - `environment` is not `development`, and  
-- `gtm_id` and/or `fb_pixel_id` are **non-empty strings** in `_data/campaigns.json` (checked with `{% if campaign.gtm_id != "" %}` / `{% if campaign.fb_pixel_id != "" %}`).
+- `gtm_id` and/or `fb_pixel_id` are **present and non-empty** in `_data/campaigns.json` (checked with the hardened guard `{% if campaign.gtm_id and campaign.gtm_id != "" %}` / `{% if campaign.fb_pixel_id and campaign.fb_pixel_id != "" %}` — absent OR empty = off).
 
 **Gotchas**
 
-- **`""` disables layout injection** for that tag. **`"GTM-XXXXXXX"`** (or any other non-empty placeholder) **still injects** on staging/production builds — do not assume placeholders mean “no script.”
+- **`""` (or an absent key) disables layout injection** for that tag. **`"GTM-XXXXXXX"`** (or any other non-empty placeholder) **still injects** on staging/production builds — do not assume placeholders mean “no script.”
 - **Liquid:** do not replace `!= ""` with a bare `{% if campaign.gtm_id %}` — in Liquid, an **empty string can be truthy**, so you could inject broken or unwanted snippets.
 
 The layout snippet and SDK provider work together: layout injection initialises GTM/Pixel, the SDK provider forwards ecommerce events into it. Enable both — set `gtm_id` / `fb_pixel_id` in `campaigns.json` **and** enable the matching provider in `config.js`.
