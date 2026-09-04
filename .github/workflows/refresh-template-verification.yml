@@ -2,9 +2,11 @@ name: refresh-template-verification
 
 # Closes the certification loop: whenever lint:sdk passes on main and the
 # recorded verification evidence is stale (SDK bump or template change), this
-# workflow regenerates template-verification.json against that exact commit and
-# opens a small re-certification PR. Merging the PR clears the freshness
-# warnings; the PR *is* the notification that re-certification happened.
+# workflow regenerates template-verification.json against that exact commit,
+# opens a small re-certification PR, and arms auto-merge so it lands on its own
+# once lint-sdk passes. Merging clears the freshness warnings. An ordinary
+# recertification therefore needs no human, and the record of it is the merge
+# in history rather than a PR sitting in the queue.
 #
 # Only mechanical facts are refreshed (SDK version, source SHA, fingerprint,
 # CI run link). campaigns_os_status is never touched — that stays a human call.
@@ -20,6 +22,12 @@ name: refresh-template-verification
 # creation is ever refused again, the run stays GREEN and posts a comment on
 # the PR whose merge staled the evidence, with a one-click compare link to
 # open the re-certification PR from `bot/recertify-template-evidence`.)
+#
+# Auto-merge degrades the same way rather than failing: it needs the repository
+# "Allow auto-merge" setting, and if that is ever turned off the request is
+# refused, one line is logged, and the PR waits for a human to merge it.
+# lint-sdk still gates the merge either way — `main` requires no reviews, so
+# these one-file PRs have never had an approver to skip.
 #
 # History: before the App this ran on the default token (Actions may not
 # open PRs here, so the comment fallback was the normal path), then briefly
@@ -90,6 +98,18 @@ jobs:
           app='${{ steps.app-token.outputs.app-slug }}'
           git config user.name "${app}[bot]"
           git config user.email "$(gh api "users/${app}%5Bbot%5D" --jq .id)+${app}[bot]@users.noreply.github.com"
+          # Ask GitHub to merge the PR by itself once lint-sdk goes green. Needs
+          # the repository "Allow auto-merge" setting on (it is); were it ever
+          # turned off the request is refused and the PR simply waits for a
+          # human, as it did before. Never fail the run over it: by the time
+          # this is called the evidence is committed and the PR exists.
+          arm_auto_merge() {
+            if gh pr merge "$1" --auto --squash; then
+              echo 'Auto-merge armed; the PR lands on its own once lint-sdk passes.'
+            else
+              echo 'Auto-merge unavailable (repository setting is off); leaving the PR for a human to merge.'
+            fi
+          }
           git checkout -B "$branch"
           git add template-verification.json
           git commit -m "chore: record template verification evidence for SDK $sdk"
@@ -98,6 +118,7 @@ jobs:
           git push -f origin "$branch"
           if ! gh pr list --head "$branch" --state open --json number --jq length | grep -qx 0; then
             echo 'Re-certification PR already open; branch updated.'
+            arm_auto_merge "$branch"
             exit 0
           fi
           if gh pr create \
@@ -105,6 +126,7 @@ jobs:
               --title "chore: record template verification evidence for SDK $sdk" \
               --body "Automated re-certification. lint:sdk passed on main at \`${{ github.event.workflow_run.head_sha }}\` ([run](${{ github.event.workflow_run.html_url }})), so this records that commit as the current verification evidence in \`template-verification.json\`. Merging clears the freshness warnings. campaigns_os_status is untouched."; then
             echo 'Re-certification PR opened automatically.'
+            arm_auto_merge "$branch"
             exit 0
           fi
           # Should not happen on the App token, but kept as a safety net
