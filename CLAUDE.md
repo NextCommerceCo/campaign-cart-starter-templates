@@ -181,6 +181,9 @@ Apollo checkout `styles:` is typically Swiper CDN only. `checkout-apollo.js` han
 └── [page].html                 ← pages with YAML frontmatter
 ```
 
+### NEXT-hosted assets — use `cdn.cachebucket.com`
+Files uploaded to the NEXT platform (Files / media uploads) are served from **two interchangeable hosts**: `cdn.29next.store` (primary) and `cdn.cachebucket.com` (alternative, same path). On campaign pages **always reference `cdn.cachebucket.com`** — campaigns are frequent DMCA-takedown targets by competitors, and the alternative host keeps those complaints off the primary domain. Swapping the host is a straight find/replace (`https://cdn.29next.store/` → `https://cdn.cachebucket.com/`); no path changes. The `src/landing/` demo video URLs already use it. Local assets under `assets/` are unaffected — those go through `campaign_asset`.
+
 ---
 
 ## base.html Pattern
@@ -378,7 +381,7 @@ The 0.3.x archive is out of scope for this repository.
 - Full `config.js` structure (matches real template file)
 - All SDK data attributes with real examples (checkout form, selectors, bump, upsell, display, etc.)
 - Task checklists: configuring config.js, setting up a new campaign, adding a bump, adding a upsell step, debugging
-- 10 hard rules
+- 11 hard rules
 
 Design decisions:
 - **Checklists over how-to recipes** — checklists are AI-useful; prose how-tos are not worth the file bloat
