@@ -2,21 +2,21 @@
   <div class="max-w-[1440px] mx-auto px-[15px] md:px-[26px] lg:px-[80px] xl:px-[160px]">
     <div class="flex flex-col gap-8 md:gap-10 lg:gap-12 items-center">
 
-      <!-- Header -->
+      {% comment %} Header {% endcomment %}
       <div class="flex flex-col gap-3 items-center text-center w-full lg:max-w-[800px]">
         <p class="font-bold text-[18px] md:text-[20px] text-[color:var(--brand-primary)] tracking-[-0.09px] md:tracking-[-0.1px] leading-[1.4]">{{ ingredients_2_eyebrow }}</p>
         <h2 class="font-bold text-[28px] md:text-[32px] lg:text-[40px] text-[color:var(--text-primary)] tracking-[-0.14px] md:tracking-[-0.16px] lg:tracking-[-0.2px] leading-[1.2]">{{ ingredients_2_heading }}</h2>
       </div>
 
-      <!-- Two-col on desktop: product image | ingredient list -->
+      {% comment %} Two-col on desktop: product image | ingredient list {% endcomment %}
       <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center lg:items-stretch w-full">
 
-        <!-- Product image — hidden on mobile, shown lg -->
+        {% comment %} Product image — hidden on mobile, shown lg {% endcomment %}
         <div class="hidden lg:flex items-center justify-center shrink-0 lg:w-[410px]">
           <img src="{{ ingredients_2_product_image | campaign_asset }}" alt="{{ ingredients_2_product_image_alt }}" class="w-full h-auto object-contain self-start">
         </div>
 
-        <!-- Ingredient rows -->
+        {% comment %} Ingredient rows {% endcomment %}
         <div class="flex flex-col gap-3 md:gap-4 lg:flex-1 w-full">
 
           <div class="flex items-center gap-3 md:gap-5 lg:gap-8">
@@ -66,7 +66,7 @@
         </div>
       </div>
 
-      <!-- CTA -->
+      {% comment %} CTA {% endcomment %}
       <div class="flex flex-col gap-3 items-center w-full max-w-[440px]">
         <a href="{{ next_url }}" class="w-full bg-[color:var(--brand-primary)] rounded-[6px] py-5 px-6 flex items-center justify-center gap-5 no-underline">
           <span class="font-bold text-[20px] text-white text-center tracking-[-0.1px] leading-[1.5] whitespace-nowrap">{{ cta_text }}</span>

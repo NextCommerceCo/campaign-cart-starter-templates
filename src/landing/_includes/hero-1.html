@@ -2,7 +2,7 @@
   <div class="max-w-[1440px] mx-auto md:pr-[26px] lg:pr-[60px] xl:pr-[120px]">
     <div class="flex flex-col gap-[20px] md:flex-row md:gap-[32px] lg:gap-[60px] md:items-center">
 
-      <!-- ── MOBILE ONLY: stars + headline above image ── -->
+      {% comment %} ── MOBILE ONLY: stars + headline above image ── {% endcomment %}
       <div class="md:hidden flex flex-col gap-[8px] items-center text-center px-[15px] pt-[24px]">
         <div class="flex items-center gap-[16px] justify-center">
           <div class="flex gap-[2px]">
@@ -17,17 +17,17 @@
         <h1 class="text-[32px] font-bold leading-[1.2] text-[var(--text-primary)] tracking-[-0.16px]">{{ hero_1_headline }}</h1>
       </div>
 
-      <!-- ── IMAGE COLUMN — bleeds left edge, full height on desktop ── -->
+      {% comment %} ── IMAGE COLUMN — bleeds left edge, full height on desktop ── {% endcomment %}
       <div class="md:flex-1 md:self-stretch overflow-hidden">
         <img src="{{ hero_1_hero_image | campaign_asset }}"
              alt="{{ hero_1_hero_image_alt }}"
              class="w-full h-[300px] md:h-full object-cover object-center md:object-bottom">
       </div>
 
-      <!-- ── CONTENT COLUMN ── -->
+      {% comment %} ── CONTENT COLUMN ── {% endcomment %}
       <div class="md:flex-1 flex flex-col gap-[20px] md:gap-[26px] lg:gap-[32px] px-[15px] md:px-0 pb-[24px] md:py-[32px] lg:py-[40px]">
 
-        <!-- Stars + headline + body — desktop/tablet only -->
+        {% comment %} Stars + headline + body — desktop/tablet only {% endcomment %}
         <div class="hidden md:flex flex-col md:gap-[12px] lg:gap-[20px]">
           <div class="flex items-center gap-[16px]">
             <div class="flex md:gap-[2.2px] lg:gap-[2px]">
@@ -43,10 +43,10 @@
           <p class="md:text-[20px] text-[var(--text-secondary)] leading-[1.5] tracking-[-0.1px]">{{ hero_1_body_text }}</p>
         </div>
 
-        <!-- Body — mobile only (centered) -->
+        {% comment %} Body — mobile only (centered) {% endcomment %}
         <p class="md:hidden text-[18px] text-[var(--text-primary)] text-center leading-[1.5] tracking-[-0.09px]">{{ hero_1_body_text }}</p>
 
-        <!-- Benefit bullets -->
+        {% comment %} Benefit bullets {% endcomment %}
         <div class="flex flex-col gap-[8px]">
           <div class="flex items-center gap-[12px]">
             <img src="{{ 'images/hero-1/icon-check.svg' | campaign_asset }}" alt="" class="w-[24px] h-[24px] shrink-0">
@@ -62,7 +62,7 @@
           </div>
         </div>
 
-        <!-- CTA block -->
+        {% comment %} CTA block {% endcomment %}
         <div class="w-full md:max-w-[440px]">
           <div class="w-full flex flex-col items-center gap-[12px]">
             <a href="{{ next_url | campaign_link }}{{ cta_params }}"
@@ -77,7 +77,7 @@
           </div>
         </div>
 
-        <!-- Testimonial -->
+        {% comment %} Testimonial {% endcomment %}
         <div class="flex gap-[12px] items-start mt-[20px] md:mt-0">
           <div class="shrink-0 w-[60px] h-[60px] rounded-full overflow-hidden">
             <img src="{{ 'images/_shared/1x1_1.svg' | campaign_asset }}"
@@ -104,7 +104,7 @@
           </div>
         </div>
 
-      </div><!-- /content column -->
-    </div><!-- /flex wrapper -->
-  </div><!-- /container -->
+      </div>{% comment %} /content column {% endcomment %}
+    </div>{% comment %} /flex wrapper {% endcomment %}
+  </div>{% comment %} /container {% endcomment %}
 </section>

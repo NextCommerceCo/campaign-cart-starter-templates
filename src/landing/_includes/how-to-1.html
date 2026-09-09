@@ -2,7 +2,7 @@
   <div class="max-w-[1440px] mx-auto">
     <div class="flex flex-col items-center gap-[32px] md:gap-[40px] lg:gap-[48px]">
 
-      <!-- Heading -->
+      {% comment %} Heading {% endcomment %}
       <div class="flex flex-col items-center text-center gap-[12px] md:gap-[16px] lg:gap-[20px]">
         <h2 class="text-[28px] md:text-[32px] lg:text-[40px] font-bold text-[var(--text-primary)] leading-[1.2] tracking-[-0.14px] md:tracking-[-0.16px] lg:tracking-[-0.2px]">
           {{ how_to_1_heading }}
@@ -12,10 +12,10 @@
         </p>
       </div>
 
-      <!-- Steps -->
+      {% comment %} Steps {% endcomment %}
       <div class="flex flex-col md:flex-row gap-[32px] md:gap-[26px] lg:gap-[32px] w-full">
 
-        <!-- Step 1 -->
+        {% comment %} Step 1 {% endcomment %}
         <div class="md:flex-1 flex flex-col items-center gap-[12px] md:gap-[16px] lg:gap-[20px]">
           <div class="relative w-full">
             <img src="{{ 'images/_shared/4x3.svg' | campaign_asset }}"
@@ -33,7 +33,7 @@
           </p>
         </div>
 
-        <!-- Step 2 -->
+        {% comment %} Step 2 {% endcomment %}
         <div class="md:flex-1 flex flex-col items-center gap-[12px] md:gap-[16px] lg:gap-[20px]">
           <div class="relative w-full">
             <img src="{{ 'images/_shared/4x3.svg' | campaign_asset }}"
@@ -51,7 +51,7 @@
           </p>
         </div>
 
-        <!-- Step 3 -->
+        {% comment %} Step 3 {% endcomment %}
         <div class="md:flex-1 flex flex-col items-center gap-[12px] md:gap-[16px] lg:gap-[20px]">
           <div class="relative w-full">
             <img src="{{ 'images/_shared/4x3.svg' | campaign_asset }}"
@@ -71,7 +71,7 @@
 
       </div>
 
-      <!-- CTA -->
+      {% comment %} CTA {% endcomment %}
       <div class="flex flex-col items-center gap-[8px] md:gap-[10px] lg:gap-[12px] w-full max-w-[440px]">
         <a href="{{ next_url }}"
           class="w-full bg-[var(--brand-primary)] rounded-[6px] py-[20px] px-[24px] flex items-center justify-center gap-[20px] no-underline">

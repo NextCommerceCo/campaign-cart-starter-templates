@@ -2,12 +2,12 @@
   <div class="max-w-[1440px] mx-auto px-[15px] md:px-[26px] lg:px-[60px] xl:px-[120px]">
     <div class="flex flex-col items-center gap-[32px] md:gap-[40px] lg:gap-[48px]">
 
-      <!-- Heading -->
+      {% comment %} Heading {% endcomment %}
       <h2 class="font-bold text-[32px] md:text-[36px] lg:text-[44px] tracking-[-0.16px] md:tracking-[-0.18px] lg:tracking-[-0.22px] text-[var(--text-primary)] leading-[1.2] text-center max-w-[312px] md:max-w-none">
         {{ testimonials_3_section_heading }}
       </h2>
 
-      <!-- ─── Mobile: static 3×2 grid (hidden on md+) ─── -->
+      {% comment %} ─── Mobile: static 3×2 grid (hidden on md+) ─── {% endcomment %}
       <div class="md:hidden grid grid-cols-3 gap-[12px] w-full">
 
         <div class="relative rounded-[8px] overflow-hidden h-[168px]" data-video-inline data-video-src="{{ testimonials_3_video_1_url }}">
@@ -54,13 +54,13 @@
 
       </div>
 
-      <!-- ─── Tablet/Desktop: Swiper showing 4 of 6 slides (hidden on mobile) ─── -->
+      {% comment %} ─── Tablet/Desktop: Swiper showing 4 of 6 slides (hidden on mobile) ─── {% endcomment %}
       <div class="hidden md:block w-full" data-swiper-root data-slides-md="4" data-slides-lg="4" data-gap-md="32" data-gap-lg="32" data-swiper-variant="sw-landing1">
         <div class="swiper" data-swiper>
 
           <div class="swiper-wrapper">
 
-            <!-- Slide 1 -->
+            {% comment %} Slide 1 {% endcomment %}
             <div class="swiper-slide">
               <div class="relative rounded-[16px] overflow-hidden h-[264px] lg:h-[434px]" data-video-inline data-video-src="{{ testimonials_3_video_1_url }}">
                 <img src="{{ testimonials_3_video_1_thumbnail | campaign_asset }}" alt="Customer testimonial video" class="w-full h-full object-cover">
@@ -70,7 +70,7 @@
               </div>
             </div>
 
-            <!-- Slide 2 -->
+            {% comment %} Slide 2 {% endcomment %}
             <div class="swiper-slide">
               <div class="relative rounded-[16px] overflow-hidden h-[264px] lg:h-[434px]" data-video-inline data-video-src="{{ testimonials_3_video_2_url }}">
                 <img src="{{ testimonials_3_video_2_thumbnail | campaign_asset }}" alt="Customer testimonial video" class="w-full h-full object-cover">
@@ -80,7 +80,7 @@
               </div>
             </div>
 
-            <!-- Slide 3 -->
+            {% comment %} Slide 3 {% endcomment %}
             <div class="swiper-slide">
               <div class="relative rounded-[16px] overflow-hidden h-[264px] lg:h-[434px]" data-video-inline data-video-src="{{ testimonials_3_video_3_url }}">
                 <img src="{{ testimonials_3_video_3_thumbnail | campaign_asset }}" alt="Customer testimonial video" class="w-full h-full object-cover">
@@ -90,7 +90,7 @@
               </div>
             </div>
 
-            <!-- Slide 4 -->
+            {% comment %} Slide 4 {% endcomment %}
             <div class="swiper-slide">
               <div class="relative rounded-[16px] overflow-hidden h-[264px] lg:h-[434px]" data-video-inline data-video-src="{{ testimonials_3_video_4_url }}">
                 <img src="{{ testimonials_3_video_4_thumbnail | campaign_asset }}" alt="Customer testimonial video" class="w-full h-full object-cover">
@@ -100,7 +100,7 @@
               </div>
             </div>
 
-            <!-- Slide 5 -->
+            {% comment %} Slide 5 {% endcomment %}
             <div class="swiper-slide">
               <div class="relative rounded-[16px] overflow-hidden h-[264px] lg:h-[434px]" data-video-inline data-video-src="{{ testimonials_3_video_5_url }}">
                 <img src="{{ testimonials_3_video_5_thumbnail | campaign_asset }}" alt="Customer testimonial video" class="w-full h-full object-cover">
@@ -110,7 +110,7 @@
               </div>
             </div>
 
-            <!-- Slide 6 -->
+            {% comment %} Slide 6 {% endcomment %}
             <div class="swiper-slide">
               <div class="relative rounded-[16px] overflow-hidden h-[264px] lg:h-[434px]" data-video-inline data-video-src="{{ testimonials_3_video_6_url }}">
                 <img src="{{ testimonials_3_video_6_thumbnail | campaign_asset }}" alt="Customer testimonial video" class="w-full h-full object-cover">
@@ -120,9 +120,9 @@
               </div>
             </div>
 
-          </div><!-- /.swiper-wrapper -->
+          </div>{% comment %} /.swiper-wrapper {% endcomment %}
 
-          <!-- Slider nav — arrows + pagination dots -->
+          {% comment %} Slider nav — arrows + pagination dots {% endcomment %}
           <div class="flex items-center justify-center gap-[16px] mt-[40px]">
             <button type="button"
                     class="bg-white rounded-full w-[40px] h-[40px] flex items-center justify-center shadow-sm shrink-0 border-0 cursor-pointer"
@@ -143,13 +143,13 @@
             </button>
           </div>
 
-        </div><!-- /.swiper -->
+        </div>{% comment %} /.swiper {% endcomment %}
       </div>
 
-      <!-- Review cards — 2-col on md+, stacked on mobile -->
+      {% comment %} Review cards — 2-col on md+, stacked on mobile {% endcomment %}
       <div class="grid grid-cols-1 md:grid-cols-2 gap-[20px] w-full">
 
-        <!-- Card 1 -->
+        {% comment %} Card 1 {% endcomment %}
         <div class="bg-white rounded-[8px] md:rounded-[16px] p-[20px] flex flex-col justify-between gap-[40px] md:gap-[60px]">
           <div class="flex flex-col gap-[16px]">
             <div class="flex flex-col gap-[4px]">
@@ -172,7 +172,7 @@
           </div>
         </div>
 
-        <!-- Card 2 -->
+        {% comment %} Card 2 {% endcomment %}
         <div class="bg-white rounded-[8px] md:rounded-[16px] p-[20px] flex flex-col justify-between gap-[40px] md:gap-[60px]">
           <div class="flex flex-col gap-[16px]">
             <div class="flex flex-col gap-[4px]">
@@ -195,7 +195,7 @@
           </div>
         </div>
 
-        <!-- Card 3 -->
+        {% comment %} Card 3 {% endcomment %}
         <div class="bg-white rounded-[8px] md:rounded-[16px] p-[20px] flex flex-col justify-between gap-[40px] md:gap-[60px]">
           <div class="flex flex-col gap-[16px]">
             <div class="flex flex-col gap-[4px]">
@@ -218,7 +218,7 @@
           </div>
         </div>
 
-        <!-- Card 4 -->
+        {% comment %} Card 4 {% endcomment %}
         <div class="bg-white rounded-[8px] md:rounded-[16px] p-[20px] flex flex-col justify-between gap-[40px] md:gap-[60px]">
           <div class="flex flex-col gap-[16px]">
             <div class="flex flex-col gap-[4px]">
@@ -236,7 +236,7 @@
 
       </div>
 
-      <!-- CTA -->
+      {% comment %} CTA {% endcomment %}
       <div class="flex flex-col items-center gap-[8px] md:gap-[10px] lg:gap-[12px] w-full max-w-[440px]">
         <a href="{{ next_url }}"
           class="w-full bg-[var(--brand-primary)] rounded-[6px] py-[20px] px-[24px] flex items-center justify-center gap-[20px] no-underline">

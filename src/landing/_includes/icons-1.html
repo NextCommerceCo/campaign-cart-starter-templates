@@ -14,11 +14,11 @@
 
 <section class="w-full bg-white overflow-hidden">
 
-  <!-- Mobile: infinite scroll (hidden md+) -->
+  {% comment %} Mobile: infinite scroll (hidden md+) {% endcomment %}
   <div class="md:hidden py-[32px]">
     <div class="icons1-track flex gap-[24px] w-max">
 
-      <!-- Set 1 -->
+      {% comment %} Set 1 {% endcomment %}
       <div class="shrink-0 flex flex-col gap-[16px] items-center w-[140px]">
         <img src="{{ 'images/icons-1/icon-setup.svg' | campaign_asset }}" alt="" class="w-[50px] h-[50px]">
         <span class="text-[16px] font-semibold text-[var(--text-primary)] text-center leading-[1.4] tracking-[-0.09px]">{{ icons_1_feature_1 }}</span>
@@ -40,7 +40,7 @@
         <span class="text-[16px] font-semibold text-[var(--text-primary)] text-center leading-[1.4] tracking-[-0.09px]">{{ icons_1_feature_5 }}</span>
       </div>
 
-      <!-- Set 2 — duplicate for seamless loop -->
+      {% comment %} Set 2 — duplicate for seamless loop {% endcomment %}
       <div class="shrink-0 flex flex-col gap-[16px] items-center w-[140px]">
         <img src="{{ 'images/icons-1/icon-setup.svg' | campaign_asset }}" alt="" class="w-[50px] h-[50px]">
         <span class="text-[16px] font-semibold text-[var(--text-primary)] text-center leading-[1.4] tracking-[-0.09px]">{{ icons_1_feature_1 }}</span>
@@ -65,7 +65,7 @@
     </div>
   </div>
 
-  <!-- Desktop: static layout (hidden below md) -->
+  {% comment %} Desktop: static layout (hidden below md) {% endcomment %}
   <div class="hidden md:flex max-w-[1440px] mx-auto px-[26px] lg:px-[60px] xl:px-[120px] py-[40px] justify-between">
     <div class="flex flex-col gap-[16px] items-center w-[160px]">
       <img src="{{ 'images/icons-1/icon-setup.svg' | campaign_asset }}" alt="" class="w-[50px] h-[50px]">

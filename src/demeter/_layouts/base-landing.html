@@ -5,27 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ title }}</title>
 
-  <!-- Social share meta -->
+  {% comment %} Social share meta {% endcomment %}
   {% campaign_include 'meta-social.html' %}
 
-  <!-- Resource hints: SDK CDN + campaign API + next-page prefetch.
+  {% comment %} Resource hints: SDK CDN + campaign API + next-page prefetch.
        rel=prefetch issues a real low-priority GET, so the prefetched page appears in CDN/server
        access logs even when the visitor never navigates; client-side analytics (GTM, pixels, SDK)
-       never run on a prefetched document. -->
+       never run on a prefetched document. {% endcomment %}
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://campaigns.apps.29next.com" crossorigin>
   <link rel="dns-prefetch" href="//cdn-countries.muddy-wind-c7ca.workers.dev">
   {% if next_url %}<link rel="prefetch" href="{{ next_url | campaign_link }}" as="document">{% endif %}
 
-  <!-- Fonts -->
+  {% comment %} Fonts {% endcomment %}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 
-  <!-- Swiper -->
+  {% comment %} Swiper {% endcomment %}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
-  <!-- Tailwind CDN + design token color aliases -->
+  {% comment %} Tailwind CDN + design token color aliases {% endcomment %}
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -50,7 +50,7 @@
     }
   </script>
 
-  <!-- Design tokens + any page-level styles -->
+  {% comment %} Design tokens + any page-level styles {% endcomment %}
   <link rel="stylesheet" href="{{ 'css/landing/tokens.css' | campaign_asset }}">
   {% for style in styles %}
   <link rel="stylesheet" href="{{ style | campaign_asset }}">
@@ -74,13 +74,13 @@
 
   {{ content }}
 
-  <!-- Swiper JS -->
+  {% comment %} Swiper JS {% endcomment %}
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-  <!-- Unified section behaviors -->
+  {% comment %} Unified section behaviors {% endcomment %}
   <script src="{{ 'js/landing/landing.js' | campaign_asset }}"></script>
 
-  <!-- Optional page-level scripts -->
+  {% comment %} Optional page-level scripts {% endcomment %}
   {% for script in scripts %}
   <script src="{{ script | campaign_asset }}"></script>
   {% endfor %}

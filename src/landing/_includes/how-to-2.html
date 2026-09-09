@@ -2,7 +2,7 @@
   <div class="max-w-[1440px] mx-auto">
     <div class="flex flex-col items-center gap-[32px] md:gap-[40px] lg:gap-[48px]">
 
-      <!-- Heading -->
+      {% comment %} Heading {% endcomment %}
       <div class="flex flex-col items-center text-center gap-[12px] md:gap-[16px] lg:gap-[20px]">
         <h2 class="text-[28px] md:text-[32px] lg:text-[40px] font-bold text-[var(--text-primary)] leading-[1.2] tracking-[-0.14px] md:tracking-[-0.16px] lg:tracking-[-0.2px]">
           {{ how_to_2_heading }}
@@ -12,10 +12,10 @@
         </p>
       </div>
 
-      <!-- Cards -->
+      {% comment %} Cards {% endcomment %}
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[12px] md:gap-[16px] lg:gap-[20px] w-full">
 
-        <!-- Step 1 -->
+        {% comment %} Step 1 {% endcomment %}
         <div class="bg-white rounded-[8px] md:rounded-[12px] lg:rounded-[16px] pt-[8px] px-[8px] pb-[12px] md:pt-[10px] md:px-[10px] md:pb-[16px] lg:pt-[12px] lg:px-[12px] lg:pb-[20px] flex flex-col gap-[8px] md:gap-[10px] lg:gap-[12px] items-start">
           <img src="{{ 'images/_shared/1x1_1.svg' | campaign_asset }}"
                alt="{{ how_to_2_step_1_text }}"
@@ -28,7 +28,7 @@
           </p>
         </div>
 
-        <!-- Step 2 -->
+        {% comment %} Step 2 {% endcomment %}
         <div class="bg-white rounded-[8px] md:rounded-[12px] lg:rounded-[16px] pt-[8px] px-[8px] pb-[12px] md:pt-[10px] md:px-[10px] md:pb-[16px] lg:pt-[12px] lg:px-[12px] lg:pb-[20px] flex flex-col gap-[8px] md:gap-[10px] lg:gap-[12px] items-start">
           <img src="{{ 'images/_shared/1x1_1.svg' | campaign_asset }}"
                alt="{{ how_to_2_step_2_text }}"
@@ -41,7 +41,7 @@
           </p>
         </div>
 
-        <!-- Step 3 -->
+        {% comment %} Step 3 {% endcomment %}
         <div class="bg-white rounded-[8px] md:rounded-[12px] lg:rounded-[16px] pt-[8px] px-[8px] pb-[12px] md:pt-[10px] md:px-[10px] md:pb-[16px] lg:pt-[12px] lg:px-[12px] lg:pb-[20px] flex flex-col gap-[8px] md:gap-[10px] lg:gap-[12px] items-start">
           <img src="{{ 'images/_shared/1x1_1.svg' | campaign_asset }}"
                alt="{{ how_to_2_step_3_text }}"
@@ -54,7 +54,7 @@
           </p>
         </div>
 
-        <!-- Step 4 -->
+        {% comment %} Step 4 {% endcomment %}
         <div class="bg-white rounded-[8px] md:rounded-[12px] lg:rounded-[16px] pt-[8px] px-[8px] pb-[12px] md:pt-[10px] md:px-[10px] md:pb-[16px] lg:pt-[12px] lg:px-[12px] lg:pb-[20px] flex flex-col gap-[8px] md:gap-[10px] lg:gap-[12px] items-start">
           <img src="{{ 'images/_shared/1x1_1.svg' | campaign_asset }}"
                alt="{{ how_to_2_step_4_text }}"
@@ -69,7 +69,7 @@
 
       </div>
 
-      <!-- CTA -->
+      {% comment %} CTA {% endcomment %}
       <div class="flex flex-col items-center gap-[8px] md:gap-[10px] lg:gap-[12px] w-full max-w-[440px]">
         <a href="{{ next_url }}"
           class="w-full bg-[var(--brand-primary)] rounded-[6px] py-[20px] px-[24px] flex items-center justify-center gap-[20px] no-underline">

@@ -215,8 +215,8 @@ bundles:
                           <div class="form-sections">
                             <div class="form-section grid-row-gap2 form-section--first">
                               <h2 class="form-section__title">Step 1: Pick Your Bundle Deal</h2>
-                              <!-- v0 catalog: bundle-selector partial. Canonical 3-tier defaults live in page frontmatter so CampaignSpec package/shipping ids stay visible.
-                                   Reference variant (data-next-bundles= JSON config-driven) preserved below as commented reference. -->
+                              {% comment %} v0 catalog: bundle-selector partial. Canonical 3-tier defaults live in page frontmatter so CampaignSpec package/shipping ids stay visible.
+                                   Reference variant (data-next-bundles= JSON config-driven) preserved below as commented reference. {% endcomment %}
                               {% campaign_include 'bundle-selector.html' selector_id='main' card_style=bundle_card_style packages=packages shipping_methods=shipping_methods bundles=bundles %}
                               {% comment %}
                               Reference only — optional config-driven variant.
@@ -345,7 +345,7 @@ bundles:
                                 {% endif %}
                               </div>
                             </div>
-                            <!-- END SUMMARY V2 -->
+                            {% comment %} END SUMMARY V2 {% endcomment %}
 
                             {% campaign_include 'submit-block.html' %}
                             </div>

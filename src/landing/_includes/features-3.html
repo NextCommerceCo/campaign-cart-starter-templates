@@ -8,12 +8,12 @@
 
       <div class="flex flex-col lg:flex-row items-center gap-10 w-full">
 
-        <!-- Product image -->
+        {% comment %} Product image {% endcomment %}
         <div class="w-full md:w-[400px] lg:w-auto lg:flex-1 aspect-square shrink-0">
           <img src="{{ features_3_product_image | campaign_asset }}" alt="{{ features_3_product_image_alt }}" class="w-full h-full object-contain">
         </div>
 
-        <!-- 2×3 feature grid -->
+        {% comment %} 2×3 feature grid {% endcomment %}
         <div class="grid grid-cols-2 gap-x-6 gap-y-8 w-full lg:w-[60%] lg:shrink-0">
 
           <div class="flex flex-col md:flex-row gap-5 items-start">

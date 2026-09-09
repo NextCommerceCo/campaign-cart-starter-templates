@@ -94,8 +94,8 @@ scripts:
                                 <div class="form-section form-section--first">
                                   <h2 class="form-section__title">Select Your Bundle</h2>
                                   {% campaign_include 'editorial-tier-selector.html' packages=packages shipping_methods=shipping_methods bundles=bundles %}
-                                  <!-- Canonical Demeter checkout pattern: manual inline bundle cards.
-                                   This keeps data-next-display="package.*" bindings reliable for image/name in initial DOM. -->
+                                  {% comment %} Canonical Demeter checkout pattern: manual inline bundle cards.
+                                   This keeps data-next-display="package.*" bindings reliable for image/name in initial DOM. {% endcomment %}
                                   {% comment %}
                                   Reference only — optional Step 4 auto-render variant.
                                   Kept as an optional implementation reference; do not treat as the default checkout pattern.
@@ -248,9 +248,9 @@ scripts:
                                 </div>
 
                                 {% assign bump_variant = order_bump_variant | default: 'check01+switch01' %}
-                                <!-- DEMO-ONLY override: pricing_mode='discounted' keeps the showcase's struck-price look.
+                                {% comment %} DEMO-ONLY override: pricing_mode='discounted' keeps the showcase's struck-price look.
                                      The contract default for bumps is full_price (single unitPrice/ea row) — when cloning
-                                     this page for a real campaign, drop the arg unless the bump has a genuine discount. -->
+                                     this page for a real campaign, drop the arg unless the bump has a genuine discount. {% endcomment %}
                                 {% unless bump_variant == 'none' or bump_variant == 'off' or bump_variant == 'false' %}
                                 <div class="order-bumps">
                                 {% case bump_variant %}

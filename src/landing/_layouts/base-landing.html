@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ title }}</title>
 
-  <!-- Fonts -->
+  {% comment %} Fonts {% endcomment %}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 
-  <!-- Swiper -->
+  {% comment %} Swiper {% endcomment %}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
-  <!-- Tailwind CDN + design token color aliases -->
+  {% comment %} Tailwind CDN + design token color aliases {% endcomment %}
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -38,13 +38,13 @@
     }
   </script>
 
-  <!-- Design tokens + any page-level styles -->
+  {% comment %} Design tokens + any page-level styles {% endcomment %}
   <link rel="stylesheet" href="{{ 'css/tokens.css' | campaign_asset }}">
   {% for style in styles %}
   <link rel="stylesheet" href="{{ style | campaign_asset }}">
   {% endfor %}
 
-  <!--
+  {% comment %}
     PRODUCTION HARDENING — uncomment to align with Campaign Cart stack:
 
     1. Load config.js before the SDK (same file as checkout, contains apiKey + analytics)
@@ -63,19 +63,19 @@
        PageView/ecommerce events to the Pixel, so do NOT add a manual fbq PageView.
 
     See docs/pre-checkout-pages.md for full guidance.
-  -->
+  {% endcomment %}
 </head>
 <body class="font-sans bg-white text-[var(--text-primary)]">
 
   {{ content }}
 
-  <!-- Swiper JS -->
+  {% comment %} Swiper JS {% endcomment %}
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-  <!-- Unified section behaviors -->
+  {% comment %} Unified section behaviors {% endcomment %}
   <script src="{{ 'js/landing.js' | campaign_asset }}"></script>
 
-  <!-- Optional page-level scripts -->
+  {% comment %} Optional page-level scripts {% endcomment %}
   {% for script in scripts %}
   <script src="{{ script | campaign_asset }}"></script>
   {% endfor %}

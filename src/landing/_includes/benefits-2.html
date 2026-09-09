@@ -2,28 +2,28 @@
   <div class="max-w-[1440px] mx-auto px-[15px] md:px-[26px] lg:px-[60px] xl:px-[120px]">
     <div class="flex flex-col gap-[32px] md:gap-[40px] lg:gap-[48px]">
 
-      <!-- Heading -->
+      {% comment %} Heading {% endcomment %}
       <h2 class="font-bold text-[32px] md:text-[36px] lg:text-[44px] tracking-[-0.16px] md:tracking-[-0.19px] lg:tracking-[-0.22px] text-[var(--text-primary)] leading-[1.2] text-center lg:text-left">
         {{ benefits_2_section_heading }}
       </h2>
 
-      <!-- Main content: image left, benefits + review right -->
+      {% comment %} Main content: image left, benefits + review right {% endcomment %}
       <div class="flex flex-col md:flex-row gap-[32px] md:gap-[40px] lg:gap-[48px] md:items-start lg:items-center">
 
-        <!-- Product image — square -->
+        {% comment %} Product image — square {% endcomment %}
         <div class="w-full md:w-[45%] shrink-0 aspect-square rounded-[16px] overflow-hidden">
           <img src="{{ benefits_2_product_image | campaign_asset }}"
                alt="{{ benefits_2_product_image_alt }}"
                class="w-full h-full object-cover">
         </div>
 
-        <!-- Benefits + review -->
+        {% comment %} Benefits + review {% endcomment %}
         <div class="flex flex-col gap-[20px] md:gap-[26px] lg:gap-[32px] md:flex-1">
 
-          <!-- Benefits grid: 1-col mobile/tablet, 2-col desktop -->
+          {% comment %} Benefits grid: 1-col mobile/tablet, 2-col desktop {% endcomment %}
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-[24px] md:gap-[20px] lg:gap-x-[20px] lg:gap-y-[40px]">
 
-            <!-- Benefit 1 -->
+            {% comment %} Benefit 1 {% endcomment %}
             <div class="flex flex-col items-center gap-[8px] md:flex-row md:items-center md:gap-[16px] lg:flex-col lg:items-center lg:gap-[8px]">
               <div class="flex flex-col items-center gap-[16px] shrink-0">
                 <img src="{{ 'images/benefits-2/benefits-2-icon-1.svg' | campaign_asset }}" alt="" class="w-[50px] h-[50px]">
@@ -41,7 +41,7 @@
               </div>
             </div>
 
-            <!-- Benefit 2 -->
+            {% comment %} Benefit 2 {% endcomment %}
             <div class="flex flex-col items-center gap-[8px] md:flex-row md:items-center md:gap-[16px] lg:flex-col lg:items-center lg:gap-[8px]">
               <div class="flex flex-col items-center gap-[16px] shrink-0">
                 <img src="{{ 'images/benefits-2/benefits-2-icon-2.svg' | campaign_asset }}" alt="" class="w-[50px] h-[50px]">
@@ -59,7 +59,7 @@
               </div>
             </div>
 
-            <!-- Benefit 3 -->
+            {% comment %} Benefit 3 {% endcomment %}
             <div class="flex flex-col items-center gap-[8px] md:flex-row md:items-center md:gap-[16px] lg:flex-col lg:items-center lg:gap-[8px]">
               <div class="flex flex-col items-center gap-[16px] shrink-0">
                 <img src="{{ 'images/benefits-2/benefits-2-icon-3.svg' | campaign_asset }}" alt="" class="w-[50px] h-[50px]">
@@ -77,7 +77,7 @@
               </div>
             </div>
 
-            <!-- Benefit 4 -->
+            {% comment %} Benefit 4 {% endcomment %}
             <div class="flex flex-col items-center gap-[8px] md:flex-row md:items-center md:gap-[16px] lg:flex-col lg:items-center lg:gap-[8px]">
               <div class="flex flex-col items-center gap-[16px] shrink-0">
                 <img src="{{ 'images/benefits-2/benefits-2-icon-4.svg' | campaign_asset }}" alt="" class="w-[50px] h-[50px]">
@@ -95,9 +95,9 @@
               </div>
             </div>
 
-          </div><!-- /.grid -->
+          </div>{% comment %} /.grid {% endcomment %}
 
-          <!-- Review card -->
+          {% comment %} Review card {% endcomment %}
           <div class="bg-white border border-[var(--brand-primary)] rounded-[8px] flex gap-[16px] items-start px-[12px] pt-[12px] pb-[16px]">
             <img src="{{ 'images/benefits-2/benefits-2-quote.svg' | campaign_asset }}" alt="" class="w-[32px] h-[32px] shrink-0">
             <div class="flex flex-col gap-[16px] flex-1 min-w-0">
@@ -117,8 +117,8 @@
             </div>
           </div>
 
-        </div><!-- /.benefits + review -->
-      </div><!-- /.main content -->
+        </div>{% comment %} /.benefits + review {% endcomment %}
+      </div>{% comment %} /.main content {% endcomment %}
 
     </div>
   </div>

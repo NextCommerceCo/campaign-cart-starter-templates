@@ -2,7 +2,7 @@
   <div class="max-w-[1440px] mx-auto px-4 md:px-[26px] lg:px-[80px] xl:px-[240px]">
     <div class="flex flex-col gap-8 md:gap-10 lg:gap-12 items-center w-full">
 
-      <!-- Header -->
+      {% comment %} Header {% endcomment %}
       <div class="flex flex-col gap-3 md:gap-4 lg:gap-5 items-center text-center w-full">
         <h2 class="text-[32px] md:text-[36px] lg:text-[44px] font-bold leading-[1.2] tracking-[-0.02em] text-[var(--text-primary)]">
           {{ benefits_8_headline }}
@@ -12,15 +12,15 @@
         </p>
       </div>
 
-      <!-- Banner image -->
+      {% comment %} Banner image {% endcomment %}
       <div class="w-full aspect-[345/319] md:aspect-[956/420] overflow-hidden rounded-2xl">
         <img src="{{ benefits_8_banner_image | campaign_asset }}" alt="{{ benefits_8_banner_image_alt }}" class="w-full h-full object-cover">
       </div>
 
-      <!-- Steps -->
+      {% comment %} Steps {% endcomment %}
       <div class="flex flex-col gap-10 w-full">
 
-        <!-- Step 1: image left on md+ -->
+        {% comment %} Step 1: image left on md+ {% endcomment %}
         <div class="flex flex-col md:flex-row gap-5 md:gap-8 lg:gap-[60px] items-center">
           <div class="w-full aspect-[440/380] md:w-[400px] md:h-[328px] md:aspect-auto lg:w-[440px] lg:h-[360px] lg:flex-none rounded-xl overflow-hidden shrink-0">
             <img src="{{ benefits_8_step_1_image | campaign_asset }}" alt="{{ benefits_8_step_1_image_alt }}" class="w-full h-full object-cover">
@@ -37,7 +37,7 @@
           </div>
         </div>
 
-        <!-- Step 2: image right on md+ -->
+        {% comment %} Step 2: image right on md+ {% endcomment %}
         <div class="flex flex-col md:flex-row-reverse gap-5 md:gap-8 lg:gap-[60px] items-center">
           <div class="w-full aspect-[440/380] md:w-[400px] md:h-[328px] md:aspect-auto lg:w-[440px] lg:h-[360px] lg:flex-none rounded-xl overflow-hidden shrink-0">
             <img src="{{ benefits_8_step_2_image | campaign_asset }}" alt="{{ benefits_8_step_2_image_alt }}" class="w-full h-full object-cover">
@@ -56,7 +56,7 @@
 
       </div>
 
-      <!-- CTA block: bird bg + right copy + bottom press bar -->
+      {% comment %} CTA block: bird bg + right copy + bottom press bar {% endcomment %}
       <div
         class="relative w-full overflow-hidden rounded-[14px] lg:rounded-[16px] bg-no-repeat bg-[length:400%] bg-[position:30%_50%] md:bg-[length:150%] md:bg-[position:70%_60%] lg:bg-[length:150%] lg:bg-[position:50%_60%]"
         style="background-color: var(--text-primary); background-image: url('{{ benefits_8_cta_background_image | campaign_asset }}');"

@@ -2,10 +2,10 @@
   <div class="max-w-[1440px] mx-auto px-[15px] md:px-[26px] lg:px-[60px] xl:px-[120px]">
     <div class="flex flex-col items-center gap-[32px] md:gap-[40px] lg:gap-[48px]">
 
-      <!-- Header -->
+      {% comment %} Header {% endcomment %}
       <div class="flex flex-col items-center gap-[12px] md:gap-[16px] lg:gap-[20px] w-full">
 
-        <!-- Stars + rating -->
+        {% comment %} Stars + rating {% endcomment %}
         <div class="flex items-center gap-[8px] md:gap-[16px]">
           <span class="text-[18px] md:text-[26px] lg:text-[32px] text-[#ffb800] tracking-[2px] leading-none">★★★★★</span>
           <p class="font-medium text-[14px] lg:text-[16px] lg:text-[20px] tracking-[-0.07px] md:tracking-[-0.08px] lg:tracking-[-0.1px] text-[var(--text-primary)] leading-[1.5]">
@@ -13,12 +13,12 @@
           </p>
         </div>
 
-        <!-- Heading -->
+        {% comment %} Heading {% endcomment %}
         <h2 class="font-bold text-[32px] md:text-[36px] lg:text-[44px] tracking-[-0.16px] md:tracking-[-0.19px] lg:tracking-[-0.22px] text-[var(--text-primary)] leading-[1.2] text-center">
           {{ ugc_6_section_heading }}
         </h2>
 
-        <!-- Stat boxes -->
+        {% comment %} Stat boxes {% endcomment %}
         <div class="flex flex-col md:flex-row gap-[12px] md:gap-[16px] lg:gap-[20px] w-full lg:max-w-[980px]">
 
           <div class="md:flex-1 flex items-center gap-[16px] md:gap-[24px] h-[64px] md:h-[72px] lg:h-[80px] px-[14px] md:px-[16px] lg:px-[24px] bg-white border border-[var(--brand-primary)] rounded-[4px] md:rounded-[6px] lg:rounded-[8px]">
@@ -42,7 +42,7 @@
         </div>
       </div>
 
-      <!-- Swiper — nav inside, mobile only -->
+      {% comment %} Swiper — nav inside, mobile only {% endcomment %}
       <div class="ugc-6-swiper w-full" data-swiper-root
            data-slides="1.1"
            data-slides-md="4"
@@ -57,7 +57,7 @@
 
           <div class="swiper-wrapper">
 
-            <!-- Slide 1 -->
+            {% comment %} Slide 1 {% endcomment %}
             <div class="swiper-slide">
               <div class="relative rounded-[14px] md:rounded-[16px] overflow-hidden h-[535px] md:h-[316px] lg:h-[500px]" data-video-inline data-video-src="{{ ugc_6_slide_1_video_url }}">
                 <img src="{{ ugc_6_slide_1_photo | campaign_asset }}"
@@ -69,7 +69,7 @@
               </div>
             </div>
 
-            <!-- Slide 2 -->
+            {% comment %} Slide 2 {% endcomment %}
             <div class="swiper-slide">
               <div class="relative rounded-[14px] md:rounded-[16px] overflow-hidden h-[535px] md:h-[316px] lg:h-[500px]" data-video-inline data-video-src="{{ ugc_6_slide_2_video_url }}">
                 <img src="{{ ugc_6_slide_2_photo | campaign_asset }}"
@@ -81,7 +81,7 @@
               </div>
             </div>
 
-            <!-- Slide 3 -->
+            {% comment %} Slide 3 {% endcomment %}
             <div class="swiper-slide">
               <div class="relative rounded-[14px] md:rounded-[16px] overflow-hidden h-[535px] md:h-[316px] lg:h-[500px]" data-video-inline data-video-src="{{ ugc_6_slide_3_video_url }}">
                 <img src="{{ ugc_6_slide_3_photo | campaign_asset }}"
@@ -93,7 +93,7 @@
               </div>
             </div>
 
-            <!-- Slide 4 -->
+            {% comment %} Slide 4 {% endcomment %}
             <div class="swiper-slide">
               <div class="relative rounded-[14px] md:rounded-[16px] overflow-hidden h-[535px] md:h-[316px] lg:h-[500px]" data-video-inline data-video-src="{{ ugc_6_slide_4_video_url }}">
                 <img src="{{ ugc_6_slide_4_photo | campaign_asset }}"
@@ -105,9 +105,9 @@
               </div>
             </div>
 
-          </div><!-- /.swiper-wrapper -->
+          </div>{% comment %} /.swiper-wrapper {% endcomment %}
 
-          <!-- Nav — mobile only, inside .swiper (hidden on md+ via data-swiper-controls) -->
+          {% comment %} Nav — mobile only, inside .swiper (hidden on md+ via data-swiper-controls) {% endcomment %}
           <div class="md:hidden flex items-center justify-center gap-[16px] mt-[36px]" data-swiper-controls>
             <button type="button"
                     class="w-[40px] h-[40px] rounded-full bg-white flex items-center justify-center shadow-sm border-0 cursor-pointer shrink-0"
@@ -126,8 +126,8 @@
             </button>
           </div>
 
-        </div><!-- /.swiper -->
-      </div><!-- /.ugc-6-swiper -->
+        </div>{% comment %} /.swiper {% endcomment %}
+      </div>{% comment %} /.ugc-6-swiper {% endcomment %}
 
     </div>
   </div>
