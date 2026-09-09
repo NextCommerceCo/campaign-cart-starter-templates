@@ -22,8 +22,24 @@
  * (`{orderId}-US{n}`) + incremental total → upsell revenue attributed; count inflates. If a Northbeam
  * Orders API feed exists, the id must match an order_id in it (see README).
  *
- * Identity (Northbeam.identify email) is opt-in via northbeam_identity_enabled → the core onContact hook
- * (consent-gated). Default off = zero PII.
+ * Identity (Northbeam.identify email) is opt-in via northbeam_identity_enabled → the core onContact hook.
+ * Default off = zero PII. When on, this adapter registers with:
+ *   - contactRequiresMarketingConsent: false — Northbeam is an ATTRIBUTION vendor: identify joins the
+ *     backend order to the browser session by email. The accepts_marketing checkbox is the newsletter
+ *     opt-in (the SDK only records it on the prospect cart; cart creation never depends on it), so gating
+ *     identify on it would cap the attribution match rate at the newsletter opt-in rate. Marketing consent
+ *     and attribution identity are separate decisions; the core still passes acceptsMarketing here.
+ *   - contactOnFieldEntry: true — identify fires the moment a valid email is entered in the checkout
+ *     field (Northbeam's own guidance: "identify on every email input"), not only on the prospect cart,
+ *     which also waits for first + last name and a cart line. Deduped per email per page load.
+ *
+ * ⚠️ Shop Sync stores (checkout on NEXT, orders pushed into Shopify): set
+ *   northbeam_blocked_events: "dl_purchase,dl_upsell_purchase"
+ * and rely on identity. Northbeam ingests the order through its Shopify Connector, which is the order of
+ * record; the funnel purchase carries the NEXT order id and can never match the Shopify order's checkout
+ * token, so a pixel purchase only creates an unmatched / double-counted order. Attribution then rides
+ * entirely on identify(email) matching the order email (see README). Mirrors the Triple Whale shop-sync
+ * note (triplewhale_blocked_events).
  *
  * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus().
  */
@@ -96,9 +112,12 @@
     }
   };
 
-  // Identity (opt-in): Northbeam.identify('email', <email>) on the core's onContact (prospect-cart,
-  // consent-gated). Signature confirmed from the real GTM tag. Email-only (Northbeam is email-centric).
+  // Identity (opt-in): Northbeam.identify('email', <email>) on the core's onContact — on field entry AND
+  // on prospect-cart creation, NOT gated on accepts_marketing (attribution, see header). Signature
+  // confirmed from the real GTM tag. Email-only (Northbeam is email-centric).
   if (IDENTITY_ENABLED) {
+    reg.contactRequiresMarketingConsent = false;
+    reg.contactOnFieldEntry = true;
     reg.onContact = function (c) {
       if (c.email && c.email.indexOf('@') > -1) window.Northbeam.identify('email', c.email);
     };

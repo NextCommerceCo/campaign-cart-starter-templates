@@ -17,9 +17,12 @@
  *     Adapters that omit allowedEvents default to NextForwarder.DEFAULT_MAIN_EVENTS (main funnel +
  *     conversion; obscure events like login/sign_up off).
  *   - data quality — warns once/event when a value is sent without a currency (vendors drop it)
- *   - contact/identity — optional onContact hook: fires when the SDK creates a prospect cart
- *     (next:prospect-cart-created), for identity adapters (e.g. Triple Whale). Consent-gated, once
- *     per session. Only active if an adapter opts in — non-identity adapters never touch PII.
+ *   - contact/identity — optional onContact hook for identity adapters (Triple Whale, Northbeam, ad-
+ *     platform advanced matching). Fires when the SDK creates a prospect cart (next:prospect-cart-
+ *     created) and, per adapter opt-in, as soon as a valid checkout email/phone is entered. Deduped
+ *     per adapter per identifier. The accepts_marketing consent gate is PER ADAPTER (default on;
+ *     attribution vendors turn it off — see the contact bridge below). Only active if an adapter opts
+ *     in — non-identity adapters never touch PII.
  *   - debug — one switch (?nfdebug=true or localhost) + NextForwarder.getStatus()
  *
  * Load this BEFORE any adapter. Adapters call NextForwarder.register(adapter).
@@ -33,7 +36,15 @@
  *     allowedEvents: ['dl_purchase', 'dl_add_to_cart'], // optional: ONLY these fire. Omitted/[] ->
  *                                                       //   DEFAULT_MAIN_EVENTS; explicit null -> all
  *     blockedEvents: ['dl_login', 'dl_sign_up'],        // optional: suppress these (applied after allow)
- *     onContact: function ({email?, phone?, acceptsMarketing?, source}) {}  // optional identity hook
+ *     onContact: function ({email?, phone?, acceptsMarketing?, source}) {}, // optional identity hook;
+ *                                                       //   source = 'prospect' | 'field:<dom event>'
+ *     contactRequiresMarketingConsent: true,            // optional (default true): skip onContact while an
+ *                                                       //   accepts_marketing checkbox is present AND
+ *                                                       //   unchecked. false = fire regardless (attribution
+ *                                                       //   identity); acceptsMarketing is still passed
+ *     contactOnFieldEntry: false                        // optional (default false): also fire onContact the
+ *                                                       //   moment a valid checkout email/phone is entered
+ *                                                       //   (no name/cart needed), deduped per identifier
  *   }
  */
 (function () {
@@ -78,57 +89,145 @@
   }
 
   // ---- contact / identity bridge (opt-in via adapter.onContact) -----------------------
-  // For adapters that resolve identity (e.g. Triple Whale). Fires when the SDK creates a PROSPECT CART
-  // (ProspectCartEnhancer: valid email/phone + first/last name + items in cart) via its
-  // `next:prospect-cart-created` DOM event — emitted ONCE per session. We reuse the SDK's field
-  // detection, validation, debounce, name/cart checks, and accepts_marketing consent rather than
-  // re-scraping fields ourselves. Only active if an adapter opts in with onContact, so non-identity
-  // adapters (GA4/Axon/Taboola) never touch PII.
+  // For adapters that resolve identity (Triple Whale, Northbeam, TikTok/Snap/Pinterest advanced
+  // matching). Only active if an adapter opts in with onContact, so non-identity adapters
+  // (GA4/Axon/Taboola) never touch PII. Two sources feed it:
   //
-  // Trade-off (see adapter READMEs): fires once with whatever's valid then — in the default emailEntry
-  // mode that's usually email (+name), not a separate phone beacon (the vendor still gets phone via the
-  // prospect PATCH / order + its session cookie). No Contact if the prospect enhancer is disabled. The
-  // alternate "capture on every field entry" path is documented if a merchant needs pre-name capture.
+  //   1. PROSPECT CART — every contact adapter. The SDK's `next:prospect-cart-created` DOM event
+  //      (ProspectCartEnhancer: a valid email and/or phone per data-trigger-on, PLUS first + last name,
+  //      PLUS items in cart; emitted once per session). We reuse the SDK's field detection, validation
+  //      and debounce rather than re-scraping fields.
+  //   2. FIELD ENTRY — opt-in per adapter (contactOnFieldEntry). A valid email or phone typed into the
+  //      checkout field, the moment it validates: no name, no cart. This is what attribution vendors
+  //      ask for (Northbeam: "identify on every email input") — the prospect cart is late (waits for
+  //      both names + a cart line) and, under a phone-only or email-only trigger, never carries the
+  //      other identifier at all. An attribution join needs an identifier, not a cart.
+  //
+  // Both sources dedupe PER ADAPTER PER IDENTIFIER (email / phone value, this page load): the same email
+  // arriving from a field blur and then again from the prospect event fires each adapter once.
+  //
+  // Consent is PER ADAPTER — contactRequiresMarketingConsent (default true). When the page has an
+  // accepts_marketing checkbox and it is unchecked, adapters on the default skip the contact. That
+  // checkbox is the NEWSLETTER opt-in: the SDK only records it on the prospect cart, creation never
+  // depends on it (campaign-cart prospect-cart/cart-creation.ts). Ad-platform advanced matching
+  // (TikTok/Snap/Pinterest) is marketing use and stays behind it. Attribution vendors (Northbeam,
+  // Triple Whale) set it to false: they join a backend order — e.g. the Shopify Connector order on a
+  // Shop Sync store — to the browser session by email, so gating identify on the newsletter box caps
+  // the attribution match rate at the newsletter opt-in rate. acceptsMarketing is always passed in the
+  // contact object so an adapter can still decide what to send.
+  //
+  // No contact at all if the prospect enhancer is disabled AND no adapter opted into field entry.
   var contactAdapters = [];
   var prospectHooked = false;
-  var contactFired = false;
+  var fieldHooked = false;
+  var EMAIL_SEL = '[data-next-checkout-field="email"], [os-checkout-field="email"]';
+  var PHONE_SEL = '[data-next-checkout-field="phone"], [os-checkout-field="phone"], input[type="tel"]';
+  var AM_SEL = '[data-next-checkout-field="accepts_marketing"], [os-checkout-field="accepts_marketing"]';
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  var MIN_PHONE_DIGITS = 7; // mirrors the SDK's prospect threshold (MIN_PROSPECT_PHONE_DIGITS)
 
   function fieldVal(sel) { var el = document.querySelector(sel); return (el && el.value) ? el.value.trim() : ''; }
+
+  function itiFor(el) {
+    return el && (el.iti || (window.intlTelInput && window.intlTelInput.getInstance && window.intlTelInput.getInstance(el)));
+  }
 
   // Phone must match the SDK's normalization (E.164 via intl-tel-input) or Triple Whale-style identity
   // joins against the order/feed silently fail. Prefer the intl-tel-input instance's getNumber(); fall
   // back to the raw input only if it isn't available. Mirrors ProspectCartEnhancer.getFormattedPhoneNumber.
-  function phoneVal() {
-    var el = document.querySelector('[data-next-checkout-field="phone"], [os-checkout-field="phone"], input[type="tel"]');
+  function phoneVal(el) {
+    el = el || document.querySelector(PHONE_SEL);
     if (!el) return '';
-    var iti = el.iti || (window.intlTelInput && window.intlTelInput.getInstance && window.intlTelInput.getInstance(el));
+    var iti = itiFor(el);
     if (iti && typeof iti.getNumber === 'function') {
       try { var e164 = iti.getNumber(); if (e164) return e164; } catch (err) {}
     }
     return el.value ? el.value.trim() : '';
   }
 
-  function onProspectCartCreated(e) {
-    if (contactFired) return; // SDK emits once/session; in-memory guard against a stray re-fire
-    var d = (e && e.detail) || {}, pc = d.prospectCart || {}, cart = d.cart || {};
-    var email = pc.email || cart.email || fieldVal('[data-next-checkout-field="email"], [os-checkout-field="email"]');
-    var phone = pc.phone || cart.phone || phoneVal(); // SDK-formatted E.164 preferred; raw only as last resort
-    if (!email && !phone) return;
-    var am = document.querySelector('[data-next-checkout-field="accepts_marketing"], [os-checkout-field="accepts_marketing"]');
-    if (am && !am.checked) { log('contact blocked: accepts_marketing unchecked'); return; }
-    contactFired = true;
-    var contact = { email: email || undefined, phone: phone || undefined,
-      acceptsMarketing: am ? !!am.checked : undefined, source: 'prospect' };
-    for (var i = 0; i < contactAdapters.length; i++) {
-      try { contactAdapters[i].onContact(contact); contactAdapters[i]._contacts++; log(contactAdapters[i].name, 'contact'); }
-      catch (err) { log(contactAdapters[i].name, 'onContact error', err); }
+  // Is the field's current value a usable phone? intl-tel-input's own verdict when present, else the
+  // SDK's prospect digit-count threshold.
+  function validPhone(el) {
+    var raw = (el && el.value) ? el.value.trim() : '';
+    if (!raw) return false;
+    var iti = itiFor(el);
+    if (iti && typeof iti.isValidNumber === 'function') {
+      try { return !!iti.isValidNumber(); } catch (err) {}
     }
+    return raw.replace(/\D/g, '').length >= MIN_PHONE_DIGITS;
+  }
+
+  function marketingConsent() { var am = document.querySelector(AM_SEL); return am ? !!am.checked : undefined; }
+
+  // Fan a contact out to the identity adapters. fieldEntry=true restricts it to adapters that opted
+  // into contactOnFieldEntry. Per-adapter consent check, then per-adapter identifier dedup (an adapter
+  // that was blocked by consent is NOT marked seen, so it still gets the contact if consent is granted
+  // before a later source fires).
+  function dispatchContact(contact, fieldEntry) {
+    if (!contact.email && !contact.phone) return;
+    contact.acceptsMarketing = marketingConsent();
+    var keys = [];
+    if (contact.email) keys.push('email:' + contact.email.toLowerCase());
+    if (contact.phone) keys.push('phone:' + contact.phone.replace(/\D/g, ''));
+    for (var i = 0; i < contactAdapters.length; i++) {
+      var a = contactAdapters[i];
+      if (fieldEntry && !a.contactOnFieldEntry) continue;
+      if (a.contactRequiresMarketingConsent !== false && contact.acceptsMarketing === false) {
+        log(a.name, 'contact blocked: accepts_marketing unchecked', contact.source); continue;
+      }
+      var fresh = false, k;
+      for (k = 0; k < keys.length; k++) if (!a._contactSeen[keys[k]]) fresh = true;
+      if (!fresh) { log(a.name, 'contact dup dropped', contact.source); continue; }
+      for (k = 0; k < keys.length; k++) a._contactSeen[keys[k]] = true;
+      try { a.onContact(contact); a._contacts++; log(a.name, 'contact', contact.source); }
+      catch (err) { log(a.name, 'onContact error', err); }
+    }
+  }
+
+  function onProspectCartCreated(e) {
+    var d = (e && e.detail) || {}, pc = d.prospectCart || {}, cart = d.cart || {};
+    var email = pc.email || cart.email || fieldVal(EMAIL_SEL);
+    var phone = pc.phone || cart.phone || phoneVal(); // SDK-formatted E.164 preferred; raw only as last resort
+    dispatchContact({ email: email || undefined, phone: phone || undefined, source: 'prospect' }, false);
   }
 
   function installProspectHook() {
     if (prospectHooked || typeof document === 'undefined') return;
     prospectHooked = true;
     document.addEventListener('next:prospect-cart-created', onProspectCartCreated);
+  }
+
+  // Field-entry source. Delegated capture-phase listeners (blur doesn't bubble; the checkout form may
+  // render after this script), debounced so a typed address fires once it becomes valid; change/blur
+  // also cover autofill and paste. Prefilled values (bfcache, SDK-restored checkout state) are picked up
+  // at DOMContentLoaded and again after the SDK initialises.
+  var fieldTimer;
+  function captureField(el, source) {
+    if (!el) return;
+    if (el.matches(EMAIL_SEL)) {
+      var email = (el.value || '').trim();
+      if (EMAIL_RE.test(email)) dispatchContact({ email: email, source: source }, true);
+    } else if (el.matches(PHONE_SEL)) {
+      if (validPhone(el)) dispatchContact({ phone: phoneVal(el), source: source }, true);
+    }
+  }
+  function onFieldEvent(e) {
+    var el = e && e.target;
+    if (!el || typeof el.matches !== 'function' || !(el.matches(EMAIL_SEL) || el.matches(PHONE_SEL))) return;
+    clearTimeout(fieldTimer);
+    fieldTimer = setTimeout(function () { captureField(el, 'field:' + e.type); }, 400);
+  }
+  function capturePrefilled() {
+    captureField(document.querySelector(EMAIL_SEL), 'field:prefilled');
+    captureField(document.querySelector(PHONE_SEL), 'field:prefilled');
+  }
+  function installFieldHook() {
+    if (fieldHooked || typeof document === 'undefined') return;
+    fieldHooked = true;
+    ['change', 'blur', 'input'].forEach(function (t) { document.addEventListener(t, onFieldEvent, true); });
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', capturePrefilled);
+    else capturePrefilled();
+    document.addEventListener('next:initialized', function () { setTimeout(capturePrefilled, 0); });
   }
 
   function processForAdapter(adapter, evt) {
@@ -244,7 +343,12 @@
       adapter._seenSet = {};
       adapter._count = 0;
       adapter._contacts = 0;
-      if (typeof adapter.onContact === 'function') { contactAdapters.push(adapter); installProspectHook(); }
+      adapter._contactSeen = {};
+      if (typeof adapter.onContact === 'function') {
+        contactAdapters.push(adapter);
+        installProspectHook();
+        if (adapter.contactOnFieldEntry) installFieldHook();
+      }
       // Quiet by default, enforced HERE: an adapter that OMITS allowedEvents (or passes an empty
       // list) gets DEFAULT_MAIN_EVENTS — the core owns the documented default instead of trusting
       // every adapter to re-implement the fallback. Pass null explicitly to forward every mapped
@@ -275,7 +379,10 @@
       return adapters.map(function (a) {
         return {
           name: a.name, active: a.isActive(), sent: a._count, contacts: a._contacts,
-          allowed: a._allowed ? Object.keys(a._allowed) : 'all', blocked: a.blockedEvents || []
+          allowed: a._allowed ? Object.keys(a._allowed) : 'all', blocked: a.blockedEvents || [],
+          contact: typeof a.onContact === 'function'
+            ? { requiresMarketingConsent: a.contactRequiresMarketingConsent !== false, onFieldEntry: !!a.contactOnFieldEntry }
+            : null
         };
       });
     },

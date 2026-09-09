@@ -21,6 +21,10 @@
  *     → upsell revenue counts toward Snap's PURCHASE optimization; count inflates (Snap is ad-optimization).
  *   - Advanced Matching (user_email/phone) is init-time; opt-in via snap_advanced_matching_enabled → the
  *     core onContact hook re-inits with the email. Default off = zero PII. See README for the init-timing caveat.
+ *     Keeps the core's DEFAULT contact gate (contactRequiresMarketingConsent true, prospect-cart source
+ *     only): Snap advanced matching is marketing use — it builds the ad platform's identity graph and
+ *     audiences — so it stays behind the accepts_marketing checkbox. Attribution vendors (Northbeam,
+ *     Triple Whale) opt out of that gate; see next-forwarder-core.js.
  *
  * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus(). QA with Snap Pixel Helper.
  */

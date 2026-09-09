@@ -22,6 +22,10 @@
  *   - event_id (3rd arg) enables Pixel + Events-API dedup later; harmless without it.
  *   - Advanced Matching (ttq.identify email/phone) is opt-in via tiktok_advanced_matching_enabled →
  *     the core onContact hook. Default off = zero PII (like GA4/Axon/Taboola).
+ *     Keeps the core's DEFAULT contact gate (contactRequiresMarketingConsent true, prospect-cart source
+ *     only): TikTok advanced matching is marketing use — it builds the ad platform's identity graph and
+ *     audiences — so it stays behind the accepts_marketing checkbox. Attribution vendors (Northbeam,
+ *     Triple Whale) opt out of that gate; see next-forwarder-core.js.
  *
  * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus(). QA with TikTok Pixel Helper.
  */
