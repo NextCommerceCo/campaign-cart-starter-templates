@@ -116,7 +116,7 @@ so an email seen on field blur and again on the prospect event fires each adapte
 that vendor.
 
 **Northbeam on Shop Sync stores** (checkout on NEXT, orders pushed into Shopify): set
-`"northbeam_blocked_events": "dl_purchase,dl_upsell_purchase"` and rely on identity. The Shopify Connector
+`"northbeam_blocked_events": "dl_purchase, dl_upsell_purchase"` and rely on identity. The Shopify Connector
 order is the order of record; the funnel purchase carries the NEXT order id and can never match the Shopify
 order's checkout token, so a pixel purchase only creates an unmatched or double-counted order. Same shape as
 the Triple Whale shop-sync note (`triplewhale_blocked_events`).

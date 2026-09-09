@@ -35,7 +35,7 @@
  *     which also waits for first + last name and a cart line. Deduped per email per page load.
  *
  * ⚠️ Shop Sync stores (checkout on NEXT, orders pushed into Shopify): set
- *   northbeam_blocked_events: "dl_purchase,dl_upsell_purchase"
+ *   northbeam_blocked_events: "dl_purchase, dl_upsell_purchase"
  * and rely on identity. Northbeam ingests the order through its Shopify Connector, which is the order of
  * record; the funnel purchase carries the NEXT order id and can never match the Shopify order's checkout
  * token, so a pixel purchase only creates an unmatched / double-counted order. Attribution then rides
@@ -120,7 +120,7 @@
     reg.contactRequiresMarketingConsent = false;
     reg.contactOnFieldEntry = true;
     reg.onContact = function (c) {
-      if (c.email && c.email.indexOf('@') > -1) window.Northbeam.identify('email', c.email);
+      if (c.email && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(c.email)) window.Northbeam.identify('email', c.email);
     };
   }
 

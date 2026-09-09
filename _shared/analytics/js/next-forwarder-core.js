@@ -200,7 +200,7 @@
   // render after this script), debounced so a typed address fires once it becomes valid; change/blur
   // also cover autofill and paste. Prefilled values (bfcache, SDK-restored checkout state) are picked up
   // at DOMContentLoaded and again after the SDK initialises.
-  var fieldTimer;
+  var fieldTimers = {}; // one debounce per field kind — a quick email→phone move must not cancel the email
   function captureField(el, source) {
     if (!el) return;
     if (el.matches(EMAIL_SEL)) {
@@ -213,12 +213,13 @@
   function onFieldEvent(e) {
     var el = e && e.target;
     if (!el || typeof el.matches !== 'function' || !(el.matches(EMAIL_SEL) || el.matches(PHONE_SEL))) return;
-    clearTimeout(fieldTimer);
-    fieldTimer = setTimeout(function () { captureField(el, 'field:' + e.type); }, 400);
+    var key = el.matches(EMAIL_SEL) ? 'email' : 'phone';
+    clearTimeout(fieldTimers[key]);
+    fieldTimers[key] = setTimeout(function () { captureField(el, 'field:' + e.type); }, 400);
   }
   function capturePrefilled() {
-    captureField(document.querySelector(EMAIL_SEL), 'field:prefilled');
-    captureField(document.querySelector(PHONE_SEL), 'field:prefilled');
+    var els = document.querySelectorAll(EMAIL_SEL + ', ' + PHONE_SEL);
+    for (var i = 0; i < els.length; i++) captureField(els[i], 'field:prefilled');
   }
   function installFieldHook() {
     if (fieldHooked || typeof document === 'undefined') return;
@@ -226,7 +227,10 @@
     ['change', 'blur', 'input'].forEach(function (t) { document.addEventListener(t, onFieldEvent, true); });
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', capturePrefilled);
     else capturePrefilled();
-    document.addEventListener('next:initialized', function () { setTimeout(capturePrefilled, 0); });
+    // SDK-restored values: re-scan after init. If the SDK is already up (late adapter registration),
+    // the event has passed — scan now instead.
+    if (window.next) setTimeout(capturePrefilled, 0);
+    else document.addEventListener('next:initialized', function () { setTimeout(capturePrefilled, 0); });
   }
 
   function processForAdapter(adapter, evt) {
