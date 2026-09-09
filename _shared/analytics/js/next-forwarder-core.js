@@ -227,10 +227,11 @@
     ['change', 'blur', 'input'].forEach(function (t) { document.addEventListener(t, onFieldEvent, true); });
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', capturePrefilled);
     else capturePrefilled();
-    // SDK-restored values: re-scan after init. If the SDK is already up (late adapter registration),
-    // the event has passed — scan now instead.
+    // SDK-restored values: re-scan after init. Always listen (window.next existing does not mean init has
+    // finished), and ALSO scan now if the SDK object is already present in case the event has passed (late
+    // adapter registration). Per-identifier dedup swallows any duplicate.
+    document.addEventListener('next:initialized', function () { setTimeout(capturePrefilled, 0); });
     if (window.next) setTimeout(capturePrefilled, 0);
-    else document.addEventListener('next:initialized', function () { setTimeout(capturePrefilled, 0); });
   }
 
   function processForAdapter(adapter, evt) {
@@ -336,6 +337,7 @@
 
   window.NextForwarder = {
     DEFAULT_MAIN_EVENTS: DEFAULT_MAIN_EVENTS,
+    EMAIL_RE: EMAIL_RE, // the field-entry email shape; adapters re-validating prospect emails should use it
     register: function (adapter) {
       if (!adapter || !adapter.name || typeof adapter.send !== 'function' ||
           typeof adapter.isActive !== 'function' || !adapter.map) {

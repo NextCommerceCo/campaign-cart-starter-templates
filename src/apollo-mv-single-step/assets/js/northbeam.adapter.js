@@ -115,12 +115,13 @@
 
   // Identity (opt-in): Northbeam.identify('email', <email>) on the core's onContact — on field entry AND
   // on prospect-cart creation, NOT gated on accepts_marketing (attribution, see header). Signature
-  // confirmed from the real GTM tag. Email-only (Northbeam is email-centric).
+  // confirmed from the real GTM tag. Email-only (Northbeam is email-centric). Re-validates with the core's
+  // EMAIL_RE (the prospect-cart source is SDK-validated; the field-entry source already passed this regex).
   if (IDENTITY_ENABLED) {
     reg.contactRequiresMarketingConsent = false;
     reg.contactOnFieldEntry = true;
     reg.onContact = function (c) {
-      if (c.email && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(c.email)) window.Northbeam.identify('email', c.email);
+      if (c.email && window.NextForwarder.EMAIL_RE.test(c.email)) window.Northbeam.identify('email', c.email);
     };
   }
 
