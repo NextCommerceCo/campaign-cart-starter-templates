@@ -100,7 +100,8 @@
     }
   };
 
-  // Advanced Matching (opt-in): fire ttq.identify on the core's onContact (prospect-cart, consent-gated).
+  // Advanced Matching (opt-in): fire ttq.identify on the core's onContact (prospect-cart source, default
+  // accepts_marketing gate — see header).
   // TikTok links the browser via its cookie, so subsequent Purchase attributes to the matched identity.
   if (ADV_MATCHING) {
     reg.onContact = function (c) {

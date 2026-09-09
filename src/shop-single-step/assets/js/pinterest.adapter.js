@@ -109,7 +109,8 @@
     }
   };
 
-  // Enhanced Match (opt-in): re-load with em on the core's onContact (prospect-cart, consent-gated).
+  // Enhanced Match (opt-in): re-load with em on the core's onContact (prospect-cart source, default
+  // accepts_marketing gate — see header).
   // `em` accepts a RAW email — the Pinterest JS hashes it client-side (no pre-hashing needed).
   // ⚠️ UNVERIFIED: docs show `em` only in the INITIAL load(); calling load() again to set it may be a
   // no-op. Email isn't known at page-load, so this re-loads at checkout — TEST it applies (see README).

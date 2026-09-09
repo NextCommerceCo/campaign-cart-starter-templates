@@ -95,8 +95,8 @@
     }
   };
 
-  // Advanced Matching (opt-in): re-init with user_email/phone on the core's onContact (prospect-cart,
-  // consent-gated). Snap links the browser via its _scid cookie, so the later PURCHASE benefits. NOTE:
+  // Advanced Matching (opt-in): re-init with user_email/phone on the core's onContact (prospect-cart
+  // source, default accepts_marketing gate — see header). Snap links the browser via its _scid cookie, so the later PURCHASE benefits. NOTE:
   // Snap Advanced Matching is init-scoped — verify snaptr re-init sets it (see README caveat).
   if (AM_ENABLED) {
     reg.onContact = function (c) {

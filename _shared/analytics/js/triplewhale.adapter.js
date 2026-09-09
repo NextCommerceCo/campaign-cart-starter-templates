@@ -93,7 +93,7 @@
 
       if (name === 'Purchase') {
         // MUST be the function-call form (object form doesn't register on headless). No PII here —
-        // identity comes from the consent-gated Contact event + TW's in-session cookie.
+        // identity comes from the Contact event (field entry / prospect cart) + TW's in-session cookie.
         TP('Purchase', { orderId: ec.transaction_id, value: ec.value, currency: ec.currency, lineItems: lineItems(ec.items) });
         return;
       }
