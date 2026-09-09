@@ -18,11 +18,18 @@
  *     the Pixel Helper, despite TW docs showing nesting; keep UpsellPurchase flat).
  *   - No page_view mapping — the base snippet is the pageload signal (dl_user_data NOT mapped).
  *   - Upsell = Approach C: TriplePixel('custom','UpsellPurchase',{value,currency,orderId}).
- *   - Contact (identity) sends RAW email/phone via the core's onContact hook, which fires on the SDK's
- *     prospect-cart creation (once/session, consent-gated on accepts_marketing). Opt-in via
+ *   - Contact (identity) sends RAW email/phone via the core's onContact hook. Opt-in via
  *     triplewhale_contact_enabled (default off) — when off, onContact isn't attached, so the core's
- *     prospect listener never activates and NO PII is touched. Purchase carries no PII (identity comes
- *     from the Contact event + TW's session cookie). See README for the trade-off + alternate path.
+ *     contact listeners never activate and NO PII is touched. Purchase carries no PII (identity comes
+ *     from the Contact event + TW's session cookie). When on, this adapter registers with:
+ *       contactRequiresMarketingConsent: false — TW is an ATTRIBUTION vendor: Contact ties the session to
+ *       the order (on a shop-sync store, to the order TW ingests from Shopify). accepts_marketing is the
+ *       newsletter opt-in, not a precondition of the prospect cart; gating Contact on it would cap the
+ *       attribution match rate at the newsletter opt-in rate. acceptsMarketing is still passed.
+ *       contactOnFieldEntry: true — Contact fires as soon as a valid checkout email / phone is entered,
+ *       plus on prospect-cart creation (deduped per identifier per page load); the prospect cart alone
+ *       waits for first + last name + a cart line and, in the default emailEntry mode, rarely carries
+ *       phone. See README.
  *
  * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus(). QA with a REAL browser +
  * the TW Pixel Helper (it does not beacon in headless browsers).
@@ -86,7 +93,7 @@
 
       if (name === 'Purchase') {
         // MUST be the function-call form (object form doesn't register on headless). No PII here —
-        // identity comes from the consent-gated Contact event + TW's in-session cookie.
+        // identity comes from the Contact event (field entry / prospect cart) + TW's in-session cookie.
         TP('Purchase', { orderId: ec.transaction_id, value: ec.value, currency: ec.currency, lineItems: lineItems(ec.items) });
         return;
       }
@@ -99,9 +106,12 @@
     }
   };
 
-  // Identity: only opt in when enabled, so the core's prospect-cart listener / PII path stays off
-  // otherwise. The core consent-gates on accepts_marketing and fires this once per session.
+  // Identity: only opt in when enabled, so the core's contact listeners / PII path stay off otherwise.
+  // Fires on field entry + prospect cart, NOT gated on accepts_marketing (attribution, see header);
+  // the core dedupes per email/phone per page load.
   if (CONTACT_ENABLED) {
+    reg.contactRequiresMarketingConsent = false;
+    reg.contactOnFieldEntry = true;
     reg.onContact = function (c) {
       var p = {};
       if (c.email) p.email = c.email;

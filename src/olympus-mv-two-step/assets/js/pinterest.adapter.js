@@ -23,6 +23,10 @@
  *     revenue counts toward Pinterest's checkout optimization; count inflates.
  *   - Enhanced Match (em) is load-time; opt-in via pinterest_enhanced_match_enabled → the core onContact
  *     hook re-loads with the email. Default off = zero PII. See README (hashing + init-timing caveats).
+ *     Keeps the core's DEFAULT contact gate (contactRequiresMarketingConsent true, prospect-cart source
+ *     only): Pinterest Enhanced Match is marketing use — it builds the ad platform's identity graph and
+ *     audiences — so it stays behind the accepts_marketing checkbox. Attribution vendors (Northbeam,
+ *     Triple Whale) opt out of that gate; see next-forwarder-core.js.
  *
  * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus(). QA with Pinterest Tag Helper.
  */
@@ -105,7 +109,8 @@
     }
   };
 
-  // Enhanced Match (opt-in): re-load with em on the core's onContact (prospect-cart, consent-gated).
+  // Enhanced Match (opt-in): re-load with em on the core's onContact (prospect-cart source, default
+  // accepts_marketing gate — see header).
   // `em` accepts a RAW email — the Pinterest JS hashes it client-side (no pre-hashing needed).
   // ⚠️ UNVERIFIED: docs show `em` only in the INITIAL load(); calling load() again to set it may be a
   // no-op. Email isn't known at page-load, so this re-loads at checkout — TEST it applies (see README).

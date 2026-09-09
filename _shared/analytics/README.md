@@ -92,9 +92,34 @@ entry (keep only the vendors you need; delete the rest — absent = off):
 ```
 
 The shared forwarder core loads once when **any** Route C id is set; each adapter loads only when its own
-id is set. Identity/PII (raw email/phone) is off unless the vendor's `*_enabled` flag is set, and is then
-consent-gated on the `accepts_marketing` checkbox. Adapter behaviour is regression-tested by
-`analytics-tracking-docs/examples/_harness/`.
+id is set. Identity/PII (raw email/phone) is off unless the vendor's `*_enabled` flag is set. Adapter
+behaviour is regression-tested by `analytics-tracking-docs/examples/_harness/`.
+
+### Identity: the `accepts_marketing` gate is per adapter
+
+The `accepts_marketing` checkbox is the **newsletter opt-in**. The SDK only records it on the prospect cart;
+`next:prospect-cart-created` fires on a valid email and/or phone (per `data-trigger-on`) + first/last name +
+items in cart and never depends on that box. So the core no longer ties every identity hook to it — each
+adapter declares `contactRequiresMarketingConsent` and `contactOnFieldEntry` when it registers:
+
+| Adapter | Fires `onContact` on | Gated on `accepts_marketing`? | Why |
+|---|---|---|---|
+| Northbeam (`northbeam_identity_enabled`) | valid checkout **email entry** + prospect cart | **No** | Attribution: `identify(email)` joins the backend order to the session. Northbeam: "identify on every email input". |
+| Triple Whale (`triplewhale_contact_enabled`) | valid checkout **email/phone entry** + prospect cart | **No** | Attribution: `Contact` ties the session to the order (incl. the Shopify-ingested order on shop-sync). |
+| TikTok / Snapchat / Pinterest (`*_advanced_matching_enabled`, `pinterest_enhanced_match_enabled`) | prospect cart only | **Yes** (default) | Ad-platform advanced matching is marketing use — it feeds the platform's identity graph and audiences. |
+
+Gating attribution identity on the newsletter box caps the attribution match rate at the newsletter opt-in
+rate (a checkout with the box unchecked by default would floor a Northbeam setup from day one). The core
+still passes `acceptsMarketing` in the contact object, and dedupes per adapter per identifier per page load,
+so an email seen on field blur and again on the prospect event fires each adapter once. Enabling any
+`*_enabled` flag still means the campaign has handled the region's rules for sending raw email/phone to
+that vendor.
+
+**Northbeam on Shop Sync stores** (checkout on NEXT, orders pushed into Shopify): set
+`"northbeam_blocked_events": "dl_purchase, dl_upsell_purchase"` and rely on identity. The Shopify Connector
+order is the order of record; the funnel purchase carries the NEXT order id and can never match the Shopify
+order's checkout token, so a pixel purchase only creates an unmatched or double-counted order. Same shape as
+the Triple Whale shop-sync note (`triplewhale_blocked_events`).
 
 **RudderStack is an SDK-provider vendor, not a Route C adapter** — the partial injects only the official
 RudderStack JS SDK v3 loader (no `rudderstack.adapter.js`, no forwarder involvement, and no manual
