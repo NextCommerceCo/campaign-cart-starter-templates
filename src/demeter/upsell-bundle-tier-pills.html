@@ -66,7 +66,7 @@ swiper_thumbs:
     alt: ""
 ---
 
-<!--
+{% comment %}
   APPROACH B — Bundle upsell (data-next-bundle-selector + data-next-upsell-context).
   See upsell-bundle-stepper.html for one-card + native bundleQuantity stepper (not tier pills).
   See upsell-bundle-tier-cards.html for visible tier cards (no initBundleQtyToggle).
@@ -94,7 +94,7 @@ swiper_thumbs:
 
   Display note: remote bundle.upsell-bundle.unitPrice is not a supported remote path — use
   per-card data-next-bundle-display for per-unit amounts on tier cards.
--->
+{% endcomment %}
 {% assign upsell_package_id = upsell_offer.package_id | default: 3 -%}
 {% assign upsell_display_selector_id = upsell_offer.display_selector_id | default: 'upsell-bundle-1x' -%}
 {% assign upsell_package_name_path = 'package.' | append: upsell_package_id | append: '.name' -%}
@@ -113,9 +113,9 @@ swiper_thumbs:
       <div class="container">
         <div class="upsell-header__inner">
           <div class="upsell-header__title">Wait! Your Order Isn't Complete</div>
-          <!-- bundle.upsell-bundle.price updates with qty selection — use bundle.upsell-bundle-1x.price
+          {% comment %} bundle.upsell-bundle.price updates with qty selection — use bundle.upsell-bundle-1x.price
                (from the display-only selector below) for the header so it always shows the 1x price.
-               package path reads the product name from campaign package data (packageId comes from upsell_offer). -->
+               package path reads the product name from campaign package data (packageId comes from upsell_offer). {% endcomment %}
           <div class="upsell-header__offer">Special Discount: Get 1 More <span data-next-display="{{ upsell_package_name_path }}">Product Title</span> For Only <span data-next-display="{{ upsell_display_price_path }}" data-next-format="currency">$14.95</span></div>
           <div class="upsell-header__suboffer">Add this to your order and get a <span data-next-display="{{ upsell_display_discount_path }}" data-next-format="percentage">50%</span> discount<br></div>
         </div>

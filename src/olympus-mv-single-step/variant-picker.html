@@ -52,14 +52,14 @@ variant_picker:
       package_id: 2
       image: "images/1x1_2.svg"
 ---
-<!--
+{% comment %}
   REFERENCE / QA PAGE — demonstrates the B1-remediated MV variant-picker in isolation.
   - window.NEXT_VP_FIXTURE = true enables variant-picker-fixture.js so the picker renders
     fully OFFLINE (mock SDK package data) for visual QA — no live API required.
   - In a live campaign you would include 'variant-picker.html' inside checkout.html instead,
     omit the fixture script, and let the real SDK drive prices + images.
   - Image precedence: live API getPackageImage() > declared variants[].image (template swatch).
--->
+{% endcomment %}
 <script>window.NEXT_VP_FIXTURE = true;</script>
 <div class="page-wrapper">
   <div class="main-wrapper">

@@ -2,32 +2,32 @@
   <div class="max-w-[1440px] mx-auto px-[15px] md:px-[26px] lg:px-[60px] xl:px-[120px]">
     <div class="flex flex-col items-center gap-[32px] md:gap-[40px] lg:gap-[48px]">
 
-      <!-- Heading -->
+      {% comment %} Heading {% endcomment %}
       <h2 class="font-bold text-[32px] md:text-[36px] lg:text-[44px] text-[var(--text-primary)] text-center tracking-[-0.16px] md:tracking-[-0.19px] lg:tracking-[-0.22px] leading-[1.2] max-w-[720px]">
         {{ results_4_headline }}
       </h2>
 
-      <!-- Mobile: landscape product image (hidden md+) -->
+      {% comment %} Mobile: landscape product image (hidden md+) {% endcomment %}
       <div class="md:hidden w-full aspect-[374/233] relative overflow-hidden rounded-[8px]">
         <img src="{{ 'images/landing/_shared/1x1_1.svg' | campaign_asset }}"
              alt="{{ results_4_product_image_alt }}"
              class="absolute inset-0 w-full h-full object-cover">
       </div>
 
-      <!-- Content row: portrait image (md+) + timeline -->
+      {% comment %} Content row: portrait image (md+) + timeline {% endcomment %}
       <div class="flex gap-[20px] lg:gap-[40px] items-start w-full">
 
-        <!-- Portrait image: hidden on mobile -->
+        {% comment %} Portrait image: hidden on mobile {% endcomment %}
         <div class="hidden md:block flex-1 aspect-[412/480] relative self-start">
           <img src="{{ 'images/landing/_shared/1x1_1.svg' | campaign_asset }}"
                alt="{{ results_4_product_image_alt }}"
                class="absolute inset-0 w-full h-full object-contain">
         </div>
 
-        <!-- Timeline -->
+        {% comment %} Timeline {% endcomment %}
         <div class="flex-1 flex flex-col">
 
-          <!-- Phase 1 -->
+          {% comment %} Phase 1 {% endcomment %}
           <div class="flex gap-[20px] lg:gap-[40px] items-start">
             <div class="flex flex-col items-center self-stretch shrink-0">
               <div class="w-[16px] h-[16px] rounded-[8px] bg-white border-4 border-[var(--brand-primary)] shadow-[0_0_0_5px_#d5ddf3] shrink-0"></div>
@@ -44,7 +44,7 @@
             </div>
           </div>
 
-          <!-- Phase 2 -->
+          {% comment %} Phase 2 {% endcomment %}
           <div class="flex gap-[20px] lg:gap-[40px] items-start">
             <div class="flex flex-col items-center self-stretch shrink-0">
               <div class="w-[16px] h-[16px] rounded-[8px] bg-white border-4 border-[var(--brand-primary)] shadow-[0_0_0_5px_#d5ddf3] shrink-0"></div>
@@ -61,7 +61,7 @@
             </div>
           </div>
 
-          <!-- Phase 3 -->
+          {% comment %} Phase 3 {% endcomment %}
           <div class="flex gap-[20px] lg:gap-[40px] items-start">
             <div class="flex flex-col items-center self-stretch shrink-0">
               <div class="w-[16px] h-[16px] rounded-[8px] bg-white border-4 border-[var(--brand-primary)] shadow-[0_0_0_5px_#d5ddf3] shrink-0"></div>
@@ -78,7 +78,7 @@
             </div>
           </div>
 
-          <!-- Phase 4 (last — no line) -->
+          {% comment %} Phase 4 (last — no line) {% endcomment %}
           <div class="flex gap-[20px] lg:gap-[40px] items-start">
             <div class="flex flex-col items-center shrink-0">
               <div class="w-[16px] h-[16px] rounded-[8px] bg-white border-4 border-[var(--brand-primary)] shadow-[0_0_0_5px_#d5ddf3] shrink-0"></div>
@@ -95,12 +95,12 @@
           </div>
 
         </div>
-        <!-- end timeline -->
+        {% comment %} end timeline {% endcomment %}
 
       </div>
-      <!-- end content row -->
+      {% comment %} end content row {% endcomment %}
 
-      <!-- CTA -->
+      {% comment %} CTA {% endcomment %}
       <div class="flex flex-col items-center gap-[8px] md:gap-[10px] lg:gap-[12px] w-full max-w-[440px]">
         <a href="{{ next_url | campaign_link }}{{ cta_params }}"
           class="w-full bg-[var(--brand-primary)] rounded-[6px] py-[20px] px-[24px] flex items-center justify-center gap-[20px] no-underline">

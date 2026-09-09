@@ -29,7 +29,7 @@
 <div data-next-catalog-component="upsell-bundle-tier-cards-offer">
       <section class="section upsell-box">
         <div class="container">
-          <!-- Outside offer: UpsellEnhancer uses first in-offer [data-next-bundle-selector] for add — must be upsell-bundle. -->
+          {% comment %} Outside offer: UpsellEnhancer uses first in-offer [data-next-bundle-selector] for add — must be upsell-bundle. {% endcomment %}
           <div data-next-bundle-selector data-next-upsell-context data-next-selector-id="{{ display_selector_id }}" style="display:none">
             <div role="button"
                  data-next-bundle-card
@@ -85,10 +85,10 @@
                     <p class="cc-upsell-bundle-tier-heading">Choose quantity</p>
                     <div class="next-bundle-qty">
                       
-                      <!--
+                      {% comment %}
                         Three visible tier cards (1×–3×). Same bundle/voucher pattern as upsell-bundle-tier-pills.html.
                         Click selects the card; SDK applies .next-selected and updates bundle.upsell-bundle.* below.
-                      -->
+                      {% endcomment %}
                       <div
                         data-next-bundle-selector
                         data-next-upsell-context
@@ -114,9 +114,9 @@
                         {% endfor %}
                       </div>
                     </div>
-                    <!-- pricing_mode-driven price rows — never hide rows with campaign CSS; pick the mode instead.
+                    {% comment %} pricing_mode-driven price rows — never hide rows with campaign CSS; pick the mode instead.
                          $ amounts are SSR placeholders: the offer wrapper is [data-next-await]-skeletoned until the
-                         SDK hydrates bundle.{{ selector_id }}.* — configure the bundle selector so those paths resolve. -->
+                         SDK hydrates bundle.{{ selector_id }}.* — configure the bundle selector so those paths resolve. {% endcomment %}
                     {% case pricing_mode %}
                     {% when 'discounted' %}
                     <div class="prices-text-wrapper">
@@ -167,7 +167,7 @@
                       </div>
                     </div>
                     {% else %}
-                    <!-- full_price (default): exactly one visible price row adjacent to the accept control -->
+                    {% comment %} full_price (default): exactly one visible price row adjacent to the accept control {% endcomment %}
                     <div class="prices-text-wrapper">
                       <div class="price-wrapper">
                         <div class="text-sm tw-600">Selected offer total</div>

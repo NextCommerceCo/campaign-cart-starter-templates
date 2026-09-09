@@ -27,7 +27,7 @@
   <div class="max-w-[1440px] mx-auto px-[15px] md:px-[26px] lg:px-[60px] xl:px-[120px]">
     <div class="flex flex-col items-center gap-[32px] md:gap-[40px] lg:gap-[48px]">
 
-      <!-- Heading + featured quote -->
+      {% comment %} Heading + featured quote {% endcomment %}
       <div class="flex flex-col items-center gap-[20px] w-full lg:max-w-[800px]">
         <h2 class="font-bold text-[32px] md:text-[36px] lg:text-[44px] tracking-[-0.16px] md:tracking-[-0.19px] lg:tracking-[-0.22px] text-[var(--text-primary)] leading-[1.2] text-center">
           {{ ugc_1_section_heading }}
@@ -45,10 +45,10 @@
         </div>
       </div>
 
-      <!-- UGC video slider -->
+      {% comment %} UGC video slider {% endcomment %}
       <div class="ugc-1-swiper relative w-full overflow-hidden md:overflow-visible" data-swiper-root data-slides="1" data-slides-md="3" data-slides-lg="4" data-gap="20" data-gap-md="20" data-gap-lg="24">
 
-        <!-- Prev arrow -->
+        {% comment %} Prev arrow {% endcomment %}
         <button type="button"
                 class="absolute left-0 md:left-[-20px] top-1/2 -translate-y-1/2 z-10 bg-[var(--brand-primary)] rounded-full w-[40px] h-[40px] flex items-center justify-center border-0 cursor-pointer shrink-0"
                 data-swiper-prev>
@@ -56,7 +56,7 @@
           <img src="{{ 'images/_shared/swiper-arrow-left-white.svg' | campaign_asset }}" alt="" class="w-[16px] h-[16px]">
         </button>
 
-        <!-- Next arrow -->
+        {% comment %} Next arrow {% endcomment %}
         <button type="button"
                 class="absolute right-0 md:right-[-20px] top-1/2 -translate-y-1/2 z-10 bg-[var(--brand-primary)] rounded-full w-[40px] h-[40px] flex items-center justify-center border-0 cursor-pointer shrink-0"
                 data-swiper-next>
@@ -68,7 +68,7 @@
         <div class="swiper" data-swiper>
           <div class="swiper-wrapper">
 
-            <!-- Slide 1 -->
+            {% comment %} Slide 1 {% endcomment %}
             <div class="swiper-slide">
               <div class="relative rounded-[16px] overflow-hidden h-[405px] md:h-[424px] lg:h-[388px]" data-video-inline data-video-src="{{ ugc_1_slide_1_video_url }}">
                 <img src="{{ ugc_1_slide_1_photo | campaign_asset }}"
@@ -86,7 +86,7 @@
               </div>
             </div>
 
-            <!-- Slide 2 -->
+            {% comment %} Slide 2 {% endcomment %}
             <div class="swiper-slide">
               <div class="relative rounded-[16px] overflow-hidden h-[405px] md:h-[424px] lg:h-[388px]" data-video-inline data-video-src="{{ ugc_1_slide_2_video_url }}">
                 <img src="{{ ugc_1_slide_2_photo | campaign_asset }}"
@@ -104,7 +104,7 @@
               </div>
             </div>
 
-            <!-- Slide 3 -->
+            {% comment %} Slide 3 {% endcomment %}
             <div class="swiper-slide">
               <div class="relative rounded-[16px] overflow-hidden h-[405px] md:h-[424px] lg:h-[388px]" data-video-inline data-video-src="{{ ugc_1_slide_3_video_url }}">
                 <img src="{{ ugc_1_slide_3_photo | campaign_asset }}"
@@ -122,7 +122,7 @@
               </div>
             </div>
 
-            <!-- Slide 4 -->
+            {% comment %} Slide 4 {% endcomment %}
             <div class="swiper-slide">
               <div class="relative rounded-[16px] overflow-hidden h-[405px] md:h-[424px] lg:h-[388px]" data-video-inline data-video-src="{{ ugc_1_slide_4_video_url }}">
                 <img src="{{ ugc_1_slide_4_photo | campaign_asset }}"
@@ -140,7 +140,7 @@
               </div>
             </div>
 
-            <!-- Slide 5 -->
+            {% comment %} Slide 5 {% endcomment %}
             <div class="swiper-slide">
               <div class="relative rounded-[16px] overflow-hidden h-[405px] md:h-[424px] lg:h-[388px]" data-video-inline data-video-src="{{ ugc_1_slide_5_video_url }}">
                 <img src="{{ ugc_1_slide_5_photo | campaign_asset }}"
@@ -158,7 +158,7 @@
               </div>
             </div>
 
-            <!-- Slide 6 -->
+            {% comment %} Slide 6 {% endcomment %}
             <div class="swiper-slide">
               <div class="relative rounded-[16px] overflow-hidden h-[405px] md:h-[424px] lg:h-[388px]" data-video-inline data-video-src="{{ ugc_1_slide_6_video_url }}">
                 <img src="{{ ugc_1_slide_6_photo | campaign_asset }}"
@@ -176,7 +176,7 @@
               </div>
             </div>
 
-            <!-- Slide 7 -->
+            {% comment %} Slide 7 {% endcomment %}
             <div class="swiper-slide">
               <div class="relative rounded-[16px] overflow-hidden h-[405px] md:h-[424px] lg:h-[388px]" data-video-inline data-video-src="{{ ugc_1_slide_7_video_url }}">
                 <img src="{{ ugc_1_slide_7_photo | campaign_asset }}"
@@ -194,7 +194,7 @@
               </div>
             </div>
 
-            <!-- Slide 8 -->
+            {% comment %} Slide 8 {% endcomment %}
             <div class="swiper-slide">
               <div class="relative rounded-[16px] overflow-hidden h-[405px] md:h-[424px] lg:h-[388px]" data-video-inline data-video-src="{{ ugc_1_slide_8_video_url }}">
                 <img src="{{ ugc_1_slide_8_photo | campaign_asset }}"
@@ -212,10 +212,10 @@
               </div>
             </div>
 
-          </div><!-- /.swiper-wrapper -->
-        </div><!-- /.swiper -->
-        </div><!-- /.swiper padding wrapper -->
-      </div><!-- /.ugc-1-swiper -->
+          </div>{% comment %} /.swiper-wrapper {% endcomment %}
+        </div>{% comment %} /.swiper {% endcomment %}
+        </div>{% comment %} /.swiper padding wrapper {% endcomment %}
+      </div>{% comment %} /.ugc-1-swiper {% endcomment %}
 
     </div>
   </div>

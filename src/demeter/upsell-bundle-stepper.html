@@ -48,7 +48,7 @@ swiper_thumbs:
     alt: ""
 ---
 
-<!--
+{% comment %}
   Single-tier bundle upsell (SDK 0.4.x, pin in campaigns.json): one hidden data-next-bundle-card
   + data-next-upsell-context. Same voucher + calculateBundlePrice mechanics as upsell-bundle-tier-pills.html,
   without per-tier card picking — vouchers ride AddUpsellLine on accept.
@@ -63,7 +63,7 @@ swiper_thumbs:
 
   Only one [data-next-bundle-selector] here (inside offer) — no sibling-order pitfall vs a separate
   display-only selector. data-next-upsell-action-for is not read by UpsellEnhancer.
--->
+{% endcomment %}
 {% assign upsell_package_id = upsell_offer.package_id | default: 3 -%}
 {% assign upsell_selector_id = upsell_offer.selector_id | default: 'upsell-bundle' -%}
 {% assign upsell_package_name_path = 'package.' | append: upsell_package_id | append: '.name' -%}

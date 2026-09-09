@@ -63,13 +63,13 @@
         </div>
         <div class="bump-product__price">
           {% if b_price_mode == 'unit' %}
-          <!-- Per-unit price: stable, does not multiply with synced qty (like bump-check01) -->
+          {% comment %} Per-unit price: stable, does not multiply with synced qty (like bump-check01) {% endcomment %}
           <div class="bump__price-row">
             {% if b_compare %}<span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span>{% endif %}
             <span class="bump__price-unit"><span data-next-toggle-display="unitPrice" class="bump__price-total">--</span><span class="text-sm text-muted text-weight-normal">/ea</span></span>
           </div>
           {% else %}
-          <!-- Line-total price: multiplies with synced qty -->
+          {% comment %} Line-total price: multiplies with synced qty {% endcomment %}
           <div class="bump__price-row">
             {% if b_compare %}<span data-next-toggle-display="originalPrice" class="bump__price-reg">--</span>{% endif %}
             <span data-next-toggle-display="price" class="bump__price-total">--</span>

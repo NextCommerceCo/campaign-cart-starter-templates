@@ -94,15 +94,15 @@ guarantee_text: "30 Day Money Back Guarantee"
 footer_copyright: "Copyright ©2026 Next Commerce"
 ---
 
-<!-- ============================================================
+{% comment %} ============================================================
      ARTICLE HEADER
-     ============================================================ -->
+     ============================================================ {% endcomment %}
 <header class="bg-white border-b border-[var(--border-default)] py-10 md:py-14">
   <div class="max-w-[800px] mx-auto px-[15px] md:px-[35px] lg:px-0">
     <h1 class="font-bold text-[32px] md:text-[44px] leading-tight text-[var(--text-primary)] mb-5">
       {{ article_title }}
     </h1>
-    <!-- Author row (renders only when author_name is set) -->
+    {% comment %} Author row (renders only when author_name is set) {% endcomment %}
     {% if author_name and author_name != "" %}
     <div class="flex items-center gap-3 mb-4">
       <img src="{{ 'images/presell/author-avatar.png' | campaign_asset }}" alt="{{ author_name }}" class="w-10 h-10 rounded-full object-cover shrink-0">
@@ -120,7 +120,7 @@ footer_copyright: "Copyright ©2026 Next Commerce"
       </div>
     </div>
     {% endif %}
-    <!-- Star rating + read time (rating chrome renders only when article_rating_text is set) -->
+    {% comment %} Star rating + read time (rating chrome renders only when article_rating_text is set) {% endcomment %}
     {%- capture _article_meta -%}{{ article_rating_text }}{{ read_time }}{%- endcapture -%}
     {% if _article_meta != "" %}
     <div class="flex items-center gap-3 mb-5 text-sm">
@@ -138,19 +138,19 @@ footer_copyright: "Copyright ©2026 Next Commerce"
       {% endif %}
     </div>
     {% endif %}
-    <!-- Bold summary -->
+    {% comment %} Bold summary {% endcomment %}
     <p class="text-[17px] md:text-[18px] font-semibold text-[var(--text-primary)] leading-[1.6]">
       {{ article_subtitle }}
     </p>
   </div>
 </header>
 
-<!-- ============================================================
+{% comment %} ============================================================
      REASONS 1–9
-     ============================================================ -->
+     ============================================================ {% endcomment %}
 <main class="bg-white">
 
-  <!-- REASON 1 -->
+  {% comment %} REASON 1 {% endcomment %}
   <div class="border-b border-[var(--border-default)] py-8 md:py-12">
     <div class="max-w-[800px] mx-auto px-[15px] md:px-[35px] lg:px-0 flex flex-col md:flex-row gap-5 md:gap-8">
       <h2 class="md:hidden text-[24px] font-bold text-[var(--text-primary)] leading-[1.2]">{{ reason_1_heading }}</h2>
@@ -169,7 +169,7 @@ footer_copyright: "Copyright ©2026 Next Commerce"
     </div>
   </div>
 
-  <!-- REASON 2 -->
+  {% comment %} REASON 2 {% endcomment %}
   <div class="border-b border-[var(--border-default)] py-8 md:py-12">
     <div class="max-w-[800px] mx-auto px-[15px] md:px-[35px] lg:px-0 flex flex-col md:flex-row gap-5 md:gap-8">
       <h2 class="md:hidden text-[24px] font-bold text-[var(--text-primary)] leading-[1.2]">{{ reason_2_heading }}</h2>
@@ -188,7 +188,7 @@ footer_copyright: "Copyright ©2026 Next Commerce"
     </div>
   </div>
 
-  <!-- REASON 3 -->
+  {% comment %} REASON 3 {% endcomment %}
   <div class="border-b border-[var(--border-default)] py-8 md:py-12">
     <div class="max-w-[800px] mx-auto px-[15px] md:px-[35px] lg:px-0 flex flex-col md:flex-row gap-5 md:gap-8">
       <h2 class="md:hidden text-[24px] font-bold text-[var(--text-primary)] leading-[1.2]">{{ reason_3_heading }}</h2>
@@ -207,7 +207,7 @@ footer_copyright: "Copyright ©2026 Next Commerce"
     </div>
   </div>
 
-  <!-- REASON 4 -->
+  {% comment %} REASON 4 {% endcomment %}
   <div class="border-b border-[var(--border-default)] py-8 md:py-12">
     <div class="max-w-[800px] mx-auto px-[15px] md:px-[35px] lg:px-0 flex flex-col md:flex-row gap-5 md:gap-8">
       <h2 class="md:hidden text-[24px] font-bold text-[var(--text-primary)] leading-[1.2]">{{ reason_4_heading }}</h2>
@@ -229,7 +229,7 @@ footer_copyright: "Copyright ©2026 Next Commerce"
     </div>
   </div>
 
-  <!-- REASON 5 -->
+  {% comment %} REASON 5 {% endcomment %}
   <div class="border-b border-[var(--border-default)] py-8 md:py-12">
     <div class="max-w-[800px] mx-auto px-[15px] md:px-[35px] lg:px-0 flex flex-col md:flex-row gap-5 md:gap-8">
       <h2 class="md:hidden text-[24px] font-bold text-[var(--text-primary)] leading-[1.2]">{{ reason_5_heading }}</h2>
@@ -251,7 +251,7 @@ footer_copyright: "Copyright ©2026 Next Commerce"
     </div>
   </div>
 
-  <!-- REASON 6 -->
+  {% comment %} REASON 6 {% endcomment %}
   <div class="border-b border-[var(--border-default)] py-8 md:py-12">
     <div class="max-w-[800px] mx-auto px-[15px] md:px-[35px] lg:px-0 flex flex-col md:flex-row gap-5 md:gap-8">
       <h2 class="md:hidden text-[24px] font-bold text-[var(--text-primary)] leading-[1.2]">{{ reason_6_heading }}</h2>
@@ -273,7 +273,7 @@ footer_copyright: "Copyright ©2026 Next Commerce"
     </div>
   </div>
 
-  <!-- REASON 7 -->
+  {% comment %} REASON 7 {% endcomment %}
   <div class="border-b border-[var(--border-default)] py-8 md:py-12">
     <div class="max-w-[800px] mx-auto px-[15px] md:px-[35px] lg:px-0 flex flex-col md:flex-row gap-5 md:gap-8">
       <h2 class="md:hidden text-[24px] font-bold text-[var(--text-primary)] leading-[1.2]">{{ reason_7_heading }}</h2>
@@ -295,7 +295,7 @@ footer_copyright: "Copyright ©2026 Next Commerce"
     </div>
   </div>
 
-  <!-- REASON 8 -->
+  {% comment %} REASON 8 {% endcomment %}
   <div class="border-b border-[var(--border-default)] py-8 md:py-12">
     <div class="max-w-[800px] mx-auto px-[15px] md:px-[35px] lg:px-0 flex flex-col md:flex-row gap-5 md:gap-8">
       <h2 class="md:hidden text-[24px] font-bold text-[var(--text-primary)] leading-[1.2]">{{ reason_8_heading }}</h2>
@@ -317,7 +317,7 @@ footer_copyright: "Copyright ©2026 Next Commerce"
     </div>
   </div>
 
-  <!-- REASON 9 -->
+  {% comment %} REASON 9 {% endcomment %}
   <div class="border-b border-[var(--border-default)] py-8 md:py-12">
     <div class="max-w-[800px] mx-auto px-[15px] md:px-[35px] lg:px-0 flex flex-col md:flex-row gap-5 md:gap-8">
       <h2 class="md:hidden text-[24px] font-bold text-[var(--text-primary)] leading-[1.2]">{{ reason_9_heading }}</h2>
@@ -341,13 +341,13 @@ footer_copyright: "Copyright ©2026 Next Commerce"
 
 </main>
 
-<!-- ============================================================
+{% comment %} ============================================================
      CTA SECTION — Reason #10 + Offer Box
-     ============================================================ -->
+     ============================================================ {% endcomment %}
 <section class="bg-[var(--brand-secondary)] py-14 md:py-20">
   <div class="max-w-[800px] mx-auto px-[15px] md:px-[35px] lg:px-0">
 
-    <!-- Reason #10 intro -->
+    {% comment %} Reason #10 intro {% endcomment %}
     <div class="text-center mb-10">
       <h2 class="text-[24px] md:text-[26px] lg:text-[28px] font-bold text-[var(--text-primary)] leading-[1.2] mb-3">
         {{ cta_heading }}
@@ -357,55 +357,55 @@ footer_copyright: "Copyright ©2026 Next Commerce"
       </p>
     </div>
 
-    <!-- Offer box -->
+    {% comment %} Offer box {% endcomment %}
     <div class="relative border-2 border-dashed border-[var(--text-primary)] rounded-lg">
 
-      <!-- SPRING SALE badge -->
+      {% comment %} SPRING SALE badge {% endcomment %}
       <div class="absolute -top-[15px] left-1/2 -translate-x-1/2 z-10">
         <span class="bg-[var(--brand-primary)] text-white font-extrabold text-[16px] px-[30px] py-[5px] rounded">
           {{ offer_badge }}
         </span>
       </div>
 
-      <!-- Product image + offer details -->
+      {% comment %} Product image + offer details {% endcomment %}
       <div class="flex flex-col md:flex-row overflow-hidden rounded-[5px]">
 
-        <!-- Left: product image on gray bg, full height -->
+        {% comment %} Left: product image on gray bg, full height {% endcomment %}
         <div class="w-full md:w-1/2 min-h-[300px] md:min-h-[484px] bg-[#e4e4e4] overflow-hidden">
           <img src="{{ product_image | campaign_asset }}"
                alt="Product"
                class="w-full h-full object-cover">
         </div>
 
-        <!-- Right column: 50%, white bg, padded, centered -->
+        {% comment %} Right column: 50%, white bg, padded, centered {% endcomment %}
         <div class="w-full md:w-1/2 bg-white flex flex-col items-center text-center px-[20px] py-[20px] gap-[20px]">
 
-          <!-- Divider + label -->
+          {% comment %} Divider + label {% endcomment %}
           <div class="flex items-center gap-3 w-full">
             <div class="flex-1 h-px bg-[var(--border-default)]"></div>
             <span class="text-overline text-[var(--text-primary)] whitespace-nowrap">{{ offer_label }}</span>
             <div class="flex-1 h-px bg-[var(--border-default)]"></div>
           </div>
 
-          <!-- Headline: two lines, second in red -->
+          {% comment %} Headline: two lines, second in red {% endcomment %}
           <div class="font-bold text-[28px] leading-[1.2] tracking-[-0.14px] uppercase">
             <p class="text-[var(--text-primary)]">{{ offer_headline }}</p>
             <p class="text-[#b70101]">{{ offer_headline_red }}</p>
           </div>
 
-          <!-- Subheadline -->
+          {% comment %} Subheadline {% endcomment %}
           <p class="text-[18px] font-medium text-[var(--text-primary)] opacity-80 leading-[1.5]">
             {{ offer_subheadline }}
           </p>
 
-          <!-- CTA button -->
+          {% comment %} CTA button {% endcomment %}
           <a href="{{ next_url | campaign_link }}"
              class="w-full bg-[var(--brand-primary)] text-white font-extrabold text-[20px] uppercase py-[20px] px-6 rounded-[6px] flex items-center justify-center gap-4 hover:opacity-90 transition-opacity">
             <span>{{ cta_text }}</span>
             <img src="{{ 'images/presell/_shared/arrow-right.svg' | campaign_asset }}" alt="" class="w-[18px] h-[14px] brightness-0 invert">
           </a>
 
-          <!-- Countdown (renders only when countdown_label is set) -->
+          {% comment %} Countdown (renders only when countdown_label is set) {% endcomment %}
           {% if countdown_label and countdown_label != "" %}
           <div class="flex items-center gap-1 text-[14px] font-extrabold">
             <span class="text-[var(--text-primary)]">{{ countdown_label }}</span>
@@ -413,7 +413,7 @@ footer_copyright: "Copyright ©2026 Next Commerce"
           </div>
           {% endif %}
 
-          <!-- Sell-out / shipping bar (each half renders only when its slots are set; bar absent when both empty) -->
+          {% comment %} Sell-out / shipping bar (each half renders only when its slots are set; bar absent when both empty) {% endcomment %}
           {%- capture _urgency_bar -%}{{ sell_out_risk }}{{ shipping_text }}{%- endcapture -%}
           {% if _urgency_bar != "" %}
           <div class="w-full bg-[#ffe7e7] rounded px-4 py-2 flex items-center justify-center gap-3 text-[14px]">
@@ -429,7 +429,7 @@ footer_copyright: "Copyright ©2026 Next Commerce"
           </div>
           {% endif %}
 
-          <!-- Guarantee -->
+          {% comment %} Guarantee {% endcomment %}
           <div class="flex items-center gap-2">
             <img src="{{ 'images/presell/_shared/cta-guarantee-icon.png' | campaign_asset }}" alt="" class="w-5 h-5 shrink-0">
             <span class="text-[var(--text-primary)] text-[16px] font-semibold">{{ guarantee_text }}</span>
@@ -442,9 +442,9 @@ footer_copyright: "Copyright ©2026 Next Commerce"
   </div>
 </section>
 
-<!-- ============================================================
+{% comment %} ============================================================
      FOOTER
-     ============================================================ -->
+     ============================================================ {% endcomment %}
 <footer class="bg-[var(--surface-alt)] border-t border-[var(--border-default)] py-6">
   <div class="max-w-[800px] mx-auto px-[15px] md:px-[35px] lg:px-0 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-[var(--text-secondary)]">
     <p>{{ footer_copyright }}</p>

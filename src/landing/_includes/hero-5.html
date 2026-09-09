@@ -1,5 +1,5 @@
 <section class="bg-white w-full">
-  <!--
+  {% comment %}
     Desktop: px-[120px], py-[60px]. Two equal flex-1 columns.
       Left:  hero composite PNG + reviewer row PNG.
       Right: stars, headline, body, 5 bullets, CTA.
@@ -7,26 +7,26 @@
     Mobile:  px-[15px], py-[24px]. Stacked:
       stars + headline → hero image (edge-to-edge) → body → bullets → CTA → reviewer row.
     Below all: divider before next section.
-  -->
+  {% endcomment %}
   <div class="max-w-[1440px] mx-auto px-[15px] md:px-[26px] lg:px-[60px] xl:px-[120px] py-[24px] md:py-[48px] lg:py-[60px]">
 
-    <!-- ── MAIN ROW ── -->
+    {% comment %} ── MAIN ROW ── {% endcomment %}
     <div class="flex flex-col md:flex-row md:gap-[40px] lg:gap-[60px] md:items-start">
 
-      <!-- ── LEFT COLUMN — desktop/tablet only ── -->
+      {% comment %} ── LEFT COLUMN — desktop/tablet only ── {% endcomment %}
       <div class="hidden md:flex md:flex-1 flex-col gap-[12px]">
         <img src="{{ hero_5_hero_image | campaign_asset }}" alt="{{ hero_5_hero_image_alt }}" class="w-full rounded-[8px]">
-        <!-- Social proof: avatars + text -->
+        {% comment %} Social proof: avatars + text {% endcomment %}
         <div class="flex items-center gap-[8px] lg:gap-[16px]">
           <img src="{{ 'images/hero-6/avatars.png' | campaign_asset }}" alt="" class="h-[22px] md:h-[28px] lg:h-[32px] w-auto shrink-0">
           <p class="text-[14px] lg:text-[16px] font-medium leading-[1.5] tracking-[-0.08px]" style="color: var(--text-primary);">{{ hero_5_avatars_text }}</p>
         </div>
       </div>
 
-      <!-- ── RIGHT COLUMN (+ mobile hero + mobile reviewer row) ── -->
+      {% comment %} ── RIGHT COLUMN (+ mobile hero + mobile reviewer row) ── {% endcomment %}
       <div class="md:flex-1 flex flex-col gap-[20px] md:gap-[24px] lg:gap-[32px]">
 
-        <!-- Stars + rating -->
+        {% comment %} Stars + rating {% endcomment %}
         <div class="flex flex-col gap-[2px] items-center md:items-start">
           <img src="{{ 'images/hero-5/stars.svg' | campaign_asset }}" alt="4.8 stars" class="h-[16px] md:h-[20px] w-[80px] md:w-[100px]">
           <p class="text-[14px] lg:text-[16px] text-[var(--text-primary)] text-center md:text-left tracking-[-0.08px] leading-[1.5]">
@@ -34,20 +34,20 @@
           </p>
         </div>
 
-        <!-- Headline -->
+        {% comment %} Headline {% endcomment %}
         <h1 class="text-[32px] md:text-[36px] lg:text-[44px] font-bold leading-[1.2] text-[var(--text-primary)] tracking-[-0.22px] text-center md:text-left">{{ hero_5_headline }}</h1>
 
-        <!-- MOBILE ONLY: hero image (edge-to-edge) -->
+        {% comment %} MOBILE ONLY: hero image (edge-to-edge) {% endcomment %}
         <div class="md:hidden -mx-[15px]">
           <img src="{{ hero_5_hero_image | campaign_asset }}" alt="{{ hero_5_hero_image_alt }}" class="w-full">
         </div>
 
-        <!-- Body -->
+        {% comment %} Body {% endcomment %}
         <p class="text-[18px] text-[var(--text-primary)] leading-[1.5] tracking-[-0.09px]">
           <strong>{{ hero_5_body_bold }}</strong> {{ hero_5_body_text }}
         </p>
 
-        <!-- Benefit bullets -->
+        {% comment %} Benefit bullets {% endcomment %}
         <div class="flex flex-col gap-[8px]">
           <div class="flex items-center gap-[12px]">
             <img src="{{ 'images/hero-5/icon-check.svg' | campaign_asset }}" alt="" class="w-[30px] h-[30px] shrink-0">
@@ -63,7 +63,7 @@
           </div>
         </div>
 
-        <!-- CTA block -->
+        {% comment %} CTA block {% endcomment %}
         <div class="w-full md:max-w-[440px]">
           <div class="w-full flex flex-col items-center gap-[12px]">
             <a href="{{ next_url }}"
@@ -78,20 +78,20 @@
           </div>
         </div>
 
-        <!-- MOBILE ONLY: reviewer row -->
+        {% comment %} MOBILE ONLY: reviewer row {% endcomment %}
         <div class="md:hidden flex justify-center">
-          <!-- Social proof: avatars + text -->
+          {% comment %} Social proof: avatars + text {% endcomment %}
           <div class="flex items-center gap-[8px]">
             <img src="{{ 'images/hero-6/avatars.png' | campaign_asset }}" alt="" class="h-[22px] w-auto shrink-0">
             <p class="text-[14px] font-medium leading-[1.5] tracking-[-0.08px]" style="color: var(--text-primary);">{{ hero_5_avatars_text }}</p>
           </div>
         </div>
 
-      </div><!-- /right column -->
-    </div><!-- /main row -->
+      </div>{% comment %} /right column {% endcomment %}
+    </div>{% comment %} /main row {% endcomment %}
 
-    <!-- ── DIVIDER ── -->
+    {% comment %} ── DIVIDER ── {% endcomment %}
     <div class="border-t border-[var(--border-default)] mt-[32px]"></div>
 
-  </div><!-- /container -->
+  </div>{% comment %} /container {% endcomment %}
 </section>

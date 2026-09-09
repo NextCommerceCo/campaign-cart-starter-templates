@@ -1,7 +1,7 @@
 <section class="bg-white w-full">
   <div class="max-w-[1440px] mx-auto px-[15px] md:px-[26px] lg:px-[60px] xl:px-[120px] py-[40px] md:py-[48px] lg:py-[60px]">
     <div class="flex flex-col items-center gap-[32px] md:gap-[40px] lg:gap-[48px]">
-      <!-- Heading -->
+      {% comment %} Heading {% endcomment %}
       <div class="w-full max-w-[800px] mx-auto flex flex-col items-center text-center gap-[12px] md:gap-[16px] lg:gap-[20px] text-[var(--text-primary)]">
         <h2 class="font-bold text-[32px] md:text-[36px] lg:text-[44px] leading-[1.2] tracking-[-0.16px] md:tracking-[-0.19px] lg:tracking-[-0.22px] w-full">
           <span class="lg:hidden">{{ features_6_heading_tablet_mobile }}</span>
@@ -12,9 +12,9 @@
         </p>
       </div>
 
-      <!-- Tablet + desktop: 3-column row -->
+      {% comment %} Tablet + desktop: 3-column row {% endcomment %}
       <div class="hidden md:flex w-full items-center justify-center overflow-visible">
-        <!-- Left column -->
+        {% comment %} Left column {% endcomment %}
         <div class="relative flex flex-col gap-[40px] justify-center flex-1 min-w-0 lg:w-[300px] lg:flex-none lg:shrink-0 text-[var(--text-primary)]">
           <div class="flex flex-col gap-[16px] items-start text-right w-full lg:w-[260px] lg:ml-auto">
             <h3 class="font-bold text-[20px] lg:text-[24px] leading-[1.2] tracking-[-0.1px] lg:tracking-[-0.12px] w-full">{{ features_6_feature_1_title }}</h3>
@@ -28,20 +28,20 @@
             <h3 class="font-bold text-[20px] lg:text-[24px] leading-[1.2] tracking-[-0.1px] lg:tracking-[-0.12px] w-full">{{ features_6_feature_3_title }}</h3>
             <p class="font-normal text-[16px] lg:text-[18px] leading-[1.5] tracking-[-0.08px] lg:tracking-[-0.09px] w-full">{{ features_6_feature_3_body }}</p>
           </div>
-          <!-- Connector lines → center (tablet) -->
+          {% comment %} Connector lines → center (tablet) {% endcomment %}
           <img src="{{ features_6_connector_image | campaign_asset }}" alt="" class="pointer-events-none select-none hidden md:block lg:hidden absolute left-0 top-[124px] w-[392px] max-w-none h-[17px] object-contain" aria-hidden="true">
           <img src="{{ features_6_connector_image | campaign_asset }}" alt="" class="pointer-events-none select-none hidden md:block lg:hidden absolute left-0 top-[276px] w-[392px] max-w-none h-[17px] object-contain" aria-hidden="true">
-          <!-- Connector lines → center (desktop) -->
+          {% comment %} Connector lines → center (desktop) {% endcomment %}
           <img src="{{ features_6_connector_image | campaign_asset }}" alt="" class="pointer-events-none select-none hidden lg:block absolute right-[-92px] top-[138px] w-[392px] max-w-none h-[17px] object-contain" aria-hidden="true">
           <img src="{{ features_6_connector_image | campaign_asset }}" alt="" class="pointer-events-none select-none hidden lg:block absolute right-[-92px] top-[304px] w-[392px] max-w-none h-[17px] object-contain" aria-hidden="true">
         </div>
 
-        <!-- Center product -->
+        {% comment %} Center product {% endcomment %}
         <div class="relative shrink-0 aspect-square w-[406px] max-w-[406px] lg:flex-1 lg:max-w-none lg:w-auto min-h-0 min-w-0 overflow-hidden">
           <img src="{{ features_6_hero_image | campaign_asset }}" alt="{{ features_6_hero_image_alt }}" class="absolute inset-0 w-full h-full object-cover pointer-events-none">
         </div>
 
-        <!-- Right column -->
+        {% comment %} Right column {% endcomment %}
         <div class="relative flex flex-col gap-[40px] justify-center flex-1 min-w-0 lg:w-[300px] lg:flex-none lg:shrink-0 text-[var(--text-primary)]">
           <div class="flex flex-col gap-[16px] items-start text-left w-full lg:w-[260px]">
             <h3 class="font-bold text-[20px] lg:text-[24px] leading-[1.2] tracking-[-0.1px] lg:tracking-[-0.12px] w-full">{{ features_6_feature_4_title }}</h3>
@@ -55,14 +55,14 @@
             <h3 class="font-bold text-[20px] lg:text-[24px] leading-[1.2] tracking-[-0.1px] lg:tracking-[-0.12px] w-full">{{ features_6_feature_6_title }}</h3>
             <p class="font-normal text-[16px] lg:text-[18px] leading-[1.5] tracking-[-0.08px] lg:tracking-[-0.09px] w-full">{{ features_6_feature_6_body }}</p>
           </div>
-          <!-- Connector lines ← center (tablet, flipped) -->
+          {% comment %} Connector lines ← center (tablet, flipped) {% endcomment %}
           <div class="pointer-events-none select-none hidden md:flex lg:hidden absolute right-0 top-[124px] w-[392px] h-[17px] items-center justify-center" aria-hidden="true">
             <img src="{{ features_6_connector_image | campaign_asset }}" alt="" class="w-full h-full object-contain -scale-y-100 rotate-180">
           </div>
           <div class="pointer-events-none select-none hidden md:flex lg:hidden absolute right-0 top-[276px] w-[392px] h-[17px] items-center justify-center" aria-hidden="true">
             <img src="{{ features_6_connector_image | campaign_asset }}" alt="" class="w-full h-full object-contain -scale-y-100 rotate-180">
           </div>
-          <!-- Connector lines ← center (desktop, flipped) -->
+          {% comment %} Connector lines ← center (desktop, flipped) {% endcomment %}
           <div class="pointer-events-none select-none hidden lg:flex absolute right-0 top-[138px] w-[392px] h-[17px] items-center justify-center" aria-hidden="true">
             <img src="{{ features_6_connector_image | campaign_asset }}" alt="" class="w-full h-full object-contain -scale-y-100 rotate-180">
           </div>
@@ -72,7 +72,7 @@
         </div>
       </div>
 
-      <!-- Mobile: hero + stacked features + connectors -->
+      {% comment %} Mobile: hero + stacked features + connectors {% endcomment %}
       <div class="md:hidden w-full flex flex-col gap-[16px] text-[var(--text-primary)]">
         <div class="relative w-full aspect-[543/543] overflow-hidden">
           <img src="{{ features_6_hero_image | campaign_asset }}" alt="{{ features_6_hero_image_alt }}" class="absolute inset-0 w-full h-full object-cover pointer-events-none">
@@ -124,7 +124,7 @@
         </div>
       </div>
 
-      <!-- CTA -->
+      {% comment %} CTA {% endcomment %}
       <div class="w-[345px] md:w-[440px] flex flex-col items-center">
         <div class="w-full flex flex-col items-center gap-[12px]">
           <a href="{{ next_url }}"

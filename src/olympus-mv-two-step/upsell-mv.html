@@ -58,7 +58,7 @@ order_personalization:
   placeholder: "e.g. name to print"
   maxlength: 40
 ---
-<!--
+{% comment %}
   APPROACH B — Bundle upsell (data-next-bundle-selector + data-next-upsell-context + configurable:true)
   packageId matches checkout bundle. Per-tier vouchers control offer pricing.
   Variant selection per slot via data-next-bundle-slots-for + upsell-slot-template.
@@ -84,7 +84,7 @@ order_personalization:
     - data-next-show does not support bundle.* namespace — always-visible fallback used.
     - NOTE: data-next-bundle-slots-for on a hidden (display:none) selector is assumed to work;
       if slots do not render, move the selector off-screen instead of display:none.
--->
+{% endcomment %}
 {% assign offer = upsell_offer -%}
 {% assign package_id = offer.package_id | default: 1 -%}
 {% assign display_selector_id = offer.display_selector_id | default: 'upsell-bundle-1x' -%}
@@ -103,7 +103,7 @@ order_personalization:
       <div class="container cc-medium">
         <div class="upsell-header__inner">
           <div class="upsell-header__title">Wait! Your Order Isn't Complete</div>
-          <!-- bundle.upsell-bundle-1x.price stays locked to 1× regardless of qty selection -->
+          {% comment %} bundle.upsell-bundle-1x.price stays locked to 1× regardless of qty selection {% endcomment %}
           <div class="upsell-header__offer">Special Discount: Get Another <span data-next-display="{{ package_name_path }}">Product Title</span> For Only <span data-next-display="{{ display_price_path }}" data-next-format="currency">$19.99</span></div>
           <div class="upsell-header__suboffer">Add to your order and get a <span data-next-display="{{ display_discount_path }}" data-next-format="percentage">50%</span> discount<br></div>
         </div>

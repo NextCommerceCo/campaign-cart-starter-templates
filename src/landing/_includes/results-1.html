@@ -2,15 +2,15 @@
   <div class="max-w-[1440px] mx-auto px-[15px] md:px-[26px] lg:px-[60px] xl:px-[120px]">
     <div class="flex flex-col items-center gap-[32px] md:gap-[40px] lg:gap-[48px]">
 
-      <!-- Heading -->
+      {% comment %} Heading {% endcomment %}
       <h2 class="font-bold text-[32px] md:text-[36px] lg:text-[44px] text-[var(--text-primary)] text-center tracking-[-0.16px] md:tracking-[-0.19px] lg:tracking-[-0.22px] leading-[1.2] max-w-[800px]">
         {{ results_1_headline }}
       </h2>
 
-      <!-- ── MOBILE TIMELINE (hidden md+) ── -->
+      {% comment %} ── MOBILE TIMELINE (hidden md+) ── {% endcomment %}
       <div class="md:hidden flex flex-col w-full">
 
-        <!-- Week 1 -->
+        {% comment %} Week 1 {% endcomment %}
         <div class="flex gap-[16px] items-start">
           <div class="flex flex-col items-center self-stretch shrink-0">
             <img src="{{ 'images/results-1/results-1-timeline-icon.svg' | campaign_asset }}" alt="" class="w-[40px] h-[40px] shrink-0">
@@ -25,7 +25,7 @@
           </div>
         </div>
 
-        <!-- Week 2-3 -->
+        {% comment %} Week 2-3 {% endcomment %}
         <div class="flex gap-[16px] items-start">
           <div class="flex flex-col items-center self-stretch shrink-0">
             <img src="{{ 'images/results-1/results-1-timeline-icon.svg' | campaign_asset }}" alt="" class="w-[40px] h-[40px] shrink-0">
@@ -40,7 +40,7 @@
           </div>
         </div>
 
-        <!-- Month 1 -->
+        {% comment %} Month 1 {% endcomment %}
         <div class="flex gap-[16px] items-start">
           <div class="flex flex-col items-center self-stretch shrink-0">
             <img src="{{ 'images/results-1/results-1-timeline-icon.svg' | campaign_asset }}" alt="" class="w-[40px] h-[40px] shrink-0">
@@ -55,7 +55,7 @@
           </div>
         </div>
 
-        <!-- Month 3 -->
+        {% comment %} Month 3 {% endcomment %}
         <div class="flex gap-[16px] items-start">
           <div class="flex flex-col items-center self-stretch shrink-0">
             <img src="{{ 'images/results-1/results-1-timeline-icon.svg' | campaign_asset }}" alt="" class="w-[40px] h-[40px] shrink-0">
@@ -70,7 +70,7 @@
           </div>
         </div>
 
-        <!-- Month 6 -->
+        {% comment %} Month 6 {% endcomment %}
         <div class="flex gap-[16px] items-start">
           <div class="flex flex-col items-center self-stretch shrink-0">
             <img src="{{ 'images/results-1/results-1-timeline-icon.svg' | campaign_asset }}" alt="" class="w-[40px] h-[40px] shrink-0">
@@ -85,7 +85,7 @@
           </div>
         </div>
 
-        <!-- Month 12 — no line after icon -->
+        {% comment %} Month 12 — no line after icon {% endcomment %}
         <div class="flex gap-[16px] items-start">
           <div class="flex flex-col items-center shrink-0">
             <img src="{{ 'images/results-1/results-1-timeline-icon.svg' | campaign_asset }}" alt="" class="w-[40px] h-[40px] shrink-0">
@@ -103,12 +103,12 @@
         </div>
 
       </div>
-      <!-- ── END MOBILE TIMELINE ── -->
+      {% comment %} ── END MOBILE TIMELINE ── {% endcomment %}
 
-      <!-- ── DESKTOP / TABLET TIMELINE (hidden on mobile, shown md+) ── -->
+      {% comment %} ── DESKTOP / TABLET TIMELINE (hidden on mobile, shown md+) ── {% endcomment %}
       <div class="hidden md:flex flex-col w-full">
 
-        <!-- Row 1: Week 1 — label left (right-aligned), card right -->
+        {% comment %} Row 1: Week 1 — label left (right-aligned), card right {% endcomment %}
         <div class="flex gap-[24px] lg:gap-[60px] items-start">
           <div class="flex-1 h-[217px] flex items-start justify-end">
             <p class="font-bold text-[24px] md:text-[26px] lg:text-[28px] text-[var(--text-primary)] tracking-[-0.14px] lg:tracking-[-0.16px] leading-[1.4] whitespace-nowrap">{{ results_1_label_1 }}</p>
@@ -125,7 +125,7 @@
           </div>
         </div>
 
-        <!-- Row 2: Week 2-3 — card left, label right (left-aligned) -->
+        {% comment %} Row 2: Week 2-3 — card left, label right (left-aligned) {% endcomment %}
         <div class="flex gap-[24px] lg:gap-[60px] items-start">
           <div class="flex-1 flex flex-col pb-[60px]">
             <div class="bg-[var(--brand-secondary)] border border-[var(--brand-primary)] rounded-[16px] p-[20px] flex flex-col gap-[16px]">
@@ -142,7 +142,7 @@
           </div>
         </div>
 
-        <!-- Row 3: Month 1 — label left (right-aligned), card right -->
+        {% comment %} Row 3: Month 1 — label left (right-aligned), card right {% endcomment %}
         <div class="flex gap-[24px] lg:gap-[60px] items-start">
           <div class="flex-1 h-[217px] flex items-start justify-end">
             <p class="font-bold text-[24px] md:text-[26px] lg:text-[28px] text-[var(--text-primary)] tracking-[-0.14px] lg:tracking-[-0.16px] leading-[1.4] whitespace-nowrap">{{ results_1_label_3 }}</p>
@@ -159,7 +159,7 @@
           </div>
         </div>
 
-        <!-- Row 4: Month 3 — card left, label right (left-aligned) -->
+        {% comment %} Row 4: Month 3 — card left, label right (left-aligned) {% endcomment %}
         <div class="flex gap-[24px] lg:gap-[60px] items-start">
           <div class="flex-1 flex flex-col pb-[60px]">
             <div class="bg-[var(--brand-secondary)] border border-[var(--brand-primary)] rounded-[16px] p-[20px] flex flex-col gap-[16px]">
@@ -176,7 +176,7 @@
           </div>
         </div>
 
-        <!-- Row 5: Month 6 — label left (right-aligned), card right -->
+        {% comment %} Row 5: Month 6 — label left (right-aligned), card right {% endcomment %}
         <div class="flex gap-[24px] lg:gap-[60px] items-start">
           <div class="flex-1 h-[217px] flex items-start justify-end">
             <p class="font-bold text-[24px] md:text-[26px] lg:text-[28px] text-[var(--text-primary)] tracking-[-0.14px] lg:tracking-[-0.16px] leading-[1.4] whitespace-nowrap">{{ results_1_label_5 }}</p>
@@ -193,7 +193,7 @@
           </div>
         </div>
 
-        <!-- Row 6: Month 12 — 2-card group left, label right — no line after icon -->
+        {% comment %} Row 6: Month 12 — 2-card group left, label right — no line after icon {% endcomment %}
         <div class="flex gap-[24px] lg:gap-[60px] items-start">
           <div class="flex-1 flex flex-col gap-[16px]">
             <div class="bg-[var(--brand-primary)] border border-[var(--brand-primary)] rounded-[16px] p-[20px] flex items-center justify-center">
@@ -213,9 +213,9 @@
         </div>
 
       </div>
-      <!-- ── END DESKTOP / TABLET TIMELINE ── -->
+      {% comment %} ── END DESKTOP / TABLET TIMELINE ── {% endcomment %}
 
-      <!-- CTA -->
+      {% comment %} CTA {% endcomment %}
       <div class="flex flex-col items-center gap-[8px] md:gap-[10px] lg:gap-[12px] w-full max-w-[440px]">
         <a href="{{ next_url }}"
           class="w-full bg-[var(--brand-primary)] rounded-[6px] py-[20px] px-[24px] flex items-center justify-center gap-[20px] no-underline">

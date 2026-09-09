@@ -2,15 +2,15 @@
   <div class="max-w-[1440px] mx-auto px-[15px] md:px-[26px] lg:px-[60px] xl:px-[120px]">
     <div class="flex flex-col items-center gap-8 md:gap-10 lg:gap-12">
 
-      <!-- Zone 1: Main heading -->
+      {% comment %} Zone 1: Main heading {% endcomment %}
       <h2 class="max-w-[800px] text-[28px] md:text-[32px] lg:text-[40px] font-bold leading-[1.2] tracking-[-0.14px] md:tracking-[-0.16px] lg:tracking-[-0.2px] text-[var(--text-primary)] text-center">
         {{ problemsolution_2_heading }}
       </h2>
 
-      <!-- Zone 2: Problem row -->
+      {% comment %} Zone 2: Problem row {% endcomment %}
       <div class="flex flex-col md:flex-row items-start gap-5 md:gap-12 lg:gap-[60px] w-full">
 
-        <!-- Problem photo -->
+        {% comment %} Problem photo {% endcomment %}
         <div class="w-full md:w-[320px] lg:w-[560px] shrink-0 overflow-hidden rounded-[16px] md:rounded-[20px] lg:rounded-[24px] aspect-[345/240] md:aspect-[560/582]">
           <img
             src="{{ 'images/_shared/1x1_1.svg' | campaign_asset }}"
@@ -19,7 +19,7 @@
           >
         </div>
 
-        <!-- Pain cards column -->
+        {% comment %} Pain cards column {% endcomment %}
         <div class="flex flex-col gap-6 md:gap-8 flex-1">
           <p class="text-[20px] lg:text-[24px] font-bold leading-[1.4] tracking-[-0.1px] lg:tracking-[-0.12px] text-[#b70101] uppercase">
             {{ problemsolution_2_problem_label }}
@@ -73,12 +73,12 @@
 
       </div>
 
-      <!-- Zone 3: Bridge text -->
+      {% comment %} Zone 3: Bridge text {% endcomment %}
       <p class="max-w-[800px] text-[18px] md:text-[20px] font-bold leading-[1.5] tracking-[-0.09px] md:tracking-[-0.1px] text-[var(--text-primary)] text-center">
         {{ problemsolution_2_bridge_text }}
       </p>
 
-      <!-- Zone 4: Divider -->
+      {% comment %} Zone 4: Divider {% endcomment %}
       <div class="flex items-center gap-8 justify-center w-full">
         <img src="{{ 'images/problemsolution-2/icon-divider-line.svg' | campaign_asset }}" alt="" class="hidden md:block w-[160px] h-px shrink-0" aria-hidden="true">
         <p class="text-[20px] lg:text-[24px] font-semibold leading-[1.5] tracking-[-0.1px] lg:tracking-[-0.12px] text-[var(--text-primary)] whitespace-nowrap">
@@ -87,7 +87,7 @@
         <img src="{{ 'images/problemsolution-2/icon-divider-line.svg' | campaign_asset }}" alt="" class="hidden md:block w-[160px] h-px shrink-0" aria-hidden="true">
       </div>
 
-      <!-- Zone 5: Relief icons grid — 2 cols mobile / 3 cols tablet / 6 cols desktop -->
+      {% comment %} Zone 5: Relief icons grid — 2 cols mobile / 3 cols tablet / 6 cols desktop {% endcomment %}
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 w-full">
 
         <div class="flex flex-col items-center gap-3">
@@ -122,10 +122,10 @@
 
       </div>
 
-      <!-- Zone 6: Solution row -->
+      {% comment %} Zone 6: Solution row {% endcomment %}
       <div class="flex flex-col md:flex-row items-start gap-5 md:gap-12 lg:gap-[60px] w-full">
 
-        <!-- Left column: product photo + testimonial card (testimonial hidden on mobile) -->
+        {% comment %} Left column: product photo + testimonial card (testimonial hidden on mobile) {% endcomment %}
         <div class="w-full md:w-[320px] lg:w-[560px] shrink-0 flex flex-col gap-5">
 
           <div class="w-full overflow-hidden rounded-[16px] md:rounded-[20px] lg:rounded-[24px] aspect-square">
@@ -136,7 +136,7 @@
             >
           </div>
 
-          <!-- Testimonial card: desktop / tablet only -->
+          {% comment %} Testimonial card: desktop / tablet only {% endcomment %}
           <div class="hidden md:flex bg-white border border-[var(--brand-primary)] rounded-[8px] p-3">
             <div class="flex flex-col gap-3 flex-1">
               <div class="flex flex-col gap-1">
@@ -163,7 +163,7 @@
 
         </div>
 
-        <!-- Right column: solution content + bullets + CTA -->
+        {% comment %} Right column: solution content + bullets + CTA {% endcomment %}
         <div class="flex flex-col gap-6 md:gap-8 flex-1">
 
           <div class="flex flex-col gap-4 md:gap-5">
@@ -178,7 +178,7 @@
             </p>
           </div>
 
-          <!-- Bullet items -->
+          {% comment %} Bullet items {% endcomment %}
           <div class="flex flex-col gap-3">
 
             <div class="border-b border-[var(--border-default)] pb-3 flex items-center gap-3">
@@ -211,7 +211,7 @@
 
           </div>
 
-          <!-- CTA -->
+          {% comment %} CTA {% endcomment %}
           <div class="w-full md:max-w-[440px] flex flex-col items-center gap-[8px] md:gap-[10px] lg:gap-[12px]">
             <a href="{{ next_url }}" class="w-full rounded-[6px] bg-[var(--brand-primary)] px-[24px] py-[20px] flex items-center justify-center gap-[20px]">
               <span class="text-[20px] leading-[1.5] tracking-[-0.1px] font-bold text-white text-center">
@@ -231,7 +231,7 @@
 
       </div>
 
-      <!-- Testimonial card: mobile only, appears below CTA -->
+      {% comment %} Testimonial card: mobile only, appears below CTA {% endcomment %}
       <div class="md:hidden bg-white border border-[var(--brand-primary)] rounded-[8px] p-3 w-full">
         <div class="flex flex-col gap-3">
           <div class="flex flex-col gap-1">

@@ -25,7 +25,7 @@
         <div class="container">
           <div class="upsell-wrapper" data-next-upsell="offer" data-next-await="">
 
-            <!-- Hidden bundle: single card only (voucher merged into price fetch + sent on accept) -->
+            {% comment %} Hidden bundle: single card only (voucher merged into price fetch + sent on accept) {% endcomment %}
             <div
               data-next-bundle-selector
               data-next-upsell-context
@@ -88,11 +88,11 @@
                     <div class="divider_line margin-32"></div>
 
                     <div class="checkout-button-wrapper">
-                      <!--
+                      {% comment %}
                         SDK 0.4.18+ bundleQuantity: data-next-bundle-qty-for matches data-next-selector-id on the hidden selector;
                         card uses data-next-quantity / min / max. Tiered line qty + per-step vouchers → upsell-bundle-tier-pills.html / upsell-bundle-tier-cards.html.
                         Single fixed qty only: remove or hide this entire .next-bundle-qty block and drop data-next-quantity (and min/max) from the hidden bundle card above.
-                      -->
+                      {% endcomment %}
                       <div class="next-bundle-qty">
                         <div class="next-bundle-qty__label">
                           <div>Select Quantity</div>

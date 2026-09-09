@@ -2,7 +2,7 @@
   <div class="max-w-[1440px] mx-auto px-[15px] md:px-[26px] lg:px-[60px]">
     <div class="flex flex-col items-center gap-[32px] md:gap-[40px] lg:gap-[48px]">
 
-      <!-- Header badge + heading -->
+      {% comment %} Header badge + heading {% endcomment %}
       <div class="flex flex-col items-center gap-[12px] md:gap-[16px] lg:gap-[20px] text-center">
         <div class="bg-white rounded-full px-[27px] py-[7px] flex items-center gap-[8px] shadow-sm">
           <div class="w-[24px] md:w-[27px] h-[24px] md:h-[27px]">
@@ -20,7 +20,7 @@
         </div>
       </div>
 
-      <!-- Swiper — pagination and nav must be INSIDE .swiper -->
+      {% comment %} Swiper — pagination and nav must be INSIDE .swiper {% endcomment %}
       <div class="testimonials-1-swiper w-full"
            data-swiper-root
            data-slides="1.1"
@@ -35,7 +35,7 @@
 
           <div class="swiper-wrapper">
 
-            <!-- Slide 1 -->
+            {% comment %} Slide 1 {% endcomment %}
             <div class="swiper-slide">
               <article>
                 <div class="h-[270px] rounded-t-[16px] overflow-hidden">
@@ -62,7 +62,7 @@
               </article>
             </div>
 
-            <!-- Slide 2 -->
+            {% comment %} Slide 2 {% endcomment %}
             <div class="swiper-slide">
               <article>
                 <div class="h-[270px] rounded-t-[16px] overflow-hidden">
@@ -89,7 +89,7 @@
               </article>
             </div>
 
-            <!-- Slide 3 -->
+            {% comment %} Slide 3 {% endcomment %}
             <div class="swiper-slide">
               <article>
                 <div class="h-[270px] rounded-t-[16px] overflow-hidden">
@@ -116,7 +116,7 @@
               </article>
             </div>
 
-            <!-- Slide 4 -->
+            {% comment %} Slide 4 {% endcomment %}
             <div class="swiper-slide">
               <article>
                 <div class="h-[270px] rounded-t-[16px] overflow-hidden">
@@ -143,9 +143,9 @@
               </article>
             </div>
 
-          </div><!-- /.swiper-wrapper -->
+          </div>{% comment %} /.swiper-wrapper {% endcomment %}
 
-          <!-- Controls — visible on mobile only -->
+          {% comment %} Controls — visible on mobile only {% endcomment %}
           <div class="testimonials-1-controls flex items-center justify-center gap-4 mt-6" data-swiper-controls>
             <button type="button"
                     class="flex-shrink-0 w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm cursor-pointer border-0"
@@ -154,7 +154,7 @@
               <img src="{{ 'images/_shared/swiper-arrow-left.svg' | campaign_asset }}" alt="" class="w-4 h-4 object-contain">
             </button>
 
-            <!-- .swiper-pagination inside .swiper — Swiper injects and manages bullets here -->
+            {% comment %} .swiper-pagination inside .swiper — Swiper injects and manages bullets here {% endcomment %}
             <div class="swiper-pagination testimonials-1-pagination"></div>
 
             <button type="button"
@@ -165,7 +165,7 @@
             </button>
           </div>
 
-        </div><!-- /.swiper -->
+        </div>{% comment %} /.swiper {% endcomment %}
       </div>
 
     </div>

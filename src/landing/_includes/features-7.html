@@ -6,20 +6,20 @@
         {{ features_7_heading }}
       </h2>
 
-      <!-- Product image + specs -->
+      {% comment %} Product image + specs {% endcomment %}
       <div class="flex flex-col md:flex-row gap-5 md:gap-8 lg:gap-10 items-center w-full">
 
-        <!-- Product image -->
+        {% comment %} Product image {% endcomment %}
         <div class="w-full md:w-[42%] md:shrink-0 lg:w-auto lg:flex-1">
           <img src="{{ features_7_product_image | campaign_asset }}"
                alt="{{ features_7_product_image_alt }}"
                class="w-full object-contain">
         </div>
 
-        <!-- Specs: Hardware / Software / Dimensions -->
+        {% comment %} Specs: Hardware / Software / Dimensions {% endcomment %}
         <div class="flex flex-col gap-6 text-[var(--text-primary)] w-full md:flex-1">
 
-          <!-- Hardware -->
+          {% comment %} Hardware {% endcomment %}
           <div class="flex flex-col gap-4">
             <h3 class="font-bold text-[22px] leading-[1.2] tracking-[-0.11px]">{{ features_7_hardware_title }}</h3>
             <ul class="flex flex-col gap-1 font-normal text-[16px] leading-[1.5] tracking-[-0.08px] list-disc ps-6">
@@ -33,7 +33,7 @@
             </ul>
           </div>
 
-          <!-- Software -->
+          {% comment %} Software {% endcomment %}
           <div class="flex flex-col gap-4">
             <h3 class="font-bold text-[22px] leading-[1.2] tracking-[-0.11px]">{{ features_7_software_title }}</h3>
             <ul class="flex flex-col gap-1 font-normal text-[16px] leading-[1.5] tracking-[-0.08px] list-disc ps-6">
@@ -42,7 +42,7 @@
             </ul>
           </div>
 
-          <!-- Dimensions -->
+          {% comment %} Dimensions {% endcomment %}
           <div class="flex flex-col gap-4">
             <h3 class="font-bold text-[22px] leading-[1.2] tracking-[-0.11px]">{{ features_7_dimensions_title }}</h3>
             <ul class="flex flex-col gap-1 font-normal text-[16px] leading-[1.5] tracking-[-0.08px] list-disc ps-6">
@@ -54,17 +54,17 @@
         </div>
       </div>
 
-      <!-- Bonus gift card -->
+      {% comment %} Bonus gift card {% endcomment %}
       <div class="bg-[var(--brand-secondary)] rounded-[16px] px-[16px] py-[24px] md:px-[36px] lg:py-[32px] flex flex-col gap-8 items-center w-full">
 
         <h3 class="font-bold text-[22px] md:text-[26px] lg:text-[32px] leading-[1.2] tracking-[-0.11px] md:tracking-[-0.13px] lg:tracking-[-0.16px] text-[var(--text-primary)] text-center">
           {{ features_7_bonus_heading }}
         </h3>
 
-        <!-- Two bonus items: stacked on mobile/tablet, side-by-side on desktop -->
+        {% comment %} Two bonus items: stacked on mobile/tablet, side-by-side on desktop {% endcomment %}
         <div class="flex flex-col lg:flex-row gap-5 lg:gap-10 items-start w-full">
 
-          <!-- Bonus item 1: Fat Burning Signature Kit -->
+          {% comment %} Bonus item 1: Fat Burning Signature Kit {% endcomment %}
           <div class="flex flex-col md:flex-row gap-6 items-center md:items-start w-full lg:flex-1">
             <div class="relative shrink-0 w-[120px]">
               <img src="{{ features_7_bonus_1_image | campaign_asset }}"
@@ -85,7 +85,7 @@
             </div>
           </div>
 
-          <!-- Bonus item 2: 90-Day Transformation Program -->
+          {% comment %} Bonus item 2: 90-Day Transformation Program {% endcomment %}
           <div class="flex flex-col md:flex-row gap-6 items-center md:items-start w-full lg:flex-1">
             <div class="relative shrink-0 w-[120px]">
               <img src="{{ features_7_bonus_2_image | campaign_asset }}"

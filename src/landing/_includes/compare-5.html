@@ -2,16 +2,16 @@
   <div class="mx-auto max-w-[1440px] px-[15px] py-10 md:px-[26px] md:py-12 lg:px-[80px] xl:px-[160px] xl:py-[60px]">
     <div class="flex flex-col items-center gap-8 md:gap-10 xl:gap-12">
 
-      <!-- Heading -->
+      {% comment %} Heading {% endcomment %}
       <div class="flex flex-col items-center gap-3 md:gap-4 xl:gap-5 text-center w-full">
         <p class="text-[var(--brand-primary,#0f75ff)] text-[18px] md:text-[20px] font-bold leading-[1.4] tracking-[-0.1px]">{{ compare_5_eyebrow }}</p>
         <h2 class="text-[var(--text-primary,#020b1e)] text-[28px] md:text-[32px] lg:text-[40px] font-bold leading-[1.2] tracking-[-0.2px]">{{ compare_5_heading }}</h2>
       </div>
 
-      <!-- Comparison table: label col + 3 card cols, bottom-aligned -->
+      {% comment %} Comparison table: label col + 3 card cols, bottom-aligned {% endcomment %}
       <div class="flex items-end gap-2 md:gap-[10px] xl:gap-3 w-full">
 
-        <!-- Label column — 8 labels + 7 dividers = same structure as card feature rows → aligns under items-end -->
+        {% comment %} Label column — 8 labels + 7 dividers = same structure as card feature rows → aligns under items-end {% endcomment %}
         <div class="w-[121px] md:w-[281px] shrink-0 flex flex-col gap-3 md:gap-4 xl:gap-5 pt-3 md:pt-4 xl:pt-5 pb-3 md:pb-4 xl:pb-5">
           <div class="h-8 flex items-center text-[14px] lg:text-[16px] font-bold text-[var(--text-primary,#020b1e)] leading-[1.3] tracking-[-0.08px]">{{ compare_5_row1_label }}</div>
           <div class="w-full border-t border-[rgba(2,11,30,0.09)]"></div>
@@ -30,15 +30,15 @@
           <div class="h-8 flex items-center text-[14px] lg:text-[16px] font-bold text-[var(--text-primary,#020b1e)] leading-[1.3] tracking-[-0.08px]">{{ compare_5_row8_label }}</div>
         </div>
 
-        <!-- Herz P1 column — CSS grid stacking: white card + blue band + content all in col-1/row-1 -->
+        {% comment %} Herz P1 column — CSS grid stacking: white card + blue band + content all in col-1/row-1 {% endcomment %}
         <div class="flex-1 min-w-0 grid items-start">
-          <!-- White card (stretches to full column height, starts below protruding image) -->
+          {% comment %} White card (stretches to full column height, starts below protruding image) {% endcomment %}
           <div class="col-start-1 row-start-1 self-stretch bg-white rounded-lg md:rounded-xl xl:rounded-2xl mt-[57px]"></div>
-          <!-- Blue header band (overlays top of white card) -->
+          {% comment %} Blue header band (overlays top of white card) {% endcomment %}
           <div class="col-start-1 row-start-1 self-start bg-[var(--brand-primary,#0f75ff)] w-full h-[90px] md:h-[120px] mt-14 rounded-t-lg md:rounded-t-xl xl:rounded-t-2xl"></div>
-          <!-- Content column (starts at y=0 — product image protrudes above white card) -->
+          {% comment %} Content column (starts at y=0 — product image protrudes above white card) {% endcomment %}
           <div class="col-start-1 row-start-1 flex flex-col items-center gap-6 px-[5%]">
-            <!-- Product header -->
+            {% comment %} Product header {% endcomment %}
             <div class="flex flex-col items-center gap-2 md:gap-[14px] w-full">
               <img
                 src="{{ 'images/_shared/1x1_1.svg' | campaign_asset }}"
@@ -52,7 +52,7 @@
               >
               <p class="text-white text-[14px] lg:text-[16px] font-bold text-center leading-[1.3] tracking-[-0.08px]">{{ compare_5_herz_name }}</p>
             </div>
-            <!-- Feature rows -->
+            {% comment %} Feature rows {% endcomment %}
             <div class="flex flex-col items-center gap-3 md:gap-4 xl:gap-5 w-full pt-3 md:pt-4 xl:pt-5 pb-3 md:pb-4 xl:pb-5">
               <div class="h-8 flex items-center justify-center"><img src="{{ compare_5_check | campaign_asset }}" alt="" class="w-8 h-8" aria-hidden="true"></div>
               <div class="w-full border-t border-[rgba(2,11,30,0.09)]"></div>
@@ -75,7 +75,7 @@
           </div>
         </div>
 
-        <!-- Clinic Visit col 1 — white card + content, no band -->
+        {% comment %} Clinic Visit col 1 — white card + content, no band {% endcomment %}
         <div class="flex-1 min-w-0 grid items-start">
           <div class="col-start-1 row-start-1 self-stretch bg-white rounded-lg md:rounded-xl xl:rounded-2xl mt-[57px]"></div>
           <div class="col-start-1 row-start-1 flex flex-col items-center gap-6 px-[5%]">
@@ -109,7 +109,7 @@
           </div>
         </div>
 
-        <!-- Clinic Visit col 2 — identical to col 1 -->
+        {% comment %} Clinic Visit col 2 — identical to col 1 {% endcomment %}
         <div class="flex-1 min-w-0 grid items-start">
           <div class="col-start-1 row-start-1 self-stretch bg-white rounded-lg md:rounded-xl xl:rounded-2xl mt-[57px]"></div>
           <div class="col-start-1 row-start-1 flex flex-col items-center gap-6 px-[5%]">
