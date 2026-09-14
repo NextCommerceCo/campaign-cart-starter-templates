@@ -119,7 +119,7 @@ When adding a new `src/<slug>/` family, update these together or the **`lint-sdk
 
 **When the warning fires on your PR**, resolve it one of two ways (full steps in `docs/template-references/<family>/README.md`):
 - The render changed → recapture per the README (headless Chromium, animations frozen, full-page at 1440×900 / 390×844 viewports), update dimensions/hashes/`source_commit`/`version` in the catalog.
-- The render did not change (non-visual edit) → re-stamp `source_commit` to the current commit and leave the PNGs alone.
+- The render did not change (non-visual edit) → re-stamp `source_commit` and leave the PNGs alone. Stamp a commit that will still exist after merge (the `origin/main` tip your branch is based on), not your branch's own commit: this repo squash-merges, so a branch SHA is gone once the PR lands and the lint then reports the stamp as "not present in this clone" on every CI run.
 
 The live Netlify demo URLs are conveniences for humans, **never** the baseline — the live page is non-deterministic (countdown timer, API-priced bundles, CDN SDK) and moves with every merge, so it can't witness a regression. The pinned image is the contract.
 

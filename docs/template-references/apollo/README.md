@@ -20,7 +20,7 @@ The reference images in this directory originally captured `/apollo/checkout/` f
 `npm run lint:agent-contracts` warns when `src/apollo/`, the shared sources under `_shared/`, or the canonical `next-core.css` have changed since `source_commit`. The warning does not fail CI — it only says the reference *may* be stale. Resolve it one of two ways:
 
 - The render changed: redo the capture above, including step 6.
-- The render did not change (a non-visual edit): re-stamp `source_commit` to the current commit, leaving the PNGs and their hashes as they are.
+- The render did not change (a non-visual edit): re-stamp `source_commit`, leaving the PNGs and their hashes as they are. Use a commit that survives the merge, such as the `origin/main` tip your branch is based on. The repo squash-merges, so a branch commit disappears once the PR lands and the lint would then report the stamp as not present in the clone.
 
 Either way the warning clears, and the next reader sees a reference whose provenance is honest about what it was checked against.
 
