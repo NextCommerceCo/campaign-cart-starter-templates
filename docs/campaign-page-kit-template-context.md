@@ -660,6 +660,17 @@ bundles:
 
 `cart.hasCoupon()` (SDK 0.4.20+): truthy when any coupon is applied. `cart.hasCoupon("CODE")` matches a specific code (case-insensitive, quotes stripped). Use to show banners or messaging only when a coupon is active.
 
+**Keep `data-next-show` / `data-next-hide` and `data-next-display` on separate elements.** Put the condition on a wrapper and the value on an inner `<span>`, as in the first example above — never both on one element:
+
+```html
+<!-- wrong: renders $0.00 once the condition becomes true -->
+<div data-next-show="cart.hasDiscounts" data-next-display="cart.subtotal"></div>
+<!-- right -->
+<div data-next-show="cart.hasDiscounts"><span data-next-display="cart.subtotal"></span></div>
+```
+
+The SDK's display enhancer skips updates while its own element is hidden (`display:none` / `next-hidden`) and never re-runs when the conditional enhancer unhides it, so the element keeps the value written before it was hidden — usually `$0.00` from the empty-cart first paint. A shopper applying a voucher would see `~~$0.00~~ $38.40` in the crossed-out subtotal. Present since SDK 0.4.31; tracked as [campaign-cart#100](https://github.com/NextCommerceCo/campaign-cart/issues/100). The inner span is never itself hidden, so it always receives the update.
+
 **Receipt pages must bind to `order.*`, never `cart.*`.** SDK ≥0.4.17 clears cart and coupon session state before the post-checkout redirect, so on a receipt page `cart.isEmpty` is always true and `cart.hasItems`/`cart.total` are always empty — a cart-gated element hides or blanks a correctly loaded order. Use `data-next-show="order.hasItems"` / `order.hasDiscounts` and `data-next-display="order.subtotal"` / `order.total` instead (the order-item-list enhancer also exposes `order-loading` / `order-has-items` / `order-empty` / `order-error` state classes and `data-empty-template` for finer control).
 
 ### Cart item list
@@ -1321,3 +1332,4 @@ If `window.nextDebug` is undefined, debug mode is not enabled — add the meta t
 9. **`next_url`, `next_url`, `decline_url` are filenames** (e.g. `upsell.html`) — `base.html` applies `campaign_link` to them. Do not pre-format these values in frontmatter.
 10. **Inside `<template>` elements, use single-brace tokens** (`{item.name}`), not Liquid (`{{ item.name }}`).
 11. **Reference NEXT-hosted assets via `cdn.cachebucket.com`, never `cdn.29next.store`.** Both hosts serve the same paths; the alternative host keeps DMCA-takedown complaints aimed at campaigns off the primary domain.
+12. **Never put `data-next-show` / `data-next-hide` and `data-next-display` on the same element.** Condition on a wrapper, value on an inner `<span>`. On one element the value freezes at the pre-hide render (typically `$0.00`) — see the Conditional visibility section and [campaign-cart#100](https://github.com/NextCommerceCo/campaign-cart/issues/100).

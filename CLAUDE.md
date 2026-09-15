@@ -244,7 +244,7 @@ scripts:
 | `data-next-checkout-step="..."` | Multi-step navigation (value is `campaign_link` URL) |
 | `data-next-display="cart.total"` | Renders a dynamic value |
 | `data-next-show="cart.hasDiscounts"` | Conditional visibility (0.4.x cart / receipt; prefer over legacy `cart.hasSavings`) |
-| `data-next-display="cart.originalPrice"` | **Unsupported** on `cart.*` in current `CartDisplayEnhancer` (unresolved path / no DOM update). For crossed pricing with `cart.total`, use `data-next-display="cart.subtotal"` with `data-next-show="cart.hasDiscounts"`. |
+| `data-next-display="cart.originalPrice"` | **Unsupported** on `cart.*` in current `CartDisplayEnhancer` (unresolved path / no DOM update). For crossed pricing with `cart.total`, use `data-next-display="cart.subtotal"` with `data-next-show="cart.hasDiscounts"` — on **separate** elements (show on the wrapper, display on an inner `<span>`). Both on one element renders `$0.00` once shown: the display enhancer skips hidden elements and never re-runs on unhide (SDK ≥0.4.31, [campaign-cart#100](https://github.com/NextCommerceCo/campaign-cart/issues/100); templates fixed in PR #179). |
 | `data-next-hide="cart.isEmpty"` | Inverse conditional (checkout/upsell only — never on receipt pages, see below) |
 | `data-next-show="order.hasItems"` | **Receipt gating.** Receipt surfaces must bind to `order.*` (`order.hasItems`, `order.hasDiscounts`, `order.subtotal`, `order.total`), never `cart.*`: SDK ≥0.4.17 clears cart/coupon session state before the post-checkout redirect, so `cart.isEmpty` is always true on the receipt and a cart-gated wrapper hides the populated `data-next-order-items` list. `order.hasItems`/`order.isEmpty` are source-verified in `ConditionalDisplayEnhancer` of the pinned SDK (v0.4.30) even though the typedoc attribute index doesn't enumerate condition paths. The order-item-list enhancer is self-contained (its own `order-loading`/`order-has-items`/`order-empty`/`order-error` classes + `data-empty-template`) — no wrapper is load-bearing for it. |
 | `data-next-cart-summary` + `data-summary-lines` | Cart summary v2 (0.4.x); replaces legacy `data-next-cart-items` |
@@ -381,7 +381,7 @@ The 0.3.x archive is out of scope for this repository.
 - Full `config.js` structure (matches real template file)
 - All SDK data attributes with real examples (checkout form, selectors, bump, upsell, display, etc.)
 - Task checklists: configuring config.js, setting up a new campaign, adding a bump, adding a upsell step, debugging
-- 11 hard rules
+- 12 hard rules
 
 Design decisions:
 - **Checklists over how-to recipes** — checklists are AI-useful; prose how-tos are not worth the file bloat
