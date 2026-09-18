@@ -20,30 +20,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
-  {% comment %} Tailwind CDN + design token color aliases {% endcomment %}
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Plus Jakarta Sans', 'sans-serif'],
-          },
-          colors: {
-            'brand-primary': 'var(--brand-primary)',
-            'brand-secondary': 'var(--brand-secondary)',
-            'brand-accent': 'var(--brand-accent)',
-            'surface-bg': 'var(--surface-bg)',
-            'surface-card': 'var(--surface-card)',
-            'surface-alt': 'var(--surface-alt)',
-            'text-primary': 'var(--text-primary)',
-            'text-secondary': 'var(--text-secondary)',
-            'text-inverse': 'var(--text-inverse)',
-          }
-        }
-      }
-    }
-  </script>
+  {% comment %} Compiled Tailwind v4 (do not list tailwind.css in page frontmatter styles:). Page tokens still come from frontmatter styles. {% endcomment %}
+  <link rel="stylesheet" href="{{ 'css/tailwind.css' | campaign_asset }}">
   {% for style in styles %}
   <link rel="stylesheet" href="{{ style | campaign_asset }}">
   {% endfor %}

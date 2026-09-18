@@ -25,33 +25,9 @@
   {% comment %} Swiper {% endcomment %}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
-  {% comment %} Tailwind CDN + design token color aliases {% endcomment %}
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Plus Jakarta Sans', 'sans-serif'],
-          },
-          colors: {
-            'brand-primary':   'var(--brand-primary)',
-            'brand-secondary': 'var(--brand-secondary)',
-            'brand-accent':    'var(--brand-accent)',
-            'surface-bg':      'var(--surface-bg)',
-            'surface-card':    'var(--surface-card)',
-            'surface-alt':     'var(--surface-alt)',
-            'text-primary':    'var(--text-primary)',
-            'text-secondary':  'var(--text-secondary)',
-            'text-inverse':    'var(--text-inverse)',
-          }
-        }
-      }
-    }
-  </script>
-
-  {% comment %} Design tokens + any page-level styles {% endcomment %}
+  {% comment %} Design tokens, then compiled Tailwind v4 (do not list tailwind.css in page frontmatter styles:). {% endcomment %}
   <link rel="stylesheet" href="{{ 'css/landing/tokens.css' | campaign_asset }}">
+  <link rel="stylesheet" href="{{ 'css/tailwind.css' | campaign_asset }}">
   {% for style in styles %}
   <link rel="stylesheet" href="{{ style | campaign_asset }}">
   {% endfor %}

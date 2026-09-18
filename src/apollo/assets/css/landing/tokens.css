@@ -21,6 +21,20 @@
   --state-success: #22c55e;
   --state-warning: #f59e0b;
   --state-error: #ef4444;
+
+  /* Aliases onto next-core names (Campaigns OS brand-theme target).
+     On checkout, invert this: lander names alias the next-core vars. */
+  --brand--color--primary: var(--brand-primary);
+  --brand--color--primary-light: var(--brand-secondary);
+  --brand--color--background: var(--surface-bg);
+  --brand--color--surface: var(--surface-card);
+  --brand--color--foreground: var(--text-primary);
+  --brand--color--text-primary: var(--text-primary);
+  --brand--color--text-secondary: var(--text-secondary);
+  --brand--color--text-inverse: var(--text-inverse);
+  --system-colors--success: var(--state-success);
+  --system-colors--success-medium: var(--brand-accent);
+  --system-colors--destructive: var(--state-error);
 }
 
 /* Typography scale */

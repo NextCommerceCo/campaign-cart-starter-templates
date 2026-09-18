@@ -63,26 +63,23 @@ swiper_thumbs:
   Only one [data-next-bundle-selector] here (inside offer) — no sibling-order pitfall vs a separate
   display-only selector. data-next-upsell-action-for is not read by UpsellEnhancer.
 {% endcomment %}
-<div class="page-wrapper">
-  <div class="main-wrapper">
-    <div class="announcement">
-      <div class="announcement__block">
-        <div class="announcement__text"><strong>Special Offer Unlocked - Do Not Close This Page</strong></div>
-      </div>
+<div class="overflow-clip">
+    <div class="flex items-center justify-center gap-3 bg-brand py-2.5 max-[479px]:flex-col max-[479px]:gap-0">
+      <div class="block text-center text-lg font-black uppercase leading-8 tracking-normal text-brand-text-inverse max-[991px]:text-base max-[479px]:text-sm max-[479px]:leading-[1.1rem]"><strong>Special Offer Unlocked - Do Not Close This Page</strong></div>
     </div>
     {% campaign_include 'upsell-header-bar.html' %}
 
-    <section class="section upsell-header">
-      <div class="container">
-        <div class="upsell-header__inner">
-          <div class="upsell-header__title">Wait! Your Order Isn't Complete</div>
-          <div class="upsell-header__offer">
+    <section class="relative overflow-clip bg-brand pb-20 pt-4 text-brand-text-inverse max-[991px]:pb-24">
+      <div class="relative z-[1] mx-auto block w-full max-w-7xl px-10 max-[991px]:px-5">
+        <div class="flex flex-col items-center gap-2 p-6 text-center max-[767px]:p-0">
+          <div class="m-0 text-balance text-[2.5rem] font-bold leading-[1.2] max-[767px]:text-[1.5rem]">Wait! Your Order Isn't Complete</div>
+          <div class="m-0 text-balance text-[2rem] font-bold leading-[1.3] max-[767px]:text-lg">
             Special Discount: Get 1 More
             <span data-next-display="package.3.name">Product Title</span>
             For Only
             <span data-next-display="bundle.upsell-bundle.price" data-next-format="currency">$14.95</span>
           </div>
-          <div class="upsell-header__suboffer">
+          <div class="m-0 text-[1.5rem] max-[767px]:text-base">
             Add this to your order and get a
             <span data-next-display="bundle.upsell-bundle.discountPercentage" data-next-format="percentage">50%</span>
             discount
@@ -93,7 +90,6 @@ swiper_thumbs:
 
     {% campaign_include 'upsell-bundle-stepper-offer.html' %}
     {% campaign_include 'footer.html' %}
-  </div>
 </div>
 
 <script>

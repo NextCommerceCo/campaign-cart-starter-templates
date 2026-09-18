@@ -1,0 +1,41 @@
+{% comment %}
+  Shared receipt totals — desktop sidebar and mobile drawer.
+  Keep data-next-display / data-next-show on order.*.
+{% endcomment %}
+<div data-next-content="">
+  <div class="relative flex h-full min-h-[30px] w-full flex-col gap-3 bg-transparent p-0 text-sm">
+    <div class="flex justify-between text-brand-black">
+      <div>Subtotal</div>
+      <div data-next-display="order.subtotal"></div>
+    </div>
+    <div class="flex flex-col gap-1">
+      <div class="flex justify-between text-brand-black">
+        <div class="flex items-center gap-1">
+          <div>Shipping<br></div>
+        </div>
+        <div class="flex items-center gap-1">
+          <div data-next-display="order.shipping"></div>
+        </div>
+      </div>
+    </div>
+    <div data-next-show="order.hasTax" class="flex flex-col gap-1">
+      <div class="flex justify-between text-brand-black">
+        <div class="flex items-center gap-1">
+          <div>Tax<br></div>
+        </div>
+        <div class="flex items-center gap-1">
+          <div data-next-display="order.tax"></div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-2 flex flex-col gap-1">
+      <div class="flex justify-between text-lg font-bold text-brand-black">
+        <div>Total</div>
+        <div class="flex items-center gap-1">
+          <div data-next-display="order.currency" class="text-sm font-normal"></div>
+          <div data-next-display="order.total"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

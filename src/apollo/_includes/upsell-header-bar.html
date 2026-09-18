@@ -1,42 +1,27 @@
-<section class="upsell-header-bar">
-          <div class="container">
-            <div class="upsell-header-bar__wrapper">
-              <div class="upsell-header-bar__left">
-                <div class="upsell-header-bar__logo"><img src="{{ 'images/next-dark.svg' | campaign_asset }}" loading="eager" alt="{{ campaign.store_name }}" class="brand-logo"></div>
+<section class="flex flex-col items-stretch border-b border-brand-border">
+          <div class="relative z-[1] mx-auto block w-full max-w-7xl px-10 max-[991px]:px-5">
+            <div class="flex items-center justify-between py-4 max-[991px]:min-h-16 max-[991px]:py-0 max-[767px]:flex-col max-[767px]:gap-2 max-[767px]:pb-[0.7rem] max-[767px]:pt-3">
+              <div class="flex shrink-0 items-center">
+                <img src="{{ 'images/next-dark.svg' | campaign_asset }}" loading="eager" alt="{{ campaign.store_name }}" class="h-auto w-[150px] max-[479px]:w-[120px]">
               </div>
-              <div class="upsell-header-bar__right">
-                <div class="upsell-header-bar__steps">
-                  <div class="upsell-header-bar__stepper">
+              <div class="flex items-center gap-8 max-[991px]:gap-4 max-[767px]:gap-2">
+                <div class="min-w-0 max-[767px]:min-w-[170px]">
+                  <div class="relative flex flex-row justify-between gap-[0.875rem]">
 
-                    <div class="upsell-header-bar__step">
-
-                      <div class="upsell-header-bar__step-content">
-                        <div class="upsell-header-bar__step-label">Checkout</div>
-                      </div>
+                    <div class="relative z-10 flex flex-col items-center text-center text-brand-gray">
+                        <div class="text-base uppercase max-[767px]:text-[0.75rem]">Checkout</div>
                     </div>
-                    <div class="upsell-header-bar__step">
-
-                      <div class="upsell-header-bar__step-content">
-                        <div class="upsell-header-bar__step-label"> &#8250; </div>
-                      </div>
+                    <div class="relative z-10 flex flex-col items-center text-center text-brand-gray">
+                        <div class="text-base uppercase max-[767px]:text-[0.75rem]"> &#8250; </div>
                     </div>
-                    <div class="upsell-header-bar__step upsell-header-bar__step--active">
-
-                      <div class="upsell-header-bar__step-content">
-                        <div class="upsell-header-bar__step-label">Upgrades</div>
-                      </div>
+                    <div class="relative z-10 flex flex-col items-center text-center font-bold text-brand-black">
+                        <div class="text-base uppercase max-[767px]:text-[0.75rem]">Upgrades</div>
                     </div>
-                    <div class="upsell-header-bar__step">
-
-                      <div class="upsell-header-bar__step-content">
-                        <div class="upsell-header-bar__step-label"> &#8250; </div>
-                      </div>
+                    <div class="relative z-10 flex flex-col items-center text-center text-brand-gray">
+                        <div class="text-base uppercase max-[767px]:text-[0.75rem]"> &#8250; </div>
                     </div>
-                    <div class="upsell-header-bar__step">
-
-                      <div class="upsell-header-bar__step-content">
-                        <div class="upsell-header-bar__step-label">Summary</div>
-                      </div>
+                    <div class="relative z-10 flex flex-col items-center text-center text-brand-gray">
+                        <div class="text-base uppercase max-[767px]:text-[0.75rem]">Summary</div>
                     </div>
                   </div>
                 </div>

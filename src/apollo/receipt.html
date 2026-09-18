@@ -3,218 +3,132 @@ title: "Apollo — Receipt"
 page_type: receipt
 styles:
 ---
-<div class="page-wrapper">
+<div class="overflow-clip text-brand-black">
+  {% campaign_include 'receipt-skeleton.html' %}
+  <div class="flex h-auto w-full flex-wrap items-start justify-center">
+    <div class="relative grid min-h-screen w-full bg-brand-background [grid-template:'main_order-summary'_/_minmax(min-content,calc(50%+3.125rem))_1fr] max-[991px]:min-h-0 max-[991px]:grid-cols-1 max-[991px]:[grid-template-areas:'main'_'order-summary']">
 
-      <div class="main-wrapper">
-        {% campaign_include 'receipt-skeleton.html' %}
-        <div class="checkout-content">
-          <div class="checkout__content">
-            <div class="checkout__layout">
-              <div class="checkout__column checkout__column--left">
-                <div class="checkout__form-container cc-checkout">
-                  <div class="checkout__header-brand cc-shop"><img src="{{ 'images/next-dark.svg' | campaign_asset }}" loading="eager" alt="{{ campaign.store_name }}" class="brand-logo"></div>
-                  <div class="order-summary-mobile">
-                    <div data-initial-state="closed" data-next-accordion="order-summary" data-open-text="Hide Order Summary" data-close-text="Show Order Summary" data-toggle-class="next-expanded" class="order-summary-mobile__accordion">
-                      <div data-next-accordion-trigger="order-summary" class="order-summary__trigger">
-                        <div class="order-summary__inner">
-                          <div class="order-summary__mobile-left">
-                            <div class="summary-toggle">
-                              <div data-next-accordion-text="order-summary" class="summary-toggle__text show_text">Show Order Summary</div><img os-summary-icon="" loading="lazy" alt="" src="{{ 'images/arrow-down.svg' | campaign_asset }}" class="summary-toggle__icon">
-                            </div>
-                          </div>
-                          <div data-next-show="order.hasItems" class="order-summary__mobile-right">
-                            <div data-next-show="order.hasDiscounts" class="summary_price price--crossed cc-sm"><span data-next-display="order.subtotal"></span></div>
-                            <div data-next-display="order.total" class="summary_price price--total"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div data-next-accordion-panel="order-summary" class="accordion__panel payment-method__form--expanded">
-                        <div class="order-summary">
-                          <h4 class="order-summary__title">Order Summary</h4>
-                          <div class="order-summary__content">
-                            {% campaign_include 'receipt-orders.html' %}
-                            <div data-next-content="">
-                              <div class="order-totals">
-                                <div class="order-totals__line">
-                                  <div class="order-totals__label">Subtotal</div>
-                                  <div data-next-display="order.subtotal" class="order-totals__value"></div>
-                                </div>
-                                <div class="order-totals__section">
-                                  <div class="order-totals__line">
-                                    <div class="order-totals__label-group">
-                                      <div class="order-totals__label">Shipping<br></div>
-                                    </div>
-                                    <div class="order-totals__value-group">
-                                      <div data-next-display="order.shipping" class="order-totals__value"></div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div data-next-show="order.hasTax" class="order-totals__section">
-                                  <div class="order-totals__line">
-                                    <div class="order-totals__label-group">
-                                      <div class="order-totals__label">Tax<br></div>
-                                    </div>
-                                    <div class="order-totals__value-group">
-                                      <div data-next-display="order.tax" class="order-totals__value"></div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="order-totals__section cc-total">
-                                  <div class="order-totals__line order-totals__line--total">
-                                    <div class="order-totals__label order-totals__label--total">Total</div>
-                                    <div class="order-totals__value-group">
-                                      <div data-next-display="order.currency" class="summary-total__coin"></div>
-                                      <div data-next-display="order.total" class="order-totals__value order-totals__value--total"></div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="receipt_head">
-                    <div class="receipt-check"><svg width="100%" height="100%" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M49 25C49 38.2548 38.2548 49 25 49C11.7452 49 1 38.2548 1 25C1 11.7452 11.7452 1 25 1C38.2548 1 49 11.7452 49 25Z" stroke="currentColor" stroke-width="2"></path>
-                        <path d="M15 24.5113L22.3067 31.818L35.1247 19" stroke="currentColor" stroke-width="2"></path>
-                      </svg></div>
-                    <div class="receipt-heading">
-                      <div class="receipt-subtitle">Confirmation #<span data-next-display="order.number">DQFDHG5E0</span><br></div>
-                      <h2 class="receipt_order">Thank you, <span data-next-display="order.customer.name">Taylor!</span></h2>
-                    </div>
-                  </div>
-                  <div class="receipt_section">
-                    <div class="receipt_section-head">
-                      <div class="display-xs">Your order is confirmed</div>
-                      <div class="receipt_section-head--desc">You’ll get a confirmation email with your order number soon.</div>
-                    </div>
-                  </div>
-                  <div class="receipt_section">
-                    <div class="receipt_section-head">
-                      <div class="display-xs">Order details</div>
-                    </div>
-                    <div class="order_receipt-grid">
-                      <div class="order_receipt-col">
-                        <div class="order_receipt-sec">
-                          <div class="sec_title">Contact information</div>
-                          <div data-next-display="order.customer.email" class="sec_value">jordan.chen@domain.com</div>
-                        </div>
-                        <div class="order_receipt-sec">
-                          <div class="sec_title">Shipping address</div>
-                          <div class="order_receipt--group">
-                            <div data-next-display="order.customer.name" class="sec_value">Jordan Chen</div>
-                            <div data-next-display="order.shippingAddress.line1" class="sec_value">151 O'Connor St</div>
-                            <div data-next-display="order.shippingAddress.line2" class="sec_value">Apt 1011</div>
-                            <div class="sec_value"><span data-next-display="order.shippingAddress.city">Ottawa</span>, <span data-next-display="order.shippingAddress.state">ON</span>, <span data-next-display="order.shippingAddress.postcode">K2P 2L8</span></div>
-                            <div data-next-display="order.shippingAddress.country" class="sec_value">Canada</div>
-                          </div>
-                        </div>
-                        <div class="order_receipt-sec">
-                          <div class="sec_title">Shipping method</div>
-                          <div class="order_receipt--group">
-                            <div data-next-display="order.shippingMethod" class="sec_value">FedEx Ground</div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="order_receipt-col">
-                        <div class="order_receipt-sec">
-                          <div class="sec_title">Payment method</div>
-                          <div data-next-display="order.paymentMethod" class="sec_value">Credit Card</div>
-                        </div>
-                        <div class="order_receipt-sec">
-                          <div class="sec_title">Billing address</div>
-                          <div class="order_receipt--group">
-                            <div data-next-display="order.billingAddress.name" class="sec_value">Jordan Chen</div>
-                            <div data-next-display="order.billingAddress.line1" class="sec_value">151 O'Connor St</div>
-                            <div data-next-display="order.billingAddress.line2" class="sec_value">Apt 1011</div>
-                            <div class="sec_value"><span data-next-display="order.billingAddress.city">Ottawa</span>, <span data-next-display="order.billingAddress.state">ON</span>, <span data-next-display="order.billingAddress.postcode">K2P 2L8</span></div>
-                            <div data-next-display="order.billingAddress.country" class="sec_value">Canada</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="receipt_info">
-                    <div class="receipt-flex">
-                      <div>Need help?</div>
-                      <a href="{{ campaign.store_contact }}" target="_blank" class="link">
-                        <div>Contact Us</div>
-                      </a>
-                    </div>
-                    <a href="{{ campaign.store_url }}" target="_blank" class="button cc-auto">
-                      <div>Continue shopping</div>
-                    </a>
-                  </div>
-                  <div class="checkout-footer-links">
-                    <a href="{{ campaign.store_returns }}" target="_blank" class="link">
-                      <div>Return policy</div>
-                    </a>
-                    <a href="{{ campaign.store_privacy }}" target="_blank" class="link">
-                      <div>Privacy policy</div>
-                    </a>
-                    <a href="{{ campaign.store_terms }}" target="_blank" class="link">
-                      <div>Terms of service</div>
-                    </a>
-                  </div>
+      <div class="flex w-full min-h-[865px] justify-end border-r-[0.5px] border-solid border-brand-border [grid-area:main] max-[991px]:min-h-0 max-[991px]:border-r-0 max-[991px]:bg-brand-background">
+        <div class="relative box-border flex w-full max-w-[36.25rem] flex-col gap-8 p-[2.375rem] max-[991px]:max-w-none max-[991px]:gap-6 max-[991px]:p-5 max-[767px]:gap-4 max-[767px]:py-4">
+
+          <div class="flex items-center justify-center max-[991px]:bg-brand-background max-[991px]:px-5 max-[991px]:py-4">
+            <img src="{{ 'images/next-dark.svg' | campaign_asset }}" loading="eager" alt="{{ campaign.store_name }}" class="h-auto w-[150px]">
+          </div>
+
+          <div class="sr-only max-[991px]:not-sr-only max-[991px]:relative max-[991px]:z-[100] max-[991px]:-mx-5 max-[991px]:flex max-[991px]:flex-col">
+            <div data-initial-state="closed" data-next-accordion="order-summary" data-open-text="Hide Order Summary" data-close-text="Show Order Summary" data-toggle-class="next-expanded" class="max-[991px]:flex max-[991px]:w-full max-[991px]:flex-col">
+              <div data-next-accordion-trigger="order-summary" class="flex cursor-pointer items-center justify-between text-lg font-normal max-[991px]:border-y max-[991px]:border-brand-border max-[991px]:bg-neutral-drawer max-[991px]:p-4 max-[991px]:text-base max-[479px]:py-[0.8rem] max-[479px]:text-sm">
+                <div class="flex items-center">
+                  <div data-next-accordion-text="order-summary" class="text-brand-black">Show Order Summary</div>
+                  <img os-summary-icon="" loading="lazy" alt="" src="{{ 'images/arrow-down.svg' | campaign_asset }}" class="ml-2.5 w-3">
+                </div>
+                <div data-next-show="order.hasItems" class="flex items-center gap-1">
+                  <div data-next-show="order.hasDiscounts" class="text-sm line-through"><span data-next-display="order.subtotal"></span></div>
+                  <div data-next-display="order.total" class="font-semibold"></div>
                 </div>
               </div>
-              <div class="checkout__column checkout__column--right">
-                <div class="checkout__summary">
-                  <div class="summary-desktop">
-                    <div class="summary-wrap">
-                      <div class="summary-holder">
-                        <div class="order-summary">
-                          <h4 class="order-summary__title checkout">Order Summary</h4>
-                          <div class="order-summary__content">
-                            {% campaign_include 'receipt-orders.html' %}
-                            <div data-next-content="">
-                              <div class="order-totals">
-                                <div class="order-totals__line">
-                                  <div class="order-totals__label">Subtotal</div>
-                                  <div data-next-display="order.subtotal" class="order-totals__value"></div>
-                                </div>
-                                <div class="order-totals__section">
-                                  <div class="order-totals__line">
-                                    <div class="order-totals__label-group">
-                                      <div class="order-totals__label">Shipping<br></div>
-                                    </div>
-                                    <div class="order-totals__value-group">
-                                      <div data-next-display="order.shipping" class="order-totals__value"></div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div data-next-show="order.hasTax" class="order-totals__section">
-                                  <div class="order-totals__line">
-                                    <div class="order-totals__label-group">
-                                      <div class="order-totals__label">Tax<br></div>
-                                    </div>
-                                    <div class="order-totals__value-group">
-                                      <div data-next-display="order.tax" class="order-totals__value"></div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="order-totals__section cc-total">
-                                  <div class="order-totals__line order-totals__line--total">
-                                    <div class="order-totals__label order-totals__label--total">Total</div>
-                                    <div class="order-totals__value-group">
-                                      <div data-next-display="order.currency" class="summary-total__coin"></div>
-                                      <div data-next-display="order.total" class="order-totals__value order-totals__value--total"></div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+              <div data-next-accordion-panel="order-summary" class="max-[991px]:overflow-hidden max-[991px]:bg-neutral-drawer max-[991px]:px-4">
+                <div class="max-[991px]:py-4">
+                  <h4 class="mb-4 text-[1.115rem] font-bold">Order Summary</h4>
+                  <div class="flex flex-col gap-4">
+                    {% campaign_include 'receipt-orders.html' %}
+                    {% campaign_include 'receipt-order-totals.html' %}
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
+          <div class="flex items-center gap-2">
+            <div class="flex size-[4.5rem] max-[767px]:size-14 flex-col items-center justify-center text-brand-dark"><svg width="100%" height="100%" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M49 25C49 38.2548 38.2548 49 25 49C11.7452 49 1 38.2548 1 25C1 11.7452 11.7452 1 25 1C38.2548 1 49 11.7452 49 25Z" stroke="currentColor" stroke-width="2"></path>
+                <path d="M15 24.5113L22.3067 31.818L35.1247 19" stroke="currentColor" stroke-width="2"></path>
+              </svg></div>
+            <div class="flex flex-col gap-2 max-[767px]:gap-1">
+              <div class="text-sm">Confirmation #<span data-next-display="order.number">DQFDHG5E0</span><br></div>
+              <h2 class="text-[1.35rem] font-bold tracking-[-0.01em] max-[767px]:text-xl">Thank you, <span data-next-display="order.customer.name">Taylor!</span></h2>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-4 rounded border border-brand-border p-6">
+            <div class="flex flex-col gap-2">
+              <div class="m-0 text-balance text-[1.25rem] font-semibold leading-[1.1] max-[991px]:text-[1.1125rem]">Your order is confirmed</div>
+              <div class="text-sm text-brand-gray">You’ll get a confirmation email with your order number soon.</div>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-4 rounded border border-brand-border p-6">
+            <div class="flex flex-col gap-2">
+              <div class="m-0 text-balance text-[1.25rem] font-semibold leading-[1.1] max-[991px]:text-[1.1125rem]">Order details</div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 max-[767px]:flex max-[767px]:flex-col">
+              <div class="flex flex-col gap-3">
+                <div class="flex flex-col gap-1 text-sm">
+                  <div class="text-brand-gray">Contact information</div>
+                  <div data-next-display="order.customer.email" class="text-brand-black">jordan.chen@domain.com</div>
+                </div>
+                <div class="flex flex-col gap-1 text-sm">
+                  <div class="text-brand-gray">Shipping address</div>
+                  <div class="flex flex-col">
+                    <div data-next-display="order.customer.name" class="text-brand-black">Jordan Chen</div>
+                    <div data-next-display="order.shippingAddress.line1" class="text-brand-black">151 O'Connor St</div>
+                    <div data-next-display="order.shippingAddress.line2" class="text-brand-black">Apt 1011</div>
+                    <div class="text-brand-black"><span data-next-display="order.shippingAddress.city">Ottawa</span>, <span data-next-display="order.shippingAddress.state">ON</span>, <span data-next-display="order.shippingAddress.postcode">K2P 2L8</span></div>
+                    <div data-next-display="order.shippingAddress.country" class="text-brand-black">Canada</div>
+                  </div>
+                </div>
+                <div class="flex flex-col gap-1 text-sm">
+                  <div class="text-brand-gray">Shipping method</div>
+                  <div class="flex flex-col">
+                    <div data-next-display="order.shippingMethod" class="text-brand-black">FedEx Ground</div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex flex-col gap-3">
+                <div class="flex flex-col gap-1 text-sm">
+                  <div class="text-brand-gray">Payment method</div>
+                  <div data-next-display="order.paymentMethod" class="text-brand-black">Credit Card</div>
+                </div>
+                <div class="flex flex-col gap-1 text-sm">
+                  <div class="text-brand-gray">Billing address</div>
+                  <div class="flex flex-col">
+                    <div data-next-display="order.billingAddress.name" class="text-brand-black">Jordan Chen</div>
+                    <div data-next-display="order.billingAddress.line1" class="text-brand-black">151 O'Connor St</div>
+                    <div data-next-display="order.billingAddress.line2" class="text-brand-black">Apt 1011</div>
+                    <div class="text-brand-black"><span data-next-display="order.billingAddress.city">Ottawa</span>, <span data-next-display="order.billingAddress.state">ON</span>, <span data-next-display="order.billingAddress.postcode">K2P 2L8</span></div>
+                    <div data-next-display="order.billingAddress.country" class="text-brand-black">Canada</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-between max-[767px]:flex-col max-[767px]:items-stretch max-[767px]:gap-4">
+            <div class="flex items-center gap-2 max-[767px]:order-1 max-[767px]:justify-center">
+              <div>Need help?</div>
+              <a href="{{ campaign.store_contact }}" target="_blank" class="whitespace-nowrap font-medium leading-6 text-brand-dark underline">Contact Us</a>
+            </div>
+            <a href="{{ campaign.store_url }}" target="_blank" class="relative flex w-auto min-h-[4.5rem] items-center justify-center rounded-button border-2 border-brand-cta bg-brand-cta px-8 py-4 text-center font-semibold text-brand-text-inverse no-underline">Continue shopping</a>
+          </div>
+
+          <div class="mt-4 flex gap-4 border-t border-brand-border pt-4 text-sm">
+            <a href="{{ campaign.store_returns }}" target="_blank" class="whitespace-nowrap font-medium leading-6 text-brand-dark underline">Return policy</a>
+            <a href="{{ campaign.store_privacy }}" target="_blank" class="whitespace-nowrap font-medium leading-6 text-brand-dark underline">Privacy policy</a>
+            <a href="{{ campaign.store_terms }}" target="_blank" class="whitespace-nowrap font-medium leading-6 text-brand-dark underline">Terms of service</a>
+          </div>
         </div>
       </div>
+
+      <div class="sticky top-0 w-full bg-neutral-drawer [grid-area:order-summary] max-[991px]:hidden">
+        <div class="sticky top-0 w-full max-w-[30rem] p-[2.375rem]">
+          <h4 class="mb-4 text-lg font-black leading-[1.25] tracking-[-0.017em]">Order Summary</h4>
+          <div class="flex flex-col gap-4 text-sm">
+            {% campaign_include 'receipt-orders.html' %}
+            {% campaign_include 'receipt-order-totals.html' %}
+          </div>
+        </div>
+      </div>
+
     </div>
+  </div>
+</div>

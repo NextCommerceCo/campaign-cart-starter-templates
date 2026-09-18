@@ -41,6 +41,8 @@
     {% campaign_include 'analytics-head.html' %}
 
     <link href="{{ 'css/next-core.css' | campaign_asset }}" rel="stylesheet" type="text/css">
+    {% comment %} Compiled Tailwind (important) for converted chrome. Do not list tailwind.css in page frontmatter styles:. next-core stays for leftover SDK/hooks. {% endcomment %}
+    <link href="{{ 'css/tailwind.css' | campaign_asset }}" rel="stylesheet" type="text/css">
     {% for style in styles %}
     <link href="{{ style | campaign_asset }}" rel="stylesheet" type="text/css">
     {% endfor %}

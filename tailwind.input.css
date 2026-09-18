@@ -1,22 +1,29 @@
-@import "tailwindcss";
+@import "tailwindcss" important;
 
 /*
-  Design token colour aliases — maps Tailwind utility classes to CSS custom
-  properties defined in assets/css/tokens.css.
+  Apollo Tailwind v4 entry (pilot).
 
-  @theme inline is required: without it Tailwind tries to resolve var() at
-  build time and the values come out blank.
+  `important` is required while pages still load unlayered next-core.css.
+  Layered utilities otherwise lose to element defaults (a, h2, h1).
 
-  Update the @source path to match your slug before running the CLI:
-    npx @tailwindcss/cli -i tailwind.input.css -o src/[slug]/assets/css/tailwind.css --minify
+  @theme inline is required: without it Tailwind resolves var() at build time
+  and the values come out blank. Campaigns OS brand-theme overrides the CSS
+  custom properties at runtime — utilities must keep the var() reference.
+
+  Token names: see docs/tailwind-class-contract.md
+  Scan every Apollo HTML file (including <template> the SDK clones).
 */
 
+@source "./src/apollo/**/*.html";
+@source "./src/apollo/assets/js/**/*.js";
 @source "./src/landing/**/*.html";
-@source "./src/presell/**/*.html";
+
+@custom-variant next-expanded (&:is(.next-expanded));
 
 @theme inline {
   --font-sans: 'Plus Jakarta Sans', sans-serif;
 
+  /* Landing / presell token names */
   --color-brand-primary:   var(--brand-primary);
   --color-brand-secondary: var(--brand-secondary);
   --color-brand-accent:    var(--brand-accent);
@@ -26,4 +33,45 @@
   --color-text-primary:    var(--text-primary);
   --color-text-secondary:  var(--text-secondary);
   --color-text-inverse:    var(--text-inverse);
+
+  /* next-core names (Campaigns OS brand-theme target) */
+  --color-brand:                    var(--brand--color--primary);
+  --color-brand-dark:               var(--brand--color--primary-dark);
+  --color-brand-cta:                var(--brand--color--cta-primary);
+  --color-brand-light:              var(--brand--color--primary-light);
+  --radius-button:                  var(--radius--button);
+  --color-brand-foreground:         var(--brand--color--foreground);
+  --color-brand-background:         var(--brand--color--background);
+  --color-brand-surface:            var(--brand--color--surface);
+  --color-brand-border:             var(--brand--color--border);
+  --color-brand-text-primary:       var(--brand--color--text-primary);
+  --color-brand-text-secondary:     var(--brand--color--text-secondary);
+  --color-brand-text-muted:         var(--brand--color--text-muted);
+  --color-brand-text-inverse:       var(--brand--color--text-inverse);
+  --color-brand-black:              var(--brand--color--black);
+  --color-brand-gray:               var(--brand--color--secondary);
+  --color-neutral-100:              var(--neutral--100);
+  /* Shared wash: mobile drawer + desktop summary column.
+     next-core hardcodes #f5f5f5 on both — not a Campaigns OS var. */
+  --color-neutral-drawer:           var(--neutral--drawer, #f5f5f5);
+  --color-system-success:           var(--system-colors--success);
+  --color-system-success-medium:    var(--system-colors--success-medium);
+  --color-system-destructive:       var(--system-colors--destructive);
+}
+
+/*
+  Accordion panel height is SDK-owned. AccordionEnhancer writes inline
+  style.height (0px → measured px → auto). Compiled utilities use
+  `important`, so height-0 / expanded-auto utilities freeze the drawer
+  and the height animation never runs.
+
+  Keep this block unlayered and without !important so it matches
+  next-core .accordion__panel at max-width 991px.
+*/
+@media (max-width: 991px) {
+  [data-next-accordion-panel] {
+    height: 0;
+    overflow: hidden;
+    transition: height 0.2s ease-out;
+  }
 }

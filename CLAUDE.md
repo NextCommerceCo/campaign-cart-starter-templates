@@ -123,6 +123,12 @@ When adding a new `src/<slug>/` family, update these together or the **`lint-sdk
 
 The live Netlify demo URLs are conveniences for humans, **never** the baseline — the live page is non-deterministic (countdown timer, API-priced bundles, CDN SDK) and moves with every merge, so it can't witness a regression. The pinned image is the contract.
 
+### Tailwind (Apollo pilot)
+
+`apollo` landing/presell load **compiled Tailwind v4** (`src/apollo/assets/css/tailwind.css`), not the CDN. Source is repo-root `tailwind.input.css`. `npm run build:css` (also hooked from `dev` / `build`) regenerates it.
+
+Checkout leftover chrome still uses `next-core.css`. Receipt and Apollo upsell **page chrome** use compiled Tailwind utilities (`important`); offer/SDK hooks stay. Standing procedure: **Convert a page** in `docs/tailwind-class-contract.md` and `.cursor/rules/tailwind-css-parity.mdc`.
+
 ### `next-core.css` — shared across all eight families
 
 Every template family ships a **byte-identical** copy of `src/olympus/assets/css/next-core.css`. The `lint:next-core` CI gate enforces this. To change core for all families: edit that canonical file (lint anchor at `src/olympus/assets/css/next-core.css`), then copy it to every family's `assets/css/next-core.css` (all eight slugs in `scripts/lint-next-core-sync.mjs`).
