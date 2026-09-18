@@ -16122,3 +16122,157 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
     padding-left: 1.5rem;
   }
 }
+
+/* --- Protection upsell (single-offer) — utility modifiers ------------------- */
+/* Used by upsell-protection-offer.html. All layout there is composed from the
+   existing utilities above; these are the only additions, each a modifier on an
+   existing class (or a generic spacing utility mirroring .margin-12). */
+
+.margin-32 {
+  margin-top: 2rem;
+}
+
+/* .badge as an inline pill (default .badge has no padding / sizing). */
+.badge.cc-inline {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  line-height: 1.3; /* size/weight via text-* / tw-* utilities */
+}
+
+/* Feature row rendered as a bordered white card (features grid, claims steps). */
+.checkout-features__item--card {
+  padding: 1.25rem;
+  background-color: var(--brand--color--white);
+  border: 1px solid var(--brand--color--border);
+  border-radius: var(--radius--cards);
+}
+
+/* Numbered step circle: brand-coloured and smaller than the 4rem default. */
+.icon-wrapper.cc-circle.cc-primary {
+  background-color: var(--brand--color--primary);
+  color: var(--brand--color--primary-foreground);
+}
+
+.icon-wrapper.cc-circle.cc-sm {
+  width: 2.75rem;
+  height: 2.75rem;
+  font-size: var(--font-size--lg);
+}
+
+/* "Without protection" comparison column. */
+.upsell-container--box.upsell-container--destructive {
+  border-color: var(--system-colors--destructive);
+}
+
+/* Left-aligned price row with no trailing gap (default is centred + 30px). */
+.prices-text-wrapper.cc-start {
+  justify-content: flex-start;
+  margin-bottom: 0;
+}
+
+.upsell-offer__card.cc-center {
+  align-items: center;
+  text-align: center;
+}
+
+/* Header card with a rule beneath it (comparison "without" column). */
+.upsell-offer__card.cc-divider {
+  border-bottom: 1px solid var(--brand--color--border);
+}
+
+/* Stacked header + body cards that fill the column: white surface, no
+   tinted gaps between cards, body card grows to equal height. */
+.upsell-container--stack {
+  display: flex;
+  flex-flow: column;
+  position: relative;
+  overflow: visible; /* lets .badge.cc-float straddle the top edge */
+  background-color: var(--brand--color--white);
+}
+
+.upsell-container--stack > :first-child:not(.badge) {
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+}
+
+.upsell-container--stack > :last-child {
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+
+.upsell-container--stack > .upsell-offer__card:last-child {
+  flex: 1 1 auto;
+}
+
+/* Pill centred on the top edge of its (position: relative) card. */
+.badge.cc-inline.cc-float {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  white-space: nowrap;
+}
+
+/* Card header band — same box on a tinted (.announcement__block) or white
+   (.upsell-offer__card) header so paired comparison columns line up. */
+.announcement__block.cc-padded,
+.upsell-offer__card.cc-padded {
+  padding: 1.75rem 1rem 1.25rem;
+  gap: 0.25rem;
+}
+
+/* Narrow fixed-width artwork column beside a fluid content column. */
+.upsell-offer__image-column.cc-narrow {
+  flex: 0 0 15rem;
+  width: 15rem;
+  padding: 0;
+}
+
+.upsell-offer__image-column.cc-medium {
+  flex: 0 0 25rem;
+  width: 25rem;
+  padding: 0;
+}
+
+.upsell-content__column.cc-fluid {
+  flex: 1 1 auto;
+  max-width: none;
+}
+
+/* Stacked (tablet/mobile) CTA card, mirroring the desktop→mobile change in the
+   reference: artwork on top, everything beneath it centred, button full width. */
+@media screen and (max-width: 991px) {
+  .upsell-offer__image-column.cc-narrow,
+  .upsell-offer__image-column.cc-medium {
+    flex-basis: auto;
+    width: 100%;
+    max-width: 15.5rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .upsell-content__column.cc-fluid {
+    align-items: center;
+    text-align: center;
+  }
+
+  .upsell-content__column.cc-fluid .button {
+    max-width: none;
+  }
+
+  .prices-text-wrapper.cc-start {
+    justify-content: center;
+    flex-wrap: wrap;
+    row-gap: 0.25rem;
+  }
+}
+
+.list-icon.cc-success {
+  color: var(--system-colors--success);
+}
+
+.list-icon.cc-destructive {
+  color: var(--system-colors--destructive);
+}
+

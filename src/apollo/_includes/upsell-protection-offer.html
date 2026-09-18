@@ -1,0 +1,267 @@
+{% comment %}
+  next_component: upsell-protection-offer
+  next_version: 1
+  next_sdk_owns: upsell add/skip actions, voucher via linked bundle selector, price/savings display, countdown timer
+  next_sdk_surface: upsell offer (single package, fixed price, no quantity)
+  next_params:
+    upsell_offer: object. package_id, voucher (optional coupon code), selector_id, headline, subheadline, product_name, image,
+      rating, rating_text, urgency_text, accept_text, social_proof, details_hint,
+      closing_title, decline_text, show_first_name.
+    protection_features: object. title, text, items[] { title, text }.
+    protection_comparison: object. title, text, recommended_label,
+      with { title, subtitle, items[] }, without { title, subtitle, items[] }.
+    protection_claims: object. title, text, steps[] { title, text }.
+    guarantee_note: string. One-line reassurance above the closing offer.
+  next_dont_touch: data-next-upsell, data-next-upsell-action, data-next-package-id, data-next-bundle-*,
+    data-next-display, data-next-show, data-next-timer
+
+  Single-offer "protection plan" upsell (warranty / insurance / lifetime cover).
+  One package, accept or skip, no tiers. Two accept points share the same
+  package_id: the hero card and the closing card. Pricing is SDK-driven from the
+  package (package.price / price_retail / savingsPercentage) so the page never
+  hardcodes a price; `data-next-show` and `data-next-display` stay on separate
+  elements (SDK >=0.4.31 skips hidden displays and never re-runs on unhide).
+
+  Layout is composed from next-core utilities. The only additions in core are
+  modifiers: .badge.cc-inline, .checkout-features__item--card, .margin-32 (utility),
+  .icon-wrapper.cc-circle.cc-primary / .cc-sm, .upsell-container--destructive,
+  .list-icon.cc-success / .cc-destructive, .prices-text-wrapper.cc-start,
+  .upsell-offer__card.cc-center / .cc-divider / .cc-padded, .upsell-container--stack, .badge.cc-float,
+  .announcement__block.cc-padded, .upsell-offer__image-column.cc-narrow / .cc-medium, .upsell-content__column.cc-fluid.
+{% endcomment %}
+{% assign offer = upsell_offer -%}
+{% assign package_id = offer.package_id | default: 4 -%}
+{% assign features = protection_features -%}
+{% assign compare = protection_comparison -%}
+{% assign claims = protection_claims -%}
+{% assign selector_id = offer.selector_id | default: 'upsell-protection' -%}
+{% comment %}
+  Voucher mode: the SDK applies a coupon to a direct upsell only via a linked
+  BundleSelector (same pattern as upsell-bundle-tier-cards-offer.html). When
+  offer.voucher is set we render one hidden, pre-selected bundle card carrying
+  the package + voucher, point both offer containers at it with
+  data-next-bundle-selector-id, and read prices from bundle.<id>.* (post-voucher).
+  Without a voucher, prices come straight from package.* inside the offer.
+{% endcomment %}
+{% if offer.voucher -%}
+  {% assign price_path = 'bundle.' | append: selector_id | append: '.price' -%}
+  {% assign compare_path = 'bundle.' | append: selector_id | append: '.originalPrice' -%}
+  {% assign pct_path = 'bundle.' | append: selector_id | append: '.discountPercentage' -%}
+{% else -%}
+  {% assign price_path = 'package.price' -%}
+  {% assign compare_path = 'package.price_retail' -%}
+  {% assign pct_path = 'package.savingsPercentage' -%}
+{% endif -%}
+<div data-next-catalog-component="upsell-protection-offer">
+  {% if offer.voucher %}
+  <div data-next-bundle-selector data-next-upsell-context data-next-selector-id="{{ selector_id }}" class="hide">
+    <div role="button"
+         data-next-bundle-card
+         data-next-bundle-id="{{ selector_id }}"
+         data-next-bundle-items='[{"packageId":{{ package_id }},"quantity":1}]'
+         data-next-bundle-vouchers='["{{ offer.voucher }}"]'
+         data-next-selected="true"
+         class="os-card next-selected"></div>
+  </div>
+  {% endif %}
+
+  {% comment %} ── Hero + offer card ─────────────────────────────────────── {% endcomment %}
+  <section class="section cc-sm color-surface">
+    <div class="container cc-medium">
+      <div class="heading-box text-center max-width-large align-center">
+        <h1 class="display-lg">{% if offer.show_first_name %}<span class="hide-tablet-down"><span data-next-display="order.customer.firstName"></span> </span>{% endif %}{{ offer.headline | default: 'Protect Your Order For Life' }}</h1>
+        <p class="text-xl" data-next-package-id="{{ package_id }}">{{ offer.subheadline | default: 'Lock in lifetime replacement and accident coverage for a one-time' }} <strong data-next-display="{{ price_path }}" data-next-format="currency">$9.99</strong>.</p>
+      </div>
+
+      <div class="upsell-container upsell-container--box margin-32" data-next-upsell="offer" data-next-package-id="{{ package_id }}"{% if offer.voucher %} data-next-bundle-selector-id="{{ selector_id }}"{% endif %} data-next-await="">
+        <div class="upsell-offer__card">
+          <div class="grid-full flex-col flex-horizontal-lg-up gap-xl">
+
+            <div class="upsell-offer__image-column cc-medium align-self-center">
+              <img loading="eager" src="{{ offer.image | default: 'images/1x1_1.svg' | campaign_asset }}" alt="{{ offer.product_name | default: 'Protection plan' }}" class="width-full">
+            </div>
+
+            <div class="upsell-content__column cc-fluid flex-col gap-md">
+              <div class="review_component cc-sm">
+                <div class="review_component-wrapper">
+                  <div class="review_stars-wrapper cc-color cc-black">
+                    {% for i in (1..5) %}<div class="review_component-star"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="100%" height="100%" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path></svg></div>{% endfor %}
+                  </div>
+                  <div class="text-sm"><strong>{{ offer.rating | default: '4.8/5' }}</strong> - {{ offer.rating_text | default: '19,569+ Protection Reviews' }}</div>
+                </div>
+              </div>
+
+              <h2 class="display-md">{% if offer.product_name %}{{ offer.product_name }}{% else %}<span data-next-display="package.name">Protection Plan</span>{% endif %}</h2>
+
+              <div{% unless offer.voucher %} data-next-show="package.hasSavings"{% endunless %}>
+                <span class="badge cc-inline text-xl tw-800"><span data-next-display="{{ pct_path }}" data-next-format="percentage"></span> OFF</span>
+              </div>
+
+              <div class="prices-text-wrapper cc-start">
+                <div{% unless offer.voucher %} data-next-show="package.hasRetailPrice"{% endunless %}>
+                  <span class="text-3xl text-strike color-muted" data-next-display="{{ compare_path }}" data-next-format="currency">$19.99</span>
+                </div>
+                <div class="text-3xl tw-700">Yours Today <span data-next-display="{{ price_path }}" data-next-format="currency">$9.99</span></div>
+              </div>
+
+              <p class="text-lg font-bold color-destructive">{{ offer.urgency_text | default: "★ Your one-time customer price — it won't appear again" }}</p>
+
+              <a data-next-upsell-action="add" href="#" class="button cc-sm" pb-animate="pulse-upsell">
+                <div data-button="content" class="button_content"><div class="text-xl tw-700">{{ offer.accept_text | default: 'Yes, Protect My Order For' }} <span data-next-display="{{ price_path }}" data-next-format="currency">$9.99</span></div></div>
+              </a>
+
+              {% if offer.social_proof %}
+              <div class="upsell-success padding-xxsmall text-center text-base font-bold color-black max-width-xsmall align-center">{{ offer.social_proof }}</div>
+              {% endif %}
+
+              {% campaign_include 'upsell-payment-logos.html' wrapper_class="flex-center flex-col" %}
+            </div>
+          </div>
+
+          {% if offer.details_hint %}
+          <p class="text-xl text-center grid-full margin-12">{{ offer.details_hint }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% comment %} ── What is covered ───────────────────────────────────────── {% endcomment %}
+  {% if features.items.size > 0 %}
+  <section class="section cc-sm">
+    <div class="container">
+      <div class="heading-box text-center max-width-large align-center">
+        <h2 class="display-md">{{ features.title | default: 'What your protection covers' }}</h2>
+        {% if features.text %}<p class="text-lg">{{ features.text }}</p>{% endif %}
+      </div>
+      <div class="grid-2col-standard margin-32">
+        {% for item in features.items %}
+        <div class="checkout-features__item checkout-features__item--card">
+          <div class="icon-wrapper cc-circle cc-primary cc-sm tw-700">{{ forloop.index }}</div>
+          <div class="heading-box">
+            <h3 class="checkout-features__item-title">{{ item.title }}</h3>
+            <p class="text-base">{{ item.text }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  {% comment %} ── With vs. without ──────────────────────────────────────── {% endcomment %}
+  {% if compare.with.items.size > 0 %}
+  <section class="section cc-sm color-surface">
+    <div class="container">
+      <div class="heading-box text-center max-width-large align-center">
+        <h2 class="display-md">{{ compare.title | default: 'With protection vs. without' }}</h2>
+        {% if compare.text %}<p class="text-lg">{{ compare.text }}</p>{% endif %}
+      </div>
+      <div class="grid-2col-standard margin-32">
+
+        <div class="upsell-container upsell-container--box upsell-container--stack">
+          {% if compare.recommended_label %}<span class="badge cc-inline cc-float text-sm tw-700">{{ compare.recommended_label }}</span>{% endif %}
+          <div class="announcement__block cc-padded flex-col color-white text-center">
+            <p class="display-sm">{{ compare.with.title | default: 'With Protection' }}</p>
+            {% if compare.with.subtitle %}<p class="text-lg tw-500">{{ compare.with.subtitle }}</p>{% endif %}
+          </div>
+          <div class="upsell-offer__card">
+            <ul role="list" class="list-container cc-lg">
+              {% for item in compare.with.items %}
+              <li class="list__item">
+                <div class="list-icon cc-success"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="100%" height="100%" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="currentColor" opacity=".18"/><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M7 12.5l3.2 3.2L17 9"/></svg></div>
+                <div class="text-base">{{ item }}</div>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+
+        <div class="upsell-container upsell-container--box upsell-container--destructive upsell-container--stack">
+          <div class="upsell-offer__card cc-center cc-divider cc-padded">
+            <p class="display-sm color-destructive">{{ compare.without.title | default: 'Without Protection' }}</p>
+            {% if compare.without.subtitle %}<p class="text-lg tw-500">{{ compare.without.subtitle }}</p>{% endif %}
+          </div>
+          <div class="upsell-offer__card">
+            <ul role="list" class="list-container cc-lg">
+              {% for item in compare.without.items %}
+              <li class="list__item">
+                <div class="list-icon cc-destructive"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="100%" height="100%" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="currentColor" opacity=".18"/><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" d="M8.5 8.5l7 7m0-7l-7 7"/></svg></div>
+                <div class="text-base">{{ item }}</div>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  {% comment %} ── Claims process ────────────────────────────────────────── {% endcomment %}
+  {% if claims.steps.size > 0 %}
+  <section class="section cc-sm">
+    <div class="container">
+      <div class="heading-box text-center max-width-large align-center">
+        <h2 class="display-md">{{ claims.title | default: 'If something goes wrong, claims take 2 minutes' }}</h2>
+        {% if claims.text %}<p class="text-lg">{{ claims.text }}</p>{% endif %}
+      </div>
+      <div class="grid-3col-standard margin-32">
+        {% for step in claims.steps %}
+        <div class="checkout-features__item checkout-features__item--card flex-col flex-center text-center">
+          <div class="icon-wrapper cc-circle cc-primary cc-sm tw-700">{{ forloop.index }}</div>
+          <div class="heading-box">
+            <h3 class="checkout-features__item-title">{{ step.title }}</h3>
+            <p class="text-base">{{ step.text }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  {% comment %} ── Guarantee + closing offer ─────────────────────────────── {% endcomment %}
+  <section class="section cc-sm color-surface">
+    <div class="container cc-medium">
+      {% if guarantee_note %}
+      <p class="text-lg text-center max-width-medium align-center margin-12">{{ guarantee_note }}</p>
+      {% endif %}
+
+      <div class="upsell-container upsell-container--box margin-32" data-next-upsell="offer" data-next-package-id="{{ package_id }}"{% if offer.voucher %} data-next-bundle-selector-id="{{ selector_id }}"{% endif %}>
+        <div class="upsell-offer__card">
+          <div class="grid-full flex-col flex-horizontal-lg-up gap-xl">
+            <div class="upsell-offer__image-column cc-narrow align-self-center">
+              <img loading="lazy" src="{{ offer.image | default: 'images/1x1_1.svg' | campaign_asset }}" alt="" class="width-full">
+            </div>
+            <div class="upsell-content__column cc-fluid flex-col gap-lg">
+              <h2 class="display-md">{{ offer.closing_title | default: 'Add lifetime protection to your order?' }}</h2>
+
+              <div class="prices-text-wrapper cc-start">
+                <div{% unless offer.voucher %} data-next-show="package.hasRetailPrice"{% endunless %}>
+                  <span class="text-3xl text-strike color-muted" data-next-display="{{ compare_path }}" data-next-format="currency">$19.99</span>
+                </div>
+                <div class="text-3xl tw-700">Yours Today <span data-next-display="{{ price_path }}" data-next-format="currency">$9.99</span></div>
+                <div{% unless offer.voucher %} data-next-show="package.hasSavings"{% endunless %}>
+                  <span class="badge cc-inline text-xl tw-800"><span data-next-display="{{ pct_path }}" data-next-format="percentage"></span> OFF</span>
+                </div>
+              </div>
+
+              <a data-next-upsell-action="add" href="#" class="button cc-sm max-width-medium" pb-animate="pulse-upsell">
+                <div data-button="content" class="button_content"><div class="text-xl tw-700">{{ offer.accept_text | default: 'Yes, Protect My Order For' }} <span data-next-display="{{ price_path }}" data-next-format="currency">$9.99</span></div></div>
+              </a>
+
+              <div class="cc-decline-wrapper max-width-medium">
+                <a data-next-upsell-action="skip" href="#" class="upsell-link cc-decline">
+                  <div class="text-sm tw-600">{{ offer.decline_text | default: "No thank you, I don't want to protect my order" }}</div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>

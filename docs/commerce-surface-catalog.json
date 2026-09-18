@@ -460,7 +460,7 @@
         "id": "template-reference-apollo",
         "family": "apollo",
         "version": "sdk-0.4.38-revalidated-2026-09-03",
-        "source_commit": "84a63fe7af8cf49cd8cfdaaa66eb00ef6dd9bc4a",
+        "source_commit": "11352c30c596db258679fd3a552b906086b11bb9",
         "provenance_path": "docs/template-references/apollo/README.md",
         "provenance_url": "https://raw.githubusercontent.com/NextCommerceCo/campaign-cart-starter-templates/main/docs/template-references/apollo/README.md",
         "contract_path": "docs/commerce-surface-catalog.json",
@@ -500,7 +500,8 @@
         "bundle-selector.html with bundle-card dispatcher",
         "promo-banner and promo-timer partials (not web components)",
         "checkout-reveal CTA and panel",
-        "selector_order_bump_variant for check03 below selector"
+        "selector_order_bump_variant for check03 below selector",
+        "upsell-protection page (single-offer warranty / protection plan)"
       ],
       "canonicalSurfaces": {
         "mainSelector": "tiered-bundle-selector",
@@ -511,7 +512,7 @@
         "expressCheckout": "express-checkout|express-checkout-inline",
         "orderBump": "bump-check01|bump-check02|bump-check03|bump-switch01",
         "checkoutReveal": "checkout-form--reveal",
-        "upsell": "bundle-stepper|bundle-tier-pills|bundle-tier-cards",
+        "upsell": "bundle-stepper|bundle-tier-pills|bundle-tier-cards|protection",
         "receipt": "receipt-skeleton"
       },
       "frontmatterInputsObserved": [
@@ -737,6 +738,28 @@
               "data-next-bundle-selector",
               "data-next-bundle-card"
             ]
+          },
+          {
+            "name": "Apollo protection upsell page",
+            "partials": [
+              "upsell-protection-offer.html"
+            ],
+            "ownedInputs": [
+              "upsell_offer",
+              "protection_features",
+              "protection_comparison",
+              "protection_claims",
+              "guarantee_note",
+              "promo_timer",
+              "announcement_text"
+            ],
+            "sdkRoots": [
+              "data-next-upsell",
+              "data-next-bundle-selector",
+              "data-next-bundle-card",
+              "data-next-timer"
+            ],
+            "note": "Single-package, fixed-price protection/warranty offer (accept or skip, no tiers). Two accept points share one package_id. Optional `voucher` applies a coupon through a hidden linked bundle selector (data-next-bundle-selector-id), and prices then read bundle.<selector_id>.price / originalPrice / discountPercentage; without a voucher they read package.price / price_retail / savingsPercentage. Countdown uses the SDK data-next-timer (persisted per persistence_id). Layout composed from next-core utilities plus the modifiers listed in the partial header."
           }
         ],
         "fixtures": [
