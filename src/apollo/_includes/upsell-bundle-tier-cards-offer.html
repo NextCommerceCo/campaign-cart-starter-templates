@@ -20,8 +20,8 @@
 {% assign bundle_original_price_path = 'bundle.' | append: selector_id | append: '.originalPrice' -%}
 {% assign bundle_discount_path = 'bundle.' | append: selector_id | append: '.discountPercentage' -%}
 <div data-next-catalog-component="upsell-bundle-tier-cards-offer">
-      <section class="section upsell-box">
-        <div class="container">
+      <section class="relative -mt-24 overflow-clip pb-16 pt-8">
+        <div class="relative z-[1] mx-auto block w-full max-w-7xl px-10 max-[991px]:px-0">
           {% comment %} Outside offer: UpsellEnhancer uses first in-offer [data-next-bundle-selector] for add — must be upsell-bundle. {% endcomment %}
           <div data-next-bundle-selector data-next-upsell-context data-next-selector-id="{{ display_selector_id }}" style="display:none">
             <div role="button"
@@ -33,50 +33,50 @@
                  class="os-card next-selected"></div>
           </div>
 
-          <div class="upsell-wrapper" data-next-upsell="offer" data-next-await="">
+          <div class="flex flex-col gap-4" data-next-upsell="offer" data-next-await="">
 
-            <div class="upsell-container">
-            <div class="grid-full flex-col flex-horizontal-lg-up">
-              <div class="upsell-content__column">
-                <div class="upsell-offer__card">
-                  <h2 class="display-lg"><span data-next-display="{{ package_name_path }}">Product Title</span></h2>
-                  <div class="review_component cc-sm margin-12">
-                    <div class="review_component-wrapper">
-                      <div class="review_stars-wrapper cc-color cc-black">
-                        <div class="review_component-star"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path></svg></div>
-                        <div class="review_component-star"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path></svg></div>
-                        <div class="review_component-star"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path></svg></div>
-                        <div class="review_component-star"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path></svg></div>
-                        <div class="review_component-star"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path></svg></div>
+            <div class="overflow-hidden rounded-cards bg-brand-light shadow-[0_0_8px_0_rgba(0,0,0,0.4)] max-[991px]:rounded-none">
+            <div class="mx-auto flex w-full flex-col min-[992px]:flex-row min-[992px]:items-stretch min-[992px]:justify-center">
+              <div class="w-full max-w-[565px] overflow-hidden bg-white max-[991px]:max-w-none">
+                <div class="flex flex-col items-start bg-white px-6 py-[30px] max-[767px]:w-full max-[767px]:px-[18px]">
+                  <h2 class="m-0 text-balance text-[2.5rem] font-bold leading-[1.2] max-[991px]:text-[2rem]"><span data-next-display="{{ package_name_path }}">Product Title</span></h2>
+                  <div class="mt-3 items-center text-sm leading-[1.3] max-[479px]:mt-2.5">
+                    <div class="flex items-center gap-[0.6em]">
+                      <div class="flex items-center text-brand-rating-star">
+                        <div class="size-[1.2em]"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path></svg></div>
+                        <div class="size-[1.2em]"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path></svg></div>
+                        <div class="size-[1.2em]"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path></svg></div>
+                        <div class="size-[1.2em]"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path></svg></div>
+                        <div class="size-[1.2em]"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--heroicons" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007l5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527l1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354L7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273l-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433l2.082-5.006Z" clip-rule="evenodd"></path></svg></div>
                       </div>
                       <div class="font-bold">(19,569 Ratings)</div>
                     </div>
                   </div>
-                  <div class="divider_line _25"></div>
-                  <div class="upsell-offer__bullets">
-                    <div class="bullet_inner-one">
-                      <div class="hero_bullet-features-box-inner">
-                        <div class="bullet-features-icon-box"><div class="bullet_features-icon-svg"><svg width="100%" height="100%" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_upsell_b1)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.930023C4.48 0.930023 0 5.41002 0 10.93C0 16.45 4.48 20.93 10 20.93C15.52 20.93 20 16.45 20 10.93C20 5.41002 15.52 0.930023 10 0.930023ZM9.99994 18.9302C5.58994 18.9302 1.99994 15.3402 1.99994 10.9302C1.99994 6.52025 5.58994 2.93025 9.99994 2.93025C14.4099 2.93025 17.9999 6.52025 17.9999 10.9302C17.9999 15.3402 14.4099 18.9302 9.99994 18.9302ZM8.00003 13.1002L14.59 6.51021L16 7.93021L8.00003 15.9302L4.00003 11.9302L5.41003 10.5202L8.00003 13.1002Z" fill="currentColor"></path></g><defs><clipPath id="clip0_upsell_b1"><rect width="20" height="20" fill="white" transform="translate(0 0.930023)"></rect></clipPath></defs></svg></div></div>
-                        <div class="bullet-features-text-box"><div class="text-size-regular text-weight-bold">The standard chunk of Lorem Ipsum</div></div>
+                  <div class="mb-[25px] mt-[25px] min-h-px w-full bg-neutral-divider max-[991px]:my-5 max-[767px]:mb-[18px] max-[767px]:mt-4"></div>
+                  <div class="flex gap-[13px] max-[767px]:w-full max-[767px]:flex-col max-[767px]:gap-[7.5px]">
+                    <div class="flex flex-col items-stretch gap-[15px] max-[479px]:gap-[7.5px]">
+                      <div class="flex w-full items-center justify-start gap-3 max-[991px]:items-start max-[479px]:items-center max-[479px]:justify-center max-[479px]:gap-1">
+                        <div class="w-[4%] max-[479px]:w-[8%]"><div class="flex items-center justify-center text-brand max-[479px]:size-5"><svg width="100%" height="100%" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_upsell_b1)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.930023C4.48 0.930023 0 5.41002 0 10.93C0 16.45 4.48 20.93 10 20.93C15.52 20.93 20 16.45 20 10.93C20 5.41002 15.52 0.930023 10 0.930023ZM9.99994 18.9302C5.58994 18.9302 1.99994 15.3402 1.99994 10.9302C1.99994 6.52025 5.58994 2.93025 9.99994 2.93025C14.4099 2.93025 17.9999 6.52025 17.9999 10.9302C17.9999 15.3402 14.4099 18.9302 9.99994 18.9302ZM8.00003 13.1002L14.59 6.51021L16 7.93021L8.00003 15.9302L4.00003 11.9302L5.41003 10.5202L8.00003 13.1002Z" fill="currentColor"></path></g><defs><clipPath id="clip0_upsell_b1"><rect width="20" height="20" fill="white" transform="translate(0 0.930023)"></rect></clipPath></defs></svg></div></div>
+                        <div class="w-[96%] max-[479px]:w-[92%]"><div class="text-lg font-bold max-[479px]:text-sm">The standard chunk of Lorem Ipsum</div></div>
                       </div>
-                      <div class="hero_bullet-features-box-inner">
-                        <div class="bullet-features-icon-box"><div class="bullet_features-icon-svg"><svg width="100%" height="100%" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_upsell_b2)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.930023C4.48 0.930023 0 5.41002 0 10.93C0 16.45 4.48 20.93 10 20.93C15.52 20.93 20 16.45 20 10.93C20 5.41002 15.52 0.930023 10 0.930023ZM9.99994 18.9302C5.58994 18.9302 1.99994 15.3402 1.99994 10.9302C1.99994 6.52025 5.58994 2.93025 9.99994 2.93025C14.4099 2.93025 17.9999 6.52025 17.9999 10.9302C17.9999 15.3402 14.4099 18.9302 9.99994 18.9302ZM8.00003 13.1002L14.59 6.51021L16 7.93021L8.00003 15.9302L4.00003 11.9302L5.41003 10.5202L8.00003 13.1002Z" fill="currentColor"></path></g><defs><clipPath id="clip0_upsell_b2"><rect width="20" height="20" fill="white" transform="translate(0 0.930023)"></rect></clipPath></defs></svg></div></div>
-                        <div class="bullet-features-text-box"><div class="text-size-regular text-weight-bold">Contrary to popular belief, Lorem Ipsum</div></div>
+                      <div class="flex w-full items-center justify-start gap-3 max-[991px]:items-start max-[479px]:items-center max-[479px]:justify-center max-[479px]:gap-1">
+                        <div class="w-[4%] max-[479px]:w-[8%]"><div class="flex items-center justify-center text-brand max-[479px]:size-5"><svg width="100%" height="100%" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_upsell_b2)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.930023C4.48 0.930023 0 5.41002 0 10.93C0 16.45 4.48 20.93 10 20.93C15.52 20.93 20 16.45 20 10.93C20 5.41002 15.52 0.930023 10 0.930023ZM9.99994 18.9302C5.58994 18.9302 1.99994 15.3402 1.99994 10.9302C1.99994 6.52025 5.58994 2.93025 9.99994 2.93025C14.4099 2.93025 17.9999 6.52025 17.9999 10.9302C17.9999 15.3402 14.4099 18.9302 9.99994 18.9302ZM8.00003 13.1002L14.59 6.51021L16 7.93021L8.00003 15.9302L4.00003 11.9302L5.41003 10.5202L8.00003 13.1002Z" fill="currentColor"></path></g><defs><clipPath id="clip0_upsell_b2"><rect width="20" height="20" fill="white" transform="translate(0 0.930023)"></rect></clipPath></defs></svg></div></div>
+                        <div class="w-[96%] max-[479px]:w-[92%]"><div class="text-lg font-bold max-[479px]:text-sm">Contrary to popular belief, Lorem Ipsum</div></div>
                       </div>
-                      <div class="hero_bullet-features-box-inner">
-                        <div class="bullet-features-icon-box"><div class="bullet_features-icon-svg"><svg width="100%" height="100%" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_upsell_b3)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.930023C4.48 0.930023 0 5.41002 0 10.93C0 16.45 4.48 20.93 10 20.93C15.52 20.93 20 16.45 20 10.93C20 5.41002 15.52 0.930023 10 0.930023ZM9.99994 18.9302C5.58994 18.9302 1.99994 15.3402 1.99994 10.9302C1.99994 6.52025 5.58994 2.93025 9.99994 2.93025C14.4099 2.93025 17.9999 6.52025 17.9999 10.9302C17.9999 15.3402 14.4099 18.9302 9.99994 18.9302ZM8.00003 13.1002L14.59 6.51021L16 7.93021L8.00003 15.9302L4.00003 11.9302L5.41003 10.5202L8.00003 13.1002Z" fill="currentColor"></path></g><defs><clipPath id="clip0_upsell_b3"><rect width="20" height="20" fill="white" transform="translate(0 0.930023)"></rect></clipPath></defs></svg></div></div>
-                        <div class="bullet-features-text-box"><div class="text-size-regular text-weight-bold">Lorem Ipsum has been the industry's</div></div>
+                      <div class="flex w-full items-center justify-start gap-3 max-[991px]:items-start max-[479px]:items-center max-[479px]:justify-center max-[479px]:gap-1">
+                        <div class="w-[4%] max-[479px]:w-[8%]"><div class="flex items-center justify-center text-brand max-[479px]:size-5"><svg width="100%" height="100%" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_upsell_b3)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.930023C4.48 0.930023 0 5.41002 0 10.93C0 16.45 4.48 20.93 10 20.93C15.52 20.93 20 16.45 20 10.93C20 5.41002 15.52 0.930023 10 0.930023ZM9.99994 18.9302C5.58994 18.9302 1.99994 15.3402 1.99994 10.9302C1.99994 6.52025 5.58994 2.93025 9.99994 2.93025C14.4099 2.93025 17.9999 6.52025 17.9999 10.9302C17.9999 15.3402 14.4099 18.9302 9.99994 18.9302ZM8.00003 13.1002L14.59 6.51021L16 7.93021L8.00003 15.9302L4.00003 11.9302L5.41003 10.5202L8.00003 13.1002Z" fill="currentColor"></path></g><defs><clipPath id="clip0_upsell_b3"><rect width="20" height="20" fill="white" transform="translate(0 0.930023)"></rect></clipPath></defs></svg></div></div>
+                        <div class="w-[96%] max-[479px]:w-[92%]"><div class="text-lg font-bold max-[479px]:text-sm">Lorem Ipsum has been the industry's</div></div>
                       </div>
-                      <div class="hero_bullet-features-box-inner">
-                        <div class="bullet-features-icon-box"><div class="bullet_features-icon-svg"><svg width="100%" height="100%" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_upsell_b4)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.930023C4.48 0.930023 0 5.41002 0 10.93C0 16.45 4.48 20.93 10 20.93C15.52 20.93 20 16.45 20 10.93C20 5.41002 15.52 0.930023 10 0.930023ZM9.99994 18.9302C5.58994 18.9302 1.99994 15.3402 1.99994 10.9302C1.99994 6.52025 5.58994 2.93025 9.99994 2.93025C14.4099 2.93025 17.9999 6.52025 17.9999 10.9302C17.9999 15.3402 14.4099 18.9302 9.99994 18.9302ZM8.00003 13.1002L14.59 6.51021L16 7.93021L8.00003 15.9302L4.00003 11.9302L5.41003 10.5202L8.00003 13.1002Z" fill="currentColor"></path></g><defs><clipPath id="clip0_upsell_b4"><rect width="20" height="20" fill="white" transform="translate(0 0.930023)"></rect></clipPath></defs></svg></div></div>
-                        <div class="bullet-features-text-box"><div class="text-size-regular text-weight-bold">Lorem Ipsum is simply dummy text</div></div>
+                      <div class="flex w-full items-center justify-start gap-3 max-[991px]:items-start max-[479px]:items-center max-[479px]:justify-center max-[479px]:gap-1">
+                        <div class="w-[4%] max-[479px]:w-[8%]"><div class="flex items-center justify-center text-brand max-[479px]:size-5"><svg width="100%" height="100%" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_upsell_b4)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 0.930023C4.48 0.930023 0 5.41002 0 10.93C0 16.45 4.48 20.93 10 20.93C15.52 20.93 20 16.45 20 10.93C20 5.41002 15.52 0.930023 10 0.930023ZM9.99994 18.9302C5.58994 18.9302 1.99994 15.3402 1.99994 10.9302C1.99994 6.52025 5.58994 2.93025 9.99994 2.93025C14.4099 2.93025 17.9999 6.52025 17.9999 10.9302C17.9999 15.3402 14.4099 18.9302 9.99994 18.9302ZM8.00003 13.1002L14.59 6.51021L16 7.93021L8.00003 15.9302L4.00003 11.9302L5.41003 10.5202L8.00003 13.1002Z" fill="currentColor"></path></g><defs><clipPath id="clip0_upsell_b4"><rect width="20" height="20" fill="white" transform="translate(0 0.930023)"></rect></clipPath></defs></svg></div></div>
+                        <div class="w-[96%] max-[479px]:w-[92%]"><div class="text-lg font-bold max-[479px]:text-sm">Lorem Ipsum is simply dummy text</div></div>
                       </div>
                     </div>
                   </div>
-                  <div class="divider_line margin-32"></div>
-                  <div class="checkout-button-wrapper">
-                    <p class="cc-upsell-bundle-tier-heading">Choose quantity</p>
-                    <div class="next-bundle-qty">
+                  <div class="mb-8 mt-8 min-h-px w-full bg-neutral-divider max-[991px]:my-[25px] max-[767px]:mb-[18px] max-[767px]:mt-4"></div>
+                  <div class="flex w-full flex-col items-center">
+                    <p class="mb-3 mt-0 text-[0.9375rem] font-semibold leading-[1.3]">Choose quantity</p>
+                    <div class="mb-6 flex w-full items-center justify-center gap-1.5 max-[991px]:mb-5 max-[767px]:mb-4">
                       
                       {% comment %}
                         Three visible tier cards (1×–3×). Same bundle/voucher pattern as upsell-bundle-tier-pills.html.
@@ -86,7 +86,7 @@
                         data-next-bundle-selector
                         data-next-upsell-context
                         data-next-selector-id="{{ selector_id }}"
-                        class="os-option cc-upsell-bundle-selector--visible cc-upsell-bundle-tier-grid"
+                        class="os-option mb-0 grid w-full grid-cols-3 gap-3 max-[600px]:grid-cols-1"
                       >
                         {% for tier in tiers %}
                           <div role="button"
@@ -95,58 +95,58 @@
                                data-next-bundle-items='{{ tier.items_json }}'
                                data-next-bundle-vouchers='{{ tier.vouchers_json }}'
                                {% if tier.selected %}data-next-selected="true"{% endif %}
-                               class="os-card{% if tier.selected %} next-selected{% endif %}">
-                            <div class="cc-upsell-bundle-tier-card__inner" data-next-package-id="{{ package_id }}">
-                              <p class="cc-upsell-bundle-tier-card__label">{{ tier.label | default: tier.id }}</p>
-                              <p class="cc-upsell-bundle-tier-card__hint">{{ tier.hint | default: '' }}</p>
-                              <div class="cc-upsell-bundle-tier-card__price"><span data-next-bundle-display="price">—</span></div>
-                              <div class="cc-upsell-bundle-tier-card__compare"><span data-next-bundle-display="originalPrice"></span></div>
-                              <div data-next-bundle-display="hasDiscount" class="cc-upsell-bundle-tier-card__badge"><span data-next-bundle-display="discountPercentage" data-next-format="percentage"></span> off</div>
+                               class="os-card m-0 min-w-0 cursor-pointer rounded-lg border-2 border-neutral-divider transition-[border-color,box-shadow] duration-150 next-selected:border-component-outline next-selected:shadow-[0_0_0_1px_var(--component--color--outline,#111)]{% if tier.selected %} next-selected{% endif %}">
+                            <div class="px-3 py-[0.85rem] text-center" data-next-package-id="{{ package_id }}">
+                              <p class="mb-[0.35rem] mt-0 text-[0.9375rem] font-bold leading-[1.2]">{{ tier.label | default: tier.id }}</p>
+                              <p class="mb-2 mt-0 text-[0.75rem] leading-[1.25] text-neutral-hint">{{ tier.hint | default: '' }}</p>
+                              <div class="text-lg font-bold leading-[1.2]"><span data-next-bundle-display="price">—</span></div>
+                              <div class="mt-1 text-[0.8125rem] text-neutral-compare line-through"><span data-next-bundle-display="originalPrice"></span></div>
+                              <div data-next-bundle-display="hasDiscount" class="mt-[0.4rem] inline-block text-[0.6875rem] font-bold uppercase tracking-[0.02em] text-brand"><span data-next-bundle-display="discountPercentage" data-next-format="percentage"></span> off</div>
                             </div>
                           </div>
                         {% endfor %}
                       </div>
                     </div>
-                    <div class="prices-text-wrapper">
-                      <div class="price-wrapper">
-                        <div class="text-sm tw-600">Retail Price</div>
-                        <div class="upsell-offer__price diagonal-strike color-muted" data-next-display="{{ bundle_original_price_path }}" data-next-format="currency">$49.99</div>
+                    <div class="mb-[30px] flex items-center justify-center gap-5 max-[991px]:mb-[26px] max-[479px]:mb-5">
+                      <div class="flex flex-col items-center gap-[7px] text-center max-[479px]:gap-[5px]">
+                        <div class="text-sm font-semibold">Retail Price</div>
+                        <div class="relative inline-block text-[2.5rem] font-bold leading-none text-brand-gray after:absolute after:inset-x-0 after:top-1/2 after:origin-center after:-rotate-[10deg] after:border-t after:border-price-strike after:content-[''] max-[767px]:text-[2rem]" data-next-display="{{ bundle_original_price_path }}" data-next-format="currency">$49.99</div>
                         <div class="text-xs font-bold"><strike>{{ offer.retail_shipping | default: '+$4.95 SHIPPING' }}</strike></div>
                       </div>
-                      <div class="upsell-offer__divider"></div>
-                      <div class="price-wrapper">
-                        <div class="upsell-offer__price-heading">
-                          <div class="text-sm tw-600">Selected offer total</div>
-                          <div class="text-sm font-bold color-primary">(<span data-next-display="{{ bundle_discount_path }}" data-next-format="percentage"></span> OFF)</div>
+                      <div class="h-[110px] min-w-[2px] rounded-[5px] bg-neutral-price-rule max-[767px]:h-20"></div>
+                      <div class="flex flex-col items-center gap-[7px] text-center max-[479px]:gap-[5px]">
+                        <div class="flex items-center gap-2">
+                          <div class="text-sm font-semibold">Selected offer total</div>
+                          <div class="text-sm font-bold text-brand">(<span data-next-display="{{ bundle_discount_path }}" data-next-format="percentage"></span> OFF)</div>
                         </div>
-                        <div class="upsell-offer__price" data-next-display="{{ bundle_price_path }}" data-next-format="currency">$24.95</div>
-                        <div class="text-xs font-bold color-primary">{{ offer.offer_shipping | default: '+ FREE SHIPPING' }}</div>
+                        <div class="text-[2.5rem] font-bold leading-none max-[767px]:text-[2rem]" data-next-display="{{ bundle_price_path }}" data-next-format="currency">$24.95</div>
+                        <div class="text-xs font-bold text-brand">{{ offer.offer_shipping | default: '+ FREE SHIPPING' }}</div>
                       </div>
                     </div>
-                    <a data-next-upsell-action="add" href="#" class="button" pb-animate="pulse-upsell">
-                      <div data-button="content" class="button_content"><div>{{ offer.accept_text | default: 'Yes, Add to My Order' }}</div></div>
+                    <a data-next-upsell-action="add" href="#" class="button animate-pulse-upsell flex min-h-[4.5rem] w-full items-center justify-center rounded-button border-2 border-brand-cta bg-brand-cta px-8 py-4 text-center font-semibold text-brand-text-inverse no-underline">
+                      <div data-button="content" class="flex h-full w-full flex-col items-center justify-center leading-none"><div>{{ offer.accept_text | default: 'Yes, Add to My Order' }}</div></div>
                     </a>
-                    <div class="upsell-ships-info">
-                      <img class="upsell-ships-info__icon" src="{{ 'images/usps.png' | campaign_asset }}" alt="USPS">
-                      <p class="upsell-ships-info__text">All orders ship from the USA <img class="upsell-ships-info__flag" src="{{ 'images/united-states-flag-icon.webp' | campaign_asset }}" alt=""> via USPS within 1 business day. A tracking number will be issued to your email.</p>
+                    <div class="mt-2.5 flex items-center rounded border-2 border-brand px-5 py-2.5 min-[992px]:mt-5">
+                      <img class="mr-2.5 h-[60px]" src="{{ 'images/usps.png' | campaign_asset }}" alt="USPS">
+                      <p class="text-left text-[13px]">All orders ship from the USA <img class="inline h-4 align-middle" src="{{ 'images/united-states-flag-icon.webp' | campaign_asset }}" alt=""> via USPS within 1 business day. A tracking number will be issued to your email.</p>
                     </div>
-                    {% campaign_include 'upsell-payment-logos.html' wrapper_class="hide-tablet-up" %}
+                    {% campaign_include 'upsell-payment-logos.html' wrapper_class="min-[992px]:hidden" %}
                   </div>
                 </div>
               </div>
-              <div class="upsell-offer__image-column">
+              <div class="relative block w-full self-center overflow-hidden p-6 max-[991px]:order-first max-[991px]:max-w-none max-[991px]:px-8 max-[767px]:px-6">
                 <div>
                   {% campaign_include 'swiper-gallery.html' main_slides=swiper_slides thumbs=swiper_thumbs variant='sw1' %}
                 </div>
-                {% campaign_include 'upsell-payment-logos.html' wrapper_class="hide-tablet-down" %}
+                {% campaign_include 'upsell-payment-logos.html' wrapper_class="max-[991px]:hidden" %}
               </div>
             </div>
             </div>
 
-            <div class="cc-decline-wrapper">
-              <a data-next-upsell-action="skip" href="#" class="upsell-link cc-decline cc-upsell4">
-                <div class="next-icon cc-1-25em"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--carbon" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32"><path fill="currentColor" d="M16 2C8.2 2 2 8.2 2 16s6.2 14 14 14s14-6.2 14-14S23.8 2 16 2m0 26C9.4 28 4 22.6 4 16S9.4 4 16 4s12 5.4 12 12s-5.4 12-12 12"></path><path fill="currentColor" d="M21.4 23L16 17.6L10.6 23L9 21.4l5.4-5.4L9 10.6L10.6 9l5.4 5.4L21.4 9l1.6 1.6l-5.4 5.4l5.4 5.4z"></path></svg></div>
-                <div class="text-sm tw-600 cc-upsell4">{{ offer.decline_text | default: "No thank you, I don't want this one-time offer" }}</div>
+            <div class="mt-4 flex w-full justify-center">
+              <a data-next-upsell-action="skip" href="#" class="mx-auto flex items-center gap-1 text-brand-foreground underline max-[479px]:mx-0 max-[479px]:items-start max-[479px]:justify-start max-[479px]:text-left max-[479px]:text-base">
+                <div class="relative flex size-[1.25em] shrink-0 select-none items-center justify-center leading-none"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--carbon" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32"><path fill="currentColor" d="M16 2C8.2 2 2 8.2 2 16s6.2 14 14 14s14-6.2 14-14S23.8 2 16 2m0 26C9.4 28 4 22.6 4 16S9.4 4 16 4s12 5.4 12 12s-5.4 12-12 12"></path><path fill="currentColor" d="M21.4 23L16 17.6L10.6 23L9 21.4l5.4-5.4L9 10.6L10.6 9l5.4 5.4L21.4 9l1.6 1.6l-5.4 5.4l5.4 5.4z"></path></svg></div>
+                <div class="text-sm font-semibold max-[479px]:text-sm">{{ offer.decline_text | default: "No thank you, I don't want this one-time offer" }}</div>
               </a>
             </div>
           </div>

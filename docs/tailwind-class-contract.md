@@ -40,15 +40,23 @@ Reusable translations go in **CSS → utility map** below. Look there before re-
 | Reuse a token when values are the same job | Hairlines `#ddd` / `#dedede` / `#dfdfdf` → `border-brand-border`. Wash fills `#f5f5f5` (drawer + desktop summary) → `bg-neutral-drawer`. Inactive step grey `#6c757d` → `text-brand-gray`. Do not mint a token per hex. Drop leftover Webflow wrappers once the computed style is carried. |
 | Nearest existing token is still wrong | If next-core hardcodes a hex with **no** var and it is a different job (`#f5f5f5` drawer vs `neutral-100` / `brand-surface`), add one named token and reuse it. Do not `bg-[#f5f5f5]`. |
 
-### 4. Compile utilities as `important`. Do not `important`-freeze SDK inline styles.
+### 4. Compile utilities as `important`. Do not `important`-freeze SDK inline styles — or leftover next-core modifiers.
 
 `next-core.css` is **unlayered**. Tailwind v4 `@import "tailwindcss"` puts utilities in `@layer utilities`, which lose to unlayered `a` / `h2` / `h1`.
 
 `tailwind.input.css` therefore uses `@import "tailwindcss" important` so converted chrome wins. Do **not** keep `.button` / `.link` / `.receipt_*` as the styling source after the map is applied.
 
-`important` utilities also freeze properties the SDK writes inline. Never put height-0 / expanded-auto utilities on `[data-next-accordion-panel]` (AccordionEnhancer `style.height`). Spreedly reveal transform stays leftover, not `hidden`. Cosmetics on the same node can still be utilities. Those leftovers stay **unlayered and without `!important`**.
+`important` utilities also freeze properties the SDK writes inline **and** leftover next-core classes that share a Tailwind name. Never put height-0 / expanded-auto utilities on `[data-next-accordion-panel]` (AccordionEnhancer `style.height`). Spreedly reveal transform stays leftover, not `hidden`. Cosmetics on the same node can still be utilities. Those leftovers stay **unlayered and without `!important`**.
 
-Do not treat “the utility class is on the node” as success until computed style matches live.
+Known name collisions while both sheets load (shield in `tailwind.input.css`):
+
+| Leftover class | Tailwind `important` does | Live next-core |
+|---|---|---|
+| `.flex-col` + `.flex-horizontal-lg-up` | stays column | row from 992px |
+| `.container` | max-width 64rem, Tailwind padding | max-width 80rem, 2.5rem / 1.25rem pad |
+| `.trust-badge.invert` | `filter: invert(1)` (white lock + label) | layout-only modifier; filter none; `#000` label |
+
+Do not treat “the utility class is on the node” as success until computed style matches live. A chrome-only computed-style pass is not a page visual-parity pass — leftover offer/checkout still has to look like live.
 
 ### 5. Off-screen ≠ `display:none`.
 
@@ -147,7 +155,6 @@ These are not always toggled by JS, but selected-state CSS and Campaigns OS bran
 - `.bump-card` / `.bump__*` (PackageToggle / order bump)
 - `.payment-method` and descendants
 - `.checkout-reveal__panel` / `.checkout-reveal__cta`
-- `.next-bundle-qty*`
 - `.form-grid`, `.input-flds`, `.button` (when used with `.next-loading` / `.is-inactive`)
 - `.hide` / `.hide-tablet*` / `.show-tablet` until those breakpoints are utilities **and** no JS uses `.hide`
 
@@ -205,6 +212,43 @@ Source of values: `src/olympus/assets/css/next-core.css`.
 | `.footer_copy-info` | `flex w-full flex-row justify-between gap-2 max-[479px]:flex-col` | Column is **479**, not 767. |
 | `.footer_link-wrapper` | `flex justify-center gap-4 text-sm max-[479px]:flex-wrap max-[479px]:gap-x-4 max-[479px]:gap-y-2` | |
 | `.footer_legal-link` | `text-brand-dark underline` | Beats unlayered `a`. |
+| `.section.upsell-box` | `relative -mt-24 overflow-clip pb-16 pt-8` | Winning padding is the upsell-box override (`--spacing--2` / `--spacing--4`), not generic `.section`. |
+| `.section.upsell-box .container` | `relative z-[1] mx-auto block w-full max-w-7xl px-10 max-[991px]:px-0` | 991 override is **0**, not the usual `px-5`. |
+| `.upsell-wrapper` | `flex flex-col gap-4` | Keep `data-next-upsell="offer"`. |
+| `.upsell-container` | `overflow-hidden rounded-cards bg-brand-light shadow-[0_0_8px_0_rgba(0,0,0,0.4)] max-[991px]:rounded-none` | `--radius--cards`. |
+| `.grid-full` + `.flex-col` + `.flex-horizontal-lg-up` | `mx-auto flex w-full flex-col min-[992px]:flex-row min-[992px]:items-stretch min-[992px]:justify-center` | Convert the trio — do not leave leftover `flex-col` on this node. |
+| `.upsell-content__column` | `w-full max-w-[565px] overflow-hidden bg-white max-[991px]:max-w-none` | |
+| `.upsell-offer__card` | `flex flex-col items-start bg-white px-6 py-[30px] max-[767px]:w-full max-[767px]:px-[18px]` | 767 pad is 18px, not `px-4`. |
+| `.display-lg` | `m-0 text-balance text-[2.5rem] font-bold leading-[1.2] max-[991px]:text-[2rem]` | 991 and 767 both `--font-size--3xl` (2rem). |
+| `.review_component.cc-sm` + wrapper/stars | `mt-3 … text-sm leading-[1.3]`; stars `flex items-center text-brand-rating-star`; star `size-[1.2em]` | Token `--brand--color--rating-star`. 479 `mt-2.5`. |
+| `.divider_line._25` | `mb-[25px] mt-[25px] min-h-px w-full bg-neutral-divider max-[991px]:my-5 max-[767px]:mb-[18px] max-[767px]:mt-4` | Token `#e5e5e5`. |
+| `.divider_line.margin-32` | `mb-8 mt-8 min-h-px w-full bg-neutral-divider max-[991px]:my-[25px] max-[767px]:mb-[18px] max-[767px]:mt-4` | |
+| `.upsell-offer__price` | `text-[2.5rem] font-bold leading-none max-[767px]:text-[2rem]` | `--font-size--4xl` / `--font-size--3xl`. |
+| `.upsell-offer__price.diagonal-strike` | add `relative inline-block text-brand-gray after:absolute after:inset-x-0 after:top-1/2 after:origin-center after:-rotate-[10deg] after:border-t after:border-price-strike after:content-['']` | Strike `#F20404` → `price-strike`. Color `#6c757d` → `brand-gray`. |
+| `.upsell-offer__divider` | `h-[110px] min-w-[2px] rounded-[5px] bg-neutral-price-rule max-[767px]:h-20` | Token `#dbdbdb`. |
+| `.upsell-ships-info` | `mt-2.5 flex items-center rounded border-2 border-brand px-5 py-2.5 min-[992px]:mt-5` | |
+| `.upsell-offer__image-column` | `relative block w-full self-center overflow-hidden p-6 max-[991px]:order-first max-[991px]:max-w-none max-[991px]:px-8 max-[767px]:px-6` | |
+| `.upsell-link.cc-decline` | `mx-auto flex items-center gap-1 text-brand-foreground underline max-[479px]:mx-0 max-[479px]:items-start max-[479px]:justify-start max-[479px]:text-left max-[479px]:text-base` | `#1a1a1a` → `brand-foreground`. |
+| `.hide-tablet-up` / `.hide-tablet-down` | `min-[992px]:hidden` / `max-[991px]:hidden` | Payment-logo chrome only. Do not use on SDK-bound nodes. |
+| `.trust-badge` (no `.invert`) | `mt-4 flex items-center justify-center gap-1.5` | Never add Tailwind `invert` — next-core `.invert` is layout-only. |
+| `.next-bundle-qty` | `mb-6 flex w-full items-center justify-center gap-1.5 max-[991px]:mb-5 max-[767px]:mb-4` | Cosmetic only. JS/SDK read `data-next-bundle-qty-for` / `data-bundle-qty-*`, not this class. |
+| `.next-bundle-qty__label` | `flex min-w-0 items-center gap-2 font-semibold max-[767px]:mr-4 max-[767px]:gap-0 max-[767px]:leading-[1.2]` | |
+| `.next-bundle-qty__row` | `flex flex-nowrap items-center justify-center gap-3 rounded-lg border border-brand-light bg-white p-2` | Keep `data-next-bundle-qty-for` or `data-bundle-qty-for`. |
+| `.next-bundle-qty__btn` | `flex size-10 cursor-pointer items-center justify-center rounded border border-brand-light bg-brand-light text-brand next-disabled:cursor-not-allowed next-disabled:opacity-50 max-[767px]:size-8` | Drop the leftover class. Keep `.next-disabled` (SDK). Pills add `next-selected:border-brand next-selected:bg-brand next-selected:text-brand-text-inverse` and keep `.next-selected`. |
+| `.slider_component` | `relative flex w-full flex-col` | Cosmetic only. Keep `data-component="swiper"` / `data-variant="sw1"` / `[swiper="…"]`. |
+| `.slider_component-wrapper` | `flex flex-col gap-2` | |
+| `.swiper` (next-core extras) | add `w-full` | Keep the `swiper` class — Swiper JS/CSS hook. |
+| `.swiper-slide_inner` | `relative` | |
+| `.swiper-slide_inner` (thumb) | `relative` | Do **not** apply `.swiper-slide_inner.is-thumb` (70px circle) — that leftover never matched this markup (`is-thumb` is on the slide). |
+| `.swiper-slide_image-wrap` + `.is-square` | `relative flex w-full justify-center overflow-hidden` + Liquid aspect (`aspect-square` default; `aspect-video` / `aspect-[3/2]` / `aspect-[4/3]` from `swiper_aspect`) | Do not keep `.cover` / `.swiper-slide_image-wrap` — leftover aspect CSS keys off those names. |
+| `img.cover` | `size-full max-h-full object-cover` (or `object-contain` when a non-square aspect is set and `swiper_fit` is not `cover`) | |
+| `.swiper-thumbs-arrow` | `relative flex items-center justify-between gap-2` | |
+| `.swiper-thumbs-arrow .swiper__button-static` | `relative z-[1] flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-white bg-white text-brand-black transition-[box-shadow,color,border-color,transform] duration-200 active:shadow-swiper-nav-press max-[479px]:size-8` | Winning thumbs-arrow override (2.5rem / 479 → 2rem), not the generic 3rem black button. Shadow token `#2a255236`. |
+| `.swiper__button-icon` | `flex size-[1.25em] items-center justify-center max-[767px]:size-[0.8rem]` | |
+| `.slider_component__thumbs-wrap` | `z-[1] flex w-full max-w-full flex-1 flex-col items-center overflow-hidden rounded-[0.4rem_0_0.4rem_0.4rem]` | |
+| `.swiper-slide.is-thumb` | `min-w-0 cursor-pointer overflow-hidden border border-transparent grayscale transition-[filter] duration-[400ms] [&.swiper-slide-thumb-active]:border-brand-black [&.swiper-slide-thumb-active]:grayscale-0 focus-visible:border-2 focus-visible:border-brand-black max-[479px]:h-auto max-[479px]:w-auto` | Keep `swiper-slide` and `swiper-slide-thumb-active` (Swiper). Drop leftover `is-thumb`. |
+| thumbs `[swiper="slider-thumbs"]` init | add `opacity-0 pointer-events-none [&.swiper-initialized]:pointer-events-auto [&.swiper-initialized]:opacity-100 [&.swiper-initialized]:transition-opacity [&.swiper-initialized]:duration-200` | `.swiper-initialized` is Swiper-toggled. |
+| `[pb-animate="pulse-upsell"]` | `animate-pulse-upsell` | Theme keyframes match leftover `scale(0.9) ↔ 1` / 1.5s ease infinite. Keep `.button` for `.next-loading`. |
 
 ---
 
@@ -286,13 +330,14 @@ Receipt **chrome + checkout shell + order-summary cosmetics** are Tailwind utili
 
 ## Upsell pass (Apollo)
 
-Page chrome on `upsell-bundle-stepper.html`, `upsell-bundle-tier-pills.html`, `upsell-bundle-tier-cards.html` plus `upsell-header-bar.html` and shared `footer.html` is Tailwind utilities. Offer partials stay leftover (SDK/JS): `data-next-upsell*`, `data-next-bundle-*`, `.os-card` / `.next-selected`, `.next-bundle-qty*`, Swiper, accept `.button.next-loading`. `upsell-protection.html` is not in this worktree.
+Page chrome **and offer cosmetics** on the three Apollo bundle upsells are Tailwind utilities. `upsell-protection.html` is not in this worktree.
 
-**Left on `next-core.css` / page CSS:**
+**Left on `next-core.css` / SDK classes:**
 
-- Offer includes (`upsell-bundle-*-offer.html`) — `.upsell-box`, `.os-card*`, quantity, accept/decline
-- Tier-cards page `<style>` for `.cc-upsell-bundle-tier-*` + `.os-card.next-selected`
-- `upsells.js` / Swiper init
+- `data-next-upsell*`, `data-next-bundle-*`, `data-next-quantity-*`, `data-next-display="bundle.*"` / `package.*`
+- `.os-card` / `.os-option` / `.next-selected` (JS toggle; selected look is `next-selected:` utilities)
+- Accept `.button` (`.next-loading` leftover). Pulse is `animate-pulse-upsell`.
+- Swiper hooks only: `data-component="swiper"`, `data-variant="sw1"`, `swiper` / `swiper-wrapper` / `swiper-slide` / `swiper-slide-thumb-active` / `.swiper-initialized`, `[swiper="…"]`, `thumbsslider`. Gallery chrome is utilities.
 
 ---
 

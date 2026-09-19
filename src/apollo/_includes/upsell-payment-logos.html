@@ -1,5 +1,5 @@
-<div class="payment-img-wrapper {{ wrapper_class }}">
-  <div class="trust-badge invert"><img loading="lazy" src="{{ 'images/icons8-lock-24_1icons8-lock-24.png' | campaign_asset }}" alt="" class="trust-badge__icon">
-    <div class="badge-text-black">100% Encrypted &amp; Secure Checkout</div>
-  </div><img loading="lazy" src="{{ 'images/upsell-payment-logos.svg' | campaign_asset }}" alt="" class="credit-card__flags">
+<div class="flex flex-col gap-[5px] {{ wrapper_class }}">
+  <div class="mt-4 flex items-center justify-center gap-1.5"><img loading="lazy" src="{{ 'images/icons8-lock-24_1icons8-lock-24.png' | campaign_asset }}" alt="" class="w-5">
+    <div class="text-sm font-semibold text-brand-black max-[479px]:text-xs max-[479px]:leading-[15px]">100% Encrypted &amp; Secure Checkout</div>
+  </div><img loading="lazy" src="{{ 'images/upsell-payment-logos.svg' | campaign_asset }}" alt="" class="mx-auto w-[90%] max-w-[350px] max-[479px]:w-full">
 </div>

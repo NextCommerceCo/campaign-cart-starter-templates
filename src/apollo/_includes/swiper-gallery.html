@@ -30,39 +30,57 @@
 {% if _swiper_fit != 'cover' and _swiper_fit != 'contain' %}
   {% assign _swiper_fit = '' %}
 {% endif %}
+{% assign _main_aspect_class = 'aspect-square' %}
+{% if _swiper_aspect == '16-9' %}{% assign _main_aspect_class = 'aspect-video' %}
+{% elsif _swiper_aspect == '3-2' %}{% assign _main_aspect_class = 'aspect-[3/2]' %}
+{% elsif _swiper_aspect == '4-3' %}{% assign _main_aspect_class = 'aspect-[4/3]' %}
+{% endif %}
+{% assign _thumb_aspect_class = 'aspect-square' %}
+{% if _swiper_thumb_aspect == '16-9' %}{% assign _thumb_aspect_class = 'aspect-video' %}
+{% elsif _swiper_thumb_aspect == '3-2' %}{% assign _thumb_aspect_class = 'aspect-[3/2]' %}
+{% elsif _swiper_thumb_aspect == '4-3' %}{% assign _thumb_aspect_class = 'aspect-[4/3]' %}
+{% endif %}
+{% assign _main_fit_class = 'object-cover' %}
+{% if _swiper_aspect != '' and _swiper_fit != 'cover' %}
+  {% assign _main_fit_class = 'object-contain' %}
+{% endif %}
+{% assign _thumb_fit_class = 'object-cover' %}
+{% if _swiper_thumb_aspect != '' and _swiper_fit != 'cover' %}
+  {% assign _thumb_fit_class = 'object-contain' %}
+{% endif %}
 <div data-component="swiper" data-variant="{{ variant | default: 'sw1' }}"{% if _swiper_aspect != '' %} data-swiper-aspect="{{ _swiper_aspect }}"{% endif %}{% if _swiper_thumb_aspect != '' %} data-swiper-thumb-aspect="{{ _swiper_thumb_aspect }}"{% endif %}{% if _swiper_fit == 'cover' %}{% if _swiper_aspect != '' or _swiper_thumb_aspect != '' %} data-swiper-fit="cover"{% endif %}{% endif %}>
-  <div class="slider_component">
-    <div class="slider_component-wrapper">
-      <div swiper="slider-main" class="swiper">
-        <div class="swiper-wrapper">
+  <div class="relative flex w-full flex-col">
+    <div class="flex flex-col gap-2">
+      <div swiper="slider-main" class="swiper w-full">
+        <div class="swiper-wrapper w-full">
           {% for slide in main_slides %}
           <div class="swiper-slide">
-            <div class="swiper-slide_inner">
-              <div class="swiper-slide_image-wrap is-square"><img loading="eager" src="{{ slide.src | campaign_asset }}" alt="{{ slide.alt }}" class="cover"></div>
+            <div class="relative">
+              <div class="relative flex w-full justify-center overflow-hidden {{ _main_aspect_class }}"><img loading="eager" src="{{ slide.src | campaign_asset }}" alt="{{ slide.alt }}" class="size-full max-h-full {{ _main_fit_class }}"></div>
             </div>
           </div>
           {% endfor %}
         </div>
       </div>
-      <div class="swiper-thumbs-arrow">
-        <div swiper="prev-button" class="swiper__button-static">
-          <div class="swiper__button-icon"><svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.91316 12.9545L0 12.0028L0.91316 11.0511L9.16383 2.45175L10.077 1.5L11.8979 3.39789L10.9848 4.34964L4.93644 10.6592H22.7108H24V13.3464H22.7108H4.93644L10.9902 19.6504L11.9033 20.6021L10.0824 22.5L9.1692 21.5483L0.91316 12.9545Z" fill="currentColor"></path></svg></div>
+      <div class="relative flex items-center justify-between gap-2">
+        <div swiper="prev-button" class="relative z-[1] flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-white bg-white text-brand-black transition-[box-shadow,color,border-color,transform] duration-200 active:shadow-swiper-nav-press max-[479px]:size-8">
+          <div class="flex size-[1.25em] items-center justify-center max-[767px]:size-[0.8rem]"><svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.91316 12.9545L0 12.0028L0.91316 11.0511L9.16383 2.45175L10.077 1.5L11.8979 3.39789L10.9848 4.34964L4.93644 10.6592H22.7108H24V13.3464H22.7108H4.93644L10.9902 19.6504L11.9033 20.6021L10.0824 22.5L9.1692 21.5483L0.91316 12.9545Z" fill="currentColor"></path></svg></div>
         </div>
-        <div class="slider_component__thumbs-wrap">
-          <div thumbsslider="" swiper="slider-thumbs" class="swiper">
-            <div class="swiper-wrapper">
+        <div class="z-[1] flex w-full max-w-full flex-1 flex-col items-center overflow-hidden rounded-[0.4rem_0_0.4rem_0.4rem]">
+          <div thumbsslider="" swiper="slider-thumbs" class="swiper w-full opacity-0 pointer-events-none [&.swiper-initialized]:pointer-events-auto [&.swiper-initialized]:opacity-100 [&.swiper-initialized]:transition-opacity [&.swiper-initialized]:duration-200 [&:not(.swiper-initialized)_.swiper-wrapper]:flex [&:not(.swiper-initialized)_.swiper-wrapper]:flex-row [&:not(.swiper-initialized)_.swiper-wrapper]:overflow-hidden [&:not(.swiper-initialized)_.swiper-slide]:min-w-0 [&:not(.swiper-initialized)_.swiper-slide]:overflow-hidden">
+            <div class="swiper-wrapper w-full">
               {% for thumb in thumbs %}
-              <div class="swiper-slide is-thumb{% if forloop.first %} swiper-slide-thumb-active{% endif %}">
-                <div class="swiper-slide_inner">
-                  <div class="swiper-slide_image-wrap"><img loading="eager" src="{{ thumb.src | campaign_asset }}" alt="{{ thumb.alt }}" class="cover"></div>
+              <div class="swiper-slide min-w-0 cursor-pointer overflow-hidden border border-transparent grayscale transition-[filter] duration-[400ms] [&.swiper-slide-thumb-active]:border-brand-black [&.swiper-slide-thumb-active]:grayscale-0 focus-visible:border-2 focus-visible:border-brand-black max-[479px]:h-auto max-[479px]:w-auto{% if forloop.first %} swiper-slide-thumb-active{% endif %}">
+                <div class="relative">
+                  <div class="relative flex w-full justify-center overflow-hidden {{ _thumb_aspect_class }}"><img loading="eager" src="{{ thumb.src | campaign_asset }}" alt="{{ thumb.alt }}" class="size-full max-h-full {{ _thumb_fit_class }}"></div>
                 </div>
               </div>
               {% endfor %}
             </div>
           </div>
         </div>
-        <div swiper="next-button" class="swiper__button-static">
-          <div class="swiper__button-icon"><svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M23.0868 12.9545L24 12.0028L23.0868 11.0511L14.8362 2.45175L13.923 1.5L12.1021 3.39789L13.0152 4.34964L19.0636 10.6592H1.28917H0V13.3464H1.28917H19.0582L13.0098 19.6504L12.0967 20.6021L13.9176 22.5L14.8308 21.5483L23.0868 12.9545Z" fill="currentColor"></path></svg></div>
+        <div swiper="next-button" class="relative z-[1] flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-white bg-white text-brand-black transition-[box-shadow,color,border-color,transform] duration-200 active:shadow-swiper-nav-press max-[479px]:size-8">
+          <div class="flex size-[1.25em] items-center justify-center max-[767px]:size-[0.8rem]"><svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M23.0868 12.9545L24 12.0028L23.0868 11.0511L14.8362 2.45175L13.923 1.5L12.1021 3.39789L13.0152 4.34964L19.0636 10.6592H1.28917H0V13.3464H1.28917H19.0582L13.0098 19.6504L12.0967 20.6021L13.9176 22.5L14.8308 21.5483L23.0868 12.9545Z" fill="currentColor"></path></svg></div>
         </div>
       </div>
     </div>

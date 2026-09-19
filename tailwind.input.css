@@ -19,6 +19,8 @@
 @source "./src/landing/**/*.html";
 
 @custom-variant next-expanded (&:is(.next-expanded));
+@custom-variant next-selected (&:is(.next-selected));
+@custom-variant next-disabled (&:is(.next-disabled));
 
 @theme inline {
   --font-sans: 'Plus Jakarta Sans', sans-serif;
@@ -40,6 +42,16 @@
   --color-brand-cta:                var(--brand--color--cta-primary);
   --color-brand-light:              var(--brand--color--primary-light);
   --radius-button:                  var(--radius--button);
+  --radius-cards:                   var(--radius--cards);
+  --color-brand-rating-star:        var(--brand--color--rating-star);
+  --color-component-outline:        var(--component--color--outline);
+  /* Hardcoded next-core hexes with no Campaigns OS var — named so we never
+     drop arbitrary hex in markup. Same job → reuse; different job → new token. */
+  --color-neutral-divider:          var(--neutral--divider, #e5e5e5);
+  --color-neutral-price-rule:       var(--neutral--price-rule, #dbdbdb);
+  --color-price-strike:             var(--price--strike, #F20404);
+  --color-neutral-hint:             var(--neutral--hint, #5c5c5e);
+  --color-neutral-compare:          var(--neutral--compare, #888);
   --color-brand-foreground:         var(--brand--color--foreground);
   --color-brand-background:         var(--brand--color--background);
   --color-brand-surface:            var(--brand--color--surface);
@@ -57,6 +69,13 @@
   --color-system-success:           var(--system-colors--success);
   --color-system-success-medium:    var(--system-colors--success-medium);
   --color-system-destructive:       var(--system-colors--destructive);
+  --shadow-swiper-nav-press:        0 0 1rem var(--swiper--nav-press-shadow, #2a255236);
+  --animate-pulse-upsell:           pulse-upsell 1.5s ease infinite;
+
+  @keyframes pulse-upsell {
+    0%, 100% { transform: scale(0.9); }
+    50% { transform: scale(1); }
+  }
 }
 
 /*
@@ -73,5 +92,62 @@
     height: 0;
     overflow: hidden;
     transition: height 0.2s ease-out;
+  }
+}
+
+/*
+  Collision shield — leftover next-core names vs important utilities.
+  Must live in the utilities layer: unlayered !important loses to
+  layered !important (cascade-layer reverse). Same layer + later
+  source order restores next-core desktop row + 80rem site container.
+  Avoid utility tokens in comments — the compiler scans this file.
+*/
+@layer utilities {
+  .container {
+    z-index: 1 !important;
+    width: 100% !important;
+    max-width: 80rem !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 2.5rem !important;
+    padding-right: 2.5rem !important;
+    display: block !important;
+    position: relative !important;
+  }
+  .container.cc-small { max-width: 62.5rem !important; }
+  .container.cc-medium { max-width: 67.5rem !important; }
+  .container.cc-tiny { max-width: 50rem !important; }
+  .container.cc-large { max-width: 90rem !important; }
+  .container.cc-full,
+  .container.cc-0 { max-width: none !important; }
+  .container.cc-0 { padding-left: 0 !important; padding-right: 0 !important; }
+
+  @media (max-width: 991px) {
+    .container {
+      padding-left: 1.25rem !important;
+      padding-right: 1.25rem !important;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .flex-horizontal-lg-up {
+      display: flex !important;
+      flex-direction: row !important;
+      justify-content: center !important;
+      align-items: stretch !important;
+    }
+  }
+  @media (min-width: 768px) {
+    .flex-horizontal-md-up {
+      display: flex !important;
+      flex-direction: row !important;
+      justify-content: center !important;
+      align-items: stretch !important;
+    }
+  }
+
+  /* next-core trust-badge modifier is layout-only, not a color filter */
+  .trust-badge.invert {
+    filter: none !important;
   }
 }
