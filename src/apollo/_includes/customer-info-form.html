@@ -33,8 +33,8 @@
 {% assign sec_title = section_title | default: 'Step 2: Customer Information' -%}
 {% if is_first == nil %}{% assign is_first = true %}{% endif -%}
 {% if show_phone == nil %}{% assign show_phone = true %}{% endif -%}
-<div data-next-catalog-component="customer-info-form" class="form-section{% if is_first %} form-section--first{% endif %}">
-  <h2 class="form-section__title">{{ sec_title }}</h2>
+<div data-next-catalog-component="customer-info-form" class="relative flex flex-col gap-4 max-[479px]:w-full">
+  <h2 class="m-0 text-lg tracking-[-0.01em]">{{ sec_title }}</h2>
   <div class="form-grid">
     <div data-next-component="shipping-field-row" class="form-grid__row">
       <div class="form-group">

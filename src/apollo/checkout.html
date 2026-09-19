@@ -211,10 +211,10 @@ bundles:
                     {% campaign_include 'promo-timer.html' promo_timer=promo_timer %}
                     <div class="checkout-form{% if checkout_reveal %} checkout-form--reveal{% endif %}">
                       <form data-next-checkout="form" id="combo_form" method="post">
-                        <div class="form-content">
-                          <div class="form-sections">
-                            <div class="form-section grid-row-gap2 form-section--first">
-                              <h2 class="form-section__title">Step 1: Pick Your Bundle Deal</h2>
+                        <div class="flex w-full max-w-full flex-col items-stretch justify-center">
+                          <div class="relative flex min-h-0 w-full flex-col gap-8 overflow-visible max-[479px]:gap-4">
+                            <div class="relative flex flex-col gap-8 max-[479px]:w-full">
+                              <h2 class="m-0 text-lg tracking-[-0.01em]">Step 1: Pick Your Bundle Deal</h2>
                               {% comment %} v0 catalog: bundle-selector partial. Canonical 3-tier defaults live in page frontmatter so CampaignSpec package/shipping ids stay visible.
                                    Reference variant (data-next-bundles= JSON config-driven) preserved below as commented reference. {% endcomment %}
                               {% campaign_include 'bundle-selector.html' selector_id='main' card_style=bundle_card_style packages=packages shipping_methods=shipping_methods bundles=bundles %}
@@ -286,11 +286,11 @@ bundles:
                             {% campaign_include 'bump-check03.html' order_bump=order_bump packages=packages %}
                             {% endif %}
                             {% if checkout_reveal %}
-                            <div class="submit-section checkout-reveal__cta" data-checkout-reveal-cta>
-                              <div class="submit-section__button"><button type="button" class="submit-button" data-checkout-reveal-trigger>
-                                <div class="submit-button__content">
-                                  <div class="submit-button__text">
-                                    <div class="submit-button__main-text">{{ checkout_reveal_cta | default: 'Add to Cart' }}</div>
+                            <div class="checkout-reveal__cta" data-checkout-reveal-cta>
+                              <div class="mt-[-1rem] flex flex-col gap-2 max-[479px]:mt-0"><button type="button" class="relative flex w-full min-h-0 items-center justify-center rounded-button border-2 border-brand-cta bg-brand-cta px-6 py-[0.875rem] text-center font-semibold text-brand-text-inverse no-underline" data-checkout-reveal-trigger>
+                                <div class="relative flex w-full flex-col items-center justify-center rounded-[3px] font-bold leading-none no-underline">
+                                  <div class="relative z-[1] flex w-full flex-wrap items-center justify-center gap-4">
+                                    <div class="text-base font-bold uppercase leading-[1.2]">{{ checkout_reveal_cta | default: 'Add to Cart' }}</div>
                                   </div>
                                 </div>
                               </button></div>
@@ -298,7 +298,7 @@ bundles:
                             {% endif %}
                             <div class="checkout-reveal__panel" data-checkout-reveal-panel>
 
-                            <div data-next-component="shipping-form" class="form-sections">
+                            <div data-next-component="shipping-form" class="relative flex min-h-0 w-full flex-col gap-8 overflow-visible max-[479px]:gap-4">
                               {% campaign_include 'customer-info-form.html' %}
                               {% campaign_include 'shipping-address-form.html' %}
                             </div>
@@ -322,16 +322,16 @@ bundles:
                           {% endif %}
                           </div>
                         {% endunless %}
-                            <div class="form-section form-section--last">
-                              <div class="form-section__header">
-                                <h1 class="form-section__title">4. Payment Method</h1>
-                                <div class="form-section__subtitle">All transactions are secure and encrypted.<br></div>
+                            <div class="relative flex flex-col gap-4 max-[479px]:w-full">
+                              <div class="flex flex-col gap-2">
+                                <h1 class="m-0 text-lg tracking-[-0.01em]">4. Payment Method</h1>
+                                <div class="text-[0.925rem]">All transactions are secure and encrypted.<br></div>
 
                               </div>
                               {% campaign_include 'express-checkout.html' show_title=false %}
                               {% campaign_include 'payment-methods.html' %}
                             </div>
-                            <div class="form-section form-section--last">
+                            <div class="relative flex flex-col gap-4 max-[479px]:w-full">
                               <div class="cart-box cart-box--card">
                                 {% assign summary_variant = cart_summary_variant | default: '01' %}
                                 {% if summary_variant == '02' %}
@@ -355,17 +355,17 @@ bundles:
 
                       
                     </div>
-                    <div class="checkout-trust-bar">
-                      <div class="trust-badges">
-                        <div class="trust-badge__item">
-                          <div class="trust-badge--icon"><svg width="100%" height="100%" viewBox="0 0 21 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <div class="flex flex-col gap-4 max-[991px]:px-5 max-[991px]:py-4">
+                      <div class="flex justify-center gap-8 max-[479px]:gap-4">
+                        <div class="flex items-center gap-2 text-neutral-hint">
+                          <div class="flex w-5 max-[479px]:w-3.5"><svg width="100%" height="100%" viewBox="0 0 21 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                               <path d="M10.2857 0.5C6.97714 0.5 4.28571 3.23949 4.28571 6.60714V10.0969H2.57143C1.14857 10.0969 0 11.266 0 12.7143V22.3112C0 23.7595 1.14857 24.9286 2.57143 24.9286H18C19.4229 24.9286 20.5714 23.7595 20.5714 22.3112V12.7143C20.5714 11.266 19.4229 10.0969 18 10.0969H16.2857V6.60714C16.2857 3.23949 13.5943 0.5 10.2857 0.5ZM6 6.60714C6 4.19918 7.92 2.2449 10.2857 2.2449C12.6514 2.2449 14.5714 4.19918 14.5714 6.60714V10.0969H6V6.60714ZM18.8571 12.7143V22.3112C18.8571 22.7911 18.4714 23.1837 18 23.1837H2.57143C2.1 23.1837 1.71429 22.7911 1.71429 22.3112V12.7143C1.71429 12.2344 2.1 11.8418 2.57143 11.8418H18C18.4714 11.8418 18.8571 12.2344 18.8571 12.7143Z" fill="#5C5C5E"></path>
                               <path d="M10.2857 13.587C8.87138 13.587 7.71423 14.7473 7.71423 16.1869C7.71423 17.3123 8.41709 18.3069 9.45423 18.6646C9.43709 18.717 9.42852 18.7606 9.42852 18.813V20.5579C9.42852 21.0377 9.81423 21.4303 10.2857 21.4303C10.7571 21.4303 11.1428 21.0377 11.1428 20.5579V18.813C11.1428 18.7606 11.1257 18.7083 11.1171 18.6646C12.4628 18.2022 13.1828 16.7191 12.7285 15.3581C12.3771 14.2937 11.3914 13.5783 10.2942 13.587H10.2857ZM10.2857 17.0768C9.81423 17.0768 9.42852 16.6842 9.42852 16.2043C9.42852 15.7245 9.81423 15.3319 10.2857 15.3319C10.7571 15.3319 11.1428 15.7245 11.1428 16.2043C11.1428 16.6842 10.7571 17.0768 10.2857 17.0768Z" fill="#5C5C5E"></path>
                             </svg></div>
-                          <div class="trust-badge--text">SECURE<br>SSL ENCRYPTION</div>
+                          <div class="text-xs font-semibold leading-none text-neutral-hint max-[479px]:text-[8px]">SECURE<br>SSL ENCRYPTION</div>
                         </div>
-                        <div class="trust-badge__item">
-                          <div class="trust-badge--icon"><svg width="100%" height="100%" viewBox="0 0 24 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <div class="flex items-center gap-2 text-neutral-hint">
+                          <div class="flex w-5 max-[479px]:w-3.5"><svg width="100%" height="100%" viewBox="0 0 24 27" fill="none" xmlns="http://www.w3.org/2000/svg">
                               <g clip-path="url(#clip0_213_4831)">
                                 <path d="M11.4991 0.503307C11.285 0.520446 11.0854 0.617568 10.9379 0.771819C8.34589 3.47122 4.63146 4.69666 0.8505 4.78807C0.378964 4.79664 0 5.17941 0 5.64502C0 16.177 4.67196 24.1466 11.3198 26.1776C11.4846 26.2262 11.6611 26.2262 11.826 26.1776C18.4738 24.1495 23.1429 16.1798 23.1429 5.64502C23.1429 5.17941 22.7639 4.79664 22.2924 4.78807C18.5114 4.69666 14.797 3.47122 12.2021 0.771819C12.0198 0.580433 11.7624 0.483312 11.4962 0.503307H11.4991ZM11.5714 2.52857C14.2734 4.99659 17.8026 6.16776 21.3609 6.41057C21.1352 15.8742 16.9203 22.6213 11.5714 24.4237C6.22254 22.6241 2.00475 15.8742 1.782 6.41342C5.34021 6.17062 8.87239 4.99945 11.5714 2.53143V2.52857ZM16.4546 9.34991C16.2289 9.3642 16.0177 9.46132 15.8673 9.627L10.4056 15.2772L7.84832 12.752C7.50986 12.4178 6.95732 12.4178 6.61886 12.752C6.28039 13.0862 6.28039 13.6318 6.61886 13.966L9.801 17.1082C10.1424 17.4424 10.692 17.4367 11.0276 17.1025C11.0305 17.0996 11.0363 17.0939 11.0391 17.0911L17.1141 10.8067C17.4497 10.4668 17.4439 9.92693 17.0997 9.59557C16.929 9.4299 16.6947 9.34134 16.4546 9.35277V9.34991Z" fill="#5C5C5E"></path>
                               </g>
@@ -375,9 +375,9 @@ bundles:
                                 </clipPath>
                               </defs>
                             </svg></div>
-                          <div class="trust-badge--text">GUARANTEED<br>SAFE CHECKOUT</div>
+                          <div class="text-xs font-semibold leading-none text-neutral-hint max-[479px]:text-[8px]">GUARANTEED<br>SAFE CHECKOUT</div>
                         </div>
-                      </div><img loading="lazy" src="{{ 'images/credit-card-flags.svg' | campaign_asset }}" alt="" class="credit-card__flags">
+                      </div><img loading="lazy" src="{{ 'images/credit-card-flags.svg' | campaign_asset }}" alt="" class="mx-auto w-[90%] max-w-[350px] max-[479px]:w-full">
                     </div>
                     <div class="min-[992px]:hidden">
                       {% campaign_include 'guarantee.html' guarantee=guarantee %}

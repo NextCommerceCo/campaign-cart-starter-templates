@@ -4,26 +4,27 @@
   Layout mirrors bump-check03: radio + image + title, one price line + savings;
   badges grouped at the top-right edge (tier pill + red % OFF at the end).
   Reads the shared card arg contract (see bundle-card.html). SDK attrs preserved.
+  Keep data-next-bundle-* / .next-selected / .os-card__radio / .radio-inner.
 {%- endcomment -%}
-<div data-next-bundle-card data-next-bundle-id="{{ bundle_id }}"{% if shipping_id and shipping_id != "" %} data-next-shipping-id="{{ shipping_id }}"{% endif %} data-next-bundle-items='{{ items }}'{% if selected %} data-next-selected="true"{% endif %} role="button" class="bundle-card">
-  <div class="bundle-card__badges">
-    {% if badge_text and badge_text != "" %}<div class="bundle-card__badge bundle-card__badge--{{ badge_tone | default: 'popular' }}">{{ badge_text }}</div>{% endif %}
-    <div data-next-discounts="offer" data-next-bundle-display="hasDiscount" class="bundle-card__badge bundle-card__badge--save"><template><span>{discount.percentage} OFF</span></template></div>
-    <div data-next-discounts="voucher" data-next-show="cart.hasCoupon()" class="bundle-card__badge bundle-card__badge--save" style="display:none"><template><span>+{discount.percentage}</span></template></div>
+<div data-next-bundle-card data-next-bundle-id="{{ bundle_id }}"{% if shipping_id and shipping_id != "" %} data-next-shipping-id="{{ shipping_id }}"{% endif %} data-next-bundle-items='{{ items }}'{% if selected %} data-next-selected="true"{% endif %} role="button" class="group relative cursor-pointer rounded-cards border-2 border-brand-border bg-brand-background p-4 next-selected:border-brand next-selected:bg-brand-lighter next-selected:[&_.radio-inner]:[transform:scale(1)]{% if selected %} next-selected{% endif %}">
+  <div class="absolute right-4 top-0 z-[1] flex -translate-y-1/2 items-center gap-[0.4rem]">
+    {% if badge_text and badge_text != "" %}<div class="inline-flex items-center whitespace-nowrap rounded-md px-[0.6rem] py-[0.3rem] text-xs font-extrabold uppercase leading-none{% if badge_tone == 'deal' %} bg-pill-secondary-surface text-pill-secondary{% else %} bg-pill-primary-surface text-pill-primary{% endif %}">{{ badge_text }}</div>{% endif %}
+    <div data-next-discounts="offer" data-next-bundle-display="hasDiscount" class="inline-flex items-center whitespace-nowrap rounded-md bg-system-destructive px-[0.6rem] py-[0.3rem] text-xs font-extrabold uppercase leading-none text-brand-white"><template><span>{discount.percentage} OFF</span></template></div>
+    <div data-next-discounts="voucher" data-next-show="cart.hasCoupon()" class="inline-flex items-center whitespace-nowrap rounded-md bg-system-destructive px-[0.6rem] py-[0.3rem] text-xs font-extrabold uppercase leading-none text-brand-white" style="display:none"><template><span>+{discount.percentage}</span></template></div>
   </div>
-  <div class="bundle-card__main" data-next-package-id="{{ package_id }}">
-    <div class="os-card__radio" aria-hidden="true"><div class="radio-inner"></div></div>
-    <img data-next-display="package.image" loading="lazy" alt="" class="bundle-card__image">
-    <div class="bundle-card__copy">
-      <div class="bundle-card__title">{{ title_prefix }}<span data-next-display="package.name">Package</span></div>
-      {% if subtitle and subtitle != "" %}<div class="bundle-card__subtitle">{{ subtitle }}</div>{% endif %}
+  <div class="grid grid-cols-[auto_auto_minmax(0,1fr)_auto] items-center gap-x-5 gap-y-4 max-[767px]:grid-cols-[auto_auto_minmax(0,1fr)] max-[767px]:gap-x-4 max-[767px]:gap-y-[0.175rem]" data-next-package-id="{{ package_id }}">
+    <div class="os-card__radio flex size-5 shrink-0 items-center justify-center rounded-full shadow-[0_0_0_2px_var(--brand--color--border)] group-[.next-selected]:shadow-[0_0_0_2px_var(--brand--color--primary)]" aria-hidden="true"><div class="radio-inner static size-2.5 rounded-full bg-brand [transform:scale(0)] transition-transform duration-150 ease-in-out"></div></div>
+    <img data-next-display="package.image" loading="lazy" alt="" class="size-[84px] rounded-lg object-cover max-[767px]:size-16">
+    <div class="flex min-w-0 flex-col gap-1">
+      <div class="text-lg font-bold leading-[1.2] text-brand-text-primary max-[767px]:text-base">{{ title_prefix }}<span data-next-display="package.name">Package</span></div>
+      {% if subtitle and subtitle != "" %}<div class="text-sm leading-[1.35] text-brand-text-secondary">{{ subtitle }}</div>{% endif %}
     </div>
-    <div class="bundle-card__price">
-      <div class="bundle-card__price-row">
-        <span data-next-bundle-display="originalPrice" class="bundle-card__price-reg">--</span>
-        <span data-next-bundle-display="price" class="bundle-card__price-total">--</span>
+    <div class="flex min-w-max flex-col items-end gap-[0.35rem] text-right max-[767px]:col-span-full max-[767px]:items-start max-[767px]:text-left">
+      <div class="flex items-baseline gap-[0.375rem]">
+        <span data-next-bundle-display="originalPrice" class="text-base font-bold text-brand-text-muted line-through">--</span>
+        <span data-next-bundle-display="price" class="text-xl font-extrabold text-brand-text-primary max-[767px]:text-lg">--</span>
       </div>
-      <div data-next-bundle-display="hasDiscount" class="bundle-card__savings">Instant savings: <span data-next-bundle-display="discountAmount">--</span></div>
+      <div data-next-bundle-display="hasDiscount" class="text-sm font-bold text-system-success-medium">Instant savings: <span data-next-bundle-display="discountAmount">--</span></div>
     </div>
   </div>
 </div>

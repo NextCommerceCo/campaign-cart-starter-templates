@@ -42,7 +42,7 @@
 {% assign card_style = card_style | default: 'product' -%}
 {% if include_shipping == nil %}{% assign include_shipping = true %}{% endif -%}
 {% if await == nil %}{% assign await = true %}{% endif -%}
-{% if card_style == 'classic' %}{% assign cards_class = 'os-cards__vertical os--gap-xl' %}{% elsif card_style == 'tiles' %}{% assign cards_class = 'bundle-tiles' %}{% else %}{% assign cards_class = 'bundle-cards' %}{% endif -%}
+{% if card_style == 'classic' %}{% assign cards_class = 'os-cards__vertical os--gap-xl' %}{% elsif card_style == 'tiles' %}{% assign cards_class = 'bundle-tiles' %}{% else %}{% assign cards_class = 'flex flex-col gap-4' %}{% endif -%}
 <div data-next-catalog-component="bundle-selector" data-component="bundle-selector" data-next-bundle-selector data-next-selector-id="{{ sel_id }}" data-next-selection-mode="{{ sel_mode }}"{% if include_shipping %} data-next-include-shipping="true"{% endif %} class="os-option"{% if await %} data-next-await=""{% endif %}>
   <div class="{{ cards_class }}">
     {% if bundles -%}

@@ -262,7 +262,21 @@ Source of values: `src/olympus/assets/css/next-core.css`.
 | `.promo-timer` | `bg-brand-black p-2` | Keep `data-next-element="timer"`. Pill: `min-w-[71px] rounded-sm bg-promo-timer-pill`. |
 | `.as-seen-in` | `flex w-full flex-col gap-6` | Heading `text-base font-bold uppercase text-brand-foreground`. Drop leftover `as-seen-in--scroll`; Liquid `scroll` arg still chooses markup. Scroll track: `animate-as-seen-in-scroll hover:[animation-play-state:paused] motion-reduce:animate-none`. |
 | `.guarantee-section--apollo` | `flex items-center justify-start gap-4 rounded-sm bg-brand-light px-5 py-4` | Badge `w-20`. |
-| `.reviews-slider` wrapper | `w-full` | Keep `swiper` / `data-component="reviews-swiper"` / `swiper-slide`. Do **not** put `w-auto`/`h-auto` important on slides (freezes Swiper inline width). Card stays leftover `.checkout-review.checkout-review--slide`. Scrollbar: `swiper-scrollbar static … bg-neutral-300 [&_.swiper-scrollbar-drag]:bg-brand-dark`. |
+| `.reviews-slider` wrapper | `w-full` | Keep `swiper` / `data-component="reviews-swiper"` / `swiper-slide`. Do **not** put `w-auto`/`h-auto` important on slides (freezes Swiper inline width). Scrollbar: `swiper-scrollbar static … bg-neutral-300 [&_.swiper-scrollbar-drag]:bg-brand-dark`. |
+| `.checkout-review--slide` | `flex h-full w-[340px] max-w-[85vw] flex-col text-left rounded border border-brand-border bg-white p-4 max-[767px]:gap-4 max-[767px]:p-8` | Drop leftover card classes. Title `text-sm font-bold`; body `text-sm`; meta `mt-3 flex … gap-[7px] text-xs leading-[1.2]`. |
+| `.form-content` | `flex w-full max-w-full flex-col items-stretch justify-center` | |
+| `.form-sections` | `relative flex min-h-0 w-full flex-col gap-8 overflow-visible max-[479px]:gap-4` | Keep `data-next-component="shipping-form"` on the shipping wrapper. |
+| `.form-section` | `relative flex flex-col gap-4 max-[479px]:w-full` | Step 1 uses `gap-8` (was `.grid-row-gap2`). Leave `.form-grid` / `.input-flds`. |
+| `.form-section__title` | `m-0 text-lg tracking-[-0.01em]` | `--font-size--lg` is 1.125rem. Beats leftover `h1`/`h2`. |
+| `.form-section__header` / `__subtitle` | `flex flex-col gap-2` / `text-[0.925rem]` | |
+| `.bundle-cards` | `flex flex-col gap-4` | Keep `os-option` + `data-next-bundle-*`. |
+| `.bundle-card` (product) | `group relative cursor-pointer rounded-cards border-2 border-brand-border bg-brand-background p-4 next-selected:border-brand next-selected:bg-brand-lighter` | Keep `.next-selected` (SDK). Token `--brand--color--primary-lighter`. Do not keep leftover `.bundle-card` (next-core would still paint). |
+| `.bundle-card` radio | radio: `os-card__radio flex size-5 … shadow-[0_0_0_2px_var(--brand--color--border)] group-[.next-selected]:shadow-[0_0_0_2px_var(--brand--color--primary)]`; inner: `[transform:scale(0)]` + card `next-selected:[&_.radio-inner]:[transform:scale(1)]` | Do **not** use `[&_.os-card__radio]` — the `__` is parsed as a space. Do **not** use v4 `scale-0` (that is the `scale` property, not `transform`). |
+| `.bundle-card__badge--popular` / `--deal` / `--save` | `bg-pill-primary-surface text-pill-primary` / `bg-pill-secondary-surface text-pill-secondary` / `bg-system-destructive text-brand-white` | Shared badge chrome: `inline-flex … rounded-md px-[0.6rem] py-[0.3rem] text-xs font-extrabold uppercase leading-none`. |
+| `.checkout-trust-bar` | `flex flex-col gap-4 max-[991px]:px-5 max-[991px]:py-4` | Icons `w-5 max-[479px]:w-3.5`; copy `text-xs font-semibold leading-none text-neutral-hint max-[479px]:text-[8px]`. Never add Tailwind `invert`. |
+| `.credit-card__flags` | `mx-auto w-[90%] max-w-[350px] max-[479px]:w-full` | |
+| `.submit-section` | `mt-[-1rem] flex flex-col gap-2 max-[479px]:mt-0` | Keep `.submit-button__loader` / `.three-quarter-spinner` leftover (SDK `data-pb-element`). |
+| `.submit-button` | `relative flex w-full min-h-[5rem] items-center justify-center rounded-button border-2 border-brand-cta bg-brand-cta px-8 py-4 text-center font-semibold text-brand-text-inverse no-underline` | Reveal trigger: `min-h-0 px-6 py-[0.875rem]` + label `text-base uppercase`. Do **not** put display utilities on `.checkout-reveal__cta` (`important` `flex` beats leftover `display:none`). |
 
 ---
 
@@ -357,9 +371,9 @@ Page chrome **and offer cosmetics** on the three Apollo bundle upsells are Tailw
 
 ## Checkout chrome pass (Apollo)
 
-Checkout **page chrome** is Tailwind utilities. Form, bundles, bumps, payment, trust bar, submit, and reveal stay leftover.
+Checkout **page chrome**, product bundle cards, form-section titles, trust bar, reviews cards, and submit cosmetics are Tailwind utilities. Bumps, payment methods, cart-summary `.cart-item*`, inputs (`.form-grid` / `.input-flds`), and reveal park/unpark stay leftover.
 
-**Tokens added:** `--color-brand-white`, `--color-neutral-300`, `--color-neutral-checkout` (`#fcfcfc`), `--color-promo-timer-pill` (`rgba(255,255,255,0.19)`), `--radius-sm`, `--animate-as-seen-in-scroll`.
+**Tokens added:** `--color-brand-white`, `--color-neutral-300`, `--color-neutral-checkout` (`#fcfcfc`), `--color-promo-timer-pill` (`rgba(255,255,255,0.19)`), `--radius-sm`, `--animate-as-seen-in-scroll`, `--color-brand-lighter`, `--color-pill-primary` / `--color-pill-primary-surface`, `--color-pill-secondary` / `--color-pill-secondary-surface`.
 
 **Verified vs live** (`nextcommerce-campaign-templates.netlify.app/apollo/checkout/`):
 
@@ -372,8 +386,12 @@ Checkout **page chrome** is Tailwind utilities. Form, bundles, bumps, payment, t
 
 - `data-next-*`, `data-next-element="timer"`, `data-checkout-reveal-*`
 - `.checkout-form--reveal` / `.is-revealed` / `.checkout-reveal__panel` / `.checkout-reveal__cta` (Spreedly: off-screen, never `hidden`)
-- `.os-card*` bundle hooks, form sections, order bumps, payment methods, `.checkout-trust-bar`, submit
-- `.checkout-review` / `.checkout-review--slide` (reviews card; Swiper hooks stay)
+- `.os-card__radio` / `.radio-inner` / `.next-selected` on product bundle cards
+- `.form-grid` / `.input-flds` / `.label-checkout` (SDK validation)
+- `.bump-card*` / `[data-component="prepurchase-upsell"]` (`.next-active` / `.next-in-cart`)
+- `.payment-method*` (generated shared partial)
+- `.cart-box` / `.cart-item*` (SDK clones summary lines)
+- `.submit-button__loader` / `.three-quarter-spinner`
 - `swiper` / `swiper-slide` / `swiper-scrollbar` / `data-component="reviews-swiper"`
 
 ---

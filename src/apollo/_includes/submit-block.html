@@ -38,17 +38,17 @@
 {% assign cta_key = cta_i18n_key | default: 'complete_purchase' -%}
 {% assign sub_key = subtext_i18n_key | default: 'try_risk_free' -%}
 {% assign payment_mode = button_attr | default: 'combo' -%}
-<div data-next-catalog-component="submit-block" class="submit-section">
-  <div class="submit-section__disclaimer">{{ disc }}</div>
-  <div class="submit-section__button"><button os-checkout-payment="{{ payment_mode }}" data-action="submit" type="submit" class="submit-button">
+<div data-next-catalog-component="submit-block" class="mt-[-1rem] flex flex-col gap-2 max-[479px]:mt-0">
+  <div class="mt-2.5 w-full text-center text-xs text-brand-foreground/90">{{ disc }}</div>
+  <div class="flex flex-col gap-2"><button os-checkout-payment="{{ payment_mode }}" data-action="submit" type="submit" class="relative flex w-full min-h-[5rem] items-center justify-center rounded-button border-2 border-brand-cta bg-brand-cta px-8 py-4 text-center font-semibold text-brand-text-inverse no-underline transition-[background-color,border] duration-[120ms]">
       <div data-pb-element="checkout-button-spinner" class="submit-button__loader">
         <div class="three-quarter-spinner black"></div>
       </div>
-      <div data-pb-element="checkout-button-info" class="submit-button__content">
-        <div class="submit-button__text">
-          <div data-i18n="{{ cta_key }}" class="submit-button__main-text">{{ cta }}</div>
+      <div data-pb-element="checkout-button-info" class="relative flex w-full flex-col items-center justify-center rounded-[3px] font-bold leading-none no-underline">
+        <div class="relative z-[1] mb-0.5 flex w-full flex-wrap items-center justify-center gap-4">
+          <div data-i18n="{{ cta_key }}" class="text-xl font-bold leading-[1.2]">{{ cta }}</div>
         </div>
-        <div data-i18n="{{ sub_key }}" class="submit-button__subtext">{{ sub }}</div>
+        <div data-i18n="{{ sub_key }}" class="mt-[0.15rem] text-[0.725rem] font-medium max-[479px]:text-xs">{{ sub }}</div>
       </div>
     </button></div>
 </div>

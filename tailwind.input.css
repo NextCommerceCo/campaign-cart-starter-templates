@@ -41,6 +41,11 @@
   --color-brand-dark:               var(--brand--color--primary-dark);
   --color-brand-cta:                var(--brand--color--cta-primary);
   --color-brand-light:              var(--brand--color--primary-light);
+  --color-brand-lighter:            var(--brand--color--primary-lighter);
+  --color-pill-primary:             var(--brand--color--pill-primary);
+  --color-pill-primary-surface:     var(--brand--color--pill-primary-surface);
+  --color-pill-secondary:           var(--brand--color--pill-secondary);
+  --color-pill-secondary-surface:   var(--brand--color--pill-secondary-surface);
   --radius-button:                  var(--radius--button);
   --radius-cards:                   var(--radius--cards);
   --color-brand-rating-star:        var(--brand--color--rating-star);

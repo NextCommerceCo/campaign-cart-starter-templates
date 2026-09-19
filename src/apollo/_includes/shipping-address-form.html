@@ -31,8 +31,8 @@
 {% endcomment %}
 {% assign sec_title = section_title | default: 'Step 3: Shipping Information' -%}
 {% if is_first == nil %}{% assign is_first = false %}{% endif -%}
-<div data-next-catalog-component="shipping-address-form" class="form-section{% if is_first %} form-section--first{% endif %}">
-  <h1 class="form-section__title">{{ sec_title }}</h1>
+<div data-next-catalog-component="shipping-address-form" class="relative flex flex-col gap-4 max-[479px]:w-full">
+  <h1 class="m-0 text-lg tracking-[-0.01em]">{{ sec_title }}</h1>
   <div>
     <div class="form-grid">
       <div data-next-component="shipping-field-row" class="form-grid__row">
