@@ -258,7 +258,7 @@ Source of values: `src/olympus/assets/css/next-core.css`.
 | `.hide-tablet` | `max-[991px]:hidden` (desktop instance) / `hidden max-[991px]:block` (tablet instance) | No standalone next-core rule; live computed hide is ≤991. One heading must stay hidden at each viewport or `h1Count` doubles. |
 | `.hide-tablet-down` | `max-[991px]:hidden` | Left-column as-seen-in / reviews / guarantee. |
 | `.hide-tablet-up` / `.show-tablet` | `min-[992px]:hidden` | Bottom mobile chrome (guarantee / scroll as-seen-in / reviews). |
-| `.section.checkout-page` | `bg-neutral-checkout pb-16 pt-8 max-[479px]:pt-6` | Token `#fcfcfc`. `.checkout-page-layout` 991: `flex flex-col gap-4`; 479: `gap-0`. Form column: `relative flex w-full max-w-[528px] flex-col gap-8`. |
+| `.section.checkout-page` | `bg-neutral-checkout pb-16 pt-8 max-[479px]:pt-6` | Token `#fcfcfc`. `.checkout-page-layout` 991: `flex flex-col gap-4`; 479: `gap-0`. Form column: `relative flex w-full max-w-[528px] flex-col gap-8 max-[991px]:max-w-none max-[991px]:gap-6` (leftover `.checkout__form-container` drops the 528 cap and uses 1.5rem gap at ≤991). |
 | `.promo-timer` | `bg-brand-black p-2` | Keep `data-next-element="timer"`. Pill: `min-w-[71px] rounded-sm bg-promo-timer-pill`. |
 | `.as-seen-in` | `flex w-full flex-col gap-6` | Heading `text-base font-bold uppercase text-brand-foreground`. Drop leftover `as-seen-in--scroll`; Liquid `scroll` arg still chooses markup. Scroll track: `animate-as-seen-in-scroll hover:[animation-play-state:paused] motion-reduce:animate-none`. |
 | `.guarantee-section--apollo` | `flex items-center justify-start gap-4 rounded-sm bg-brand-light px-5 py-4` | Badge `w-20`. |
