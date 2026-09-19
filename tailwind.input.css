@@ -167,3 +167,18 @@
     filter: none !important;
   }
 }
+
+/*
+  SDK / Swiper own these widths and display values via inline style.
+  Tailwind `important` utilities freeze that (voucher pills stay painted
+  as empty red dots; thumb slides ignore Swiper's computed size).
+  Keep unlayered and without !important so inline style wins.
+*/
+[data-next-discounts="voucher"] {
+  display: inline-flex;
+}
+
+[data-component="reviews-swiper"] .swiper-slide {
+  width: auto;
+  height: auto;
+}

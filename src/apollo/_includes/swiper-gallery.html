@@ -70,7 +70,7 @@
           <div thumbsslider="" swiper="slider-thumbs" class="swiper w-full opacity-0 pointer-events-none [&.swiper-initialized]:pointer-events-auto [&.swiper-initialized]:opacity-100 [&.swiper-initialized]:transition-opacity [&.swiper-initialized]:duration-200 [&:not(.swiper-initialized)_.swiper-wrapper]:flex [&:not(.swiper-initialized)_.swiper-wrapper]:flex-row [&:not(.swiper-initialized)_.swiper-wrapper]:overflow-hidden [&:not(.swiper-initialized)_.swiper-slide]:min-w-0 [&:not(.swiper-initialized)_.swiper-slide]:overflow-hidden">
             <div class="swiper-wrapper w-full">
               {% for thumb in thumbs %}
-              <div class="swiper-slide min-w-0 cursor-pointer overflow-hidden border border-transparent grayscale transition-[filter] duration-[400ms] [&.swiper-slide-thumb-active]:border-brand-black [&.swiper-slide-thumb-active]:grayscale-0 focus-visible:border-2 focus-visible:border-brand-black max-[479px]:h-auto max-[479px]:w-auto{% if forloop.first %} swiper-slide-thumb-active{% endif %}">
+              <div class="swiper-slide min-w-0 cursor-pointer overflow-hidden border border-transparent grayscale transition-[filter] duration-[400ms] [&.swiper-slide-thumb-active]:border-brand-black [&.swiper-slide-thumb-active]:grayscale-0 focus-visible:border-2 focus-visible:border-brand-black{% if forloop.first %} swiper-slide-thumb-active{% endif %}">
                 <div class="relative">
                   <div class="relative flex w-full justify-center overflow-hidden {{ _thumb_aspect_class }}"><img loading="eager" src="{{ thumb.src | campaign_asset }}" alt="{{ thumb.alt }}" class="size-full max-h-full {{ _thumb_fit_class }}"></div>
                 </div>
