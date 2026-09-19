@@ -6,10 +6,10 @@
   Data: guarantee { badge, title, text }.
     {% campaign_include 'guarantee.html' guarantee=guarantee %}
 {%- endcomment -%}
-<div class="guarantee-section guarantee-section--apollo">
-  <img loading="lazy" src="{{ guarantee.badge | campaign_asset }}" alt="" class="guarantee-badge">
-  <div class="guarantee-section__content">
-    <p class="guarantee-section__title">{{ guarantee.title }}</p>
-    <p class="guarantee-section__text">{{ guarantee.text }}</p>
+<div class="flex items-center justify-start gap-4 rounded-sm bg-brand-light px-5 py-4">
+  <img loading="lazy" src="{{ guarantee.badge | campaign_asset }}" alt="" class="mr-0 w-20 shrink-0">
+  <div class="flex flex-col gap-2">
+    <p class="m-0 text-base font-bold leading-normal text-brand-foreground">{{ guarantee.title }}</p>
+    <p class="m-0 text-sm leading-normal text-brand-text-secondary">{{ guarantee.text }}</p>
   </div>
 </div>

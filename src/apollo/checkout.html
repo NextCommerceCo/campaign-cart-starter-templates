@@ -167,34 +167,34 @@ bundles:
     total_tone_class: "os-dark"
     shipping_label: "+ Free Shipping"
 ---
-<div class="page-wrapper">
-      <div class="main-wrapper">
+<div class="overflow-clip">
+      <div>
 
-        <div data-next-hide="param.banner=='n'" class="section_header">
+        <div data-next-hide="param.banner=='n'" class="relative z-20 w-full">
           {% campaign_include 'promo-banner.html' promo_banner=promo_banner %}
         </div>
         {% campaign_include 'checkout-header.html' %}
-        <div class="section-checkout cc-gray">
-          <div class="container">
-            <div class="checkout-page-layout">
-              <div class="show-tablet">
+        <div class="bg-neutral-checkout pb-16 pt-8 max-[479px]:pt-6">
+          <div class="relative z-[1] mx-auto block w-full max-w-7xl px-10 max-[991px]:px-5">
+            <div class="max-[991px]:flex max-[991px]:flex-col max-[991px]:gap-4 max-[479px]:gap-0">
+              <div class="hidden max-[991px]:block">
                 {% campaign_include 'product-heading.html' product_heading=product_heading %}
               </div>
-              <div class="checkout-wrapper">
-                <div class="checkout-layout__left">
-                  <div class="checkout-layout__content">
-                    <div class="checkout-layout__content-inner">
-                      <div class="checkout-media__wrapper">
+              <div class="flex gap-12 max-[991px]:flex-col">
+                <div class="flex w-1/2 shrink-0 flex-col max-[991px]:w-full">
+                  <div class="flex shrink-0 flex-col">
+                    <div class="sticky top-8 flex flex-col gap-6 max-[991px]:relative max-[991px]:top-auto">
+                      <div>
                         {% campaign_include 'swiper-gallery.html' main_slides=swiper_slides thumbs=swiper_thumbs variant='sw1' %}
                       </div>
-                      <div class="hide-tablet-down" data-next-hide="param.seen=='n'">
+                      <div class="max-[991px]:hidden" data-next-hide="param.seen=='n'">
                         {% campaign_include 'as-seen-in.html' as_seen_in=as_seen_in %}
                       </div>
                 
-                      <div class="hide-tablet-down">
+                      <div class="max-[991px]:hidden">
                         {% campaign_include 'reviews-slider.html' reviews=reviews %}
                       </div>
-                      <div class="hide-tablet-down">
+                      <div class="max-[991px]:hidden">
                         {% campaign_include 'guarantee.html' guarantee=guarantee %}
                       </div>
                     </div>
@@ -202,10 +202,10 @@ bundles:
                    
                   </div>
                 </div>
-                <div class="checkout-layout__right">
-                  <div class="checkout-layout__form">
-                  <div class="checkout__form-container">
-                    <div class="hide-tablet">
+                <div class="flex flex-1 flex-col gap-6">
+                  <div>
+                  <div class="relative flex w-full max-w-[528px] flex-col gap-8">
+                    <div class="max-[991px]:hidden">
                       {% campaign_include 'product-heading.html' product_heading=product_heading %}
                     </div>
                     {% campaign_include 'promo-timer.html' promo_timer=promo_timer %}
@@ -379,14 +379,14 @@ bundles:
                         </div>
                       </div><img loading="lazy" src="{{ 'images/credit-card-flags.svg' | campaign_asset }}" alt="" class="credit-card__flags">
                     </div>
-                    <div class="hide-tablet-up">
+                    <div class="min-[992px]:hidden">
                       {% campaign_include 'guarantee.html' guarantee=guarantee %}
                     </div>
-                    <div class="hide-tablet-up" data-next-hide="param.seen=='n'">
+                    <div class="min-[992px]:hidden" data-next-hide="param.seen=='n'">
                       {% campaign_include 'as-seen-in.html' as_seen_in=as_seen_in scroll=true %}
                     </div>
               
-                    <div class="hide-tablet-up">
+                    <div class="min-[992px]:hidden">
                       {% campaign_include 'reviews-slider.html' reviews=reviews %}
                     </div>
                   </div>

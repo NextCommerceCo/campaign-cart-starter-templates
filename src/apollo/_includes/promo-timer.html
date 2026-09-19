@@ -6,12 +6,12 @@
   Data: promo_timer { text, highlight, start }.
     {% campaign_include 'promo-timer.html' promo_timer=promo_timer %}
 {%- endcomment -%}
-<div class="promo-timer">
-  <div class="promo-timer__inner">
-    <p class="promo-timer__label">
-      <span class="promo-timer__label-accent">{{ promo_timer.text }}</span>
-      <span class="promo-timer__label-strong">{{ promo_timer.highlight }}</span>
+<div class="bg-brand-black p-2">
+  <div class="flex items-center justify-center gap-2">
+    <p class="m-0 text-base font-bold uppercase leading-[1.3]">
+      <span class="font-extrabold text-system-success-medium">{{ promo_timer.text }}</span>
+      <span class="font-extrabold text-brand-white">{{ promo_timer.highlight }}</span>
     </p>
-    <span class="promo-timer__pill"><span data-next-element="timer">{{ promo_timer.start }}</span></span>
+    <span class="inline-flex min-w-[71px] items-center justify-center rounded-sm bg-promo-timer-pill px-[0.625rem] py-0.5 text-base font-bold uppercase leading-normal text-brand-white"><span data-next-element="timer">{{ promo_timer.start }}</span></span>
   </div>
 </div>

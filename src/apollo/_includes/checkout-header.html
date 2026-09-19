@@ -1,31 +1,31 @@
-<section class="checkout-header checkout-header--apollo">
-  <div class="container">
-    <div class="checkout-header__inner">
-      <div class="checkout-header__brand">
-        <img src="{{ 'images/next-dark.svg' | campaign_asset }}" loading="eager" alt="{{ campaign.store_name }}" class="checkout-header__logo">
+<section class="border-b border-brand-border bg-brand-background py-4 max-[767px]:py-3">
+  <div class="relative z-[1] mx-auto block w-full max-w-7xl px-10 max-[991px]:px-5">
+    <div class="flex flex-row flex-nowrap items-center justify-center gap-4 max-[767px]:flex-col max-[767px]:gap-2">
+      <div class="flex items-center">
+        <img src="{{ 'images/next-dark.svg' | campaign_asset }}" loading="eager" alt="{{ campaign.store_name }}" class="block h-auto w-[150px] object-contain max-[767px]:w-[120px]">
       </div>
-      <span class="checkout-header__divider" aria-hidden="true"></span>
-      <div class="checkout-header__trust">
-        <div class="checkout-header__reviews">
-          <div class="star_wrapper" role="img" aria-label="5 out of 5 stars">
-            {% for i in (1..5) %}<div class="star_img"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <span class="h-[46px] w-px shrink-0 bg-brand-border max-[767px]:hidden" aria-hidden="true"></span>
+      <div class="flex flex-col items-center gap-[0.4rem]">
+        <div class="flex items-center gap-2">
+          <div class="flex items-center justify-center gap-[1.2px]" role="img" aria-label="5 out of 5 stars">
+            {% for i in (1..5) %}<div class="flex size-4 shrink-0 items-center justify-center"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <rect width="15" height="15" rx="2" fill="#1BBA86"></rect>
               <path d="M7.3125 2.25012L8.53329 6.00734L12.4839 6.00734L9.28779 8.32943L10.5086 12.0867L7.3125 9.76456L4.11642 12.0867L5.33721 8.32943L2.14113 6.00734L6.09171 6.00734L7.3125 2.25012Z" fill="white"></path>
             </svg></div>{% endfor %}
           </div>
-          <span class="checkout-header__reviews-text"><strong>10,000+</strong> 5-Star Reviews</span>
+          <span class="whitespace-nowrap text-lg font-medium uppercase leading-[1.2] text-brand-dark max-[767px]:text-base"><strong class="font-bold">10,000+</strong> 5-Star Reviews</span>
         </div>
-        <ul class="checkout-header__badges">
-          <li class="checkout-header__badge">
-            <img src="{{ 'images/icon-shipping.svg' | campaign_asset }}" alt="" class="checkout-header__badge-icon" loading="lazy">
+        <ul class="m-0 flex list-none flex-row flex-wrap items-center justify-center gap-[0.625rem] p-0 max-[767px]:gap-[0.4rem]">
+          <li class="inline-flex items-center gap-1 whitespace-nowrap text-[0.625rem] font-bold uppercase leading-normal text-brand-dark max-[767px]:gap-[0.2rem]">
+            <img src="{{ 'images/icon-shipping.svg' | campaign_asset }}" alt="" class="size-[15px] shrink-0 max-[767px]:size-[14px]" loading="lazy">
             <span>Free US Shipping</span>
           </li>
-          <li class="checkout-header__badge">
-            <img src="{{ 'images/icon-dollar.svg' | campaign_asset }}" alt="" class="checkout-header__badge-icon" loading="lazy">
+          <li class="inline-flex items-center gap-1 whitespace-nowrap text-[0.625rem] font-bold uppercase leading-normal text-brand-dark max-[767px]:gap-[0.2rem]">
+            <img src="{{ 'images/icon-dollar.svg' | campaign_asset }}" alt="" class="size-[15px] shrink-0 max-[767px]:size-[14px]" loading="lazy">
             <span>60-Day Guarantee</span>
           </li>
-          <li class="checkout-header__badge">
-            <img src="{{ 'images/icon-guarantee.svg' | campaign_asset }}" alt="" class="checkout-header__badge-icon" loading="lazy">
+          <li class="inline-flex items-center gap-1 whitespace-nowrap text-[0.625rem] font-bold uppercase leading-normal text-brand-dark max-[767px]:gap-[0.2rem]">
+            <img src="{{ 'images/icon-guarantee.svg' | campaign_asset }}" alt="" class="size-[15px] shrink-0 max-[767px]:size-[14px]" loading="lazy">
             <span>2 Year Warranty</span>
           </li>
         </ul>

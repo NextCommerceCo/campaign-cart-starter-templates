@@ -8,16 +8,16 @@
                                              emoji set  -> renders that emoji (e.g. flag)
                                              emoji unset -> renders the green check icon
 {%- endcomment -%}
-<div class="product-heading">
-  <h1 class="product-heading__title"><span>{{ product_heading.title }}</span></h1>
-  <div class="product-heading__divider" aria-hidden="true"></div>
-  <ul class="product-heading__features">
+<div class="flex w-full flex-col gap-2 max-[991px]:items-center max-[991px]:gap-3">
+  <h1 class="m-0 text-left text-[2rem] font-bold leading-[1.2] tracking-[-0.2px] text-brand-dark max-[991px]:text-center max-[991px]:text-[1.75rem] max-[991px]:tracking-[-0.16px] max-[767px]:text-[1.5rem] max-[767px]:tracking-[-0.14px]"><span>{{ product_heading.title }}</span></h1>
+  <div class="h-px w-full bg-brand-border" aria-hidden="true"></div>
+  <ul class="m-0 flex list-none flex-col gap-[0.375rem] p-0 max-[991px]:grid max-[991px]:w-full max-[991px]:grid-cols-2 max-[991px]:gap-[0.625rem] max-[767px]:flex max-[767px]:flex-col">
     {% for feature in product_heading.features -%}
-    <li class="product-heading__feature{% if feature.emoji %} product-heading__feature--flag{% endif %}">
+    <li class="flex items-center gap-2 p-0 text-base leading-normal text-brand-text-secondary max-[767px]:text-sm">
       {% if feature.emoji -%}
-      <span class="product-heading__flag" aria-hidden="true">{{ feature.emoji }}</span>
+      <span class="w-6 shrink-0 text-center text-[22px] leading-none max-[767px]:w-5 max-[767px]:text-[18px]" aria-hidden="true">{{ feature.emoji }}</span>
       {%- else -%}
-      <svg class="product-heading__check" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+      <svg class="size-6 shrink-0 fill-system-success-medium max-[767px]:size-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
       {%- endif %}
       <span>{{ feature.text }}</span>
     </li>

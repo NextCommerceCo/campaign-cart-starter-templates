@@ -4,6 +4,6 @@
   Data: promo_banner { emoji, highlight, lead, strong, trail }.
     {% campaign_include 'promo-banner.html' promo_banner=promo_banner %}
 {%- endcomment -%}
-<div class="promo-banner promo-banner--apollo">
-  <p class="promo-banner__text">{% if promo_banner.emoji %}<span class="promo-banner__emoji">{{ promo_banner.emoji }}</span> {% endif %}<span class="promo-banner__highlight">{{ promo_banner.highlight }}</span> {{ promo_banner.lead }} <span class="promo-banner__strong">{{ promo_banner.strong }}</span> {{ promo_banner.trail }}</p>
+<div class="rounded-none bg-brand-black px-4 py-2 text-center">
+  <p class="m-0 text-base font-normal uppercase leading-normal tracking-[-0.32px] text-brand-white">{% if promo_banner.emoji %}<span class="font-extrabold">{{ promo_banner.emoji }}</span> {% endif %}<span class="font-extrabold text-system-success-medium">{{ promo_banner.highlight }}</span> {{ promo_banner.lead }} <span class="font-extrabold">{{ promo_banner.strong }}</span> {{ promo_banner.trail }}</p>
 </div>

@@ -69,6 +69,17 @@
   --color-system-success:           var(--system-colors--success);
   --color-system-success-medium:    var(--system-colors--success-medium);
   --color-system-destructive:       var(--system-colors--destructive);
+  --color-brand-white:              var(--brand--color--white);
+  --color-neutral-300:              var(--neutral--300);
+  --color-neutral-checkout:         var(--neutral--checkout, #fcfcfc);
+  --color-promo-timer-pill:         var(--promo-timer--pill, rgba(255, 255, 255, 0.19));
+  --radius-sm:                      var(--radius-size--sm);
+  --animate-as-seen-in-scroll:      as-seen-in-scroll 24s linear infinite;
+
+  @keyframes as-seen-in-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
   --shadow-swiper-nav-press:        0 0 1rem var(--swiper--nav-press-shadow, #2a255236);
   --animate-pulse-upsell:           pulse-upsell 1.5s ease infinite;
 

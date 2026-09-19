@@ -20,7 +20,7 @@ Receipt (2026-09-18) is the first completed pass. The numbered steps below are t
 
 Drop leftover layout/type/color classes (`.receipt_*`, `.checkout-content`, `.announcement`, `.upsell-header`, static `.button` / `.link`). Keep `data-next-*`, SDK/JS class names (`next-expanded`, `next-selected`, `next-loading`, `.cart-item*`, `.os-card*`, `.skeleton-*`, `.hide` if JS still uses it). Putting the old class back to “fix” a miss is a revert, not a conversion.
 
-Shared includes used by an unconverted page (today: checkout still reads `footer.html`) must either stay leftover **or** the layout must load compiled `tailwind.css` wherever that include renders.
+Shared includes used by an unconverted page must either stay leftover **or** the layout must load compiled `tailwind.css` wherever that include renders. `base.html` always loads compiled Tailwind (receipt, upsell, checkout chrome, footer).
 
 ### 2. Inventory the source class + every media query, then the map.
 
@@ -249,6 +249,20 @@ Source of values: `src/olympus/assets/css/next-core.css`.
 | `.swiper-slide.is-thumb` | `min-w-0 cursor-pointer overflow-hidden border border-transparent grayscale transition-[filter] duration-[400ms] [&.swiper-slide-thumb-active]:border-brand-black [&.swiper-slide-thumb-active]:grayscale-0 focus-visible:border-2 focus-visible:border-brand-black max-[479px]:h-auto max-[479px]:w-auto` | Keep `swiper-slide` and `swiper-slide-thumb-active` (Swiper). Drop leftover `is-thumb`. |
 | thumbs `[swiper="slider-thumbs"]` init | add `opacity-0 pointer-events-none [&.swiper-initialized]:pointer-events-auto [&.swiper-initialized]:opacity-100 [&.swiper-initialized]:transition-opacity [&.swiper-initialized]:duration-200` | `.swiper-initialized` is Swiper-toggled. |
 | `[pb-animate="pulse-upsell"]` | `animate-pulse-upsell` | Theme keyframes match leftover `scale(0.9) ↔ 1` / 1.5s ease infinite. Keep `.button` for `.next-loading`. |
+| `.promo-banner--apollo` | `rounded-none bg-brand-black px-4 py-2 text-center` | Text: `m-0 text-base font-normal uppercase leading-normal tracking-[-0.32px] text-brand-white`. Highlight: `font-extrabold text-system-success-medium`. |
+| `.checkout-header--apollo` | `border-b border-brand-border bg-brand-background py-4 max-[767px]:py-3` | Winning `--apollo` styles, not generic `.checkout-header--lg`. Inner: `flex flex-row flex-nowrap items-center justify-center gap-4 max-[767px]:flex-col max-[767px]:gap-2`. |
+| `.checkout-header--apollo .checkout-header__logo` | `block h-auto w-[150px] object-contain max-[767px]:w-[120px]` | 767 shrink is **120px**, not the receipt 479 rule. |
+| `.checkout-header--apollo .checkout-header__divider` | `h-[46px] w-px shrink-0 bg-brand-border max-[767px]:hidden` | |
+| `.checkout-header--apollo .checkout-header__reviews` | `whitespace-nowrap text-lg font-medium uppercase leading-[1.2] text-brand-dark max-[767px]:text-base` | Badges: `text-[0.625rem]`; icons `size-[15px] max-[767px]:size-[14px]`. |
+| `.product-heading` title | `m-0 text-left text-[2rem] font-bold leading-[1.2] tracking-[-0.2px] text-brand-dark max-[991px]:text-center max-[991px]:text-[1.75rem] max-[991px]:tracking-[-0.16px] max-[767px]:text-[1.5rem] max-[767px]:tracking-[-0.14px]` | Features: column → 991 2-col grid → 767 column. Checks: `fill-system-success-medium`. |
+| `.hide-tablet` | `max-[991px]:hidden` (desktop instance) / `hidden max-[991px]:block` (tablet instance) | No standalone next-core rule; live computed hide is ≤991. One heading must stay hidden at each viewport or `h1Count` doubles. |
+| `.hide-tablet-down` | `max-[991px]:hidden` | Left-column as-seen-in / reviews / guarantee. |
+| `.hide-tablet-up` / `.show-tablet` | `min-[992px]:hidden` | Bottom mobile chrome (guarantee / scroll as-seen-in / reviews). |
+| `.section.checkout-page` | `bg-neutral-checkout pb-16 pt-8 max-[479px]:pt-6` | Token `#fcfcfc`. `.checkout-page-layout` 991: `flex flex-col gap-4`; 479: `gap-0`. Form column: `relative flex w-full max-w-[528px] flex-col gap-8`. |
+| `.promo-timer` | `bg-brand-black p-2` | Keep `data-next-element="timer"`. Pill: `min-w-[71px] rounded-sm bg-promo-timer-pill`. |
+| `.as-seen-in` | `flex w-full flex-col gap-6` | Heading `text-base font-bold uppercase text-brand-foreground`. Drop leftover `as-seen-in--scroll`; Liquid `scroll` arg still chooses markup. Scroll track: `animate-as-seen-in-scroll hover:[animation-play-state:paused] motion-reduce:animate-none`. |
+| `.guarantee-section--apollo` | `flex items-center justify-start gap-4 rounded-sm bg-brand-light px-5 py-4` | Badge `w-20`. |
+| `.reviews-slider` wrapper | `w-full` | Keep `swiper` / `data-component="reviews-swiper"` / `swiper-slide`. Do **not** put `w-auto`/`h-auto` important on slides (freezes Swiper inline width). Card stays leftover `.checkout-review.checkout-review--slide`. Scrollbar: `swiper-scrollbar static … bg-neutral-300 [&_.swiper-scrollbar-drag]:bg-brand-dark`. |
 
 ---
 
@@ -294,7 +308,7 @@ npm run build:css:watch    # same, watch
 
 - `@source` in `tailwind.input.css` must include every Apollo HTML file (pages + `_includes`, including `<template>` clones the SDK paints).
 - Load compiled CSS with a hardcoded `<link>` in the layout. Do **not** list `tailwind.css` in page frontmatter `styles:` (Netlify validates those paths before compile).
-- `base.html` always loads **both**: next-core for leftover SDK/hooks, compiled `tailwind.css` (`important`) for converted chrome (receipt + upsell chrome + shared footer). Do not wait for a `page_type` gate.
+- `base.html` always loads **both**: next-core for leftover SDK/hooks, compiled `tailwind.css` (`important`) for converted chrome (receipt + upsell + checkout chrome + shared footer). Do not wait for a `page_type` gate.
 
 ---
 
@@ -338,6 +352,29 @@ Page chrome **and offer cosmetics** on the three Apollo bundle upsells are Tailw
 - `.os-card` / `.os-option` / `.next-selected` (JS toggle; selected look is `next-selected:` utilities)
 - Accept `.button` (`.next-loading` leftover). Pulse is `animate-pulse-upsell`.
 - Swiper hooks only: `data-component="swiper"`, `data-variant="sw1"`, `swiper` / `swiper-wrapper` / `swiper-slide` / `swiper-slide-thumb-active` / `.swiper-initialized`, `[swiper="…"]`, `thumbsslider`. Gallery chrome is utilities.
+
+---
+
+## Checkout chrome pass (Apollo)
+
+Checkout **page chrome** is Tailwind utilities. Form, bundles, bumps, payment, trust bar, submit, and reveal stay leftover.
+
+**Tokens added:** `--color-brand-white`, `--color-neutral-300`, `--color-neutral-checkout` (`#fcfcfc`), `--color-promo-timer-pill` (`rgba(255,255,255,0.19)`), `--radius-sm`, `--animate-as-seen-in-scroll`.
+
+**Verified vs live** (`nextcommerce-campaign-templates.netlify.app/apollo/checkout/`):
+
+- Desktop (~1265): banner 16px / `-0.32px` / white; header pad 16 / border `#dfdfdf`; logo 150; h1 32px / `-0.2px` / `#0a265c`; section `#fcfcfc`; timer 44 / black; reveal off-screen (`position:absolute; left:-99999px`, not `display:none`).
+- 768: heading 28px / `-0.16px` / center; features 2-col grid. Header stays row until 767.
+- 390: heading 24px / `-0.14px`; logo 120; header pad 12; divider `none`; features column; one visible `h1`.
+- Add to Cart: `.is-revealed` + panel `position:static` / `left:auto` / not inert.
+
+**Left on `next-core.css` / SDK classes:**
+
+- `data-next-*`, `data-next-element="timer"`, `data-checkout-reveal-*`
+- `.checkout-form--reveal` / `.is-revealed` / `.checkout-reveal__panel` / `.checkout-reveal__cta` (Spreedly: off-screen, never `hidden`)
+- `.os-card*` bundle hooks, form sections, order bumps, payment methods, `.checkout-trust-bar`, submit
+- `.checkout-review` / `.checkout-review--slide` (reviews card; Swiper hooks stay)
+- `swiper` / `swiper-slide` / `swiper-scrollbar` / `data-component="reviews-swiper"`
 
 ---
 
