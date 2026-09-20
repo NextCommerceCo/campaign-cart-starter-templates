@@ -24,7 +24,7 @@ Shared includes used by an unconverted page must either stay leftover **or** the
 
 ### 2. Inventory the source class + every media query, then the map.
 
-Canonical CSS: `src/olympus/assets/css/next-core.css`. For each class you will drop, copy **every declaration** plus every 991 / 767 / 479 override. Convert that list — not the screenshot from memory.
+Canonical CSS: `src/olympus/assets/css/next-core.css`. For each class you will drop, copy **every declaration** plus every 991 / 767 / 479 override. Convert that list — not the screenshot from memory. A desktop `max-width: 528px` that leftover sets to `100%` at ≤991 is a conversion miss if you only copy the base rule.
 
 Breakpoints stay `max-[991px]` / `max-[767px]` / `max-[479px]`, not `md` / `lg`.
 
@@ -48,6 +48,17 @@ Reusable translations go in **CSS → utility map** below. Look there before re-
 
 `important` utilities also freeze properties the SDK writes inline **and** leftover next-core classes that share a Tailwind name. Never put height-0 / expanded-auto utilities on `[data-next-accordion-panel]` (AccordionEnhancer `style.height`). Spreedly reveal transform stays leftover, not `hidden`. Cosmetics on the same node can still be utilities. Those leftovers stay **unlayered and without `!important`**.
 
+Never put a Tailwind **display** utility (`flex`, `inline-flex`, `hidden`, `block`) on a node the SDK or leftover CSS hides with inline `display:none` / `.next-hidden`. `important` `inline-flex` beats both and paints an empty box — voucher pills (`data-next-discounts="voucher"` + `data-next-show="cart.hasCoupon()"`) showed as red dots until the exit-popup coupon; the same miss hits any `data-next-show` / `data-next-hide` / `.checkout-reveal__cta`. Shown-state `display: inline-flex` lives in unlayered leftover (no `!important`) so inline `display:none` still wins.
+
+Never put important **width / height** utilities on `.swiper-slide`. `slidesPerView: N` needs Swiper’s inline size (`max-[479px]:w-auto` made thumbs 302px vs live 37px). `slidesPerView: 'auto'` needs unlayered leftover `width: auto; height: auto` on the slide (more specific than Swiper’s `width: 100%`) so the inner card can define the slide — important `w-auto` is also wrong here.
+
+Compiler traps (not leftover CSS):
+
+| Trap | What happens | Do this |
+|---|---|---|
+| `[&_.os-card__radio]` | Tailwind treats `__` as a space, so the child selector never matches | Put the utility on the radio, or use a hyphenated child (`[&_.radio-inner]`) |
+| v4 `scale-0` / `scale-100` | Those set the `scale` **property**, not `transform` | Use `[transform:scale(0)]` / `[transform:scale(1)]` when leftover animated `transform` |
+
 Known name collisions while both sheets load (shield in `tailwind.input.css`):
 
 | Leftover class | Tailwind `important` does | Live next-core |
@@ -58,9 +69,9 @@ Known name collisions while both sheets load (shield in `tailwind.input.css`):
 
 Do not treat “the utility class is on the node” as success until computed style matches live. A chrome-only computed-style pass is not a page visual-parity pass — leftover offer/checkout still has to look like live.
 
-### 5. Off-screen ≠ `display:none`.
+### 5. Off-screen ≠ `display:none`. SDK hide ≠ a display utility.
 
-`hidden` / `display:none` skips SDK display binding (and breaks Spreedly on checkout). Desktop-hidden mobile summary stays clipped (`sr-only` + `max-[991px]:not-sr-only`), not `hidden`.
+`hidden` / `display:none` skips SDK display binding (and breaks Spreedly on checkout). Desktop-hidden mobile summary stays clipped (`sr-only` + `max-[991px]:not-sr-only`), not `hidden`. Do not replace leftover `style="display:none"` + `data-next-show` / `data-next-hide` with `inline-flex` / `flex` / `hidden` — that is step 4’s display-utility freeze, and it shows empty gated chrome (coupon badges, reveal CTAs) before the SDK unhides them.
 
 ### 6. Bind the surface the SDK still has.
 
@@ -72,7 +83,9 @@ Netlify validates those paths before compile. `base.html` always loads `next-cor
 
 ### 8. Done gate = `getComputedStyle` vs live, including motion.
 
-Compare the converted control to [the live Apollo surface](https://nextcommerce-campaign-templates.netlify.app/) (or the same page built from `main`) at **1440 / 768 / 390**. Required properties: `color`, `backgroundColor`, `border`, `fontSize`, `fontWeight`, `letterSpacing`, `textDecorationLine`, `minHeight`, `width`. For drawers/accordions also sample height over ~300ms and `[os-summary-icon]` transform (SDK CSS rotates it — do not re-implement `rotate-180` on checkout/receipt).
+Compare the converted control to [the live Apollo surface](https://nextcommerce-campaign-templates.netlify.app/) (or the same page built from `main`) at **1440 / 992 / 991 / 768 / 390**. 992 vs 991 is the stack breakpoint — a two-column desktop `max-width` that leftover drops at ≤991 (`max-width: 100%`) will pass 1440 and 390 and still look broken in DevTools responsive (~988). Large thumbs at tablet width are live when the gallery is full-bleed ÷ `slidesPerView` (six), not a conversion bug.
+
+Required properties: `color`, `backgroundColor`, `border`, `fontSize`, `fontWeight`, `letterSpacing`, `textDecorationLine`, `minHeight`, `width`. For drawers/accordions also sample height over ~300ms and `[os-summary-icon]` transform (SDK CSS rotates it — do not re-implement `rotate-180` on checkout/receipt).
 
 `[data-next-skeleton]` until `next-display-ready`, and empty `order.*` / fixture `$0.00`, are not conversion failures.
 
