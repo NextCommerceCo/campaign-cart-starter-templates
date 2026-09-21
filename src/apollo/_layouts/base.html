@@ -40,8 +40,8 @@
 
     {% campaign_include 'analytics-head.html' %}
 
-    <link href="{{ 'css/next-core.css' | campaign_asset }}" rel="stylesheet" type="text/css">
-    {% comment %} Compiled Tailwind (important) for converted chrome. Do not list tailwind.css in page frontmatter styles:. next-core stays for leftover SDK/hooks. {% endcomment %}
+    <link href="{{ 'css/next-sdk.css' | campaign_asset }}" rel="stylesheet" type="text/css">
+    {% comment %} next-sdk.css is Apollo leftover (tokens + hooks + unconverted payment/cart). next-core.css stays on disk for lint:next-core but is not loaded. Do not list tailwind.css in page frontmatter styles:. {% endcomment %}
     <link href="{{ 'css/tailwind.css' | campaign_asset }}" rel="stylesheet" type="text/css">
     {% for style in styles %}
     <link href="{{ style | campaign_asset }}" rel="stylesheet" type="text/css">

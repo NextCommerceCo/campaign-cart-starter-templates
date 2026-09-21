@@ -2,7 +2,7 @@
 
 Pilot family: **`apollo`**. Other families still load CDN Tailwind on landing/presell and `next-core.css` on checkout.
 
-Cosmetic layout/type/color may move to Tailwind utilities. **Do not rename or drop classes the SDK or template JS reads or toggles.** Those stay in CSS (`next-core.css` today; a thinner `next-sdk.css` once checkout is converted).
+Cosmetic layout/type/color may move to Tailwind utilities. **Do not rename or drop classes the SDK or template JS reads or toggles.** Those stay in CSS (`src/apollo/assets/css/next-sdk.css` on Apollo checkout; other families still load `next-core.css`).
 
 Cursor rule (always on): `.cursor/rules/tailwind-css-parity.mdc`.
 
@@ -354,7 +354,7 @@ npm run build:css:watch    # same, watch
 
 - `@source` in `tailwind.input.css` must include every Apollo HTML file (pages + `_includes`, including `<template>` clones the SDK paints).
 - Load compiled CSS with a hardcoded `<link>` in the layout. Do **not** list `tailwind.css` in page frontmatter `styles:` (Netlify validates those paths before compile).
-- `base.html` always loads **both**: next-core for leftover SDK/hooks, compiled `tailwind.css` (`important`) for converted chrome (receipt + upsell + checkout chrome + shared footer). Do not wait for a `page_type` gate.
+- `base.html` always loads **both**: `next-sdk.css` (tokens + leftover hooks + unconverted payment/cart) and compiled `tailwind.css` (`important`). Apollo does **not** load `next-core.css` at runtime; the file stays on disk so `lint:next-core` stays byte-identical. Do not wait for a `page_type` gate. Regenerate leftover with `python3 scripts/extract-apollo-next-sdk.py`.
 
 ---
 
@@ -362,7 +362,7 @@ npm run build:css:watch    # same, watch
 
 All eight families still ship byte-identical `next-core.css`. This infra step does **not** change that file.
 
-When Apollo's leftover CSS is split out, add Apollo to a diverge/skip list in `scripts/lint-next-core-sync.mjs` (or replace the gate with `lint:next-sdk` for the leftover file). Do not silently weaken the gate for the other seven families.
+Apollo `base.html` loads `next-sdk.css`, not `next-core.css`. The Apollo `next-core.css` **file** stays byte-identical (`lint:next-core` unchanged). Do not add Apollo to a skip list. Regenerate `next-sdk.css` from the canonical Olympus next-core via `python3 scripts/extract-apollo-next-sdk.py`.
 
 ---
 
@@ -378,7 +378,7 @@ Receipt **chrome + checkout shell + order-summary cosmetics** are Tailwind utili
 
 **Reuse:** `receipt-order-totals.html` is included in the drawer and the desktop column. Flatten Webflow leftover wrappers (`summary-wrap`, nested `overflow-clip`, `pt-[5px]`). |
 
-**Left on `next-core.css` / SDK classes:**
+**Left on `next-sdk.css` / SDK classes:**
 
 - `data-next-*` and `data-toggle-class="next-expanded"` (JS)
 - `receipt-orders.html` `.cart-item*` template (SDK clones this; `data-next-order-items`, `order.hasItems`)
@@ -392,7 +392,7 @@ Receipt **chrome + checkout shell + order-summary cosmetics** are Tailwind utili
 
 Page chrome **and offer cosmetics** on the three Apollo bundle upsells are Tailwind utilities. `upsell-protection.html` is not in this worktree.
 
-**Left on `next-core.css` / SDK classes:**
+**Left on `next-sdk.css` / SDK classes:**
 
 - `data-next-upsell*`, `data-next-bundle-*`, `data-next-quantity-*`, `data-next-display="bundle.*"` / `package.*`
 - `.os-card` / `.os-option` / `.next-selected` (JS toggle; selected look is `next-selected:` utilities)
@@ -414,7 +414,7 @@ Checkout **page chrome**, product bundle cards, form-section titles, trust bar, 
 - 390: heading 24px / `-0.14px`; logo 120; header pad 12; divider `none`; features column; one visible `h1`.
 - Add to Cart: `.is-revealed` + panel `position:static` / `left:auto` / not inert.
 
-**Left on `next-core.css` / SDK classes:**
+**Left on `next-sdk.css` / SDK classes:**
 
 - `data-next-*`, `data-next-element="timer"`, `data-checkout-reveal-*`
 - `.checkout-form--reveal` / `.is-revealed` / `.checkout-reveal__panel` / `.checkout-reveal__cta` (Spreedly: off-screen, never `hidden`)
