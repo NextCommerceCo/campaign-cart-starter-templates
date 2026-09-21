@@ -66,6 +66,8 @@ TOKENS = [
     "spinner-arc",
     "addErrorIcon",
     "addTick",
+    "next-toast-handler",
+    "tip1_bar",
 ]
 
 HEADER = """\

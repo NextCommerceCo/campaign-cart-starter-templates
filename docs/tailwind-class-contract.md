@@ -62,6 +62,7 @@ Compiler traps (not leftover CSS):
 | Drop `.form-group` / `.form-input` | SDK inits floating labels with `querySelectorAll(".form-group")` and errors on `.form-group`; `closest(".form-input")` for icons | Keep the class names. Cosmetics can still be utilities. |
 | `p-*` / `py-*` on `.input-flds` | important padding beats SDK inline `paddingTop: 14px` when `.has-value` | Layout only (`h-12`, `px-3`). Unlayered leftover owns has-value `padding-top`. |
 | Neutralize leftover form layout globally | payment-methods + SDK billing inject have no utilities; they go unstyled | Scope the unset to `[data-next-catalog-component="customer-info-form\|shipping-address-form\|personalization-field"]` and `.bump__personalization` |
+| Extractor skip of hide-only leftover | `.next-toast-handler` / `.tip1_bar` have no brand token, so `extract-apollo-next-sdk.py` omitted them and the dummy “Error message” bars painted | Add the class names to `TOKENS` (same as `.next-hidden`). Hide stays unlayered `display:none` with no `!important`. |
 
 Known name collisions while both sheets load (shield in `tailwind.input.css`):
 
@@ -126,6 +127,7 @@ The SDK adds or removes these. Style them in leftover CSS. Do not replace the cl
 | `next-disabled` | Disabled button (incl. coupon) |
 | `next-loading` | Add-to-cart spinner (`[next-slot]`) |
 | `next-hidden` | SDK-hidden payment radios / form grids |
+| `next-toast-handler` | Hides payment / express error placeholders until the SDK has a real error |
 | `next-hidden-form` | Billing-same-as-shipping collapsed block |
 | `next-focused` | Focused `.input-flds` |
 | `next-error-field` | Invalid field |
@@ -430,6 +432,7 @@ Checkout **page chrome**, product bundle cards, form-section titles, trust bar, 
 - `.bump__personalization` (click-stop in `checkout-apollo.js`)
 - `.checkbox__icon` (1rem check glyph)
 - `.payment-method*` (generated shared partial)
+- `.next-toast-handler` / `.tip1_bar` / `.tip1_bar.is-warning` (payment + express error placeholder; hide until SDK shows it)
 - `.cart-item*` / `data-next-cart-summary` / `data-summary-lines` / `os-cart-summary-*` (SDK clones + host-state display). Cosmetics are utilities; leftover layout is unset on `[data-next-catalog-component="order-summary"]`. receipt-orders still leftover.
 - `.hide` on `{item.hasDiscount}` / scroll-hint / dormant tax. Do not put display utilities on those nodes.
 - `.diagonal-strike` leftover (no important display — `.hide` must win)

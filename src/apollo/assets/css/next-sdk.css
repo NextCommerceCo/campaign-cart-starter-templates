@@ -813,6 +813,26 @@ html.next-display-ready [data-next-await]::after {
   display: flex;
 }
 
+.next-toast-handler {
+  display: none;
+}
+
+.tip1_bar {
+  color: #b3f5d1;
+  background-color: #002a20;
+  border: 1px solid #00dc82;
+  border-radius: .375rem;
+  padding: .75rem 1.5rem .75rem 1rem;
+  font-size: var(--font-size--sm);
+}
+
+.tip1_bar.is-warning {
+  color: #ff475b;
+  background-color: #ffbec2;
+  border-color: #ff4747;
+  width: 100%;
+}
+
 .form-input-icon {
   z-index: 10;
   pointer-events: auto;
