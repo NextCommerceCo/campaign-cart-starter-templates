@@ -238,7 +238,7 @@ Source of values: `src/olympus/assets/css/next-core.css`.
 | `.upsell-content__column` | `w-full max-w-[565px] overflow-hidden bg-white max-[991px]:max-w-none` | |
 | `.upsell-offer__card` | `flex flex-col items-start bg-white px-6 py-[30px] max-[767px]:w-full max-[767px]:px-[18px]` | 767 pad is 18px, not `px-4`. |
 | `.display-lg` | `m-0 text-balance text-[2.5rem] font-bold leading-[1.2] max-[991px]:text-[2rem]` | 991 and 767 both `--font-size--3xl` (2rem). |
-| `.review_component.cc-sm` + wrapper/stars | `mt-3 … text-sm leading-[1.3]`; stars `flex items-center text-brand-rating-star`; star `size-[1.2em]` | Token `--brand--color--rating-star`. 479 `mt-2.5`. |
+| `.star_wrapper` / `.star_img` | `inline-flex items-center gap-[1.2px]` / `flex size-4 shrink-0 items-center justify-center` | Do **not** `flex justify-center` on a full-width block — leftover `.star_wrapper` shrink-wraps so header + review-card stars stay left of the copy. SVG is 15px in a 16px box. |
 | `.divider_line._25` | `mb-[25px] mt-[25px] min-h-px w-full bg-neutral-divider max-[991px]:my-5 max-[767px]:mb-[18px] max-[767px]:mt-4` | Token `#e5e5e5`. |
 | `.divider_line.margin-32` | `mb-8 mt-8 min-h-px w-full bg-neutral-divider max-[991px]:my-[25px] max-[767px]:mb-[18px] max-[767px]:mt-4` | |
 | `.upsell-offer__price` | `text-[2.5rem] font-bold leading-none max-[767px]:text-[2rem]` | `--font-size--4xl` / `--font-size--3xl`. |
