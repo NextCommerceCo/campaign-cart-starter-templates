@@ -61,6 +61,7 @@ Compiler traps (not leftover CSS):
 | `max-[767px]` (and 991 / 479) | v4 compiles to `@media not all and (min-width:767px)` (`width < 767`). Leftover is `max-width: 767px` | Compare **766 and 768**, not only 767. At exactly 767 leftover applies and utilities do not |
 | Drop `.form-group` / `.form-input` | SDK inits floating labels with `querySelectorAll(".form-group")` and errors on `.form-group`; `closest(".form-input")` for icons | Keep the class names. Cosmetics can still be utilities. |
 | `p-*` / `py-*` on `.input-flds` | important padding beats SDK inline `paddingTop: 14px` when `.has-value` | Layout only (`h-12`, `px-3`). Unlayered leftover owns has-value `padding-top`. |
+| Neutralize leftover form layout globally | payment-methods + SDK billing inject have no utilities; they go unstyled | Scope the unset to `[data-next-catalog-component="customer-info-form\|shipping-address-form\|personalization-field"]` and `.bump__personalization` |
 
 Known name collisions while both sheets load (shield in `tailwind.input.css`):
 
@@ -285,7 +286,7 @@ Source of values: `src/olympus/assets/css/next-core.css`.
 | `.form-sections` | `relative flex min-h-0 w-full flex-col gap-8 overflow-visible max-[479px]:gap-4` | Keep `data-next-component="shipping-form"` on the shipping wrapper. |
 | `.form-section` | `relative flex flex-col gap-4 max-[479px]:w-full` | Step 1 uses `gap-8` (was `.grid-row-gap2`). Leave `.form-grid` / `.input-flds`. |
 | `.form-section__title` | `m-0 text-lg tracking-[-0.01em]` | `--font-size--lg` is 1.125rem. Beats leftover `h1`/`h2`. |
-| `.form-grid` | keep class; `mt-0 flex-col justify-around gap-4` (**no `flex` / `hidden`**) | Leftover `display:flex` + `.form-grid.next-hidden { display:none }`. A display utility would freeze the country/location gate. |
+| `.form-grid` | keep class; `mt-0 flex flex-col justify-around gap-4` | Leftover layout is **unset** on converted catalog surfaces so this `flex` is the real display. `.form-grid.next-hidden` is re-asserted `display:none !important` in `tailwind.input.css`. Do not put `flex` on `[data-next-component="location"]`. Payment-methods / billing-form inject keep leftover (no neutralize). |
 | `.form-grid__row` | `flex w-full items-start justify-between gap-4 max-[991px]:flex-wrap max-[767px]:flex-col` | 991 wrap; 767 column. Do not put this on `[data-next-component="location"]`. |
 | `.form-group` | **keep class**; `m-0 flex w-full flex-1 flex-col justify-between gap-1 p-0` | SDK floating labels init via `querySelectorAll(".form-group")`; error wrapper is `.form-group`. Dropping it freezes labels at opacity 0. |
 | `.form-input` | **keep class**; `relative z-[1] flex w-full flex-col items-stretch justify-center text-sm` | SDK `closest(".form-input")` for relative + error icons. Keep `.label-checkout` leftover (opacity 0 / `.has-value`). |
@@ -418,9 +419,9 @@ Checkout **page chrome**, product bundle cards, form-section titles, trust bar, 
 - `data-next-*`, `data-next-element="timer"`, `data-checkout-reveal-*`
 - `.checkout-form--reveal` / `.is-revealed` / `.checkout-reveal__panel` / `.checkout-reveal__cta` (Spreedly: off-screen, never `hidden`)
 - `.os-card__radio` / `.radio-inner` / `.next-selected` on product bundle cards
-- `.form-grid` (leftover `display:flex` + `.next-hidden`; no display utility on the grid)
-- `.form-group` / `.form-input` / `.select-form-wrapper` (SDK floating-label + error wrappers — keep the class names, cosmetics are utilities)
-- `.input-flds` / `.select-field` / `.spreedly-field` (hover / focus / `.next-focused` / `.next-error-field`)
+- `.form-grid` / `.form-group` / `.form-input` / `.select-form-wrapper` (SDK hooks; leftover **layout** unset on converted catalog surfaces so utilities paint; leftover intact on payment-methods / billing-form)
+- `.form-grid.next-hidden` (unlayered `display:none !important` on converted catalog grids)
+- `.input-flds` / `.select-field` / `.spreedly-field` (leftover **layout** unset on converted fields; leftover hover / focus / `.next-focused` / `.next-error-field` / border / fill stay)
 - `.label-checkout` / `.has-value` (floating label; opacity is leftover — do not put opacity utilities)
 - `.next-hidden` on `[data-next-component="location"]`
 - `[os-component="check"]` display (unlayered leftover; no display utility — voucher-dot trap)

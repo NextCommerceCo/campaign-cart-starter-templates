@@ -35,7 +35,7 @@
 {% if show_phone == nil %}{% assign show_phone = true %}{% endif -%}
 <div data-next-catalog-component="customer-info-form" class="relative flex flex-col gap-4 max-[479px]:w-full">
   <h2 class="m-0 text-lg tracking-[-0.01em]">{{ sec_title }}</h2>
-  <div class="form-grid mt-0 flex-col justify-around gap-4">
+  <div class="form-grid mt-0 flex flex-col justify-around gap-4">
     <div data-next-component="shipping-field-row" class="flex w-full items-start justify-between gap-4 max-[991px]:flex-wrap max-[767px]:flex-col">
       <div class="form-group m-0 flex w-full flex-1 flex-col justify-between gap-1 p-0">
         <div class="form-input relative z-[1] flex w-full flex-col items-stretch justify-center text-sm"><label for="shipping_fname" class="label-checkout">First Name</label><input autocomplete="given-name" placeholder="First Name*" maxlength="256" name="shipping_fname" data-name="Shipping First Name" type="text" id="shipping_fname" data-next-checkout-field="fname" class="input-flds relative mb-0 flex h-12 w-full items-center justify-center rounded-input px-3 text-[0.925rem]"></div>

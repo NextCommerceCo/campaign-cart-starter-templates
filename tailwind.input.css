@@ -227,6 +227,87 @@
 }
 
 /*
+  Neutralize leftover next-core FORM LAYOUT inside converted catalog
+  surfaces only. next-core still loads (lint:next-core) and still
+  matches these SDK hook names. payment-methods + the billing-form
+  inject have no Tailwind utilities — leave leftover intact there.
+
+  Do not unset hide / focus / error / floating-label / border / fill.
+*/
+[data-next-catalog-component="customer-info-form"] .form-grid,
+[data-next-catalog-component="shipping-address-form"] .form-grid,
+[data-next-catalog-component="personalization-field"] .form-grid {
+  display: unset;
+  flex-flow: unset;
+  justify-content: unset;
+  margin-top: unset;
+  grid-column-gap: unset;
+  grid-row-gap: unset;
+}
+
+[data-next-catalog-component="customer-info-form"] .form-group,
+[data-next-catalog-component="shipping-address-form"] .form-group,
+[data-next-catalog-component="personalization-field"] .form-group {
+  display: unset;
+  flex-flow: unset;
+  flex: unset;
+  justify-content: unset;
+  width: unset;
+  margin-top: unset;
+  margin-left: unset;
+  padding: unset;
+  grid-column-gap: unset;
+  grid-row-gap: unset;
+  grid-template-rows: unset;
+  grid-template-columns: unset;
+  grid-auto-columns: unset;
+}
+
+[data-next-catalog-component="customer-info-form"] .form-input,
+[data-next-catalog-component="shipping-address-form"] .form-input,
+[data-next-catalog-component="personalization-field"] .form-input {
+  z-index: unset;
+  display: unset;
+  flex-flow: unset;
+  justify-content: unset;
+  align-items: unset;
+  width: unset;
+  font-size: unset;
+  position: unset;
+}
+
+[data-next-catalog-component="shipping-address-form"] .select-form-wrapper {
+  cursor: unset;
+  flex: unset;
+  align-items: unset;
+  display: unset;
+  position: unset;
+}
+
+[data-next-catalog-component="customer-info-form"] .input-flds,
+[data-next-catalog-component="shipping-address-form"] .input-flds,
+[data-next-catalog-component="personalization-field"] .input-flds,
+.bump__personalization .input-flds {
+  border-radius: unset;
+  justify-content: unset;
+  align-items: unset;
+  width: unset;
+  height: unset;
+  margin-bottom: unset;
+  padding-left: unset;
+  padding-right: unset;
+  font-size: unset;
+  display: unset;
+  position: unset;
+}
+
+[data-next-catalog-component="customer-info-form"] .form-grid.next-hidden,
+[data-next-catalog-component="shipping-address-form"] .form-grid.next-hidden,
+[data-next-catalog-component="personalization-field"] .form-grid.next-hidden {
+  display: none !important;
+}
+
+/*
   Floating labels. SDK inits on .form-group, toggles .has-value on
   .label-checkout, and writes inline paddingTop 14px on the field.
   important preflight / padding utilities freeze both. Unlayered

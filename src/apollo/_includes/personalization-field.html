@@ -30,7 +30,7 @@
 {%- assign op_maxlength = order_personalization.maxlength | default: 120 -%}
 <div class="relative flex flex-col gap-8 max-[479px]:w-full" data-next-catalog-component="personalization-field">
   <h2 class="m-0 text-lg tracking-[-0.01em]">{{ op_label }}{% if order_personalization.optional %} <span class="font-normal text-brand-text-muted">(optional)</span>{% endif %}</h2>
-  <div class="form-grid mt-0 flex-col justify-around gap-4">
+  <div class="form-grid mt-0 flex flex-col justify-around gap-4">
     <div class="flex w-full items-start justify-between gap-4 max-[991px]:flex-wrap max-[767px]:flex-col">
       <div class="form-group m-0 flex w-full flex-1 flex-col justify-between gap-1 p-0">
         <div class="form-input relative z-[1] flex w-full flex-col items-stretch justify-center text-sm">
