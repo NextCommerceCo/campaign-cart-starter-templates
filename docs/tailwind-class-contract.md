@@ -302,6 +302,7 @@ Source of values: `src/olympus/assets/css/next-core.css`.
 | `.checkout-trust-bar` | `flex flex-col gap-4 max-[991px]:px-5 max-[991px]:py-4` | Icons `w-5 max-[479px]:w-3.5`; copy `text-xs font-semibold leading-none text-neutral-hint max-[479px]:text-[8px]`. Never add Tailwind `invert`. |
 | `.credit-card__flags` | `mx-auto w-[90%] max-w-[350px] max-[479px]:w-full` | |
 | `.submit-section` | `mt-[-1rem] flex flex-col gap-2 max-[479px]:mt-0` | Keep `.submit-button__loader` / `.three-quarter-spinner` leftover (SDK `data-pb-element`). |
+| `.submit-section__disclaimer` | `mt-2.5 w-full text-center text-xs text-brand-foreground/90 max-[479px]:text-[8px]` | Leftover is `--font-size--xs` (12px) then **8px** at ≤479 — not `text-xs` on mobile. Compare 478 and 480. |
 | `.submit-button` | `relative flex w-full min-h-[5rem] items-center justify-center rounded-button border-2 border-brand-cta bg-brand-cta px-8 py-4 text-center font-semibold text-brand-text-inverse no-underline` | Reveal trigger: `min-h-0 px-6 py-[0.875rem]` + label `text-base uppercase`. Do **not** put display utilities on `.checkout-reveal__cta` (`important` `flex` beats leftover `display:none`). |
 | `.order-bumps` | `my-4 flex flex-col gap-4` | Form-section slot. Drop leftover `.order-bumps`. |
 | check03 wrapper | `flex flex-col gap-4 border-none pt-[0.875rem]` | Beats leftover `[data-component="prepurchase-upsell"]` dashed border. Keep `data-component` / `data-variant`. |
