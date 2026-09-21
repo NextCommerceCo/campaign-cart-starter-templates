@@ -58,6 +58,7 @@ Compiler traps (not leftover CSS):
 |---|---|---|
 | `[&_.os-card__radio]` | Tailwind treats `__` as a space, so the child selector never matches | Put the utility on the radio, or use a hyphenated child (`[&_.radio-inner]`) |
 | v4 `scale-0` / `scale-100` | Those set the `scale` **property**, not `transform` | Use `[transform:scale(0)]` / `[transform:scale(1)]` when leftover animated `transform` |
+| `max-[767px]` (and 991 / 479) | v4 compiles to `@media not all and (min-width:767px)` (`width < 767`). Leftover is `max-width: 767px` | Compare **766 and 768**, not only 767. At exactly 767 leftover applies and utilities do not |
 
 Known name collisions while both sheets load (shield in `tailwind.input.css`):
 
@@ -165,7 +166,7 @@ These are not always toggled by JS, but selected-state CSS and Campaigns OS bran
 
 - `.os-card` and `.os-card__*` (incl. `.os-card.next-selected`, radio, pills)
 - `.bundle-card` / `.bundle-tile` and descendants
-- `.bump-card` / `.bump__*` (PackageToggle / order bump)
+- `.bump__switch` / `.bump__switch-slider` / `.bump__personalization` / `[os-component="check"]` (PackageToggle; cosmetics on the card are utilities)
 - `.payment-method` and descendants
 - `.checkout-reveal__panel` / `.checkout-reveal__cta`
 - `.form-grid`, `.input-flds`, `.button` (when used with `.next-loading` / `.is-inactive`)
@@ -290,6 +291,12 @@ Source of values: `src/olympus/assets/css/next-core.css`.
 | `.credit-card__flags` | `mx-auto w-[90%] max-w-[350px] max-[479px]:w-full` | |
 | `.submit-section` | `mt-[-1rem] flex flex-col gap-2 max-[479px]:mt-0` | Keep `.submit-button__loader` / `.three-quarter-spinner` leftover (SDK `data-pb-element`). |
 | `.submit-button` | `relative flex w-full min-h-[5rem] items-center justify-center rounded-button border-2 border-brand-cta bg-brand-cta px-8 py-4 text-center font-semibold text-brand-text-inverse no-underline` | Reveal trigger: `min-h-0 px-6 py-[0.875rem]` + label `text-base uppercase`. Do **not** put display utilities on `.checkout-reveal__cta` (`important` `flex` beats leftover `display:none`). |
+| `.order-bumps` | `my-4 flex flex-col gap-4` | Form-section slot. Drop leftover `.order-bumps`. |
+| check03 wrapper | `flex flex-col gap-4 border-none pt-[0.875rem]` | Beats leftover `[data-component="prepurchase-upsell"]` dashed border. Keep `data-component` / `data-variant`. |
+| check03 card | `relative cursor-pointer overflow-visible rounded-cards border-2 border-dashed border-brand-border bg-white p-4 next-active:border-brand next-active:bg-brand-lighter next-in-cart:border-brand next-in-cart:bg-brand-lighter max-[767px]:p-[0.875rem]` | Selected fill is `--brand--color--primary-lighter`, not `brand-light`. Keep `data-next-toggle-card`. |
+| check01 / switch card | `group relative overflow-hidden rounded-cards border border-bump-border next-active:bg-brand-surface next-active:select-none next-in-cart:bg-brand-surface next-in-cart:select-none max-[767px]:rounded` | Token `#bbb`. Header selected: `group-[.next-active]:bg-brand-light group-[.next-in-cart]:bg-brand-light` (`--brand--color--primary-light`). |
+| check01 checkbox | `flex size-[1.625rem] shrink-0 items-center justify-center rounded border border-bump-checkbox bg-white` | check03 is `size-5` (1.25rem). Keep `[os-component="check"]` + leftover display. |
+| `.bump__switch` | leftover | `::before` opacity + slider `transform`. Do not put transform utilities on the thumb. |
 
 ---
 
@@ -384,9 +391,9 @@ Page chrome **and offer cosmetics** on the three Apollo bundle upsells are Tailw
 
 ## Checkout chrome pass (Apollo)
 
-Checkout **page chrome**, product bundle cards, form-section titles, trust bar, reviews cards, and submit cosmetics are Tailwind utilities. Bumps, payment methods, cart-summary `.cart-item*`, inputs (`.form-grid` / `.input-flds`), and reveal park/unpark stay leftover.
+Checkout **page chrome**, product bundle cards, form-section titles, trust bar, reviews cards, submit cosmetics, and **order-bump cosmetics** (check03 / check01 / switch01) are Tailwind utilities. Payment methods, cart-summary `.cart-item*`, inputs (`.form-grid` / `.input-flds`), and reveal park/unpark stay leftover. `bump-check02.html` is unwired on the default checkout and is still leftover.
 
-**Tokens added:** `--color-brand-white`, `--color-neutral-300`, `--color-neutral-checkout` (`#fcfcfc`), `--color-promo-timer-pill` (`rgba(255,255,255,0.19)`), `--radius-sm`, `--animate-as-seen-in-scroll`, `--color-brand-lighter`, `--color-pill-primary` / `--color-pill-primary-surface`, `--color-pill-secondary` / `--color-pill-secondary-surface`.
+**Tokens added:** `--color-brand-white`, `--color-neutral-300`, `--color-neutral-checkout` (`#fcfcfc`), `--color-promo-timer-pill` (`rgba(255,255,255,0.19)`), `--radius-sm`, `--animate-as-seen-in-scroll`, `--color-brand-lighter`, `--color-pill-primary` / `--color-pill-primary-surface`, `--color-pill-secondary` / `--color-pill-secondary-surface`, `--color-bump-border` (`#bbb`), `--color-bump-checkbox` (`#9b9b9b`).
 
 **Verified vs live** (`nextcommerce-campaign-templates.netlify.app/apollo/checkout/`):
 
@@ -401,7 +408,10 @@ Checkout **page chrome**, product bundle cards, form-section titles, trust bar, 
 - `.checkout-form--reveal` / `.is-revealed` / `.checkout-reveal__panel` / `.checkout-reveal__cta` (Spreedly: off-screen, never `hidden`)
 - `.os-card__radio` / `.radio-inner` / `.next-selected` on product bundle cards
 - `.form-grid` / `.input-flds` / `.label-checkout` (SDK validation)
-- `.bump-card*` / `[data-component="prepurchase-upsell"]` (`.next-active` / `.next-in-cart`)
+- `[os-component="check"]` display (unlayered leftover; no display utility — voucher-dot trap)
+- `.bump__switch` / `.bump__switch-slider` (`::before` fill + thumb `transform`; ON state retargeted to `[data-next-toggle-card].next-in-cart` / `.next-active`)
+- `.bump__personalization` (click-stop in `checkout-apollo.js`)
+- `.checkbox__icon` (1rem check glyph)
 - `.payment-method*` (generated shared partial)
 - `.cart-box` / `.cart-item*` (SDK clones summary lines)
 - `.submit-button__loader` / `.three-quarter-spinner`

@@ -59,70 +59,70 @@
      Option A (per-unit, stable, DEFAULT): unitPrice/ea, with originalUnitPrice/ea only when show_compare_price=true — does not scale with synced qty
      Option B (line total, scales, opt-in): originalPrice + price — multiplies with data-next-package-sync qty
        To switch: pass show_per_unit_price=false show_line_total_price=true to {% campaign_include %} {% endcomment %}
-<div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="check01" data-next-await="">
+<div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="check01" data-next-await="" class="flex flex-col gap-4 border-none">
   <div data-next-package-toggle>
-    <div class="bump-card" data-next-toggle-card{% if is_upsell %} data-next-is-upsell="true"{% endif %}{% if b_sync %} data-next-package-sync="{{ b_sync }}"{% endif %} data-next-package-id="{{ pkg_id }}">
+    <div class="group relative overflow-hidden rounded-cards border border-bump-border next-active:bg-brand-surface next-active:select-none next-in-cart:bg-brand-surface next-in-cart:select-none max-[767px]:rounded" data-next-toggle-card{% if is_upsell %} data-next-is-upsell="true"{% endif %}{% if b_sync %} data-next-package-sync="{{ b_sync }}"{% endif %} data-next-package-id="{{ pkg_id }}">
       {% comment %} Bump header — visual only, whole card is the toggle target {% endcomment %}
-      <div class="bump__header-left">
-        <div class="bump__header-content">
-          <div class="bump__checkbox">
+      <div class="flex cursor-pointer flex-col items-start justify-start bg-brand-surface p-3 group-[.next-active]:bg-brand-light group-[.next-in-cart]:bg-brand-light">
+        <div class="relative flex items-center gap-3">
+          <div class="flex size-[1.625rem] shrink-0 items-center justify-center rounded border border-bump-checkbox bg-white">
             <div os-component="check" class="checkbox__icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--fe" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m6 10l-2 2l6 6L20 8l-2-2l-8 8z"></path></svg></div>
           </div>
-          <div class="bump__title">{{ t }}</div>
+          <div class="text-lg font-bold">{{ t }}</div>
         </div>
       </div>
       {% comment %} Bump body: price, list, image {% endcomment %}
-      <div class="bump__body">
-        <div class="bump__content">
-          <div class="bump__content-wrap">
-            <div class="bump__price">
+      <div class="bg-white p-4">
+        <div class="flex items-start justify-start gap-4">
+          <div class="flex flex-1 flex-col justify-start gap-2 text-left">
+            <div class="flex flex-col items-start gap-2 text-[1.5rem] font-bold max-[767px]:text-xl">
               {% if b_unit %}
               {% comment %} Option A: per-unit pricing — stable across tier changes (SDK 0.4.14+) {% endcomment %}
-              <div class="bump__price-row">
-                {% if b_compare %}<div class="bump__price-unit"><span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span></div>{% endif %}
-                <div class="bump__price-unit"><span data-next-toggle-display="unitPrice" class="bump__price-sale">--</span><span class="text-xl">/ea</span></div>
+              <div class="flex items-center gap-2">
+                {% if b_compare %}<div><span data-next-toggle-display="originalUnitPrice" class="font-normal line-through">--</span></div>{% endif %}
+                <div><span data-next-toggle-display="unitPrice">--</span><span class="text-xl">/ea</span></div>
               </div>
               {% endif %}
               {% if b_line_total %}
               {% comment %} Option B: line total pricing — scales with synced qty {% endcomment %}
-              <div class="bump__price-row">
-                <div data-next-toggle-display="originalPrice" class="bump__price-reg">--</div>
-                <div data-next-toggle-display="price" class="bump__price-total">--</div>
+              <div class="flex items-center gap-2">
+                <div data-next-toggle-display="originalPrice" class="font-normal line-through">--</div>
+                <div data-next-toggle-display="price">--</div>
               </div>
               {% endif %}
             </div>
 
-            <div class="list-container cc-2xs">
-              <ul role="list" class="list w-list-unstyled">
+            <div class="m-0 flex flex-col items-start justify-center p-0 text-[0.725rem]">
+              <ul role="list" class="m-0 flex list-none flex-col items-start justify-center gap-y-[0.5em] p-0 text-left">
                 {% if feature_list -%}
                 {% for feat in feature_list -%}
-                <li class="list__item">
-                  <div class="list_icon"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
+                <li class="m-0 flex items-start justify-start gap-x-[0.5em] p-0 max-[767px]:mb-[0.15rem]">
+                  <div class="relative flex size-[1.5em] min-h-[1.5em] min-w-[1.5em] shrink-0 items-center justify-center"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
                   <div>{{ feat }}</div>
                 </li>
                 {% endfor -%}
                 {% else -%}
-                <li class="list__item">
-                  <div class="list_icon"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
+                <li class="m-0 flex items-start justify-start gap-x-[0.5em] p-0 max-[767px]:mb-[0.15rem]">
+                  <div class="relative flex size-[1.5em] min-h-[1.5em] min-w-[1.5em] shrink-0 items-center justify-center"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
                   <div>Order bump feature 1</div>
                 </li>
-                <li class="list__item">
-                  <div class="list_icon"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
+                <li class="m-0 flex items-start justify-start gap-x-[0.5em] p-0 max-[767px]:mb-[0.15rem]">
+                  <div class="relative flex size-[1.5em] min-h-[1.5em] min-w-[1.5em] shrink-0 items-center justify-center"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
                   <div>Order bump feature 2</div>
                 </li>
-                <li class="list__item">
-                  <div class="list_icon"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
+                <li class="m-0 flex items-start justify-start gap-x-[0.5em] p-0 max-[767px]:mb-[0.15rem]">
+                  <div class="relative flex size-[1.5em] min-h-[1.5em] min-w-[1.5em] shrink-0 items-center justify-center"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
                   <div>Order bump feature 3</div>
                 </li>
-                <li class="list__item">
-                  <div class="list_icon"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
+                <li class="m-0 flex items-start justify-start gap-x-[0.5em] p-0 max-[767px]:mb-[0.15rem]">
+                  <div class="relative flex size-[1.5em] min-h-[1.5em] min-w-[1.5em] shrink-0 items-center justify-center"><svg width="100%" height="100%" viewBox="0 0 13 10" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation" fill="CurrentColor"><path d="M12.265 0.182296C12.0219 -0.0607654 11.6279 -0.0607654 11.3848 0.182296L3.92853 7.63866L1.06245 4.77258C0.819416 4.52952 0.425382 4.52955 0.182296 4.77258C-0.0607654 5.01562 -0.0607654 5.40966 0.182296 5.65272L3.48845 8.95882C3.73142 9.20186 4.12574 9.20169 4.36861 8.95882L12.265 1.06245C12.508 0.819416 12.508 0.425358 12.265 0.182296Z" fill="inherit"></path></svg></div>
                   <div>Order bump feature 4</div>
                 </li>
                 {%- endif %}
               </ul>
             </div>
           </div>
-          <img data-next-toggle-image loading="lazy" alt="{{ img_alt }}" src="{{ img_src | campaign_asset }}" class="bump__image">
+          <img data-next-toggle-image loading="lazy" alt="{{ img_alt }}" src="{{ img_src | campaign_asset }}" class="size-[135px] shrink-0">
         </div>
       </div>
     </div>

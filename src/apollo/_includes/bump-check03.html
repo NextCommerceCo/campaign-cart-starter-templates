@@ -48,34 +48,34 @@
 {% assign b_savings_text = bump.savings_text | default: 'Instant savings when added' -%}
 {% assign b_exclude = bump.exclude_property | default: '' -%}
 {% assign b_personalization = bump.personalization -%}
-<div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="check03" data-next-await="">
+<div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="check03" data-next-await="" class="flex flex-col gap-4 border-none pt-[0.875rem]">
   <div data-next-package-toggle>
-    <div class="bump-card bump-card--product" data-next-toggle-card{% if is_upsell %} data-next-is-upsell="true"{% endif %}{% if bump_sync %} data-next-package-sync="{{ bump_sync }}"{% endif %} data-next-package-id="{{ pkg_id }}"{% if b_exclude != "" %} data-next-exclude-property="{{ b_exclude }}"{% endif %}>
-      {% if b_badge_text != "" %}<div class="bump__badge"><span data-next-toggle-display="discountPercentage" data-next-format="percentage">{{ b_badge_text }}</span> OFF</div>{% endif %}
-      <div class="bump-product__main">
-        <div class="bump__checkbox" aria-hidden="true">
+    <div class="relative cursor-pointer overflow-visible rounded-cards border-2 border-dashed border-brand-border bg-white p-4 next-active:border-brand next-active:bg-brand-lighter next-in-cart:border-brand next-in-cart:bg-brand-lighter max-[767px]:p-[0.875rem]" data-next-toggle-card{% if is_upsell %} data-next-is-upsell="true"{% endif %}{% if bump_sync %} data-next-package-sync="{{ bump_sync }}"{% endif %} data-next-package-id="{{ pkg_id }}"{% if b_exclude != "" %} data-next-exclude-property="{{ b_exclude }}"{% endif %}>
+      {% if b_badge_text != "" %}<div class="absolute right-4 top-0 z-[1] -translate-y-1/2 whitespace-nowrap rounded-md bg-system-destructive px-[0.6rem] py-[0.3rem] text-xs font-extrabold uppercase leading-none text-brand-white max-[479px]:right-3"><span data-next-toggle-display="discountPercentage" data-next-format="percentage">{{ b_badge_text }}</span> OFF</div>{% endif %}
+      <div class="grid grid-cols-[auto_auto_minmax(0,1fr)_auto] items-center gap-x-5 gap-y-4 max-[767px]:grid-cols-[auto_72px_minmax(0,1fr)] max-[767px]:gap-x-3 max-[767px]:gap-y-[0.175rem] max-[479px]:grid-cols-[auto_64px_minmax(0,1fr)]">
+        <div class="flex size-5 shrink-0 items-center justify-center rounded border border-bump-checkbox bg-white" aria-hidden="true">
           <div os-component="check" class="checkbox__icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--fe" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="m6 10l-2 2l6 6L20 8l-2-2l-8 8z"></path></svg></div>
         </div>
-        <img data-next-toggle-image loading="lazy" alt="{{ b_image_alt }}" src="{{ b_image_src | campaign_asset }}" class="bump__image bump-product__image">
-        <div class="bump-product__copy">
-          <div class="bump__title">{{ b_title }}</div>
-          <div class="bump__description">{{ b_subtitle }}</div>
+        <img data-next-toggle-image loading="lazy" alt="{{ b_image_alt }}" src="{{ b_image_src | campaign_asset }}" class="size-[60px] rounded-lg object-cover max-[767px]:size-[72px] max-[479px]:size-16">
+        <div class="flex min-w-0 flex-col gap-2">
+          <div class="text-lg font-bold leading-[1.2] text-brand-text-primary max-[767px]:text-base">{{ b_title }}</div>
+          <div class="text-sm leading-[1.35] text-brand-text-secondary">{{ b_subtitle }}</div>
         </div>
-        <div class="bump-product__price">
+        <div class="flex min-w-max flex-col items-end gap-[0.35rem] text-right max-[767px]:col-span-full max-[767px]:items-start max-[767px]:text-left">
           {% if b_price_mode == 'unit' %}
           {% comment %} Per-unit price: stable, does not multiply with synced qty (like bump-check01) {% endcomment %}
-          <div class="bump__price-row">
-            {% if b_compare %}<span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span>{% endif %}
-            <span class="bump__price-unit"><span data-next-toggle-display="unitPrice" class="bump__price-total">--</span><span class="text-sm text-muted text-weight-normal">/ea</span></span>
+          <div class="flex items-baseline gap-[0.375rem]">
+            {% if b_compare %}<span data-next-toggle-display="originalUnitPrice" class="text-base font-bold text-brand-text-muted line-through">--</span>{% endif %}
+            <span><span data-next-toggle-display="unitPrice" class="text-xl font-extrabold text-brand-text-primary max-[767px]:text-lg">--</span><span class="text-sm font-normal text-brand-text-muted">/ea</span></span>
           </div>
           {% else %}
           {% comment %} Line-total price: multiplies with synced qty {% endcomment %}
-          <div class="bump__price-row">
-            {% if b_compare %}<span data-next-toggle-display="originalPrice" class="bump__price-reg">--</span>{% endif %}
-            <span data-next-toggle-display="price" class="bump__price-total">--</span>
+          <div class="flex items-baseline gap-[0.375rem]">
+            {% if b_compare %}<span data-next-toggle-display="originalPrice" class="text-base font-bold text-brand-text-muted line-through">--</span>{% endif %}
+            <span data-next-toggle-display="price" class="text-xl font-extrabold text-brand-text-primary max-[767px]:text-lg">--</span>
           </div>
           {% endif %}
-          {% if b_savings_text != "" %}<div class="bump__savings">{{ b_savings_text }} <span data-next-toggle-display="discountAmount">--</span></div>{% endif %}
+          {% if b_savings_text != "" %}<div class="text-sm font-bold text-system-success-medium">{{ b_savings_text }} <span data-next-toggle-display="discountAmount">--</span></div>{% endif %}
         </div>
       </div>
       {% if b_personalization and b_personalization.enabled %}
@@ -83,8 +83,8 @@
       {% assign bp_label = b_personalization.label | default: 'Custom text for this add-on' -%}
       {% assign bp_placeholder = b_personalization.placeholder | default: '' -%}
       {% assign bp_maxlength = b_personalization.maxlength | default: 24 -%}
-      <div class="os-slot__personalization bump__personalization bump-product__personalization">
-        <label class="os-card__variant-label">{{ bp_label }}{% if b_personalization.optional %} <span class="text-muted text-weight-normal">(optional)</span>{% endif %}</label>
+      <div class="bump__personalization mt-4">
+        <label class="os-card__variant-label">{{ bp_label }}{% if b_personalization.optional %} <span class="font-normal text-brand-text-muted">(optional)</span>{% endif %}</label>
         <input data-next-property="{{ bp_key }}" type="text" maxlength="{{ bp_maxlength }}"{% if bp_placeholder != "" %} placeholder="{{ bp_placeholder }}"{% endif %} class="input-flds">
       </div>
       {% endif %}

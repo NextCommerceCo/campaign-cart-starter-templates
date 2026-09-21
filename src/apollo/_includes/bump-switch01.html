@@ -36,23 +36,23 @@
 {% assign sw_title = bump_title | default: bump.title | default: 'Order Bump Title' -%}
 {% assign sw_desc = description_prefix | default: bump.description_prefix | default: 'Order bump description before price' -%}
 {% if show_unit_price == nil and bump.show_unit_price == nil %}{% assign show_unit = true %}{% elsif show_unit_price != nil %}{% assign show_unit = show_unit_price %}{% else %}{% assign show_unit = bump.show_unit_price %}{% endif -%}
-<div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="switch" data-next-await="">
+<div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="switch" data-next-await="" class="flex flex-col gap-4 border-none">
   <div data-next-package-toggle>
-    <div class="bump-card bump-card--switch" data-next-toggle-card data-next-is-upsell="true" data-next-package-id="{{ pkg_id }}">
-      <div class="bump__header-left bump__head--switch">
-        <div class="bump__header-content bump__head-inner">
-          <span class="bump__title">{{ sw_title }}</span>
+    <div class="bump-card bump-card--switch group relative overflow-hidden rounded-cards border border-bump-border next-active:select-none next-in-cart:select-none max-[767px]:rounded" data-next-toggle-card data-next-is-upsell="true" data-next-package-id="{{ pkg_id }}">
+      <div class="bump__head--switch flex cursor-pointer flex-col p-3">
+        <div class="flex w-full flex-row items-center justify-between gap-3">
+          <span class="text-lg font-bold">{{ sw_title }}</span>
           <span class="bump__switch" aria-hidden="true">
             <span class="bump__switch-slider"></span>
           </span>
         </div>
       </div>
-      <div class="bump__body">
-        <div class="bump__content">
-          <p class="bump__description">
+      <div class="bg-white p-4">
+        <div class="flex items-start justify-start gap-4">
+          <p class="text-sm">
             {{ sw_desc }}
 
-            <span data-next-toggle-display="price" class="display-visible bump__price-total">$9.99</span>{% if show_unit %} total or <span data-next-toggle-display="unitPrice" class="display-visible">$9.99</span><span class="bump__price-ea">/ea</span>{% endif %}
+            <span data-next-toggle-display="price">$9.99</span>{% if show_unit %} total or <span data-next-toggle-display="unitPrice">$9.99</span><span>/ea</span>{% endif %}
           </p>
         </div>
       </div>

@@ -21,6 +21,8 @@
 @custom-variant next-expanded (&:is(.next-expanded));
 @custom-variant next-selected (&:is(.next-selected));
 @custom-variant next-disabled (&:is(.next-disabled));
+@custom-variant next-active (&:is(.next-active));
+@custom-variant next-in-cart (&:is(.next-in-cart));
 
 @theme inline {
   --font-sans: 'Plus Jakarta Sans', sans-serif;
@@ -76,6 +78,8 @@
   --color-system-destructive:       var(--system-colors--destructive);
   --color-brand-white:              var(--brand--color--white);
   --color-neutral-300:              var(--neutral--300);
+  --color-bump-border:              var(--neutral--bump-border, #bbb);
+  --color-bump-checkbox:            var(--neutral--bump-checkbox, #9b9b9b);
   --color-neutral-checkout:         var(--neutral--checkout, #fcfcfc);
   --color-promo-timer-pill:         var(--promo-timer--pill, rgba(255, 255, 255, 0.19));
   --radius-sm:                      var(--radius-size--sm);
@@ -181,4 +185,42 @@
 [data-component="reviews-swiper"] .swiper-slide {
   width: auto;
   height: auto;
+}
+
+/*
+  Bump checkmark: leftover next-core hides this until selected.
+  Do not put a display utility on [os-component="check"] — important
+  flex would freeze it visible (voucher-dot trap).
+*/
+[data-next-toggle-card] [os-component="check"] {
+  display: none;
+}
+[data-next-toggle-card].next-in-cart [os-component="check"],
+[data-next-toggle-card].next-active [os-component="check"] {
+  display: flex;
+}
+
+/*
+  Switch fill + thumb. next-core keys the ON state off .bump-card;
+  converted cards drop that class, so retarget to the toggle card.
+  Keep .bump__switch / .bump__switch-slider for ::before + transform.
+*/
+[data-next-toggle-card].next-in-cart .bump__switch::before,
+[data-next-toggle-card].next-active .bump__switch::before,
+[data-next-toggle-card].bump--switch-on .bump__switch::before {
+  opacity: 1;
+}
+[data-next-toggle-card].next-in-cart .bump__switch-slider,
+[data-next-toggle-card].next-active .bump__switch-slider,
+[data-next-toggle-card].bump--switch-on .bump__switch-slider,
+[data-next-toggle-card] .bump__head--switch.next-active .bump__switch-slider {
+  transform: translate(1.75rem, -50%);
+}
+@media screen and (max-width: 426px) {
+  [data-next-toggle-card].next-in-cart .bump__switch-slider,
+  [data-next-toggle-card].next-active .bump__switch-slider,
+  [data-next-toggle-card].bump--switch-on .bump__switch-slider,
+  [data-next-toggle-card] .bump__head--switch.next-active .bump__switch-slider {
+    transform: translate(1.25rem, -50%);
+  }
 }

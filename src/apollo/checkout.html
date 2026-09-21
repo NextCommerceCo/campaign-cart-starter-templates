@@ -304,7 +304,7 @@ bundles:
                             </div>
                         {% assign bump_variant = order_bump_variant | default: 'check01+switch01' %}
                         {% unless bump_variant == 'none' %}
-                          <div class="order-bumps">
+                          <div class="my-4 flex flex-col gap-4">
                           {% if bump_variant == 'check01' %}
                           {% campaign_include 'bump-check01.html' packages=packages %}
                           {% elsif bump_variant == 'check02' %}
