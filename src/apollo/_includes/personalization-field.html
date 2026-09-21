@@ -28,13 +28,13 @@
 {%- assign op_label = order_personalization.label | default: 'Add a gift message' -%}
 {%- assign op_placeholder = order_personalization.placeholder | default: '' -%}
 {%- assign op_maxlength = order_personalization.maxlength | default: 120 -%}
-<div class="form-section grid-row-gap2" data-next-catalog-component="personalization-field">
-  <h2 class="form-section__title">{{ op_label }}{% if order_personalization.optional %} <span class="text-muted">(optional)</span>{% endif %}</h2>
-  <div class="form-grid">
-    <div class="form-grid__row">
-      <div class="form-group">
-        <div class="form-input">
-          <input data-next-default-property="{{ op_key }}" name="{{ op_key }}" type="text" id="{{ op_key }}" maxlength="{{ op_maxlength }}"{% if op_placeholder != "" %} placeholder="{{ op_placeholder }}"{% endif %} class="input-flds">
+<div class="relative flex flex-col gap-8 max-[479px]:w-full" data-next-catalog-component="personalization-field">
+  <h2 class="m-0 text-lg tracking-[-0.01em]">{{ op_label }}{% if order_personalization.optional %} <span class="font-normal text-brand-text-muted">(optional)</span>{% endif %}</h2>
+  <div class="form-grid mt-0 flex-col justify-around gap-4">
+    <div class="flex w-full items-start justify-between gap-4 max-[991px]:flex-wrap max-[767px]:flex-col">
+      <div class="form-group m-0 flex w-full flex-1 flex-col justify-between gap-1 p-0">
+        <div class="form-input relative z-[1] flex w-full flex-col items-stretch justify-center text-sm">
+          <input data-next-default-property="{{ op_key }}" name="{{ op_key }}" type="text" id="{{ op_key }}" maxlength="{{ op_maxlength }}"{% if op_placeholder != "" %} placeholder="{{ op_placeholder }}"{% endif %} class="input-flds relative mb-0 flex h-12 w-full items-center justify-center rounded-input px-3 text-[0.925rem]">
         </div>
       </div>
     </div>

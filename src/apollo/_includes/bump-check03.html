@@ -85,7 +85,7 @@
       {% assign bp_maxlength = b_personalization.maxlength | default: 24 -%}
       <div class="bump__personalization mt-4">
         <label class="os-card__variant-label">{{ bp_label }}{% if b_personalization.optional %} <span class="font-normal text-brand-text-muted">(optional)</span>{% endif %}</label>
-        <input data-next-property="{{ bp_key }}" type="text" maxlength="{{ bp_maxlength }}"{% if bp_placeholder != "" %} placeholder="{{ bp_placeholder }}"{% endif %} class="input-flds">
+        <input data-next-property="{{ bp_key }}" type="text" maxlength="{{ bp_maxlength }}"{% if bp_placeholder != "" %} placeholder="{{ bp_placeholder }}"{% endif %} class="input-flds relative mb-0 flex h-12 w-full items-center justify-center rounded-input px-3 text-[0.925rem]">
       </div>
       {% endif %}
     </div>

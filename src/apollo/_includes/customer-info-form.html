@@ -35,24 +35,24 @@
 {% if show_phone == nil %}{% assign show_phone = true %}{% endif -%}
 <div data-next-catalog-component="customer-info-form" class="relative flex flex-col gap-4 max-[479px]:w-full">
   <h2 class="m-0 text-lg tracking-[-0.01em]">{{ sec_title }}</h2>
-  <div class="form-grid">
-    <div data-next-component="shipping-field-row" class="form-grid__row">
-      <div class="form-group">
-        <div class="form-input"><label for="shipping_fname" class="label-checkout">First Name</label><input autocomplete="given-name" placeholder="First Name*" maxlength="256" name="shipping_fname" data-name="Shipping First Name" type="text" id="shipping_fname" data-next-checkout-field="fname" class="input-flds"></div>
+  <div class="form-grid mt-0 flex-col justify-around gap-4">
+    <div data-next-component="shipping-field-row" class="flex w-full items-start justify-between gap-4 max-[991px]:flex-wrap max-[767px]:flex-col">
+      <div class="form-group m-0 flex w-full flex-1 flex-col justify-between gap-1 p-0">
+        <div class="form-input relative z-[1] flex w-full flex-col items-stretch justify-center text-sm"><label for="shipping_fname" class="label-checkout">First Name</label><input autocomplete="given-name" placeholder="First Name*" maxlength="256" name="shipping_fname" data-name="Shipping First Name" type="text" id="shipping_fname" data-next-checkout-field="fname" class="input-flds relative mb-0 flex h-12 w-full items-center justify-center rounded-input px-3 text-[0.925rem]"></div>
       </div>
-      <div class="form-group">
-        <div class="form-input"><label for="shipping_lname" class="label-checkout">Last Name</label><input autocomplete="family-name" placeholder="Last Name*" maxlength="256" name="shipping_lname" data-name="Shipping Last Name" type="text" id="shipping_lname" data-next-checkout-field="lname" class="input-flds"></div>
+      <div class="form-group m-0 flex w-full flex-1 flex-col justify-between gap-1 p-0">
+        <div class="form-input relative z-[1] flex w-full flex-col items-stretch justify-center text-sm"><label for="shipping_lname" class="label-checkout">Last Name</label><input autocomplete="family-name" placeholder="Last Name*" maxlength="256" name="shipping_lname" data-name="Shipping Last Name" type="text" id="shipping_lname" data-next-checkout-field="lname" class="input-flds relative mb-0 flex h-12 w-full items-center justify-center rounded-input px-3 text-[0.925rem]"></div>
       </div>
     </div>
-    <div class="form-grid__row">
-      <div class="form-group">
-        <div class="form-input"><label for="email" class="label-checkout">Email</label><input autocomplete="email" name="email" data-name="Email" type="email" id="email" placeholder="Email*" data-next-checkout-field="email" class="input-flds"></div>
+    <div class="flex w-full items-start justify-between gap-4 max-[991px]:flex-wrap max-[767px]:flex-col">
+      <div class="form-group m-0 flex w-full flex-1 flex-col justify-between gap-1 p-0">
+        <div class="form-input relative z-[1] flex w-full flex-col items-stretch justify-center text-sm"><label for="email" class="label-checkout">Email</label><input autocomplete="email" name="email" data-name="Email" type="email" id="email" placeholder="Email*" data-next-checkout-field="email" class="input-flds relative mb-0 flex h-12 w-full items-center justify-center rounded-input px-3 text-[0.925rem]"></div>
       </div>
     </div>
     {% if show_phone -%}
-    <div data-next-component="shipping-field-row" class="form-grid__row">
-      <div class="form-group">
-        <div class="form-input"><label for="phone" class="label-checkout">Phone</label><input autocomplete="tel-full"{% if phone_required == true or phone_required == 'true' %} required data-next-required="true"{% endif %} name="phone" data-name="Phone" type="tel" id="phone" placeholder="201-555-0123" data-next-checkout-field="phone" class="input-flds"></div>
+    <div data-next-component="shipping-field-row" class="flex w-full items-start justify-between gap-4 max-[991px]:flex-wrap max-[767px]:flex-col">
+      <div class="form-group m-0 flex w-full flex-1 flex-col justify-between gap-1 p-0">
+        <div class="form-input relative z-[1] flex w-full flex-col items-stretch justify-center text-sm"><label for="phone" class="label-checkout">Phone</label><input autocomplete="tel-full"{% if phone_required == true or phone_required == 'true' %} required data-next-required="true"{% endif %} name="phone" data-name="Phone" type="tel" id="phone" placeholder="201-555-0123" data-next-checkout-field="phone" class="input-flds relative mb-0 flex h-12 w-full items-center justify-center rounded-input px-3 text-[0.925rem]"></div>
       </div>
     </div>
     {%- endif %}

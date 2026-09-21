@@ -83,6 +83,7 @@
   --color-neutral-checkout:         var(--neutral--checkout, #fcfcfc);
   --color-promo-timer-pill:         var(--promo-timer--pill, rgba(255, 255, 255, 0.19));
   --radius-sm:                      var(--radius-size--sm);
+  --radius-input:                   var(--radius--input);
   --animate-as-seen-in-scroll:      as-seen-in-scroll 24s linear infinite;
 
   @keyframes as-seen-in-scroll {
@@ -223,4 +224,18 @@
   [data-next-toggle-card] .bump__head--switch.next-active .bump__switch-slider {
     transform: translate(1.25rem, -50%);
   }
+}
+
+/*
+  Floating labels. SDK inits on .form-group, toggles .has-value on
+  .label-checkout, and writes inline paddingTop 14px on the field.
+  important preflight / padding utilities freeze both. Unlayered
+  important restores the leftover next-core has-value paint.
+*/
+.form-input:has(> .label-checkout.has-value) .input-flds {
+  padding-top: 14px !important;
+}
+.label-checkout.has-value {
+  opacity: 1 !important;
+  transform: translate(0);
 }

@@ -59,6 +59,8 @@ Compiler traps (not leftover CSS):
 | `[&_.os-card__radio]` | Tailwind treats `__` as a space, so the child selector never matches | Put the utility on the radio, or use a hyphenated child (`[&_.radio-inner]`) |
 | v4 `scale-0` / `scale-100` | Those set the `scale` **property**, not `transform` | Use `[transform:scale(0)]` / `[transform:scale(1)]` when leftover animated `transform` |
 | `max-[767px]` (and 991 / 479) | v4 compiles to `@media not all and (min-width:767px)` (`width < 767`). Leftover is `max-width: 767px` | Compare **766 and 768**, not only 767. At exactly 767 leftover applies and utilities do not |
+| Drop `.form-group` / `.form-input` | SDK inits floating labels with `querySelectorAll(".form-group")` and errors on `.form-group`; `closest(".form-input")` for icons | Keep the class names. Cosmetics can still be utilities. |
+| `p-*` / `py-*` on `.input-flds` | important padding beats SDK inline `paddingTop: 14px` when `.has-value` | Layout only (`h-12`, `px-3`). Unlayered leftover owns has-value `padding-top`. |
 
 Known name collisions while both sheets load (shield in `tailwind.input.css`):
 
@@ -169,7 +171,8 @@ These are not always toggled by JS, but selected-state CSS and Campaigns OS bran
 - `.bump__switch` / `.bump__switch-slider` / `.bump__personalization` / `[os-component="check"]` (PackageToggle; cosmetics on the card are utilities)
 - `.payment-method` and descendants
 - `.checkout-reveal__panel` / `.checkout-reveal__cta`
-- `.form-grid`, `.input-flds`, `.button` (when used with `.next-loading` / `.is-inactive`)
+- `.form-grid` / `.input-flds` / `.label-checkout` (SDK validation; cosmetics on the grid/row, not display/border on the field)
+- `.button` (when used with `.next-loading` / `.is-inactive`)
 - `.hide` / `.hide-tablet*` / `.show-tablet` until those breakpoints are utilities **and** no JS uses `.hide`
 
 Checkout reveal CSS must keep the payment panel in the layout (translated/off-screen). `hidden` / `display:none` on that panel breaks Spreedly.
@@ -282,6 +285,14 @@ Source of values: `src/olympus/assets/css/next-core.css`.
 | `.form-sections` | `relative flex min-h-0 w-full flex-col gap-8 overflow-visible max-[479px]:gap-4` | Keep `data-next-component="shipping-form"` on the shipping wrapper. |
 | `.form-section` | `relative flex flex-col gap-4 max-[479px]:w-full` | Step 1 uses `gap-8` (was `.grid-row-gap2`). Leave `.form-grid` / `.input-flds`. |
 | `.form-section__title` | `m-0 text-lg tracking-[-0.01em]` | `--font-size--lg` is 1.125rem. Beats leftover `h1`/`h2`. |
+| `.form-grid` | keep class; `mt-0 flex-col justify-around gap-4` (**no `flex` / `hidden`**) | Leftover `display:flex` + `.form-grid.next-hidden { display:none }`. A display utility would freeze the country/location gate. |
+| `.form-grid__row` | `flex w-full items-start justify-between gap-4 max-[991px]:flex-wrap max-[767px]:flex-col` | 991 wrap; 767 column. Do not put this on `[data-next-component="location"]`. |
+| `.form-group` | **keep class**; `m-0 flex w-full flex-1 flex-col justify-between gap-1 p-0` | SDK floating labels init via `querySelectorAll(".form-group")`; error wrapper is `.form-group`. Dropping it freezes labels at opacity 0. |
+| `.form-input` | **keep class**; `relative z-[1] flex w-full flex-col items-stretch justify-center text-sm` | SDK `closest(".form-input")` for relative + error icons. Keep `.label-checkout` leftover (opacity 0 / `.has-value`). |
+| `.input-flds` (layout) | keep class; `relative mb-0 flex h-12 w-full items-center justify-center rounded-input px-3 text-[0.925rem]` | **Do not** put border / background / shadow utilities — leftover owns hover, `:focus`, `.next-focused`, `.next-error-field`, and 479 `#d4d4d4`. Token `--radius-input`. Keep `.select-field`. SDK `has-value` also sets inline `paddingTop: 14px`. |
+| `.select-form-wrapper` | **keep class**; `relative flex flex-1 cursor-pointer items-center` | `findFieldWrapper` walks `.select-form-wrapper`. |
+| `.caret-down` | `pointer-events-none absolute bottom-0 right-0 z-[15] flex h-12 w-10 cursor-pointer items-center justify-center rounded-br-[6px] rounded-tr-[6px] border-l border-brand-border bg-transparent` | Hairline `#e1e1e1` → `brand-border`. |
+| `.select-arrow` | `flex w-3 items-center justify-center text-brand-gray` | Source `#696969` → `brand-gray`. |
 | `.form-section__header` / `__subtitle` | `flex flex-col gap-2` / `text-[0.925rem]` | |
 | `.bundle-cards` | `flex flex-col gap-4` | Keep `os-option` + `data-next-bundle-*`. |
 | `.bundle-card` (product) | `group relative cursor-pointer rounded-cards border-2 border-brand-border bg-brand-background p-4 next-selected:border-brand next-selected:bg-brand-lighter` | Keep `.next-selected` (SDK). Token `--brand--color--primary-lighter`. Do not keep leftover `.bundle-card` (next-core would still paint). |
@@ -391,9 +402,9 @@ Page chrome **and offer cosmetics** on the three Apollo bundle upsells are Tailw
 
 ## Checkout chrome pass (Apollo)
 
-Checkout **page chrome**, product bundle cards, form-section titles, trust bar, reviews cards, submit cosmetics, and **order-bump cosmetics** (check03 / check01 / switch01) are Tailwind utilities. Payment methods, cart-summary `.cart-item*`, inputs (`.form-grid` / `.input-flds`), and reveal park/unpark stay leftover. `bump-check02.html` is unwired on the default checkout and is still leftover.
+Checkout **page chrome**, product bundle cards, form-section titles, trust bar, reviews cards, submit cosmetics, order-bump cosmetics, and **checkout form layout** (customer + shipping grids, select caret) are Tailwind utilities. `.input-flds` / `.label-checkout` / `.form-grid` stay as SDK hooks. Payment methods, cart-summary `.cart-item*`, and reveal park/unpark stay leftover. `bump-check02.html` is unwired on the default checkout and is still leftover.
 
-**Tokens added:** `--color-brand-white`, `--color-neutral-300`, `--color-neutral-checkout` (`#fcfcfc`), `--color-promo-timer-pill` (`rgba(255,255,255,0.19)`), `--radius-sm`, `--animate-as-seen-in-scroll`, `--color-brand-lighter`, `--color-pill-primary` / `--color-pill-primary-surface`, `--color-pill-secondary` / `--color-pill-secondary-surface`, `--color-bump-border` (`#bbb`), `--color-bump-checkbox` (`#9b9b9b`).
+**Tokens added:** `--color-brand-white`, `--color-neutral-300`, `--color-neutral-checkout` (`#fcfcfc`), `--color-promo-timer-pill` (`rgba(255,255,255,0.19)`), `--radius-sm`, `--radius-input`, `--animate-as-seen-in-scroll`, `--color-brand-lighter`, `--color-pill-primary` / `--color-pill-primary-surface`, `--color-pill-secondary` / `--color-pill-secondary-surface`, `--color-bump-border` (`#bbb`), `--color-bump-checkbox` (`#9b9b9b`).
 
 **Verified vs live** (`nextcommerce-campaign-templates.netlify.app/apollo/checkout/`):
 
@@ -407,7 +418,11 @@ Checkout **page chrome**, product bundle cards, form-section titles, trust bar, 
 - `data-next-*`, `data-next-element="timer"`, `data-checkout-reveal-*`
 - `.checkout-form--reveal` / `.is-revealed` / `.checkout-reveal__panel` / `.checkout-reveal__cta` (Spreedly: off-screen, never `hidden`)
 - `.os-card__radio` / `.radio-inner` / `.next-selected` on product bundle cards
-- `.form-grid` / `.input-flds` / `.label-checkout` (SDK validation)
+- `.form-grid` (leftover `display:flex` + `.next-hidden`; no display utility on the grid)
+- `.form-group` / `.form-input` / `.select-form-wrapper` (SDK floating-label + error wrappers — keep the class names, cosmetics are utilities)
+- `.input-flds` / `.select-field` / `.spreedly-field` (hover / focus / `.next-focused` / `.next-error-field`)
+- `.label-checkout` / `.has-value` (floating label; opacity is leftover — do not put opacity utilities)
+- `.next-hidden` on `[data-next-component="location"]`
 - `[os-component="check"]` display (unlayered leftover; no display utility — voucher-dot trap)
 - `.bump__switch` / `.bump__switch-slider` (`::before` fill + thumb `transform`; ON state retargeted to `[data-next-toggle-card].next-in-cart` / `.next-active`)
 - `.bump__personalization` (click-stop in `checkout-apollo.js`)

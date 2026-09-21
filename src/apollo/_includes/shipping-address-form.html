@@ -34,15 +34,15 @@
 <div data-next-catalog-component="shipping-address-form" class="relative flex flex-col gap-4 max-[479px]:w-full">
   <h1 class="m-0 text-lg tracking-[-0.01em]">{{ sec_title }}</h1>
   <div>
-    <div class="form-grid">
-      <div data-next-component="shipping-field-row" class="form-grid__row">
-        <div class="form-group">
-          <div class="form-input"><label for="shipping_country" class="label-checkout">Country</label>
-            <div class="select-form-wrapper"><select autocomplete="country-name" data-next-checkout-field="country" class="input-flds select-field">
+    <div class="form-grid mt-0 flex-col justify-around gap-4">
+      <div data-next-component="shipping-field-row" class="flex w-full items-start justify-between gap-4 max-[991px]:flex-wrap max-[767px]:flex-col">
+        <div class="form-group m-0 flex w-full flex-1 flex-col justify-between gap-1 p-0">
+          <div class="form-input relative z-[1] flex w-full flex-col items-stretch justify-center text-sm"><label for="shipping_country" class="label-checkout">Country</label>
+            <div class="select-form-wrapper relative flex flex-1 cursor-pointer items-center"><select autocomplete="country-name" data-next-checkout-field="country" class="input-flds select-field relative mb-0 flex h-12 w-full items-center justify-center rounded-input px-3 text-[0.925rem]">
                 <option value="">Select Country</option>
               </select>
-              <div class="caret-down">
-                <div class="select-arrow"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <div class="pointer-events-none absolute bottom-0 right-0 z-[15] flex h-12 w-10 cursor-pointer items-center justify-center rounded-br-[6px] rounded-tr-[6px] border-l border-brand-border bg-transparent">
+                <div class="flex w-3 items-center justify-center text-brand-gray"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="2 4.75 7 9.25 12 4.75"></polyline>
                   </svg></div>
               </div>
@@ -50,36 +50,36 @@
           </div>
         </div>
       </div>
-      <div data-next-component="shipping-field-row" class="form-grid__row">
-        <div class="form-group">
-          <div class="form-input"><label for="shipping_address1" class="label-checkout">Address</label><input autocomplete="address-line1" placeholder="Address*" data-next-checkout-field="address1" class="input-flds"></div>
+      <div data-next-component="shipping-field-row" class="flex w-full items-start justify-between gap-4 max-[991px]:flex-wrap max-[767px]:flex-col">
+        <div class="form-group m-0 flex w-full flex-1 flex-col justify-between gap-1 p-0">
+          <div class="form-input relative z-[1] flex w-full flex-col items-stretch justify-center text-sm"><label for="shipping_address1" class="label-checkout">Address</label><input autocomplete="address-line1" placeholder="Address*" data-next-checkout-field="address1" class="input-flds relative mb-0 flex h-12 w-full items-center justify-center rounded-input px-3 text-[0.925rem]"></div>
         </div>
       </div>
-      <div data-next-component="shipping-field-row" class="form-grid__row">
-        <div class="form-group">
-          <div class="form-input"><label for="shipping_address2" class="label-checkout">Apartment, suite, etc. (optional)</label><input autocomplete="address-line2" name="shipping_address2" data-name="Shipping Address 2" type="text" id="shipping_addres2" placeholder="Apartment, suite, etc. (optional)" maxlength="256" data-next-checkout-field="address2" class="input-flds"></div>
+      <div data-next-component="shipping-field-row" class="flex w-full items-start justify-between gap-4 max-[991px]:flex-wrap max-[767px]:flex-col">
+        <div class="form-group m-0 flex w-full flex-1 flex-col justify-between gap-1 p-0">
+          <div class="form-input relative z-[1] flex w-full flex-col items-stretch justify-center text-sm"><label for="shipping_address2" class="label-checkout">Apartment, suite, etc. (optional)</label><input autocomplete="address-line2" name="shipping_address2" data-name="Shipping Address 2" type="text" id="shipping_addres2" placeholder="Apartment, suite, etc. (optional)" maxlength="256" data-next-checkout-field="address2" class="input-flds relative mb-0 flex h-12 w-full items-center justify-center rounded-input px-3 text-[0.925rem]"></div>
         </div>
       </div>
       <div data-next-component="location" class="next-hidden">
-        <div data-next-component="shipping-field-row" class="form-grid__row">
-          <div class="form-group">
-            <div class="form-input"><label for="shipping_city" class="label-checkout">City</label><input autocomplete="address-level2" placeholder="City*" maxlength="256" name="shipping_city" data-name="Shipping City" type="text" id="shipping_city" pattern="^[A-Za-z\s]+$" data-next-checkout-field="city" class="input-flds"></div>
+        <div data-next-component="shipping-field-row" class="flex w-full items-start justify-between gap-4 max-[991px]:flex-wrap max-[767px]:flex-col">
+          <div class="form-group m-0 flex w-full flex-1 flex-col justify-between gap-1 p-0">
+            <div class="form-input relative z-[1] flex w-full flex-col items-stretch justify-center text-sm"><label for="shipping_city" class="label-checkout">City</label><input autocomplete="address-level2" placeholder="City*" maxlength="256" name="shipping_city" data-name="Shipping City" type="text" id="shipping_city" pattern="^[A-Za-z\s]+$" data-next-checkout-field="city" class="input-flds relative mb-0 flex h-12 w-full items-center justify-center rounded-input px-3 text-[0.925rem]"></div>
           </div>
-          <div class="form-group">
-            <div class="form-input"><label for="shipping_province" class="label-checkout">State</label>
-              <div class="select-form-wrapper"><select autocomplete="address-level1" name="shipping_province" data-name="Shipping Province" type="select" id="shipping_province" data-next-checkout-field="province" class="input-flds select-field">
+          <div class="form-group m-0 flex w-full flex-1 flex-col justify-between gap-1 p-0">
+            <div class="form-input relative z-[1] flex w-full flex-col items-stretch justify-center text-sm"><label for="shipping_province" class="label-checkout">State</label>
+              <div class="select-form-wrapper relative flex flex-1 cursor-pointer items-center"><select autocomplete="address-level1" name="shipping_province" data-name="Shipping Province" type="select" id="shipping_province" data-next-checkout-field="province" class="input-flds select-field relative mb-0 flex h-12 w-full items-center justify-center rounded-input px-3 text-[0.925rem]">
                   <option value="">Select State</option>
                 </select>
-                <div class="caret-down">
-                  <div class="select-arrow"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <div class="pointer-events-none absolute bottom-0 right-0 z-[15] flex h-12 w-10 cursor-pointer items-center justify-center rounded-br-[6px] rounded-tr-[6px] border-l border-brand-border bg-transparent">
+                  <div class="flex w-3 items-center justify-center text-brand-gray"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                       <polyline points="2 4.75 7 9.25 12 4.75"></polyline>
                     </svg></div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="form-group">
-            <div class="form-input"><label for="shipping_postal_code" class="label-checkout">ZIP Code</label><input autocomplete="postal-code" placeholder="ZIP Code*" maxlength="10" name="shipping_postal_code" data-name="Shipping Postal Code" type="text" id="shipping_postal_code" inputmode="numeric" pattern="(^\d{5}$)|(^\d{5}-\d{4}$)" data-next-checkout-field="postal" class="input-flds"></div>
+          <div class="form-group m-0 flex w-full flex-1 flex-col justify-between gap-1 p-0">
+            <div class="form-input relative z-[1] flex w-full flex-col items-stretch justify-center text-sm"><label for="shipping_postal_code" class="label-checkout">ZIP Code</label><input autocomplete="postal-code" placeholder="ZIP Code*" maxlength="10" name="shipping_postal_code" data-name="Shipping Postal Code" type="text" id="shipping_postal_code" inputmode="numeric" pattern="(^\d{5}$)|(^\d{5}-\d{4}$)" data-next-checkout-field="postal" class="input-flds relative mb-0 flex h-12 w-full items-center justify-center rounded-input px-3 text-[0.925rem]"></div>
           </div>
         </div>
       </div>
