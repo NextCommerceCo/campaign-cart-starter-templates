@@ -30,50 +30,49 @@
     - bundle-selector (drives cart contents)
     - submit-block (acts on the totals)
 {% endcomment %}
-<div data-next-catalog-component="order-summary" class="summary-wrapper" data-next-cart-summary>
+<div data-next-catalog-component="order-summary" class="flex flex-col gap-4" data-next-cart-summary>
   <template>
-    <div class="order-summary">
-      <div class="order-summary__content">
+    <div class="flex flex-col gap-4">
 
-        <div data-os-cart-summary="line-wrapper" class="cart-items">
-          <div class="cart-summary__line pb--header">
-            <div class="cart-summary__line-item"><div>Item</div></div>
-            <div class="cart-summary__line-item"><div>Amount</div></div>
+        <div data-os-cart-summary="line-wrapper" class="cart-items relative">
+          <div class="mb-1 flex justify-between border-b border-brand-border pb-1 font-bold">
+            <div class="text-right"><div>Item</div></div>
+            <div class="text-right"><div>Amount</div></div>
           </div>
           <div data-os-cart-summary="summary-scroll" class="cart-items__scroll-hint cart-items__scroll-hint--active hide">
             <div>Scroll for more items</div>
             <div class="icon__view-more">…</div>
           </div>
-          <div class="cart-items__list" data-summary-lines>
+          <div class="cart-items__list flex max-h-[18rem] flex-col gap-2 overflow-auto border-b border-brand-border pt-2 max-[991px]:max-h-none" data-summary-lines>
             <template>
-              <div class="cart-item" data-package-id="{item.packageId}">
-                <div class="cart-item__wrapper">
-                  <div class="cart-item__details cc-left-0">
-                    <div class="cart-item__content">
-                      <div class="cart-item__description">
-                        <div class="cart-item__header">
-                          <div class="cart-item__title os-bold">
+              <div class="cart-item static z-0 items-center justify-between pb-2" data-package-id="{item.packageId}">
+                <div class="cart-item__wrapper flex w-full flex-row items-stretch justify-between overflow-visible rounded pl-0.5">
+                  <div class="cart-item__details cc-left-0 relative z-[1] flex w-full flex-col justify-center pl-0">
+                    <div class="cart-item__content flex w-full items-stretch justify-between max-[991px]:items-end">
+                      <div class="cart-item__description flex flex-1 flex-col items-start justify-center gap-[0.15rem] text-left">
+                        <div class="cart-item__header flex justify-between">
+                          <div class="cart-item__title text-base font-bold leading-[1.3] max-[479px]:text-[0.9rem]">
                             {% comment %} Single-variant: {item.name} | Multi-variant swap: replace with {item.variantName} {% endcomment %}
                             {item.quantity}x {item.name}
                             {% comment %} {item.quantity}x {item.variantName} {% endcomment %}
                             <div>
-                              <div class="text-2xs text-muted text-weight-normal diagonal-strike {item.hasDiscount}">{item.originalUnitPrice}/ea</div>
-                              <div class="text-2xs text-muted text-weight-normal">{item.unitPrice}/ea</div>
+                              <div class="text-xs font-normal leading-[1.4] text-brand-text-muted diagonal-strike {item.hasDiscount}">{item.originalUnitPrice}/ea</div>
+                              <div class="text-xs font-normal leading-[1.4] text-brand-text-muted">{item.unitPrice}/ea</div>
                             </div>
                           </div>
                         </div>
                         {% comment %} SDK 0.4.26: line-item properties (personalization). Renders one row per
                              property on this item; container gets next-summary-empty / next-summary-has-items
                              so the block hides itself when the item carries no properties. {% endcomment %}
-                        <div data-next-item-properties class="cart-item__properties text-2xs text-muted">
+                        <div data-next-item-properties class="cart-item__properties text-xs leading-[1.4] text-brand-text-muted">
                           <template>
-                            <div class="cart-item__property"><span class="os-bold">{property.key}:</span> {property.value}</div>
+                            <div class="cart-item__property"><span class="font-bold">{property.key}:</span> {property.value}</div>
                           </template>
                         </div>
                       </div>
-                      <div class="cart-item__pricing">
-                        <div class="cart-price diagonal-strike line-compare {item.hasDiscount}">{item.originalPrice}</div>
-                        <div class="checkout__line-item__final-price">{item.price}</div>
+                      <div class="cart-item__pricing flex flex-col items-end justify-center">
+                        <div class="cart-price font-normal diagonal-strike line-compare {item.hasDiscount}">{item.originalPrice}</div>
+                        <div class="checkout__line-item__final-price font-bold">{item.price}</div>
                       </div>
                     </div>
                   </div>
@@ -83,41 +82,40 @@
           </div>
         </div>
 
-        <div class="order-totals os-cart-summary-totals">
-          <div class="order-totals__line">
-            <div class="order-totals__label">Subtotal</div>
-            <div class="order-totals__value">{subtotal}</div>
+        <div class="order-totals os-cart-summary-totals relative flex min-h-[30px] w-full min-w-0 flex-col gap-3 bg-transparent p-0 text-sm max-[991px]:text-xs">
+          <div class="order-totals__line flex justify-between text-brand-black">
+            <div>Subtotal</div>
+            <div>{subtotal}</div>
           </div>
 
           {% comment %} Per-discount rows — SDK 0.4.13+: data-next-discounts replaces data-summary-offer/voucher-discounts {% endcomment %}
-          <div class="order-totals__section">
-            <ul class="order-totals__discount-list" data-next-discounts="offer" aria-label="Offer discounts">
+          <div class="flex flex-col gap-1">
+            <ul class="m-0 list-none p-0" data-next-discounts="offer" aria-label="Offer discounts">
               <template>
-                <li class="order-totals__line">
-                  <div class="order-totals__label text-muted">{discount.name} - Save {discount.percentage}</div>
-                  <div class="order-totals__value text-muted">−{discount.amount}</div>
+                <li class="flex justify-between text-brand-black">
+                  <div class="text-brand-text-muted">{discount.name} - Save {discount.percentage}</div>
+                  <div class="text-brand-text-muted">−{discount.amount}</div>
                 </li>
-                
               </template>
             </ul>
-            <ul class="order-totals__discount-list" data-next-discounts="voucher" aria-label="Coupon discounts">
+            <ul class="m-0 list-none p-0" data-next-discounts="voucher" aria-label="Coupon discounts">
               <template>
-                <li class="order-totals__line">
-                  <div class="order-totals__label text-muted">{discount.name} - Save {discount.percentage}</div>
-                  <div class="order-totals__value text-muted">−{discount.amount}</div>
+                <li class="flex justify-between text-brand-black">
+                  <div class="text-brand-text-muted">{discount.name} - Save {discount.percentage}</div>
+                  <div class="text-brand-text-muted">−{discount.amount}</div>
                 </li>
               </template>
             </ul>
           </div>
 
-          <div class="order-totals__section order-totals__section--inset os-cart-summary-row--discount">
-            <div class="order-totals__line">
-              <div class="order-totals__label-group">
-                <div class="order-totals__label ts-lg tw-600">Today you saved</div>
+          <div class="os-cart-summary-row--discount mx-[-1.5rem] bg-brand-surface px-6 py-2">
+            <div class="flex justify-between text-brand-black">
+              <div class="flex items-center gap-1">
+                <div class="text-lg font-semibold">Today you saved</div>
               </div>
-              <div class="accordion__right">
-                <div class="order-totals__label">Discounts</div>
-                <div class="order-totals__value ts-lg tw-600 cc-disc">{discounts}</div>
+              <div class="flex items-center gap-1">
+                <div>Discounts</div>
+                <div class="text-lg font-semibold text-discount-saved">{discounts}</div>
               </div>
             </div>
             {% comment %} BS-014: cart.discountCode unwired — use data-next-discounts="voucher" + {discount.description} for code string {% endcomment %}
@@ -139,32 +137,31 @@
             {% endcomment %}
           </div>
 
-          <div data-next-show="order.hasTax" class="order-totals__line os-cart-summary-row--tax">
-            <div class="order-totals__label">Tax</div>
-            <div data-next-display="order.tax" class="order-totals__value"></div>
+          <div data-next-show="order.hasTax" class="os-cart-summary-row--tax justify-between text-brand-black">
+            <div>Tax</div>
+            <div data-next-display="order.tax"></div>
           </div>
 
-          <div class="order-totals__section">
-            <div class="order-totals__line">
-              <div class="accordion__right"><div class="order-totals__label">Shipping</div></div>
-              <div class="accordion__right">
-                <div class="order-totals__value">{shipping}</div>
+          <div class="flex flex-col gap-1">
+            <div class="flex justify-between text-brand-black">
+              <div class="flex items-center gap-1"><div>Shipping</div></div>
+              <div class="flex items-center gap-1">
+                <div>{shipping}</div>
               </div>
             </div>
           </div>
 
-          <div class="order-totals__section cc-total">
-            <div class="order-totals__line order-totals__line--total">
-              <div class="order-totals__label order-totals__label--total">Grand Total:</div>
-              <div class="order-totals__value-group">
-                <div class="summary-total__coin">{currency}</div>
-                <div class="order-totals__value order-totals__value--total">{total}</div>
+          <div class="cc-total mt-2 flex flex-col gap-1">
+            <div class="flex justify-between text-lg font-bold text-brand-black">
+              <div>Grand Total:</div>
+              <div class="flex items-center gap-1">
+                <div class="text-sm font-normal">{currency}</div>
+                <div>{total}</div>
               </div>
             </div>
           </div>
         </div>
 
-      </div>
     </div>
   </template>
 </div>

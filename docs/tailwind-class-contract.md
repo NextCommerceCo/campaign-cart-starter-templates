@@ -354,7 +354,7 @@ npm run build:css:watch    # same, watch
 
 - `@source` in `tailwind.input.css` must include every Apollo HTML file (pages + `_includes`, including `<template>` clones the SDK paints).
 - Load compiled CSS with a hardcoded `<link>` in the layout. Do **not** list `tailwind.css` in page frontmatter `styles:` (Netlify validates those paths before compile).
-- `base.html` always loads **both**: `next-sdk.css` (tokens + leftover hooks + unconverted payment/cart) and compiled `tailwind.css` (`important`). Apollo does **not** load `next-core.css` at runtime; the file stays on disk so `lint:next-core` stays byte-identical. Do not wait for a `page_type` gate. Regenerate leftover with `python3 scripts/extract-apollo-next-sdk.py`.
+- `base.html` always loads **both**: `next-sdk.css` (tokens + leftover hooks + unconverted payment; cart-item* leftover still shipped for receipt-orders) and compiled `tailwind.css` (`important`). Apollo does **not** load `next-core.css` at runtime; the file stays on disk so `lint:next-core` stays byte-identical. Do not wait for a `page_type` gate. Regenerate leftover with `python3 scripts/extract-apollo-next-sdk.py`.
 
 ---
 
@@ -403,7 +403,7 @@ Page chrome **and offer cosmetics** on the three Apollo bundle upsells are Tailw
 
 ## Checkout chrome pass (Apollo)
 
-Checkout **page chrome**, product bundle cards, form-section titles, trust bar, reviews cards, submit cosmetics, order-bump cosmetics, and **checkout form layout** (customer + shipping grids, select caret) are Tailwind utilities. `.input-flds` / `.label-checkout` / `.form-grid` stay as SDK hooks. Payment methods, cart-summary `.cart-item*`, and reveal park/unpark stay leftover. `bump-check02.html` is unwired on the default checkout and is still leftover.
+Checkout **page chrome**, product bundle cards, form-section titles, trust bar, reviews cards, submit cosmetics, order-bump cosmetics, and **checkout form layout** (customer + shipping grids, select caret) are Tailwind utilities. `.input-flds` / `.label-checkout` / `.form-grid` stay as SDK hooks. Payment methods and reveal park/unpark stay leftover. Cart-summary cosmetics are utilities; `.cart-item*` class names stay (SDK clones the template). `bump-check02.html` is unwired on the default checkout and is still leftover.
 
 **Tokens added:** `--color-brand-white`, `--color-neutral-300`, `--color-neutral-checkout` (`#fcfcfc`), `--color-promo-timer-pill` (`rgba(255,255,255,0.19)`), `--radius-sm`, `--radius-input`, `--animate-as-seen-in-scroll`, `--color-brand-lighter`, `--color-pill-primary` / `--color-pill-primary-surface`, `--color-pill-secondary` / `--color-pill-secondary-surface`, `--color-bump-border` (`#bbb`), `--color-bump-checkbox` (`#9b9b9b`).
 
@@ -429,11 +429,34 @@ Checkout **page chrome**, product bundle cards, form-section titles, trust bar, 
 - `.bump__personalization` (click-stop in `checkout-apollo.js`)
 - `.checkbox__icon` (1rem check glyph)
 - `.payment-method*` (generated shared partial)
-- `.cart-box` / `.cart-item*` (SDK clones summary lines)
+- `.cart-item*` / `data-next-cart-summary` / `data-summary-lines` / `os-cart-summary-*` (SDK clones + host-state display). Cosmetics are utilities; leftover layout is unset on `[data-next-catalog-component="order-summary"]`. receipt-orders still leftover.
+- `.hide` on `{item.hasDiscount}` / scroll-hint / dormant tax. Do not put display utilities on those nodes.
+- `.diagonal-strike` leftover (no important display — `.hide` must win)
+- `.cart-items__scroll-hint` leftover (JS opacity + 991 hide)
 - `.submit-button__loader` / `.three-quarter-spinner`
 - `swiper` / `swiper-slide` / `swiper-scrollbar` / `data-component="reviews-swiper"`
 
 ---
+
+
+| `.cart-box` + `.cart-box--card` | `flex flex-col gap-4 rounded-sm border border-brand-border bg-white p-6` | `--radius--label` is 4px → `rounded-sm`. Converted on checkout.html wrapper. |
+| `.summary-wrapper` / `.order-summary__content` | `flex flex-col gap-4` | Drop leftover wrappers. Keep `data-next-cart-summary`. |
+| `.cart-items` | keep class; `relative` | Scroll-hint leftover keys off this. |
+| `.cart-summary__line.pb--header` | `mb-1 flex justify-between border-b border-brand-border pb-1 font-bold` | Amount column `text-right`. |
+| `.cart-items__list` | keep class; `flex max-h-[18rem] flex-col gap-2 overflow-auto border-b border-brand-border pt-2 max-[991px]:max-h-none` | Do not put display utilities on `.cart-items__scroll-hint`. |
+| `.cart-item` | **keep class**; `static z-0 items-center justify-between pb-2` | SDK clones this node. No `flex` on the item — wrapper is the row. |
+| `.cart-item__wrapper` | keep class; `flex w-full flex-row items-stretch justify-between overflow-visible rounded pl-0.5` | |
+| `.cart-item__details` | keep class; `relative z-[1] flex w-full flex-col justify-center pl-4 max-[991px]:pl-3 max-[479px]:text-[0.9rem]` | Variant 01/03 no-image uses `pl-0` (was `.cc-left-0`). |
+| `.cart-item__content` | keep class; `flex w-full items-stretch justify-between max-[991px]:items-end` | |
+| `.cart-item__description` | keep class; `flex flex-1 flex-col items-start justify-center gap-[0.15rem] text-left` | |
+| `.cart-item__title` | keep class; `text-base font-bold leading-[1.3] max-[479px]:text-[0.9rem]` | Variant 02 (no os-bold) is `font-medium`. |
+| unit / muted | `text-xs font-normal leading-[1.4] text-brand-text-muted` | Keep `.diagonal-strike {item.hasDiscount}` — no display utility (`.hide` token). |
+| `.cart-item__image-container` | keep class; `relative flex size-16 … rounded bg-white p-0.5 shadow-cart-item` | Token `--shadow-cart-item`. Image `bg-cart-image-wash`. |
+| `.cart-item__quantity-badge` | keep class; `absolute -right-[0.35rem] -top-[0.35rem] z-[1] flex size-6 … rounded-md border-2 border-white bg-black text-[0.65rem] text-white` | Qty `font-bold max-[991px]:text-[0.6rem]`. |
+| `.order-totals` | keep `.os-cart-summary-totals`; `relative flex min-h-[30px] w-full flex-col gap-3 … text-sm max-[991px]:text-xs` | Empty-cart hide is unlayered leftover `display:none !important`. |
+| totals line | `flex justify-between text-brand-black` | Grand total adds `text-lg font-bold`. Coin `text-sm font-normal`. |
+| `.order-totals__section--inset` + discount | `mx-[-1.5rem] bg-brand-surface px-6 py-2` on the **hook node only** — no display utility (`os-cart-summary-row--discount`). Saved amount `text-discount-saved`. |
+| tax / discount rows | keep `os-cart-summary-row--tax` / `--discount` | Leftover display. Do not put `flex` on these nodes. |
 
 ## Out of scope for the Apollo pilot
 

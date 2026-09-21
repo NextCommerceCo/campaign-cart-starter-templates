@@ -90,6 +90,11 @@
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
   }
+  --color-discount-saved:           var(--discount--saved, #e44613);
+  --color-neutral-summary-rule:     var(--neutral--summary-rule, #f0f0f0);
+  --color-cart-image-wash:          var(--cart-image--wash, #ececec);
+  --color-brand-accent-core:        var(--brand--color--accent);
+  --shadow-cart-item:               0 1px 1.75px #0000001f, 0 -.5px 1.5px #00000017, 0 3px 4px #00000008;
   --shadow-swiper-nav-press:        0 0 1rem var(--swiper--nav-press-shadow, #2a255236);
   --animate-pulse-upsell:           pulse-upsell 1.5s ease infinite;
 
@@ -320,3 +325,113 @@
   opacity: 1 !important;
   transform: translate(0);
 }
+
+/*
+  Cart-summary SDK visibility. next-sdk.css extracted cart-item* layout
+  but not these host-state display rules. Keep unlayered and without
+  important display utilities on the same nodes.
+*/
+[data-next-cart-summary].next-cart-empty .os-cart-summary-totals { display: none !important; }
+[data-next-cart-summary] .os-cart-summary-row--discount { display: none; }
+[data-next-cart-summary].next-has-discounts .os-cart-summary-row--discount { display: block; }
+[data-next-cart-summary] .os-cart-summary-row--tax { display: none; }
+[data-next-cart-summary].next-has-tax .os-cart-summary-row--tax { display: flex; }
+
+/*
+  Diagonal strike. next-sdk does not ship this leftover. Do not add a
+  Tailwind display utility on {item.hasDiscount} nodes — .hide must win.
+*/
+.diagonal-strike {
+  position: relative;
+  display: inline-block;
+}
+.diagonal-strike::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  right: 0;
+  border-top: 1px solid var(--price--strike, #F20404) !important;
+  transform: rotate(-10deg);
+  transform-origin: center;
+}
+.diagonal-strike.hide,
+.hide.diagonal-strike {
+  display: none;
+}
+
+/*
+  Neutralize leftover cart-item LAYOUT on converted checkout summaries
+  so utilities paint. receipt-orders keeps leftover (no neutralize).
+  Do not unset scroll-hint opacity, .hide, diagonal-strike, or
+  os-cart-summary display hooks.
+*/
+[data-next-catalog-component="order-summary"] .cart-items,
+[data-next-catalog-component="order-summary"] .cart-items__list,
+[data-next-catalog-component="order-summary"] .cart-item,
+[data-next-catalog-component="order-summary"] .cart-item__wrapper,
+[data-next-catalog-component="order-summary"] .cart-item__image-container,
+[data-next-catalog-component="order-summary"] .cart-item__quantity-badge,
+[data-next-catalog-component="order-summary"] .cart-item__quantity,
+[data-next-catalog-component="order-summary"] .cart-item__image,
+[data-next-catalog-component="order-summary"] .cart-item__details,
+[data-next-catalog-component="order-summary"] .cart-item__content,
+[data-next-catalog-component="order-summary"] .cart-item__description,
+[data-next-catalog-component="order-summary"] .cart-item__header,
+[data-next-catalog-component="order-summary"] .cart-item__pricing,
+[data-next-catalog-component="order-summary"] .cart-item__title,
+[data-next-catalog-component="order-summary"] .cart-item__frequency,
+[data-next-catalog-component="order-summary"] .checkout__line-item__final-price,
+[data-next-catalog-component="order-summary"] .cart-box__title,
+[data-next-catalog-component="order-summary"] .cart-box__subtitle {
+  display: unset;
+  flex-flow: unset;
+  flex-direction: unset;
+  flex: unset;
+  justify-content: unset;
+  align-items: unset;
+  width: unset;
+  min-width: unset;
+  max-width: unset;
+  height: unset;
+  min-height: unset;
+  max-height: unset;
+  margin: unset;
+  padding: unset;
+  padding-top: unset;
+  padding-bottom: unset;
+  padding-left: unset;
+  padding-right: unset;
+  gap: unset;
+  grid-column-gap: unset;
+  grid-row-gap: unset;
+  border: unset;
+  border-bottom: unset;
+  border-radius: unset;
+  background-color: unset;
+  box-shadow: unset;
+  font-size: unset;
+  font-weight: unset;
+  line-height: unset;
+  color: unset;
+  text-align: unset;
+  position: unset;
+  z-index: unset;
+  overflow: unset;
+  inset: unset;
+}
+
+.cart-box:has([data-next-catalog-component="order-summary"]) {
+  display: unset;
+  flex-flow: unset;
+  gap: unset;
+  grid-column-gap: unset;
+  grid-row-gap: unset;
+  border: unset;
+  border-radius: unset;
+  padding: unset;
+  background-color: unset;
+}
+
+[data-next-item-properties].next-summary-empty { display: none; }
+[data-next-item-properties].next-summary-has-items { display: block; }

@@ -29,69 +29,68 @@
     - submit-block (acts on the totals)
 {% endcomment %}
 <div data-next-catalog-component="order-summary">
-<div class="cart-heading">
-  <div class="cart-box__title">Your&nbsp;Cart</div>
-  <div class="cart-box__subtitle">Free shipping on all orders.</div>
+<div class="flex flex-col">
+  <div class="text-xl font-bold">Your&nbsp;Cart</div>
+  <div class="font-semibold">Free shipping on all orders.</div>
 </div>
-<div class="cart-line-display">
-  <div class="cart-line">
-    <div class="os-card__content" data-next-package-id="1">
-      <div class="cart-feature-line__media cart-feature-line__media--cart">
-        <img width="280" data-next-display="package.image" alt="" class="cart-feature-line__image">
+<div>
+  <div>
+    <div class="flex flex-1 flex-row items-stretch justify-between gap-4 leading-none" data-next-package-id="1">
+      <div class="relative flex size-20 items-center justify-center">
+        <img width="280" data-next-display="package.image" alt="" class="relative z-[1] block size-full object-contain">
       </div>
-      <div class="cart-feature-line__details cart-feature-line__details--centered">
-        <div class="cart-pill">
+      <div class="relative flex w-full flex-1 flex-col items-start justify-center gap-2">
+        <div class="flex rounded bg-brand-accent-core px-2 py-1 text-sm font-semibold text-white">
           <div><svg width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.2095 5.63383C12.2618 5.3722 12.0525 5.05824 11.7909 5.05824L8.80834 4.63964L7.44787 1.91871C7.39555 1.81406 7.34322 1.76173 7.23857 1.70941C6.97694 1.55243 6.66299 1.65708 6.50601 1.91871L5.19787 4.63964L2.21531 5.05824C2.05834 5.05824 1.95369 5.11057 1.90136 5.21522C1.69206 5.42452 1.69206 5.73848 1.90136 5.94778L4.04671 8.0408L3.52345 11.0234C3.52345 11.128 3.52345 11.2327 3.57578 11.3373C3.73276 11.5989 4.04671 11.7036 4.30834 11.5466L6.97694 10.1338L9.64555 11.5466C9.69787 11.5989 9.80252 11.5989 9.90717 11.5989C9.9595 11.5989 9.9595 11.5989 10.0118 11.5989C10.2735 11.5466 10.4828 11.285 10.4304 10.971L9.90717 7.98848L12.0525 5.89545C12.1572 5.84313 12.2095 5.73848 12.2095 5.63383Z" fill="white"></path></svg></div>
           <div>Most Popular</div>
         </div>
-        <div class="cart-subtext">Cart subtext</div>
-        <div class="card-title" data-next-display="package.name"></div>
+        <div class="text-sm text-brand-text-secondary">Cart subtext</div>
+        <div class="text-lg font-bold" data-next-display="package.name"></div>
       </div>
     </div>
   </div>
 </div>
-<div class="summary-wrapper" data-next-cart-summary>
+<div class="flex flex-col gap-4" data-next-cart-summary>
   <template>
-    <div class="order-summary">
-      <div class="order-summary__content">
+    <div class="flex flex-col gap-4">
 
-        <div data-os-cart-summary="line-wrapper" class="cart-items">
-          <div class="cart-summary__line pb--header">
-            <div class="cart-summary__line-item"><div>Item</div></div>
-            <div class="cart-summary__line-item"><div>Amount</div></div>
+        <div data-os-cart-summary="line-wrapper" class="cart-items relative">
+          <div class="mb-1 flex justify-between border-b border-brand-border pb-1 font-bold">
+            <div class="text-right"><div>Item</div></div>
+            <div class="text-right"><div>Amount</div></div>
           </div>
           <div data-os-cart-summary="summary-scroll" class="cart-items__scroll-hint cart-items__scroll-hint--active hide">
             <div>Scroll for more items</div>
             <div class="icon__view-more"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--ic" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z"></path></svg></div>
           </div>
-          <div class="cart-items__list" data-summary-lines>
+          <div class="cart-items__list flex max-h-[18rem] flex-col gap-2 overflow-auto border-b border-brand-border pt-2 max-[991px]:max-h-none" data-summary-lines>
             <template>
-              <div class="cart-item" data-package-id="{item.packageId}">
-                <div class="cart-item__wrapper">
-                  <div class="cart-item__details cc-left-0">
-                    <div class="cart-item__content">
-                      <div class="cart-item__description">
-                        <div class="cart-item__header">
-                          <div class="cart-item__title os-bold">
+              <div class="cart-item static z-0 items-center justify-between pb-2" data-package-id="{item.packageId}">
+                <div class="cart-item__wrapper flex w-full flex-row items-stretch justify-between overflow-visible rounded pl-0.5">
+                  <div class="cart-item__details cc-left-0 relative z-[1] flex w-full flex-col justify-center pl-0">
+                    <div class="cart-item__content flex w-full items-stretch justify-between max-[991px]:items-end">
+                      <div class="cart-item__description flex flex-1 flex-col items-start justify-center gap-[0.15rem] text-left">
+                        <div class="cart-item__header flex justify-between">
+                          <div class="cart-item__title text-base font-bold leading-[1.3] max-[479px]:text-[0.9rem]">
                             {item.quantity}x {item.name}
                             <div>
-                              <div class="text-2xs text-muted text-weight-normal diagonal-strike {item.hasDiscount}">{item.originalUnitPrice}/ea</div>
-                              <div class="text-2xs text-muted text-weight-normal">{item.unitPrice}/ea</div>
+                              <div class="text-xs font-normal leading-[1.4] text-brand-text-muted diagonal-strike {item.hasDiscount}">{item.originalUnitPrice}/ea</div>
+                              <div class="text-xs font-normal leading-[1.4] text-brand-text-muted">{item.unitPrice}/ea</div>
                             </div>
                           </div>
                         </div>
                         {% comment %} SDK 0.4.26: line-item properties (personalization). Renders one row per property on the
                              line item; container gets next-summary-empty / next-summary-has-items so it stays invisible
                              unless the item carries properties. Harmless on lines without properties. {% endcomment %}
-                        <div data-next-item-properties class="cart-item__properties text-2xs text-muted">
+                        <div data-next-item-properties class="cart-item__properties text-xs leading-[1.4] text-brand-text-muted">
                           <template>
-                            <div class="cart-item__property"><span class="os-bold">{property.key}:</span> {property.value}</div>
+                            <div class="cart-item__property"><span class="font-bold">{property.key}:</span> {property.value}</div>
                           </template>
                         </div>
                       </div>
-                      <div class="cart-item__pricing">
-                        <div class="cart-price diagonal-strike line-compare {item.hasDiscount}">{item.originalPrice}</div>
-                        <div class="checkout__line-item__final-price">{item.price}</div>
+                      <div class="cart-item__pricing flex flex-col items-end justify-center">
+                        <div class="cart-price font-normal diagonal-strike line-compare {item.hasDiscount}">{item.originalPrice}</div>
+                        <div class="checkout__line-item__final-price font-bold">{item.price}</div>
                       </div>
                     </div>
                   </div>
@@ -101,43 +100,43 @@
           </div>
         </div>
 
-        <div class="order-totals os-cart-summary-totals">
-          <div class="order-totals__line">
-            <div class="order-totals__label">Subtotal</div>
-            <div class="order-totals__value">{subtotal}</div>
+        <div class="order-totals os-cart-summary-totals relative flex min-h-[30px] w-full flex-col gap-3 bg-transparent p-0 text-sm max-[991px]:text-xs">
+          <div class="flex justify-between text-brand-black">
+            <div>Subtotal</div>
+            <div>{subtotal}</div>
           </div>
 
-          <div class="order-totals__section">
-            <ul class="order-totals__discount-list" data-next-discounts="offer" aria-label="Offer discounts">
+          <div class="flex flex-col gap-1">
+            <ul class="m-0 list-none p-0" data-next-discounts="offer" aria-label="Offer discounts">
               <template>
-                <li class="order-totals__line">
-                  <div class="order-totals__label text-muted">{discount.name} - Save {discount.percentage}</div>
-                  <div class="order-totals__value text-muted">−{discount.amount}</div>
+                <li class="flex justify-between text-brand-black">
+                  <div class="text-brand-text-muted">{discount.name} - Save {discount.percentage}</div>
+                  <div class="text-brand-text-muted">−{discount.amount}</div>
                 </li>
               </template>
             </ul>
-            <ul class="order-totals__discount-list" data-next-discounts="voucher" aria-label="Coupon discounts">
+            <ul class="m-0 list-none p-0" data-next-discounts="voucher" aria-label="Coupon discounts">
               <template>
-                <li class="order-totals__line">
-                  <div class="order-totals__label text-muted">{discount.name} - Save {discount.percentage}</div>
-                  <div class="order-totals__value text-muted">−{discount.amount}</div>
+                <li class="flex justify-between text-brand-black">
+                  <div class="text-brand-text-muted">{discount.name} - Save {discount.percentage}</div>
+                  <div class="text-brand-text-muted">−{discount.amount}</div>
                 </li>
               </template>
             </ul>
           </div>
 
-          <div class="order-totals__section order-totals__section--inset os-cart-summary-row--discount">
-            <div class="order-totals__line">
-              <div class="order-totals__label-group">
-                <div class="order-totals__label">Today you saved</div>
-                <div class="badge badge--small">
-                  <div class="label__wrapper cc-sm">
-                    <div class="badge__text"><span data-next-display="cart.totalDiscountPercentage"></span> OFF</div>
+          <div class="os-cart-summary-row--discount mx-[-1.5rem] bg-brand-surface px-6 py-2">
+            <div class="flex justify-between text-brand-black">
+              <div class="flex items-center gap-1">
+                <div>Today you saved</div>
+                <div class="inline-flex min-w-[4.5rem] justify-center rounded-sm bg-black font-medium text-white">
+                  <div class="pointer-events-none flex items-center justify-center px-[0.375rem] py-[0.245rem] text-xs leading-none">
+                    <div class="pointer-events-auto leading-[1.2]"><span data-next-display="cart.totalDiscountPercentage"></span> OFF</div>
                   </div>
                 </div>
               </div>
-              <div class="accordion__right">
-                <div class="order-totals__value">- {discounts}</div>
+              <div class="flex items-center gap-1">
+                <div>- {discounts}</div>
               </div>
             </div>
             {% comment %} Coupon tag badge — uncomment to show applied coupon code below the savings row.
@@ -158,36 +157,36 @@
             {% endcomment %}
           </div>
 
-          <div data-next-show="order.hasTax" class="order-totals__line os-cart-summary-row--tax">
-            <div class="order-totals__label">Tax</div>
-            <div data-next-display="order.tax" class="order-totals__value"></div>
+          <div data-next-show="order.hasTax" class="os-cart-summary-row--tax justify-between text-brand-black">
+            <div>Tax</div>
+            <div data-next-display="order.tax"></div>
           </div>
 
-          <div class="order-totals__section">
-            <div class="order-totals__line">
-              <div class="accordion__right">
-                <div class="order-totals__label">Shipping</div>
+          <div class="flex flex-col gap-1">
+            <div class="flex justify-between text-brand-black">
+              <div class="flex items-center gap-1">
+                <div>Shipping</div>
               </div>
-              <div class="accordion__right">
-                <div class="order-totals__value">{shipping}</div>
+              <div class="flex items-center gap-1">
+                <div>{shipping}</div>
               </div>
             </div>
           </div>
 
-          <div class="order-totals__section cc-total">
-            <div class="order-totals__line order-totals__line--total">
-              <div class="order-totals__label order-totals__label--total">Grand Total:</div>
-              <div class="order-totals__value-group">
-                <div class="summary-total__coin">{currency}</div>
-                <div class="order-totals__value order-totals__value--total">{total}</div>
+          <div class="cc-total mt-2 flex flex-col gap-1">
+            <div class="flex justify-between text-lg font-bold text-brand-black">
+              <div>Grand Total:</div>
+              <div class="flex items-center gap-1">
+                <div class="text-sm font-normal">{currency}</div>
+                <div>{total}</div>
               </div>
             </div>
-            <div class="os-cart-summary-row--discount order-totals__savings">
-              <div class="order-totals__savings-content">
-                <div class="order-totals__savings-icon">
+            <div class="os-cart-summary-row--discount justify-between text-brand-black">
+              <div class="flex items-center gap-1">
+                <div class="flex size-4 items-center justify-center text-sm">
                   <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 18 18" focusable="false" aria-hidden="true" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m10.802 15.686 5.367-5.368a.15.15 0 0 0 .046-.109V4.144m-2.998-.95h-5.67a.16.16 0 0 0-.11.046L1.779 8.897a.154.154 0 0 0 0 .219l5.594 5.593c.06.06.158.06.218 0l5.658-5.657a.15.15 0 0 0 .045-.11v-5.67a.077.077 0 0 0-.077-.077Zm-3.06 3.749a.643.643 0 1 1-1.286 0 .643.643 0 0 1 1.286 0m-.648-.005h.01v.01h-.01z"></path></svg>
                 </div>
-                <div class="order-totals__savings-text">
+                <div>
                   TODAY YOU SAVED {discounts}
                 </div>
               </div>
@@ -196,7 +195,6 @@
 
         </div>
 
-      </div>
     </div>
   </template>
 </div>

@@ -332,7 +332,7 @@ bundles:
                               {% campaign_include 'payment-methods.html' %}
                             </div>
                             <div class="relative flex flex-col gap-4 max-[479px]:w-full">
-                              <div class="cart-box cart-box--card">
+                              <div class="flex flex-col gap-4 rounded-sm border border-brand-border bg-white p-6">
                                 {% assign summary_variant = cart_summary_variant | default: '01' %}
                                 {% if summary_variant == '02' %}
                                 {% campaign_include 'cart-summary02.html' %}
