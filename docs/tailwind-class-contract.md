@@ -285,7 +285,7 @@ Source of values: `src/olympus/assets/css/next-core.css`.
 | `.form-content` | `flex w-full max-w-full flex-col items-stretch justify-center` | |
 | `.form-sections` | `relative flex min-h-0 w-full flex-col gap-8 overflow-visible max-[479px]:gap-4` | Keep `data-next-component="shipping-form"` on the shipping wrapper. |
 | `.form-section` | `relative flex flex-col gap-4 max-[479px]:w-full` | Step 1 uses `gap-8` (was `.grid-row-gap2`). Leave `.form-grid` / `.input-flds`. |
-| `.form-section__title` | `m-0 text-lg tracking-[-0.01em]` | `--font-size--lg` is 1.125rem. Beats leftover `h1`/`h2`. |
+| `.form-section__title` | `m-0 text-lg font-bold leading-[1.2] tracking-[-0.01em]` | Size is leftover title (1.125rem). Weight 700 + line-height 1.2 come from leftover `h2` (the later heading block, not the 36px normalize rule). next-sdk dropped element headings. |
 | `.form-grid` | keep class; `mt-0 flex flex-col justify-around gap-4` | Leftover layout is **unset** on converted catalog surfaces so this `flex` is the real display. `.form-grid.next-hidden` is re-asserted `display:none !important` in `tailwind.input.css`. Do not put `flex` on `[data-next-component="location"]`. Payment-methods / billing-form inject keep leftover (no neutralize). |
 | `.form-grid__row` | `flex w-full items-start justify-between gap-4 max-[991px]:flex-wrap max-[767px]:flex-col` | 991 wrap; 767 column. Do not put this on `[data-next-component="location"]`. |
 | `.form-group` | **keep class**; `m-0 flex w-full flex-1 flex-col justify-between gap-1 p-0` | SDK floating labels init via `querySelectorAll(".form-group")`; error wrapper is `.form-group`. Dropping it freezes labels at opacity 0. |

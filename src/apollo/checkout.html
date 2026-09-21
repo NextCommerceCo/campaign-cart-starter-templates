@@ -214,7 +214,7 @@ bundles:
                         <div class="flex w-full max-w-full flex-col items-stretch justify-center">
                           <div class="relative flex min-h-0 w-full flex-col gap-8 overflow-visible max-[479px]:gap-4">
                             <div class="relative flex flex-col gap-8 max-[479px]:w-full">
-                              <h2 class="m-0 text-lg tracking-[-0.01em]">Step 1: Pick Your Bundle Deal</h2>
+                              <h2 class="m-0 text-lg font-bold leading-[1.2] tracking-[-0.01em]">Step 1: Pick Your Bundle Deal</h2>
                               {% comment %} v0 catalog: bundle-selector partial. Canonical 3-tier defaults live in page frontmatter so CampaignSpec package/shipping ids stay visible.
                                    Reference variant (data-next-bundles= JSON config-driven) preserved below as commented reference. {% endcomment %}
                               {% campaign_include 'bundle-selector.html' selector_id='main' card_style=bundle_card_style packages=packages shipping_methods=shipping_methods bundles=bundles %}
@@ -324,7 +324,7 @@ bundles:
                         {% endunless %}
                             <div class="relative flex flex-col gap-4 max-[479px]:w-full">
                               <div class="flex flex-col gap-2">
-                                <h1 class="m-0 text-lg tracking-[-0.01em]">4. Payment Method</h1>
+                                <h1 class="m-0 text-lg font-bold leading-[1.2] tracking-[-0.01em]">4. Payment Method</h1>
                                 <div class="text-[0.925rem]">All transactions are secure and encrypted.<br></div>
 
                               </div>

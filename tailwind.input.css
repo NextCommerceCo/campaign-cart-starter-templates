@@ -207,10 +207,42 @@
 }
 
 /*
-  Switch fill + thumb. next-core keys the ON state off .bump-card;
-  converted cards drop that class, so retarget to the toggle card.
-  Keep .bump__switch / .bump__switch-slider for ::before + transform.
+  Switch track + thumb. next-sdk never extracted these leftover rules,
+  so the toggle painted as an empty span. Keep unlayered (no important
+  transform) so the SDK ON state can move the thumb.
 */
+.bump__switch {
+  position: relative;
+  flex: none;
+  width: 3.5rem;
+  height: 1.75rem;
+  border-radius: 9999px;
+  background-color: #e5e5e5;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+.bump__switch::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: var(--brand--color--primary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.bump__switch-slider {
+  position: absolute;
+  top: 50%;
+  left: 0.25rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transform: translate(0, -50%);
+  transition: transform 0.3s ease;
+  pointer-events: none;
+}
 [data-next-toggle-card].next-in-cart .bump__switch::before,
 [data-next-toggle-card].next-active .bump__switch::before,
 [data-next-toggle-card].bump--switch-on .bump__switch::before {
@@ -223,6 +255,15 @@
   transform: translate(1.75rem, -50%);
 }
 @media screen and (max-width: 426px) {
+  .bump__switch {
+    width: 2.75rem;
+    height: 1.375rem;
+  }
+  .bump__switch-slider {
+    width: 1rem;
+    height: 1rem;
+    left: 0.2rem;
+  }
   [data-next-toggle-card].next-in-cart .bump__switch-slider,
   [data-next-toggle-card].next-active .bump__switch-slider,
   [data-next-toggle-card].bump--switch-on .bump__switch-slider,
@@ -230,6 +271,60 @@
     transform: translate(1.25rem, -50%);
   }
 }
+
+/*
+  Express / APM buttons. SDK injects .payment-btn into
+  [data-next-express-checkout="buttons"]. next-sdk omitted these.
+*/
+.exp-checkout {
+  display: flex;
+  flex-flow: column;
+  gap: 1rem;
+}
+.express-checkout__title {
+  text-align: center;
+  font-weight: 600;
+}
+.express-checkout__buttons {
+  display: flex;
+  position: relative;
+  width: 100%;
+  gap: 1rem;
+}
+.payment-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 2.75rem;
+  border-radius: var(--radius--cards);
+  background-color: #000;
+}
+.payment-btn.cc-paypal { background-color: #ffc439; }
+.payment-btn.cc-apple-pay { color: #fff; }
+.payment-btn__logo { height: 1.5rem; }
+@media screen and (max-width: 991px) {
+  .express-checkout__buttons { flex-flow: row; }
+}
+@media screen and (max-width: 479px) {
+  .express-checkout__buttons {
+    flex-flow: column;
+    gap: 0.6rem;
+  }
+}
+
+/*
+  Payment-method wordmarks. Tailwind important img { height:auto }
+  beats leftover width/height on the generated partial.
+*/
+.payment-method__icon { width: 35px !important; height: auto !important; }
+.payment-method__icon--paypal-logo { width: 15px !important; height: auto !important; }
+.payment-method__icon--paypal-txt { height: 20px !important; width: auto !important; }
+.payment-method__icon--klarna-logo { height: 25px !important; width: auto !important; }
+.payment-method__icon--apple-pay-logo,
+.payment-method__icon--google-pay-logo { width: 45px !important; height: auto !important; }
+
 
 /*
   Neutralize leftover next-core FORM LAYOUT inside converted catalog

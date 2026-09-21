@@ -61,7 +61,7 @@
        To switch: pass show_per_unit_price=false show_line_total_price=true to {% campaign_include %} {% endcomment %}
 <div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="check01" data-next-await="" class="flex flex-col gap-4 border-none">
   <div data-next-package-toggle>
-    <div class="group relative overflow-hidden rounded-cards border border-bump-border next-active:bg-brand-surface next-active:select-none next-in-cart:bg-brand-surface next-in-cart:select-none max-[767px]:rounded" data-next-toggle-card{% if is_upsell %} data-next-is-upsell="true"{% endif %}{% if b_sync %} data-next-package-sync="{{ b_sync }}"{% endif %} data-next-package-id="{{ pkg_id }}">
+    <div class="bump-card group relative overflow-hidden rounded-cards border border-bump-border next-active:bg-brand-surface next-active:select-none next-in-cart:bg-brand-surface next-in-cart:select-none max-[767px]:rounded" data-next-toggle-card{% if is_upsell %} data-next-is-upsell="true"{% endif %}{% if b_sync %} data-next-package-sync="{{ b_sync }}"{% endif %} data-next-package-id="{{ pkg_id }}">
       {% comment %} Bump header — visual only, whole card is the toggle target {% endcomment %}
       <div class="flex cursor-pointer flex-col items-start justify-start bg-brand-surface p-3 group-[.next-active]:bg-brand-light group-[.next-in-cart]:bg-brand-light">
         <div class="relative flex items-center gap-3">
@@ -122,7 +122,7 @@
               </ul>
             </div>
           </div>
-          <img data-next-toggle-image loading="lazy" alt="{{ img_alt }}" src="{{ img_src | campaign_asset }}" class="size-[135px] shrink-0">
+          <img data-next-toggle-image loading="lazy" alt="{{ img_alt }}" src="{{ img_src | campaign_asset }}" class="bump__image size-[135px] max-h-[135px] max-w-[135px] min-h-[135px] min-w-[135px] shrink-0 object-contain">
         </div>
       </div>
     </div>
