@@ -42,7 +42,7 @@
 {% assign compare = offer_comparison -%}
 {% assign claims = offer_steps -%}
 {% assign selector_id = offer.selector_id | default: 'upsell-single' -%}
-{% assign pricing_mode = pricing_mode | default: offer.pricing_mode | default: 'discounted' -%}
+{% assign pricing_mode = pricing_mode | default: offer.pricing_mode | default: 'full_price' -%}
 {% assign show_compare = false -%}{% assign show_badge = false -%}
 {% if pricing_mode == 'discounted' %}{% assign show_compare = true -%}{% assign show_badge = true -%}
 {% elsif pricing_mode == 'compare_at' %}{% assign show_compare = true -%}{% endif -%}

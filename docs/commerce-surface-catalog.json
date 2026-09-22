@@ -291,7 +291,8 @@
         "olympus in spec, path, or export metadata",
         "os-card tier bundle selector",
         "bundle selector include receives bundles frontmatter",
-        "side cart summary with Olympus card pricing rows"
+        "side cart summary with Olympus card pricing rows",
+        "upsell-single page (single-offer add-on: one package, fixed price, accept or skip)"
       ],
       "canonicalSurfaces": {
         "mainSelector": "tiered-bundle-selector",
@@ -299,7 +300,7 @@
         "payment": "payment-methods",
         "expressCheckout": "express-checkout|express-checkout-inline",
         "orderBump": "bump-check01|bump-check02|bump-check03|bump-switch01",
-        "upsell": "bundle-stepper|bundle-tier-pills|bundle-tier-cards",
+        "upsell": "bundle-stepper|bundle-tier-pills|bundle-tier-cards|single",
         "receipt": "receipt-skeleton"
       },
       "frontmatterInputsObserved": [
@@ -312,7 +313,13 @@
         "swiper_slides",
         "swiper_thumbs",
         "upsell_offer",
-        "upsell_bundle_tiers"
+        "upsell_bundle_tiers",
+        "offer_features",
+        "offer_comparison",
+        "offer_steps",
+        "guarantee_note",
+        "countdown_timer",
+        "announcement_text"
       ],
       "agentContract": {
         "status": "agent-ready",
@@ -443,6 +450,28 @@
               "data-next-bundle-selector",
               "data-next-bundle-card"
             ]
+          },
+          {
+            "name": "Olympus single-offer upsell page",
+            "partials": [
+              "upsell-single-offer.html"
+            ],
+            "ownedInputs": [
+              "upsell_offer",
+              "offer_features",
+              "offer_comparison",
+              "offer_steps",
+              "guarantee_note",
+              "countdown_timer",
+              "announcement_text"
+            ],
+            "sdkRoots": [
+              "data-next-upsell",
+              "data-next-bundle-selector",
+              "data-next-bundle-card",
+              "data-next-timer"
+            ],
+            "note": "Single-package, fixed-price offer (accept or skip, no tiers); demo copy is a protection plan, any add-on fits. Two accept points share one package_id. Optional `voucher` applies a coupon through a hidden linked bundle selector (data-next-bundle-selector-id), and prices then read bundle.<selector_id>.price / originalPrice / discountPercentage; without a voucher they read package.price / price_retail / savingsPercentage. Countdown uses the SDK data-next-timer (persisted per persistence_id). Layout composed from next-core utilities plus the modifiers listed in the partial header."
           }
         ],
         "fixtures": [
@@ -759,7 +788,7 @@
               "data-next-bundle-card",
               "data-next-timer"
             ],
-            "note": "Single-package, fixed-price offer (accept or skip, no tiers); demo copy is a protection plan, any add-on fits. Two accept points share one package_id. Optional `voucher` applies a coupon through a hidden linked bundle selector (data-next-bundle-selector-id), and prices then read bundle.<selector_id>.price / originalPrice / discountPercentage; without a voucher they read package.price / price_retail / savingsPercentage. Countdown uses the SDK data-next-timer (persisted per persistence_id). Layout composed from next-core utilities plus the modifiers listed in the partial header."
+            "note": "Single-package, fixed-price offer (accept or skip, no tiers); demo copy is a protection plan, any add-on fits. Two accept points share one package_id. Optional `voucher` applies a coupon through a hidden linked bundle selector (data-next-bundle-selector-id), and prices then read bundle.<selector_id>.price / originalPrice / discountPercentage; without a voucher they read package.price / price_retail / savingsPercentage. pricing_mode (discounted | compare_at | full_price, default discounted; demeter copy defaults full_price) picks which price rows render. Countdown uses the SDK data-next-timer (persisted per persistence_id). Layout composed from next-core utilities plus the modifiers listed in the partial header."
           }
         ],
         "fixtures": [
@@ -781,7 +810,8 @@
         "checkout-progress bar above bundle selection",
         "open side cart using cart-summary03",
         "luxury/editorial spacing with serif display type",
-        "demeter upsell offer includes with upsell_offer or upsell_bundle_tiers frontmatter"
+        "demeter upsell offer includes with upsell_offer or upsell_bundle_tiers frontmatter",
+        "upsell-single page (single-offer add-on: one package, fixed price, accept or skip)"
       ],
       "canonicalSurfaces": {
         "mainSelector": "editorial-tier-selector",
@@ -789,7 +819,7 @@
         "payment": "payment-methods",
         "expressCheckout": "express-checkout|express-checkout-inline",
         "orderBump": "bump-check01|bump-check02|bump-check03|bump-switch01",
-        "upsell": "upsell-bundle-stepper-offer|upsell-bundle-tier-pills-offer|upsell-bundle-tier-cards-offer",
+        "upsell": "upsell-bundle-stepper-offer|upsell-bundle-tier-pills-offer|upsell-bundle-tier-cards-offer|single",
         "receipt": "receipt-skeleton|receipt-order-summary-mobile|receipt-order-summary-desktop"
       },
       "frontmatterInputsNeeded": [
@@ -811,7 +841,13 @@
         "cart_summary_feature_package",
         "receipt_summary",
         "upsell_bundle_tiers",
-        "upsell_offer"
+        "upsell_offer",
+        "offer_features",
+        "offer_comparison",
+        "offer_steps",
+        "guarantee_note",
+        "countdown_timer",
+        "announcement_text"
       ],
       "agentContract": {
         "status": "agent-ready",
@@ -920,6 +956,28 @@
               "data-next-upsell",
               "data-next-order-items"
             ]
+          },
+          {
+            "name": "Demeter single-offer upsell page",
+            "partials": [
+              "upsell-single-offer.html"
+            ],
+            "ownedInputs": [
+              "upsell_offer",
+              "offer_features",
+              "offer_comparison",
+              "offer_steps",
+              "guarantee_note",
+              "countdown_timer",
+              "announcement_text"
+            ],
+            "sdkRoots": [
+              "data-next-upsell",
+              "data-next-bundle-selector",
+              "data-next-bundle-card",
+              "data-next-timer"
+            ],
+            "note": "Single-package, fixed-price offer (accept or skip, no tiers); demo copy is a protection plan, any add-on fits. Two accept points share one package_id. Optional `voucher` applies a coupon through a hidden linked bundle selector (data-next-bundle-selector-id), and prices then read bundle.<selector_id>.price / originalPrice / discountPercentage; without a voucher they read package.price / price_retail / savingsPercentage. Countdown uses the SDK data-next-timer (persisted per persistence_id). Demeter copy defaults pricing_mode to full_price (demo page opts into discounted). Layout composed from next-core utilities plus the modifiers listed in the partial header."
           }
         ],
         "fixtures": [
@@ -938,7 +996,8 @@
         "shop checkout with checkout.html plus upsell-bundle-stepper/tier-pills/tier-cards pages",
         "cart-summary04 used on checkout",
         "receipt order summary split into mobile and desktop order item templates",
-        "upsell bundle offers promoted to shop-single-step *_offer includes"
+        "upsell bundle offers promoted to shop-single-step *_offer includes",
+        "upsell-single page (single-offer add-on: one package, fixed price, accept or skip)"
       ],
       "canonicalSurfaces": {
         "checkoutSummary": "cart-summary04",
@@ -946,7 +1005,7 @@
         "expressCheckout": "express-checkout",
         "orderBump": "bump-check01|bump-check02|bump-check03|bump-switch01",
         "receipt": "receipt-skeleton|receipt-order-summary-mobile|receipt-order-summary-desktop",
-        "upsell": "upsell-bundle-stepper-offer|upsell-bundle-tier-pills-offer|upsell-bundle-tier-cards-offer"
+        "upsell": "upsell-bundle-stepper-offer|upsell-bundle-tier-pills-offer|upsell-bundle-tier-cards-offer|single"
       },
       "frontmatterInputsNeeded": [
         "cart_summary_variant"
@@ -959,7 +1018,13 @@
         "swiper_slides",
         "swiper_thumbs",
         "upsell_bundle_tiers",
-        "upsell_offer"
+        "upsell_offer",
+        "offer_features",
+        "offer_comparison",
+        "offer_steps",
+        "guarantee_note",
+        "countdown_timer",
+        "announcement_text"
       ],
       "agentContract": {
         "status": "agent-ready",
@@ -1069,6 +1134,28 @@
             "sdkRoots": [
               "data-next-order-items"
             ]
+          },
+          {
+            "name": "Shop single-offer upsell page",
+            "partials": [
+              "upsell-single-offer.html"
+            ],
+            "ownedInputs": [
+              "upsell_offer",
+              "offer_features",
+              "offer_comparison",
+              "offer_steps",
+              "guarantee_note",
+              "countdown_timer",
+              "announcement_text"
+            ],
+            "sdkRoots": [
+              "data-next-upsell",
+              "data-next-bundle-selector",
+              "data-next-bundle-card",
+              "data-next-timer"
+            ],
+            "note": "Single-package, fixed-price offer (accept or skip, no tiers); demo copy is a protection plan, any add-on fits. Two accept points share one package_id. Optional `voucher` applies a coupon through a hidden linked bundle selector (data-next-bundle-selector-id), and prices then read bundle.<selector_id>.price / originalPrice / discountPercentage; without a voucher they read package.price / price_retail / savingsPercentage. Countdown uses the SDK data-next-timer (persisted per persistence_id). Layout composed from next-core utilities plus the modifiers listed in the partial header."
           }
         ],
         "fixtures": [
@@ -1087,7 +1174,8 @@
         "data-next-bundle-slots-for in checkout",
         "checkout-olympus-mv-full.js",
         "variant slot controls inside checkout",
-        "MV product gallery plus bundle slots on one page"
+        "MV product gallery plus bundle slots on one page",
+        "upsell-single page (single-offer add-on: one package, fixed price, accept or skip)"
       ],
       "canonicalSurfaces": {
         "mainSelector": "mv-configurable-selector",
@@ -1097,7 +1185,7 @@
         "payment": "payment-methods",
         "expressCheckout": "express-checkout|express-checkout-inline",
         "orderBump": "bump-check01|bump-check02|bump-check03|bump-switch01",
-        "upsell": "upsell-mv|upsell-bundle-stepper|upsell-bundle-tier-pills|upsell-bundle-tier-cards",
+        "upsell": "upsell-mv|upsell-bundle-stepper|upsell-bundle-tier-pills|upsell-bundle-tier-cards|single",
         "receipt": "receipt-skeleton"
       },
       "frontmatterInputsNeeded": [
@@ -1117,7 +1205,13 @@
         "upsell_mv_tiers",
         "slot_personalization",
         "order_personalization",
-        "upsell_bundle_tiers"
+        "upsell_bundle_tiers",
+        "offer_features",
+        "offer_comparison",
+        "offer_steps",
+        "guarantee_note",
+        "countdown_timer",
+        "announcement_text"
       ],
       "agentContract": {
         "status": "agent-ready",
@@ -1254,6 +1348,28 @@
               "data-next-bundle-card",
               "data-next-bundle-slots-for"
             ]
+          },
+          {
+            "name": "Olympus MV Single single-offer upsell page",
+            "partials": [
+              "upsell-single-offer.html"
+            ],
+            "ownedInputs": [
+              "upsell_offer",
+              "offer_features",
+              "offer_comparison",
+              "offer_steps",
+              "guarantee_note",
+              "countdown_timer",
+              "announcement_text"
+            ],
+            "sdkRoots": [
+              "data-next-upsell",
+              "data-next-bundle-selector",
+              "data-next-bundle-card",
+              "data-next-timer"
+            ],
+            "note": "Single-package, fixed-price offer (accept or skip, no tiers); demo copy is a protection plan, any add-on fits. Two accept points share one package_id. Optional `voucher` applies a coupon through a hidden linked bundle selector (data-next-bundle-selector-id), and prices then read bundle.<selector_id>.price / originalPrice / discountPercentage; without a voucher they read package.price / price_retail / savingsPercentage. Countdown uses the SDK data-next-timer (persisted per persistence_id). Layout composed from next-core utilities plus the modifiers listed in the partial header."
           }
         ],
         "fixtures": [
@@ -1274,7 +1390,8 @@
         "data-next-bundle-slots-for in checkout",
         "mv-configurable-selector.html with Apollo layout partials",
         "selector_order_bump_variant and checkout_reveal frontmatter",
-        "checkout_step.selector_layout"
+        "checkout_step.selector_layout",
+        "upsell-single page (single-offer add-on: one package, fixed price, accept or skip)"
       ],
       "canonicalSurfaces": {
         "mainSelector": "mv-configurable-selector",
@@ -1287,7 +1404,7 @@
         "expressCheckout": "express-checkout|express-checkout-inline",
         "orderBump": "bump-check01|bump-check02|bump-check03|bump-switch01",
         "checkoutReveal": "checkout-form--reveal",
-        "upsell": "upsell-mv|upsell-bundle-stepper|upsell-bundle-tier-pills|upsell-bundle-tier-cards",
+        "upsell": "upsell-mv|upsell-bundle-stepper|upsell-bundle-tier-pills|upsell-bundle-tier-cards|single",
         "receipt": "receipt-skeleton"
       },
       "frontmatterInputsNeeded": [
@@ -1316,7 +1433,12 @@
         "upsell_offer",
         "upsell_mv_tiers",
         "order_personalization",
-        "upsell_bundle_tiers"
+        "upsell_bundle_tiers",
+        "offer_features",
+        "offer_comparison",
+        "offer_steps",
+        "guarantee_note",
+        "announcement_text"
       ],
       "agentContract": {
         "status": "agent-ready",
@@ -1534,6 +1656,28 @@
               "data-next-bundle-card",
               "data-next-bundle-slots-for"
             ]
+          },
+          {
+            "name": "Apollo MV Single single-offer upsell page",
+            "partials": [
+              "upsell-single-offer.html"
+            ],
+            "ownedInputs": [
+              "upsell_offer",
+              "offer_features",
+              "offer_comparison",
+              "offer_steps",
+              "guarantee_note",
+              "countdown_timer",
+              "announcement_text"
+            ],
+            "sdkRoots": [
+              "data-next-upsell",
+              "data-next-bundle-selector",
+              "data-next-bundle-card",
+              "data-next-timer"
+            ],
+            "note": "Single-package, fixed-price offer (accept or skip, no tiers); demo copy is a protection plan, any add-on fits. Two accept points share one package_id. Optional `voucher` applies a coupon through a hidden linked bundle selector (data-next-bundle-selector-id), and prices then read bundle.<selector_id>.price / originalPrice / discountPercentage; without a voucher they read package.price / price_retail / savingsPercentage. Countdown uses the SDK data-next-timer (persisted per persistence_id). Layout composed from next-core utilities plus the modifiers listed in the partial header."
           }
         ],
         "fixtures": [
@@ -1554,7 +1698,8 @@
         "select.html before checkout.html",
         "checkout-olympus-mv-selection.js",
         "checkout-olympus-mv-full.js",
-        "variant selection step followed by payment step"
+        "variant selection step followed by payment step",
+        "upsell-single page (single-offer add-on: one package, fixed price, accept or skip)"
       ],
       "canonicalSurfaces": {
         "selectStep": "mv-selection-step",
@@ -1564,7 +1709,7 @@
         "orderSummary": "cart-summary03|cart-summary04",
         "payment": "payment-methods",
         "expressCheckout": "express-checkout|express-checkout-inline",
-        "upsell": "upsell-mv|upsell-bundle-stepper|upsell-bundle-tier-pills|upsell-bundle-tier-cards",
+        "upsell": "upsell-mv|upsell-bundle-stepper|upsell-bundle-tier-pills|upsell-bundle-tier-cards|single",
         "receipt": "receipt-skeleton"
       },
       "frontmatterInputsNeeded": [
@@ -1584,7 +1729,13 @@
         "upsell_mv_tiers",
         "slot_personalization",
         "order_personalization",
-        "upsell_bundle_tiers"
+        "upsell_bundle_tiers",
+        "offer_features",
+        "offer_comparison",
+        "offer_steps",
+        "guarantee_note",
+        "countdown_timer",
+        "announcement_text"
       ],
       "agentContract": {
         "status": "agent-ready",
@@ -1737,6 +1888,28 @@
               "data-next-bundle-card",
               "data-next-bundle-slots-for"
             ]
+          },
+          {
+            "name": "Olympus MV Two Step single-offer upsell page",
+            "partials": [
+              "upsell-single-offer.html"
+            ],
+            "ownedInputs": [
+              "upsell_offer",
+              "offer_features",
+              "offer_comparison",
+              "offer_steps",
+              "guarantee_note",
+              "countdown_timer",
+              "announcement_text"
+            ],
+            "sdkRoots": [
+              "data-next-upsell",
+              "data-next-bundle-selector",
+              "data-next-bundle-card",
+              "data-next-timer"
+            ],
+            "note": "Single-package, fixed-price offer (accept or skip, no tiers); demo copy is a protection plan, any add-on fits. Two accept points share one package_id. Optional `voucher` applies a coupon through a hidden linked bundle selector (data-next-bundle-selector-id), and prices then read bundle.<selector_id>.price / originalPrice / discountPercentage; without a voucher they read package.price / price_retail / savingsPercentage. Countdown uses the SDK data-next-timer (persisted per persistence_id). Layout composed from next-core utilities plus the modifiers listed in the partial header."
           }
         ],
         "fixtures": [
@@ -1755,14 +1928,15 @@
         "shop-three-step in spec, path, or export metadata",
         "information.html -> shipping.html -> billing.html flow",
         "checkout-shop-three-shipping.js dynamic shipping options",
-        "separate shipping method page before billing"
+        "separate shipping method page before billing",
+        "upsell-single page (single-offer add-on: one package, fixed price, accept or skip)"
       ],
       "canonicalSurfaces": {
         "informationStep": "shipping/contact form",
         "shippingStep": "dynamic shipping methods from SDK getShippingMethods()",
         "billingStep": "payment-methods and checkout review",
         "receipt": "receipt-skeleton",
-        "upsell": "bundle-stepper|bundle-tier-pills|bundle-tier-cards"
+        "upsell": "bundle-stepper|bundle-tier-pills|bundle-tier-cards|single"
       },
       "frontmatterInputsNeeded": [
         "receipt_summary"
@@ -1775,7 +1949,13 @@
         "swiper_slides",
         "swiper_thumbs",
         "upsell_offer",
-        "upsell_bundle_tiers"
+        "upsell_bundle_tiers",
+        "offer_features",
+        "offer_comparison",
+        "offer_steps",
+        "guarantee_note",
+        "countdown_timer",
+        "announcement_text"
       ],
       "agentContract": {
         "status": "upsell-include-driven",
@@ -1881,6 +2061,28 @@
               "data-next-bundle-selector",
               "data-next-bundle-card"
             ]
+          },
+          {
+            "name": "Shop Three Step single-offer upsell page",
+            "partials": [
+              "upsell-single-offer.html"
+            ],
+            "ownedInputs": [
+              "upsell_offer",
+              "offer_features",
+              "offer_comparison",
+              "offer_steps",
+              "guarantee_note",
+              "countdown_timer",
+              "announcement_text"
+            ],
+            "sdkRoots": [
+              "data-next-upsell",
+              "data-next-bundle-selector",
+              "data-next-bundle-card",
+              "data-next-timer"
+            ],
+            "note": "Single-package, fixed-price offer (accept or skip, no tiers); demo copy is a protection plan, any add-on fits. Two accept points share one package_id. Optional `voucher` applies a coupon through a hidden linked bundle selector (data-next-bundle-selector-id), and prices then read bundle.<selector_id>.price / originalPrice / discountPercentage; without a voucher they read package.price / price_retail / savingsPercentage. Countdown uses the SDK data-next-timer (persisted per persistence_id). Layout composed from next-core utilities plus the modifiers listed in the partial header."
           }
         ],
         "fixtures": [
