@@ -1038,6 +1038,8 @@ Upsell pages use a different set of attributes than checkout pages.
 
 For single-package upsells without voucher-driven pricing. If the upsell uses Campaign Offers or per-tier vouchers, use the **Bundle upsell** pattern below instead.
 
+**Reference:** `apollo/upsell-single.html` + `_includes/upsell-single-offer.html` in [campaign-cart-starter-templates](https://github.com/NextCommerceCo/campaign-cart-starter-templates) — a long-form single-offer page (hero offer card, features, with/without comparison, steps, closing offer) driven entirely by frontmatter (`upsell_offer`, `offer_features`, `offer_comparison`, `offer_steps`, `guarantee_note`). Set `upsell_offer.voucher` to apply one coupon to the accepted line: the partial then renders a hidden pre-selected bundle selector and reads `bundle.<selector_id>.*` prices instead of `package.*`. Keep `data-next-show` and `data-next-display` on separate elements.
+
 ```html
 <div data-next-upsell="offer" data-next-package-id="789">
   <span data-next-display="package.name" data-next-package-id="789"></span>
@@ -1196,7 +1198,7 @@ Use these when implementing or verifying a specific task. Work through each item
 
 ### Configuring the promo banner and timer
 
-**Apollo and Apollo MV** use frontmatter-driven partials (`promo-banner.html`, `promo-timer.html`) — not `<promo-banner>` / `<promo-timer>` web components. Configure via `promo_banner`, `promo_timer`, and optional `promo_sale` frontmatter. The timer reuses `checkout.js` `[data-next-element="timer"]` countdown. No `promo-banner.js` / `promo-timer.js` on Apollo checkout.
+**Apollo and Apollo MV** use frontmatter-driven partials (`promo-banner.html`, `countdown-timer.html`) — not `<promo-banner>` / `<promo-timer>` web components. Configure via `promo_banner`, `countdown_timer`, and optional `promo_sale` frontmatter. `countdown-timer.html` has two modes chosen by the data: `countdown_timer.duration` (seconds) renders the SDK-native `data-next-timer`, persisted per `persistence_id` so a reload does not restart it (used on upsell pages); `countdown_timer.start` (`"MM:SS"`) renders the legacy `[data-next-element="timer"]` span counted down by `checkout.js` (used on checkout). It renders nothing when `countdown_timer` is absent. No `promo-banner.js` / `promo-timer.js` on Apollo checkout.
 
 **Other families (olympus, demeter, olympus-mv)** still ship the web-component path:
 
