@@ -15550,25 +15550,26 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 
 /* --- Apollo promo timer (formerly page-level CSS) ------------------------------- */
 /* ==========================================================================
-   Apollo promo-timer — slim "DISCOUNT ACTIVATED" urgency bar with a
-   countdown pill. Replaces the legacy <promo-timer> web component on checkout.
+   Apollo countdown-timer — slim "DISCOUNT ACTIVATED" urgency bar with a
+   countdown pill (countdown-timer.html). Replaces the legacy <promo-timer>
+   web component on checkout.
    Countdown ticks via checkout.js [data-next-element="timer"]. Colors/sizes use
    next-core CSS vars where one exists.
    ========================================================================== */
 
-.promo-timer {
+.countdown-timer {
   background-color: var(--brand--color--black);
   padding: 0.5rem;
 }
 
-.promo-timer__inner {
+.countdown-timer__inner {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
 }
 
-.promo-timer__label {
+.countdown-timer__label {
   margin: 0;
   font-size: var(--font-size--base);
   font-weight: 700;
@@ -15576,16 +15577,16 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   text-transform: uppercase;
 }
 
-.promo-timer__label-accent {
+.countdown-timer__label-accent {
   color: var(--system-colors--success-medium);
   font-weight: 800;
 }
 
-.promo-timer__label-strong {
+.countdown-timer__label-strong {
   color: var(--brand--color--white);
 }
 
-.promo-timer__pill {
+.countdown-timer__pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -16123,8 +16124,8 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   }
 }
 
-/* --- Protection upsell (single-offer) — utility modifiers ------------------- */
-/* Used by upsell-protection-offer.html. All layout there is composed from the
+/* --- Single-offer upsell — utility modifiers -------------------------------- */
+/* Used by upsell-single-offer.html. All layout there is composed from the
    existing utilities above; these are the only additions, each a modifier on an
    existing class (or a generic spacing utility mirroring .margin-12). */
 
@@ -16159,7 +16160,7 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   font-size: var(--font-size--lg);
 }
 
-/* "Without protection" comparison column. */
+/* "Without it" comparison column (destructive tone). */
 .upsell-container--box.upsell-container--destructive {
   border-color: var(--system-colors--destructive);
 }

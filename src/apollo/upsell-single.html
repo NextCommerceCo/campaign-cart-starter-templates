@@ -1,10 +1,10 @@
 ---
-title: "Apollo — Upsell (protection plan)"
+title: "Apollo — Upsell (single offer)"
 page_type: upsell
 next_url: receipt.html
 decline_url: receipt.html
-# Single-offer protection / warranty upsell. One package, accept or skip, no
-# quantity tiers. Prices are SDK-driven — nothing is hardcoded here.
+# Single-offer upsell: one package, one fixed price, accept or skip, no quantity
+# tiers. Demo copy sells a protection plan; swap the strings for any add-on. Prices are SDK-driven — nothing is hardcoded here.
 # `voucher` (optional) applies a coupon to the accepted line via a hidden
 # bundle selector; prices then read bundle.<selector_id>.* (post-voucher).
 # Without `voucher`, prices read package.* (price / price_retail / savings).
@@ -12,15 +12,15 @@ decline_url: receipt.html
 announcement_text: "Special Offer Unlocked - Do Not Close This Page"
 # SDK-native countdown (data-next-timer): persisted in localStorage per
 # persistence_id, so a reload does not restart the clock. duration is seconds.
-promo_timer:
+countdown_timer:
   text: "Act fast:"
   highlight: "this one-time offer expires in"
   duration: 1800
-  persistence_id: "upsell-protection"
+  persistence_id: "upsell-single"
 upsell_offer:
   package_id: 12
   voucher: "LIFE50"
-  selector_id: "upsell-protection"
+  selector_id: "upsell-single"
   show_first_name: true
   headline: "Protect Your Order For Life"
   subheadline: "Lock in lifetime replacement and accident coverage for a one-time"
@@ -34,7 +34,7 @@ upsell_offer:
   details_hint: "Want the details first? Here's exactly what's covered ↓"
   closing_title: "Add lifetime protection to your order?"
   decline_text: "No thank you, I don't want to protect my order"
-protection_features:
+offer_features:
   title: "What your protection covers"
   text: "Everything that can go wrong with a product you use every day, handled."
   items:
@@ -46,7 +46,7 @@ protection_features:
       text: "Every approved claim ships a replacement to your door at zero cost. You never pay postage."
     - title: "Priority support"
       text: "Skip the queue. Protection-plan members get dedicated, front-of-line support."
-protection_comparison:
+offer_comparison:
   title: "With protection vs. without"
   text: "The same things happen to every product over time. What changes is who pays for it."
   recommended_label: "RECOMMENDED"
@@ -68,7 +68,7 @@ protection_comparison:
       - "Accidents come straight out of pocket"
       - "Pay standard shipping on every order"
       - "Wait in the standard support queue"
-protection_claims:
+offer_steps:
   title: "If something goes wrong, claims take 2 minutes"
   text: "No paperwork, no shipping the old one back, no hold music. Here's the whole process."
   steps:
@@ -89,18 +89,8 @@ guarantee_note: "Backed by our 60-day money-back guarantee — remove this prote
       </div>
     </div>
     {% campaign_include 'upsell-header-bar.html' %}
-    {% if promo_timer %}
-    <div class="promo-timer" data-next-timer data-duration="{{ promo_timer.duration | default: 1800 }}" data-persistence-id="{{ promo_timer.persistence_id | default: 'upsell-protection' }}" data-format="mm:ss">
-      <div class="promo-timer__inner">
-        <p class="promo-timer__label">
-          <span class="promo-timer__label-accent">{{ promo_timer.text }}</span>
-          <span class="promo-timer__label-strong">{{ promo_timer.highlight }}</span>
-        </p>
-        <span class="promo-timer__pill"><span data-next-timer-display>30:00</span></span>
-      </div>
-    </div>
-    {% endif %}
-    {% campaign_include 'upsell-protection-offer.html' %}
+    {% campaign_include 'countdown-timer.html' countdown_timer=countdown_timer %}
+    {% campaign_include 'upsell-single-offer.html' %}
     {% campaign_include 'footer.html' %}
   </div>
 </div>

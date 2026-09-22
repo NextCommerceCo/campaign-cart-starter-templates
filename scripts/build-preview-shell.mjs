@@ -52,6 +52,7 @@ const LABELS = {
   'upsell-bundle-stepper': 'Upsell stepper',
   'upsell-bundle-tier-pills': 'Upsell tier pills',
   'upsell-bundle-tier-cards': 'Upsell tier cards',
+  'upsell-single': 'Upsell single offer',
 };
 const ORDER = Object.keys(LABELS);
 const REPO_URL = 'https://github.com/NextCommerceCo/campaign-cart-starter-templates';

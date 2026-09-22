@@ -460,7 +460,7 @@
         "id": "template-reference-apollo",
         "family": "apollo",
         "version": "sdk-0.4.38-revalidated-2026-09-03",
-        "source_commit": "11352c30c596db258679fd3a552b906086b11bb9",
+        "source_commit": "dd8ce5e8902af8104283a4d3db3d6d375a6b6673",
         "provenance_path": "docs/template-references/apollo/README.md",
         "provenance_url": "https://raw.githubusercontent.com/NextCommerceCo/campaign-cart-starter-templates/main/docs/template-references/apollo/README.md",
         "contract_path": "docs/commerce-surface-catalog.json",
@@ -498,10 +498,10 @@
         "checkout-apollo.js",
         "bundle_card_style frontmatter",
         "bundle-selector.html with bundle-card dispatcher",
-        "promo-banner and promo-timer partials (not web components)",
+        "promo-banner and countdown-timer partials (not web components)",
         "checkout-reveal CTA and panel",
         "selector_order_bump_variant for check03 below selector",
-        "upsell-protection page (single-offer warranty / protection plan)"
+        "upsell-single page (single-offer add-on: one package, fixed price, accept or skip)"
       ],
       "canonicalSurfaces": {
         "mainSelector": "tiered-bundle-selector",
@@ -512,7 +512,7 @@
         "expressCheckout": "express-checkout|express-checkout-inline",
         "orderBump": "bump-check01|bump-check02|bump-check03|bump-switch01",
         "checkoutReveal": "checkout-form--reveal",
-        "upsell": "bundle-stepper|bundle-tier-pills|bundle-tier-cards|protection",
+        "upsell": "bundle-stepper|bundle-tier-pills|bundle-tier-cards|single",
         "receipt": "receipt-skeleton"
       },
       "frontmatterInputsObserved": [
@@ -527,7 +527,7 @@
         "as_seen_in",
         "reviews_slider",
         "guarantee",
-        "promo_timer",
+        "countdown_timer",
         "promo_banner",
         "product_heading",
         "packages",
@@ -579,7 +579,7 @@
             "reviews",
             "guarantee",
             "promo_banner",
-            "promo_timer",
+            "countdown_timer",
             "product_heading",
             "packages.prepurchase_1",
             "packages.prepurchase_2",
@@ -662,7 +662,7 @@
               "checkout-header.html",
               "product-heading.html",
               "promo-banner.html",
-              "promo-timer.html",
+              "countdown-timer.html",
               "as-seen-in.html",
               "reviews-slider.html",
               "guarantee.html"
@@ -670,7 +670,7 @@
             "ownedInputs": [
               "product_heading",
               "promo_banner",
-              "promo_timer",
+              "countdown_timer",
               "as_seen_in",
               "reviews",
               "guarantee"
@@ -740,17 +740,17 @@
             ]
           },
           {
-            "name": "Apollo protection upsell page",
+            "name": "Apollo single-offer upsell page",
             "partials": [
-              "upsell-protection-offer.html"
+              "upsell-single-offer.html"
             ],
             "ownedInputs": [
               "upsell_offer",
-              "protection_features",
-              "protection_comparison",
-              "protection_claims",
+              "offer_features",
+              "offer_comparison",
+              "offer_steps",
               "guarantee_note",
-              "promo_timer",
+              "countdown_timer",
               "announcement_text"
             ],
             "sdkRoots": [
@@ -759,7 +759,7 @@
               "data-next-bundle-card",
               "data-next-timer"
             ],
-            "note": "Single-package, fixed-price protection/warranty offer (accept or skip, no tiers). Two accept points share one package_id. Optional `voucher` applies a coupon through a hidden linked bundle selector (data-next-bundle-selector-id), and prices then read bundle.<selector_id>.price / originalPrice / discountPercentage; without a voucher they read package.price / price_retail / savingsPercentage. Countdown uses the SDK data-next-timer (persisted per persistence_id). Layout composed from next-core utilities plus the modifiers listed in the partial header."
+            "note": "Single-package, fixed-price offer (accept or skip, no tiers); demo copy is a protection plan, any add-on fits. Two accept points share one package_id. Optional `voucher` applies a coupon through a hidden linked bundle selector (data-next-bundle-selector-id), and prices then read bundle.<selector_id>.price / originalPrice / discountPercentage; without a voucher they read package.price / price_retail / savingsPercentage. Countdown uses the SDK data-next-timer (persisted per persistence_id). Layout composed from next-core utilities plus the modifiers listed in the partial header."
           }
         ],
         "fixtures": [
@@ -1305,7 +1305,7 @@
         "as_seen_in",
         "reviews",
         "guarantee",
-        "promo_timer",
+        "countdown_timer",
         "promo_banner",
         "product_heading",
         "swiper_slides",
@@ -1359,7 +1359,7 @@
             "reviews",
             "guarantee",
             "promo_banner",
-            "promo_timer",
+            "countdown_timer",
             "product_heading",
             "swiper_slides",
             "swiper_thumbs",
@@ -1439,7 +1439,7 @@
               "checkout-header.html",
               "product-heading.html",
               "promo-banner.html",
-              "promo-timer.html",
+              "countdown-timer.html",
               "as-seen-in.html",
               "reviews-slider.html",
               "guarantee.html"
@@ -1447,7 +1447,7 @@
             "ownedInputs": [
               "product_heading",
               "promo_banner",
-              "promo_timer",
+              "countdown_timer",
               "as_seen_in",
               "reviews",
               "guarantee"

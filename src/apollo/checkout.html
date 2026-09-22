@@ -28,7 +28,7 @@ promo_banner:
   lead: "your"
   strong: "Product Name"
   trail: "- Today only · Free USA shipping"
-promo_timer:
+countdown_timer:
   text: "Discount"
   highlight: "Activated"
   start: "59:59"
@@ -208,7 +208,7 @@ bundles:
                     <div class="hide-tablet">
                       {% campaign_include 'product-heading.html' product_heading=product_heading %}
                     </div>
-                    {% campaign_include 'promo-timer.html' promo_timer=promo_timer %}
+                    {% campaign_include 'countdown-timer.html' countdown_timer=countdown_timer %}
                     <div class="checkout-form{% if checkout_reveal %} checkout-form--reveal{% endif %}">
                       <form data-next-checkout="form" id="combo_form" method="post">
                         <div class="form-content">

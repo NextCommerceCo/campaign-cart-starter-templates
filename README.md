@@ -68,7 +68,7 @@ Each checkout template includes presell + landing pages, all upsell variants, an
 | `upsell-bundle-stepper` | Quantity stepper with tier pricing | [preview](https://nextcommerce-campaign-templates.netlify.app/apollo/upsell-bundle-stepper/) |
 | `upsell-bundle-tier-pills` | Pill-style tier selector | [preview](https://nextcommerce-campaign-templates.netlify.app/apollo/upsell-bundle-tier-pills/) |
 | `upsell-bundle-tier-cards` | Card-style tier selector | [preview](https://nextcommerce-campaign-templates.netlify.app/apollo/upsell-bundle-tier-cards/) |
-| `upsell-protection` | Single-offer protection / warranty plan (accept or skip, no tiers) | [preview](https://nextcommerce-campaign-templates.netlify.app/apollo/upsell-protection/) |
+| `upsell-single` | Single-offer add-on, one package at a fixed price (accept or skip, no tiers); demo is a protection plan | [preview](https://nextcommerce-campaign-templates.netlify.app/apollo/upsell-single/) |
 | `upsell-mv` | Multi-variant upsell | [preview](https://nextcommerce-campaign-templates.netlify.app/apollo-mv-single-step/upsell-mv/) |
 
 **Receipt**
