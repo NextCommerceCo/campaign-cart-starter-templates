@@ -4,7 +4,8 @@
   next_sdk_owns: upsell add/skip actions, voucher via linked bundle selector, price/savings display, countdown timer
   next_sdk_surface: upsell offer (single package, fixed price, no quantity)
   next_params:
-    upsell_offer: object. package_id, voucher (optional coupon code), selector_id, headline, subheadline, product_name, image,
+    upsell_offer: object. package_id (REQUIRED — no fallback; a missing id renders no data-next-package-id
+      and the SDK UpsellEnhancer throws, so the mistake is loud), voucher (optional coupon code), selector_id, headline, subheadline, product_name, image,
       rating, rating_text, urgency_text, accept_text, social_proof, details_hint,
       closing_title, decline_text, show_first_name.
     offer_features: object. title, text, items[] { title, text }.
@@ -37,7 +38,7 @@
   .announcement__block.cc-padded, .upsell-offer__image-column.cc-narrow / .cc-medium, .upsell-content__column.cc-fluid.
 {% endcomment %}
 {% assign offer = upsell_offer -%}
-{% assign package_id = offer.package_id | default: 4 -%}
+{% assign package_id = offer.package_id -%}
 {% assign features = offer_features -%}
 {% assign compare = offer_comparison -%}
 {% assign claims = offer_steps -%}
