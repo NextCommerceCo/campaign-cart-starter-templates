@@ -68,6 +68,10 @@ TOKENS = [
     "addTick",
     "next-toast-handler",
     "tip1_bar",
+    "payment-btn",
+    "exp-checkout",
+    "express-checkout",
+    "bump__switch",
 ]
 
 HEADER = """\

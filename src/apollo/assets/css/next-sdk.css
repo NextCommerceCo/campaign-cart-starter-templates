@@ -312,6 +312,55 @@ html.next-display-ready [data-next-await]::after {
   inset: 0% 0% 0% auto;
 }
 
+.exp-checkout {
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+  flex-flow: column;
+  display: flex;
+}
+
+.express-checkout__title {
+  text-align: center;
+  font-weight: 600;
+}
+
+.express-checkout__buttons {
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+  width: 100%;
+  display: flex;
+  position: relative;
+}
+
+.express-checkout__buttons.cc-padding {
+  border: 1px solid var(--brand--color--border);
+  border-radius: 4px;
+  padding: 1rem;
+}
+
+.payment-btn {
+  border-radius: var(--radius--cards);
+  background-color: #000;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 2.75rem;
+  display: flex;
+  position: relative;
+}
+
+.payment-btn.cc-paypal {
+  background-color: #ffc439;
+}
+
+.payment-btn.cc-apple-pay {
+  color: #fff;
+}
+
+.payment-btn__logo {
+  height: 1.5rem;
+}
+
 .checkbox__icon {
   color: #000;
   flex-direction: column;
@@ -1214,6 +1263,34 @@ html.next-display-ready [data-next-await]::after {
   inset: 0%;
 }
 
+.exp-checkout__inline {
+  grid-column-gap: .5rem;
+  grid-row-gap: .5rem;
+  border-radius: var(--radius--cards);
+  border: 1px solid #bbb;
+  flex-flow: column;
+  padding: 1.25rem 1rem 1rem;
+  display: flex;
+  position: relative;
+}
+
+.exp-checkout__inline-header {
+  justify-content: center;
+  height: 1.5rem;
+  display: flex;
+  position: absolute;
+  inset: -.75rem 0% auto;
+}
+
+.express-checkout__title-inline {
+  text-align: center;
+  background-color: #fff;
+  padding-left: 8px;
+  padding-right: 8px;
+  font-size: .925rem;
+  font-weight: 600;
+}
+
 .next-slot__image {
   justify-content: center;
   align-items: center;
@@ -1246,6 +1323,13 @@ html.next-display-ready [data-next-await]::after {
   display: flex;
 }
 
+.express-checkout {
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+  flex-flow: column;
+  display: flex;
+}
+
 .checkout__cart-box {
   border: 1px solid #dedede;
   overflow: hidden;
@@ -1268,6 +1352,12 @@ html.next-display-ready [data-next-await]::after {
 }
 
 @media screen and (max-width: 991px) {
+  .express-checkout__buttons {
+    flex-flow: row;
+  }
+  .payment-btn {
+    position: relative;
+  }
   .cart-items__scroll-hint {
     display: none;
   }
@@ -1339,6 +1429,9 @@ html.next-display-ready [data-next-await]::after {
   .order-totals-skeleton {
     font-size: var(--font-size--xs);
   }
+  .exp-checkout__inline {
+    margin-top: .5rem;
+  }
 }
 
 @media screen and (max-width: 767px) {
@@ -1365,6 +1458,11 @@ html.next-display-ready [data-next-await]::after {
 }
 
 @media screen and (max-width: 479px) {
+  .express-checkout__buttons {
+    grid-column-gap: .6rem;
+    grid-row-gap: .6rem;
+    flex-flow: column;
+  }
   .cart-items__scroll-hint {
     font-size: var(--font-size--sm);
   }
@@ -1511,6 +1609,72 @@ html.next-display-ready [data-next-await]::after {
 
 .payment-method__icon--google-pay-logo {
   width: 45px;
+}
+
+[data-component="prepurchase-upsell"] .bump__switch {
+  position: relative;
+  flex: none;
+  width: 3.5rem;
+  height: 1.75rem;
+  border-radius: 9999px;
+  background-color: #e5e5e5;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+[data-component="prepurchase-upsell"] .bump__switch::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: var(--brand--color--primary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+[data-component="prepurchase-upsell"] [data-next-bump].next-active .bump__switch::before,
+[data-component="prepurchase-upsell"] .bump-card.bump--switch-on .bump__switch::before,
+[data-component="prepurchase-upsell"] .bump-card.next-in-cart .bump__switch::before {
+  opacity: 1;
+}
+
+[data-component="prepurchase-upsell"] .bump__switch-slider {
+  position: absolute;
+  top: 50%;
+  left: 0.25rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transform: translate(0, -50%);
+  transition: transform 0.3s ease;
+  pointer-events: none;
+}
+
+[data-component="prepurchase-upsell"] [data-next-bump].next-active .bump__switch-slider,
+[data-component="prepurchase-upsell"] .bump__head--switch.next-active .bump__switch-slider,
+[data-component="prepurchase-upsell"] .bump-card.bump--switch-on .bump__switch-slider,
+[data-component="prepurchase-upsell"] .bump-card.next-in-cart .bump__switch-slider {
+  transform: translate(1.75rem, -50%);
+}
+
+@media screen and (max-width: 426px) {
+  [data-component="prepurchase-upsell"] .bump__switch {
+    width: 2.75rem;
+    height: 1.375rem;
+  }
+  [data-component="prepurchase-upsell"] [data-next-bump].next-active .bump__switch-slider,
+  [data-component="prepurchase-upsell"] .bump__head--switch.next-active .bump__switch-slider,
+  [data-component="prepurchase-upsell"] .bump-card.bump--switch-on .bump__switch-slider,
+  [data-component="prepurchase-upsell"] .bump-card.next-in-cart .bump__switch-slider {
+    transform: translate(1.25rem, -50%);
+  }
+  [data-component="prepurchase-upsell"] .bump__switch-slider {
+    width: 1rem;
+    height: 1rem;
+    left: 0.2rem;
+  }
 }
 
 .cart-box--card {

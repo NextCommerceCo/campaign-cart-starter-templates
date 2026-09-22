@@ -10,6 +10,31 @@ Cursor rule (always on): `.cursor/rules/tailwind-css-parity.mdc`.
 
 ---
 
+## Three stylesheets — who styles what
+
+Apollo checkout loads **two campaign sheets** plus the SDK loader. The SDK may also inject its CDN `campaign-cart.css`. Do not mix their jobs.
+
+| Sheet | Who writes the HTML | Job |
+|---|---|---|
+| SDK CDN (`campaign-cart.css` via `loader.js`) | SDK | Behavior hooks only (`.next-hidden`, loaders). **Not** PayPal yellow, 44px height, or card radius. Campaigns OS could not theme that if it lived here. |
+| `next-sdk.css` (campaign leftover) | SDK **injects or clones** the node | Look of injected UI: `.payment-btn`, `.next-toast-handler`, `.tip1_bar`, payment radios, Spreedly, reveal park, `.cart-item*` clones. We cannot put Tailwind classes on markup that does not exist until JS runs. |
+| `tailwind.css` | **We** author the markup | Chrome we control: header, reviews, bundles, form layout, submit, bumps, the empty express **tray**. |
+
+**Rule:** we write the markup → Tailwind. SDK writes the markup → leftover in `next-sdk.css`. Add the class name to `TOKENS` in `scripts/extract-apollo-next-sdk.py` and regenerate (`python3 scripts/extract-apollo-next-sdk.py`). The extractor only copies rules whose selector contains a token (plus `:root`). Hide-only / injected-button leftover has no brand token — if it is not on `TOKENS` it vanishes when Apollo drops `next-core.css`.
+
+Known extractor misses (add to `TOKENS`; some are still patched unlayered in `tailwind.input.css` until extract is trusted):
+
+- `.next-toast-handler` / `.tip1_bar` — dummy “Error message” bars painted
+- `.payment-btn` / `.exp-checkout` / `.express-checkout__*` — express buttons injected but 0-height / unstyled
+- `.bump__switch` **track** (not just the ON transform)
+- Leftover `h2` weight 700 / `line-height: 1.2` (step titles)
+
+After a `next-sdk.css` change, hard-refresh. A `?v=` on the HTML URL does not bust the unversioned CSS href.
+
+Do **not** edit `_shared/checkout/_includes/payment-methods.html` (or the generated family copies) in this pilot.
+
+---
+
 ## Convert a page (standing checklist)
 
 Use this for every surface. The job is **visual and functional parity** with current templates, using **as many Tailwind utilities as possible**. It is not a redesign, a Tailwind-scale rounding, or a revert to leftover CSS.
@@ -20,7 +45,7 @@ Receipt (2026-09-18) is the first completed pass. The numbered steps below are t
 
 Drop leftover layout/type/color classes (`.receipt_*`, `.checkout-content`, `.announcement`, `.upsell-header`, static `.button` / `.link`). Keep `data-next-*`, SDK/JS class names (`next-expanded`, `next-selected`, `next-loading`, `.cart-item*`, `.os-card*`, `.skeleton-*`, `.hide` if JS still uses it). Putting the old class back to “fix” a miss is a revert, not a conversion.
 
-Shared includes used by an unconverted page must either stay leftover **or** the layout must load compiled `tailwind.css` wherever that include renders. `base.html` always loads compiled Tailwind (receipt, upsell, checkout chrome, footer).
+Shared includes used by an unconverted page must either stay leftover **or** the layout must load compiled `tailwind.css` wherever that include renders. `base.html` always loads `next-sdk.css` + compiled Tailwind (receipt, upsell, checkout chrome, footer). Apollo does **not** load `next-core.css` at runtime.
 
 ### 2. Inventory the source class + every media query, then the map.
 
@@ -58,7 +83,9 @@ Compiler traps (not leftover CSS):
 |---|---|---|
 | `[&_.os-card__radio]` | Tailwind treats `__` as a space, so the child selector never matches | Put the utility on the radio, or use a hyphenated child (`[&_.radio-inner]`) |
 | v4 `scale-0` / `scale-100` | Those set the `scale` **property**, not `transform` | Use `[transform:scale(0)]` / `[transform:scale(1)]` when leftover animated `transform` |
-| `max-[767px]` (and 991 / 479) | v4 compiles to `@media not all and (min-width:767px)` (`width < 767`). Leftover is `max-width: 767px` | Compare **766 and 768**, not only 767. At exactly 767 leftover applies and utilities do not |
+| `max-[767px]` (and 991 / 479) | v4 compiles to `@media not all and (min-width:767px)` (`width < 767`). Leftover is `max-width: 767px` | Compare **766 and 768** (and **478 and 480**), not only the breakpoint number. At exactly 767 leftover applies and utilities do not |
+| Tailwind `img` / `svg` `{ height: auto }` (`important`) | Beats leftover wordmark width/height — PayPal / Apple Pay / Klarna icons collapse or grow | Re-assert sizes unlayered with `!important` on `.payment-method__icon*` (see `tailwind.input.css`) |
+| Missing leftover on **injected** nodes | SDK still injects `.payment-btn`; without leftover the button is in the DOM at 0-height | Leftover in `next-sdk.css` (token + extract), not Tailwind on the button, not SDK CDN CSS |
 | Drop `.form-group` / `.form-input` | SDK inits floating labels with `querySelectorAll(".form-group")` and errors on `.form-group`; `closest(".form-input")` for icons | Keep the class names. Cosmetics can still be utilities. |
 | `p-*` / `py-*` on `.input-flds` | important padding beats SDK inline `paddingTop: 14px` when `.has-value` | Layout only (`h-12`, `px-3`). Unlayered leftover owns has-value `padding-top`. |
 | Neutralize leftover form layout globally | payment-methods + SDK billing inject have no utilities; they go unstyled | Scope the unset to `[data-next-catalog-component="customer-info-form\|shipping-address-form\|personalization-field"]` and `.bump__personalization` |
@@ -84,7 +111,7 @@ Receipt binds `order.*` (`order.hasItems`, `order.hasDiscounts`, `order.total`),
 
 ### 7. Load compiled CSS from the layout, never frontmatter `styles:`.
 
-Netlify validates those paths before compile. `base.html` always loads `next-core.css` + compiled `tailwind.css`. Do not list `tailwind.css` in page `styles:`.
+Netlify validates those paths before compile. Apollo `base.html` always loads `next-sdk.css` + compiled `tailwind.css` (not `next-core.css`). Do not list `tailwind.css` in page `styles:`.
 
 ### 8. Done gate = `getComputedStyle` vs live, including motion.
 
@@ -95,6 +122,11 @@ Required properties: `color`, `backgroundColor`, `border`, `fontSize`, `fontWeig
 `[data-next-skeleton]` until `next-display-ready`, and empty `order.*` / fixture `$0.00`, are not conversion failures.
 
 A surface is not converted until this gate passes. Append the new 1:1 strings to the **CSS → utility map**.
+
+**QA that is not a conversion miss:**
+
+- Express Apple Pay **button** is wallet-gated (Safari / `canMakePayments`). The Apple Pay **radio** is a redirect APM and shows whenever the campaign has the method. Real Chrome often shows PayPal-only express + an Apple Pay radio. Cursor/Electron may inject the black button anyway. Do not restyle to “add” a wallet the SDK omitted.
+- Express tray + payment radios live inside `.checkout-reveal__panel`. They are parked (`left: -99999px`) until Add to Cart. Judge APM visibility only after reveal, then look at the tray **above** the radios (easy to scroll past).
 
 ### Receipt postmortem (2026-09-18)
 
@@ -173,6 +205,7 @@ These are not always toggled by JS, but selected-state CSS and Campaigns OS bran
 - `.bundle-card` / `.bundle-tile` and descendants
 - `.bump__switch` / `.bump__switch-slider` / `.bump__personalization` / `[os-component="check"]` (PackageToggle; cosmetics on the card are utilities)
 - `.payment-method` and descendants
+- `.payment-btn` / `.exp-checkout` / `.express-checkout__buttons` (SDK **injects** the buttons; we only author the empty tray)
 - `.checkout-reveal__panel` / `.checkout-reveal__cta`
 - `.form-grid` / `.input-flds` / `.label-checkout` (SDK validation; cosmetics on the grid/row, not display/border on the field)
 - `.button` (when used with `.next-loading` / `.is-inactive`)
@@ -408,7 +441,7 @@ Page chrome **and offer cosmetics** on the three Apollo bundle upsells are Tailw
 
 Checkout **page chrome**, product bundle cards, form-section titles, trust bar, reviews cards, submit cosmetics, order-bump cosmetics, and **checkout form layout** (customer + shipping grids, select caret) are Tailwind utilities. `.input-flds` / `.label-checkout` / `.form-grid` stay as SDK hooks. Payment methods and reveal park/unpark stay leftover. Cart-summary cosmetics are utilities; `.cart-item*` class names stay (SDK clones the template). `bump-check02.html` is unwired on the default checkout and is still leftover.
 
-**Tokens added:** `--color-brand-white`, `--color-neutral-300`, `--color-neutral-checkout` (`#fcfcfc`), `--color-promo-timer-pill` (`rgba(255,255,255,0.19)`), `--radius-sm`, `--radius-input`, `--animate-as-seen-in-scroll`, `--color-brand-lighter`, `--color-pill-primary` / `--color-pill-primary-surface`, `--color-pill-secondary` / `--color-pill-secondary-surface`, `--color-bump-border` (`#bbb`), `--color-bump-checkbox` (`#9b9b9b`).
+**Tokens added:** `--color-brand-white`, `--color-neutral-300`, `--color-neutral-checkout` (`#fcfcfc`), `--color-promo-timer-pill` (`rgba(255,255,255,0.19)`), `--radius-sm`, `--radius-input`, `--animate-as-seen-in-scroll`, `--color-brand-lighter`, `--color-pill-primary` / `--color-pill-primary-surface`, `--color-pill-secondary` / `--color-pill-secondary-surface`, `--color-bump-border` (`#bbb`), `--color-bump-checkbox` (`#9b9b9b`), `--color-discount-saved` (`#e44613`), `--color-neutral-summary-rule` (`#f0f0f0`), `--color-cart-image-wash` (`#ececec`), `--shadow-cart-item`.
 
 **Verified vs live** (`nextcommerce-campaign-templates.netlify.app/apollo/checkout/`):
 
@@ -431,7 +464,8 @@ Checkout **page chrome**, product bundle cards, form-section titles, trust bar, 
 - `.bump__switch` / `.bump__switch-slider` (`::before` fill + thumb `transform`; ON state retargeted to `[data-next-toggle-card].next-in-cart` / `.next-active`)
 - `.bump__personalization` (click-stop in `checkout-apollo.js`)
 - `.checkbox__icon` (1rem check glyph)
-- `.payment-method*` (generated shared partial)
+- `.payment-method*` (generated shared partial — do **not** edit `_shared/checkout/_includes/payment-methods.html`)
+- `.payment-btn` / `.exp-checkout` / `.express-checkout__*` (SDK injects buttons into the tray; leftover paints them — `tailwind.input.css` patch + `TOKENS`)
 - `.next-toast-handler` / `.tip1_bar` / `.tip1_bar.is-warning` (payment + express error placeholder; hide until SDK shows it)
 - `.cart-item*` / `data-next-cart-summary` / `data-summary-lines` / `os-cart-summary-*` (SDK clones + host-state display). Cosmetics are utilities; leftover layout is unset on `[data-next-catalog-component="order-summary"]`. receipt-orders still leftover.
 - `.hide` on `{item.hasDiscount}` / scroll-hint / dormant tax. Do not put display utilities on those nodes.
@@ -442,6 +476,7 @@ Checkout **page chrome**, product bundle cards, form-section titles, trust bar, 
 
 ---
 
+### Cart-summary map (checkout)
 
 | `.cart-box` + `.cart-box--card` | `flex flex-col gap-4 rounded-sm border border-brand-border bg-white p-6` | `--radius--label` is 4px → `rounded-sm`. Converted on checkout.html wrapper. |
 | `.summary-wrapper` / `.order-summary__content` | `flex flex-col gap-4` | Drop leftover wrappers. Keep `data-next-cart-summary`. |
@@ -461,6 +496,19 @@ Checkout **page chrome**, product bundle cards, form-section titles, trust bar, 
 | totals line | `flex justify-between text-brand-black` | Grand total adds `text-lg font-bold`. Coin `text-sm font-normal`. |
 | `.order-totals__section--inset` + discount | `mx-[-1.5rem] bg-brand-surface px-6 py-2` on the **hook node only** — no display utility (`os-cart-summary-row--discount`). Saved amount `text-discount-saved`. |
 | tax / discount rows | keep `os-cart-summary-row--tax` / `--discount` | Leftover display. Do not put `flex` on these nodes. |
+
+## Pilot log (accumulate here)
+
+Dated so the next pass does not re-discover the same miss. Detail lives in the sections above.
+
+- **2026-09-21 — sheets:** Apollo runtime is `next-sdk.css` + `tailwind.css`, not `next-core.css`. Extractor + `TOKENS` is how leftover survives. `tailwind.input.css` still holds unlayered patches (express buttons, switch track, wordmark sizes, cart-summary host display, swiper auto slides, voucher shown-state).
+- **2026-09-21 — injected UI:** `.payment-btn` look is campaign leftover, not SDK CDN CSS, not Tailwind on the button. Missing leftover → button in DOM, invisible.
+- **2026-09-21 — toasts:** `.next-toast-handler { display: none }` + `.tip1_bar.is-warning`. Dummy “Error message” is always in the HTML.
+- **2026-09-21 — stars:** leftover `.star_wrapper` shrink-wraps. Full-width `flex justify-center` centers slider stars in the card. Use `inline-flex items-center gap-[1.2px]` / `size-4` tiles (15px SVG in 16px box).
+- **2026-09-21 — disclaimer:** `.submit-section__disclaimer` is `text-xs` then **8px** at ≤479.
+- **2026-09-21 — Apple Pay QA:** radio ≠ express button. Button is wallet-gated; radio is campaign APM. Reveal parks both until Add to Cart. Chrome often PayPal-only express.
+- **2026-09-21 — wordmarks:** important Tailwind `img { height: auto }` beats leftover icon sizes — re-assert `!important` widths on `.payment-method__icon*`.
+- **Do not edit** `_shared/checkout/_includes/payment-methods.html`. Neutralize form leftover only on converted catalog surfaces.
 
 ## Out of scope for the Apollo pilot
 

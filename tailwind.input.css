@@ -3,8 +3,8 @@
 /*
   Apollo Tailwind v4 entry (pilot).
 
-  `important` is required while pages still load unlayered next-core.css.
-  Layered utilities otherwise lose to element defaults (a, h2, h1).
+  `important` is required while leftover (next-sdk.css + this file's unlayered
+  patches) stays unlayered. Layered utilities otherwise lose to element defaults.
 
   @theme inline is required: without it Tailwind resolves var() at build time
   and the values come out blank. Campaigns OS brand-theme overrides the CSS
@@ -274,7 +274,9 @@
 
 /*
   Express / APM buttons. SDK injects .payment-btn into
-  [data-next-express-checkout="buttons"]. next-sdk omitted these.
+  [data-next-express-checkout="buttons"]. Also extracted into next-sdk.css
+  via TOKENS (payment-btn, exp-checkout, express-checkout). Keep this patch
+  until a regenerate + computed-style pass proves extract is enough.
 */
 .exp-checkout {
   display: flex;
