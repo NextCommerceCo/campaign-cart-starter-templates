@@ -168,13 +168,30 @@
         "accept_text",
         "decline_text",
         "retail_shipping",
-        "offer_shipping"
+        "offer_shipping",
+        "type",
+        "display_selector_id",
+        "display_bundle_id",
+        "voucher",
+        "pricing_mode",
+        "pretitle",
+        "title",
+        "rating_text",
+        "heading_prices",
+        "quantity_label",
+        "accept_show_price",
+        "cta_note",
+        "ships_info_text",
+        "social_proof",
+        "urgency_text",
+        "image",
+        "closing_title"
       ],
       "sourceOfTruth": [
         "CampaignSpec upsell/downsell pages",
         "Campaigns API package refs and vouchers/offers"
       ],
-      "agentRule": "Post-purchase upsells do not use shipping_methods. Package refs and vouchers must come from the upsell page contract. `retail_shipping` and `offer_shipping` are display copy for the offer price block (the struck retail shipping line and the offer shipping line), not shipping method refs. The starter defaults claim `+$4.95 SHIPPING` and `+ FREE SHIPPING`; set both from the target campaign's real shipping figures whenever they differ."
+      "agentRule": "Post-purchase upsells do not use shipping_methods. Package refs and vouchers must come from the upsell page contract. `retail_shipping` and `offer_shipping` are display copy for the offer price block (the struck retail shipping line and the offer shipping line), not shipping method refs. The starter defaults claim `+$4.95 SHIPPING` and `+ FREE SHIPPING`; set both from the target campaign's real shipping figures whenever they differ. Copy keys (pretitle, title, rating_text, cta_note, …) are display strings — HTML allowed, data-next-display spans allowed — never package refs."
     },
     "upsell_bundle_tiers": {
       "purpose": "Tiered post-purchase bundle upsell rows.",
@@ -265,6 +282,111 @@
         "Template partial: personalization-field.html; offer partials may render the same order_personalization contract with data-next-default-property"
       ],
       "agentRule": "Reliable for 'same value on every unit' and for single non-variant / non-slot upsells where the accepted set is one line. The generic partial ships in every family's _includes but is NOT wired into generic pages; opt in with a campaign_include or an offer partial that accepts order_personalization. For per-line distinct slot values use slot_personalization (MV checkout/select/upsell) instead. When paired with a per-slot field on the same surface, use a DISTINCT property_key: the merge is { ...default, ...slot } so a per-slot value overrides the default on a shared key (MV checkout uses custom_text vs slot number; MV upsell example uses gift_message vs slot upsell_message)."
+    },
+    "upsell_layout": {
+      "purpose": "Layout knobs for the composable upsell/offer.html shell.",
+      "canonicalKeys": [
+        "boxed",
+        "media",
+        "media_position",
+        "show_bullets",
+        "show_ships_info",
+        "show_payment_logos",
+        "media_align",
+        "media_width",
+        "style"
+      ],
+      "sourceOfTruth": [
+        "CampaignSpec upsell page copy / design spec"
+      ],
+      "agentRule": "media: carousel|image|grid|video|none (the swiper area; video reads media_video, same contract as upsell_video — upsell_video itself is the content-column include under the heading); media_position: right (default, content left) | left; boxed false + upsell_hero.variant card is the long-form (VSL) look. Pure presentation — never derived from the API."
+    },
+    "upsell_hero": {
+      "purpose": "Upsell title band (band) or band + overlapping offer card with countdown (card).",
+      "canonicalKeys": [
+        "variant",
+        "title",
+        "offer",
+        "suboffer",
+        "heading",
+        "text",
+        "narrow"
+      ],
+      "sourceOfTruth": [
+        "CampaignSpec upsell page copy / design spec"
+      ],
+      "agentRule": "HTML strings; quote SDK values with data-next-display spans (bundle.upsell-bundle-1x.* for the pinned 1× price on tier offers, bundle.<selector_id>.* on stepper/single-with-voucher, package.<id>.name everywhere)."
+    },
+    "upsell_video": {
+      "purpose": "VSL / product video rendered by upsell/video.html (native <video>).",
+      "canonicalKeys": [
+        "src",
+        "poster",
+        "title",
+        "autoplay",
+        "loop",
+        "controls",
+        "preload",
+        "id"
+      ],
+      "sourceOfTruth": [
+        "CampaignSpec upsell page copy / design spec"
+      ],
+      "agentRule": "src is a local asset path or an https URL — NEXT-hosted media MUST use cdn.cachebucket.com. autoplay defaults true and always pairs with muted (browser policy). Rendered under the offer heading whenever set; independent of upsell_layout.media. No player library. preload defaults metadata (autoplay) / none (autoplay: false). The <video> carries data-upsell-video (+ optional id) as the hook for a campaign-supplied player script; set controls: false when layering one on."
+    },
+    "upsell_guarantees": {
+      "purpose": "Trust / guarantee cards under the accept button.",
+      "canonicalKeys": [
+        "variant",
+        "icon",
+        "image",
+        "title",
+        "text"
+      ],
+      "sourceOfTruth": [
+        "CampaignSpec upsell page copy / design spec"
+      ],
+      "agentRule": "variant stacked (centered icon + title + text) | row (badge left, \"<strong>title</strong> text\" right). Guarantee copy must match the store policy links in campaigns.json."
+    },
+    "upsell_body": {
+      "purpose": "Ordered long-form sections between the offer and the closing CTA.",
+      "canonicalKeys": [
+        "type",
+        "title",
+        "text",
+        "items",
+        "steps",
+        "with",
+        "without",
+        "rating_text"
+      ],
+      "sourceOfTruth": [
+        "CampaignSpec upsell page copy / design spec"
+      ],
+      "agentRule": "type reviews | features | comparison | steps. Section copy is design-owned; any price/percentage inside it is a data-next-display span, never a literal."
+    },
+    "upsell_secondary": {
+      "purpose": "Closing CTA block after the body sections.",
+      "canonicalKeys": [
+        "variant",
+        "title",
+        "note",
+        "image"
+      ],
+      "sourceOfTruth": [
+        "CampaignSpec upsell page copy / design spec"
+      ],
+      "agentRule": "variant cta (centered button + note + decline) | card (boxed image + price rows + button + decline). Its accept/skip are data-upsell-proxy buttons forwarded to the single in-offer SDK action — never add a second data-next-upsell=\"offer\" wrapper."
+    },
+    "offer_bullets": {
+      "purpose": "Feature bullets in the upsell offer content column.",
+      "canonicalKeys": [
+        "text"
+      ],
+      "sourceOfTruth": [
+        "CampaignSpec upsell page copy / design spec"
+      ],
+      "agentRule": "Array of strings or { text }. Absent = demo bullets render; upsell_layout.show_bullets false removes the block."
     }
   },
   "campaignSpecFixturePolicy": {
@@ -489,7 +611,7 @@
         "id": "template-reference-apollo",
         "family": "apollo",
         "version": "sdk-0.4.38-revalidated-2026-09-03",
-        "source_commit": "dd8ce5e8902af8104283a4d3db3d6d375a6b6673",
+        "source_commit": "6c96525b6416872ad0e51918fe6ec82a9673808c",
         "provenance_path": "docs/template-references/apollo/README.md",
         "provenance_url": "https://raw.githubusercontent.com/NextCommerceCo/campaign-cart-starter-templates/main/docs/template-references/apollo/README.md",
         "contract_path": "docs/commerce-surface-catalog.json",
@@ -530,7 +652,8 @@
         "promo-banner and countdown-timer partials (not web components)",
         "checkout-reveal CTA and panel",
         "selector_order_bump_variant for check03 below selector",
-        "upsell-single page (single-offer add-on: one package, fixed price, accept or skip)"
+        "upsell-single page (single-offer add-on: one package, fixed price, accept or skip)",
+        "upsell-vsl page (long-form VSL upsell composed from the shared upsell partial set: hero card + countdown, video under the heading, guarantees, reviews, closing CTA)"
       ],
       "canonicalSurfaces": {
         "mainSelector": "tiered-bundle-selector",
@@ -541,7 +664,7 @@
         "expressCheckout": "express-checkout|express-checkout-inline",
         "orderBump": "bump-check01|bump-check02|bump-check03|bump-switch01",
         "checkoutReveal": "checkout-form--reveal",
-        "upsell": "bundle-stepper|bundle-tier-pills|bundle-tier-cards|single",
+        "upsell": "bundle-stepper|bundle-tier-pills|bundle-tier-cards|single (+ vsl page = stepper offer_type in the long-form composition)",
         "receipt": "receipt-skeleton"
       },
       "frontmatterInputsObserved": [
@@ -564,7 +687,16 @@
         "swiper_slides",
         "swiper_thumbs",
         "upsell_offer",
-        "upsell_bundle_tiers"
+        "upsell_bundle_tiers",
+        "upsell_hero",
+        "upsell_layout",
+        "offer_bullets",
+        "upsell_video",
+        "upsell_guarantees",
+        "upsell_body",
+        "upsell_secondary",
+        "header_bar",
+        "announcement_variant"
       ],
       "agentContract": {
         "status": "agent-ready",
@@ -616,7 +748,16 @@
             "swiper_thumbs",
             "payment_flags",
             "upsell_offer",
-            "upsell_bundle_tiers"
+            "upsell_bundle_tiers",
+            "upsell_hero",
+            "upsell_layout",
+            "offer_bullets",
+            "upsell_video",
+            "upsell_guarantees",
+            "upsell_body",
+            "upsell_secondary",
+            "header_bar",
+            "announcement_variant"
           ],
           "demoOnlyValues": [
             "packages.main_package=1",
@@ -752,33 +893,75 @@
             ]
           },
           {
-            "name": "Apollo bundle upsell pages",
+            "name": "Apollo bundle upsell pages (composable upsell-offer shell)",
             "partials": [
-              "upsell-bundle-stepper-offer.html",
-              "upsell-bundle-tier-pills-offer.html",
-              "upsell-bundle-tier-cards-offer.html"
+              "upsell/offer.html",
+              "upsell/offer-context.html",
+              "upsell/offer-tier.html",
+              "upsell/offer-selector.html",
+              "upsell/offer-controls.html",
+              "upsell/offer-heading.html",
+              "upsell/offer-bullets.html",
+              "upsell/offer-prices.html",
+              "upsell/offer-media.html",
+              "upsell/cta.html",
+              "upsell/decline.html",
+              "upsell/video.html",
+              "upsell/guarantees.html",
+              "upsell/announcement.html",
+              "upsell/header-bar.html",
+              "upsell/hero.html",
+              "upsell/body.html",
+              "upsell/reviews.html",
+              "upsell/features.html",
+              "upsell/comparison.html",
+              "upsell/steps.html",
+              "upsell/secondary-offer.html",
+              "upsell-bundle-stepper-offer.html (deprecated shim → upsell/offer.html offer_type=stepper)",
+              "upsell-bundle-tier-pills-offer.html (deprecated shim)",
+              "upsell-bundle-tier-cards-offer.html (deprecated shim)"
             ],
             "ownedInputs": [
               "upsell_offer",
-              "upsell_bundle_tiers"
+              "upsell_bundle_tiers",
+              "upsell_layout",
+              "upsell_hero",
+              "offer_bullets",
+              "upsell_video",
+              "upsell_guarantees",
+              "upsell_body",
+              "upsell_secondary",
+              "announcement_text",
+              "announcement_variant",
+              "header_bar",
+              "countdown_timer",
+              "swiper_slides",
+              "swiper_thumbs",
+              "media_images"
             ],
             "sdkRoots": [
               "data-next-upsell",
               "data-next-bundle-selector",
-              "data-next-bundle-card"
-            ]
+              "data-next-bundle-card",
+              "data-next-bundle-qty-for",
+              "data-next-timer"
+            ],
+            "note": "Every upsell page composes the same partial set: upsell-announcement → upsell-header-bar (steps|logo) → upsell-hero (band|card) → countdown-timer → upsell-offer (the shell; offer_type tier-cards|tier-pills|stepper|single|mv picks the ONLY piece that differs, upsell/offer-controls.html + upsell/offer-selector.html) → upsell-body (reviews|features|comparison|steps sections) → upsell-secondary-offer (cta|card) → footer. upsell/offer.html owns the single [data-next-upsell=\"offer\"] wrapper; the display-only 1x selector (tier-cards/tier-pills/mv) and the single-offer voucher selector sit outside it; the hidden state-machine selector is the first in-offer selector. upsell/offer-context.html resolves package_id / selector_id / price paths once (assign shares scope). upsell/secondary-offer.html renders PROXY buttons (data-upsell-proxy=add|skip → initUpsellProxyActions() in upsells.js clicks the in-offer actions) so a page never has two SDK offer wrappers. pricing_mode (discounted|compare_at|full_price|unit_total|unit_only) lives in upsell/offer-prices.html; the demeter contract defaults full_price when propagated. upsell/video.html is a native <video> (autoplay+muted, controls) — no Plyr / custom controls; rendered under the heading whenever upsell_video is set (upsell_layout.media only picks the swiper-area content). Reference pages: upsell-bundle-stepper / -tier-pills / -tier-cards (classic band + boxed offer), upsell-single (offer + body sections + closing card), upsell-vsl (danger announcement bar, logo header, hero card + countdown, unboxed offer with video, guarantees, reviews, closing CTA). Apollo only as of this version; other families still ship the v1 monolithic offer partials until propagated. Switching upsell_offer.type alone renders a working selector: absent upsell_bundle_tiers / upsell_mv_tiers are generated from package_id (offer.tier_count, offer.vouchers_json) by upsell/offer-context.html + upsell/offer-tier.html; declare tiers only for distinct vouchers / labels."
           },
           {
             "name": "Apollo single-offer upsell page",
             "partials": [
-              "upsell-single-offer.html"
+              "upsell/offer.html (offer_type=single)",
+              "upsell/body.html",
+              "upsell/secondary-offer.html (variant=card)",
+              "upsell-single-offer.html (deprecated shim mapping offer_features/offer_comparison/offer_steps/guarantee_note onto the sections + closing card)"
             ],
             "ownedInputs": [
               "upsell_offer",
-              "offer_features",
-              "offer_comparison",
-              "offer_steps",
-              "guarantee_note",
+              "upsell_layout",
+              "upsell_hero",
+              "upsell_body",
+              "upsell_secondary",
               "countdown_timer",
               "announcement_text"
             ],
@@ -788,7 +971,7 @@
               "data-next-bundle-card",
               "data-next-timer"
             ],
-            "note": "Single-package, fixed-price offer (accept or skip, no tiers); demo copy is a protection plan, any add-on fits. Two accept points share one package_id. Optional `voucher` applies a coupon through a hidden linked bundle selector (data-next-bundle-selector-id), and prices then read bundle.<selector_id>.price / originalPrice / discountPercentage; without a voucher they read package.price / price_retail / savingsPercentage. pricing_mode (discounted | compare_at | full_price, default discounted; demeter copy defaults full_price) picks which price rows render. Countdown uses the SDK data-next-timer (persisted per persistence_id). Layout composed from next-core utilities plus the modifiers listed in the partial header."
+            "note": "Single-package, fixed-price offer (accept or skip, no tiers) — now offer_type='single' on the shared upsell/offer.html shell; the long-form sections are upsell_body entries (features, comparison, steps) and the closing card is upsell/secondary-offer.html variant=card whose accept/skip are proxies to the one SDK offer. Optional `voucher` renders a hidden linked bundle selector outside the offer (data-next-bundle-selector-id on the wrapper) and prices read bundle.<selector_id>.*; without a voucher they read package.* gated on package.hasRetailPrice / hasSavings (data-next-show and data-next-display on separate elements). pricing_mode discounted|compare_at|full_price|unit_total|unit_only. Countdown uses the SDK data-next-timer. The v1 keys offer_features / offer_comparison / offer_steps / guarantee_note still work through the upsell-single-offer.html shim."
           }
         ],
         "fixtures": [
