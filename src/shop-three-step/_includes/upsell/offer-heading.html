@@ -1,3 +1,4 @@
+{%- comment -%} GENERATED from _shared/upsell/_includes/upsell/offer-heading.html — edit the source and run `npm run sync:shared`. Do not edit this copy. {%- endcomment -%}
 {% comment %}
   next_component: upsell-offer-heading
   next_version: 1
@@ -14,7 +15,7 @@
   next_dont_touch: data-next-display, data-next-format, data-next-show
 {% endcomment %}
 {%- if heading_style == 'box' -%}
-{%- assign h_pricing_mode = pricing_mode | default: offer.pricing_mode | default: 'discounted' -%}
+{%- assign h_pricing_mode = pricing_mode | default: offer.pricing_mode | default: 'full_price' -%}
 <div class="review_component cc-sm">
   <div class="review_component-wrapper">
     <div class="review_stars-wrapper cc-color cc-black">

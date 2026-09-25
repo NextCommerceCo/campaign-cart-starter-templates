@@ -35,6 +35,7 @@ upsell_layout:
   # Not used by the box style: boxed, media_position, media_align, show_ships_info, decline_position (card style only)
 upsell_offer:
   type: single   # tier-cards | tier-pills | stepper | single | mv — the only switch needed; tiers are generated from package_id unless upsell_bundle_tiers is set
+  pricing_mode: discounted   # struck retail + % badge; the shared contract default is full_price (one row)
   package_id: 77
   # voucher: "LIFE50"   # set a coupon code to price the line through a hidden bundle selector
   selector_id: "upsell-single"

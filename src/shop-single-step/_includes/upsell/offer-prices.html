@@ -1,3 +1,4 @@
+{%- comment -%} GENERATED from _shared/upsell/_includes/upsell/offer-prices.html — edit the source and run `npm run sync:shared`. Do not edit this copy. {%- endcomment -%}
 {% comment %}
   next_component: upsell-offer-prices
   next_version: 1
@@ -8,14 +9,17 @@
       "<price_label> $X" on one line — the upsell-single look; the % badge is rendered by the heading in box style).
     Skipped entirely when offer.heading_prices is true (the price already sits in the heading strip) unless
       offer.price_rows: true asks for both.
-    pricing_mode: include arg > offer.pricing_mode > "discounted".
-      discounted  → Retail (struck) | Offer price + "(X% OFF)"          (2 visible rows)
+    pricing_mode: include arg > offer.pricing_mode > "full_price" — the shared commerce contract's upsell
+      default (template-brand-contract.shared-commerce.v0 pricing_surfaces.upsell.default_mode: one visible
+      price row next to the accept control; same_price_strike_rule: no offer/voucher → full_price only).
+      Demo pages opt into discounted explicitly.
+      discounted  → Retail (struck) | Offer price + "(X% OFF)"          (2 visible rows; contract alias compare_at_current)
       compare_at  → Retail (struck) | Offer price                       (2 rows)
       full_price  → Offer price only                                    (1 row)
       unit_total  → Per unit (unitPrice) | Total (price)                (2 rows)
       unit_only   → Per unit (unitPrice) only                           (1 row)
-      Never hide a .price-wrapper row with campaign CSS — pick the mode (template-brand-contract.demeter.v0
-      pricing_surfaces.upsell; Campaigns OS browser QA blocks upsells with zero visible price rows).
+      Never hide a .price-wrapper row with campaign CSS — pick the mode (Campaigns OS browser QA blocks
+      upsells with zero visible price rows).
     offer.retail_label (default "Retail Price"), offer.price_label (default "Offer Price"),
     offer.unit_label (default "Per unit"), offer.total_label (default "Total"),
     offer.retail_shipping (default "+$4.95 SHIPPING", "" hides), offer.offer_shipping (default "+ FREE SHIPPING", "" hides).
@@ -28,7 +32,7 @@
 {%- assign skip_price_rows = false -%}
 {%- if offer.heading_prices and offer.price_rows != true -%}{%- assign skip_price_rows = true -%}{%- endif -%}
 {%- unless skip_price_rows -%}
-{%- assign pricing_mode = pricing_mode | default: offer.pricing_mode | default: 'discounted' -%}
+{%- assign pricing_mode = pricing_mode | default: offer.pricing_mode | default: 'full_price' -%}
 {%- assign p_retail_shipping = offer.retail_shipping -%}{%- if p_retail_shipping == nil -%}{%- assign p_retail_shipping = '+$4.95 SHIPPING' -%}{%- endif -%}
 {%- assign p_offer_shipping = offer.offer_shipping -%}{%- if p_offer_shipping == nil -%}{%- assign p_offer_shipping = '+ FREE SHIPPING' -%}{%- endif -%}
 {%- if price_layout == 'inline' -%}

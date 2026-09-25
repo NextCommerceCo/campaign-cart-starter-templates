@@ -41,6 +41,7 @@ upsell_layout:
 upsell_offer:
   image: "images/1x1_1.svg"   # used by media: image
   type: stepper   # tier-cards | tier-pills | stepper | single | mv — the only switch needed; tiers are generated from package_id unless upsell_bundle_tiers is set
+  pricing_mode: discounted   # struck retail + % badge; the shared contract default is full_price (one row)
   package_id: 3
   selector_id: "upsell-bundle"
   bundle_id: "upsell-bundle-1x"

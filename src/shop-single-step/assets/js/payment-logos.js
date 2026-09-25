@@ -1,3 +1,4 @@
+/* GENERATED from _shared/upsell/js/payment-logos.js — edit the source and run `npm run sync:shared`. Do not edit this copy. */
 // payment-logos.js — reveal only the payment methods the campaign offers (payment-logos.html).
 // Shared by checkout and upsell pages: add `js/payment-logos.js` to the page scripts wherever the partial
 // is included. Uses the supported SDK call only (next.getCampaignData() on next:initialized); until then

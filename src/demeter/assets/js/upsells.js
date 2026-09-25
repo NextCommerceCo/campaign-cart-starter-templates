@@ -1,3 +1,4 @@
+/* GENERATED from _shared/upsell/js/upsells.js — edit the source and run `npm run sync:shared`. Do not edit this copy. */
 // Shared utilities for upsell templates (apollo). Self-initialising: the page needs no inline <script>.
 //
 //   initSwiperGalleries()    — media carousel (swiper-gallery.html) once Swiper + DOM are ready

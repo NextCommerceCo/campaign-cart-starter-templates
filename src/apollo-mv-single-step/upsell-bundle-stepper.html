@@ -27,6 +27,7 @@ upsell_layout:
   decline_position: below  # below (under the whole offer) | column (inside the content column after the CTA)
 upsell_offer:
   type: stepper   # tier-cards | tier-pills | stepper | single | mv — the only switch needed; tiers are generated from package_id unless upsell_bundle_tiers is set
+  pricing_mode: discounted   # struck retail + % badge; the shared contract default is full_price (one row)
   package_id: 3
   selector_id: "upsell-bundle"
   bundle_id: "upsell-bundle-1x"
