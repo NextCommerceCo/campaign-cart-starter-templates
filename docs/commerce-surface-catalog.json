@@ -198,7 +198,8 @@
         "unit_label",
         "total_label",
         "details_hint",
-        "image_alt"
+        "image_alt",
+        "image_display"
       ],
       "sourceOfTruth": [
         "CampaignSpec upsell/downsell pages",
@@ -292,7 +293,7 @@
       ],
       "sourceOfTruth": [
         "Campaign personalization requirement (per-line custom text)",
-        "Template slot partials: mv-configurable-selector.html / mv-slot-stage.html (checkout/select) and upsell-mv-offer.html (upsell)"
+        "Template slot partials: mv-configurable-selector.html / mv-slot-stage.html (checkout/select) and upsell/offer-selector.html (MV upsell slot template)"
       ],
       "agentRule": "MV/slot-rendering families only — per-line customization requires a slot picker (eng-confirmed); not available on tier-swap families. Same `slot_personalization` contract on MV checkout/select and MV upsell. Shipped enabled on `apollo-mv-single-step` and `olympus-mv-single-step` (checkout.html + upsell-mv.html), disabled on `olympus-mv-two-step` (one live reference each). To apply on any other MV page, set slot_personalization.enabled:true in that page's frontmatter — the shared partial renders the field from the same contract (no markup copy). property_key becomes the order line-item attribute name. Fill every slot explicitly; do not rely on an order-wide default to fill some slots and override others (same-package overrides drop). When paired with order_personalization, keep property_keys distinct (per-slot overrides the page default on a shared key)."
     },
