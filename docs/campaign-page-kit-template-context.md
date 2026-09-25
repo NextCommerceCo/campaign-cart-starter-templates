@@ -1055,7 +1055,7 @@ Every key the `_includes/upsell/*` partials read. Copy keys accept HTML and the 
 | `media_video` | same contract as `upsell_video`, for `media: video` |
 | `upsell_video` | `src`, `poster`, `title`, `autoplay` (default true → muted), `loop`, `controls`, `preload`, `id` — element carries `data-upsell-video` for a custom player |
 | `ships_info` | `icon`, `flag` ("" = none), `text` (`{flag}` token) |
-| `payment_flags` | per-method override only: `show_<code>` true/false (`bankcard`, `paypal`, `apple_pay`, `google_pay`, `klarna`, `affirm`, `link`, `twint`, `bancontact`, `ideal`, `sepa_debit`), `secure_text`, `style: flat`; otherwise logos resolve from the campaign's payment methods |
+| `payment_flags` | per-method / per-brand override only: `show_<code>` true/false for methods (`paypal`, `apple_pay`, `google_pay`, `klarna`, `affirm`, `link`, `twint`, `bancontact`, `ideal`, `sepa_debit`) and card brands (`visa`, `mastercard`, `american_express`, `discover` default on; `diners_club`, `jcb`, `maestro`, `dankort` opt-in), `secure_text`, `style: flat`; otherwise logos resolve from the campaign's payment methods |
 | `upsell_guarantees[]` | `variant` stacked · row; `icon` lock · shield; `image`; `title`; `text` |
 | `upsell_body[]` | `type` reviews (`rating_text`, `title`, `items[] { title, body, author, avatar, verified }`) · features (`title`, `text`, `items[] { title, text }`) · comparison (`title`, `text`, `recommended_label`, `with { title, subtitle, items[] }`, `without {…}`) · steps (`title`, `text`, `steps[] { title, text }`) |
 | `closing_cta` | `variant` cta (default) · card; `title`, `note`, `image`, `background` surface · tint · none, `show_guarantees` |

@@ -12,6 +12,7 @@ scripts:
   - js/promo-timer.js
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js
   - js/checkout.js
+  - js/payment-logos.js
   - js/checkout-olympus.js
 swiper_slides:
   - src: "images/1x1_1.svg"
@@ -407,7 +408,7 @@ bundles:
                             </svg></div>
                           <div class="trust-badge--text">GUARANTEED<br>SAFE CHECKOUT</div>
                         </div>
-                      </div><img loading="lazy" src="{{ 'images/credit-card-flags.svg' | campaign_asset }}" alt="" class="credit-card__flags">
+                      </div>{% campaign_include 'payment-logos.html' show_secure=false %}
                     </div>
                     <div class="icons-grids hide-tablet-up">
                       <div class="icon-image">

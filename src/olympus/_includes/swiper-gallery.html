@@ -4,6 +4,7 @@
   Same sw1 JS; CSS-only data attributes. Slugs: 16-9, 3-2, 4-3
   Pass: landscape | 16/9 | 16-9 → 16-9 ; 3/2 | 3-2 → 3-2 ; 4/3 | 4-3 → 4-3
   Omit swiper_thumb_aspect to keep thumbnails square (1∶1).
+  Optional swiper_thumbs_per_view — thumbs visible per row (default 6; initSwiperGalleries reads data-swiper-thumbs).
   Unknown aspect values after normalization are omitted (no attribute).
 {% endcomment %}
 {% assign _swiper_aspect = swiper_aspect | default: '' | strip %}
@@ -30,7 +31,7 @@
 {% if _swiper_fit != 'cover' and _swiper_fit != 'contain' %}
   {% assign _swiper_fit = '' %}
 {% endif %}
-<div data-component="swiper" data-variant="{{ variant | default: 'sw1' }}"{% if _swiper_aspect != '' %} data-swiper-aspect="{{ _swiper_aspect }}"{% endif %}{% if _swiper_thumb_aspect != '' %} data-swiper-thumb-aspect="{{ _swiper_thumb_aspect }}"{% endif %}{% if _swiper_fit == 'cover' %}{% if _swiper_aspect != '' or _swiper_thumb_aspect != '' %} data-swiper-fit="cover"{% endif %}{% endif %}>
+<div data-component="swiper" data-variant="{{ variant | default: 'sw1' }}"{% if _swiper_aspect != '' %} data-swiper-aspect="{{ _swiper_aspect }}"{% endif %}{% if _swiper_thumb_aspect != '' %} data-swiper-thumb-aspect="{{ _swiper_thumb_aspect }}"{% endif %}{% if _swiper_fit == 'cover' %}{% if _swiper_aspect != '' or _swiper_thumb_aspect != '' %} data-swiper-fit="cover"{% endif %}{% endif %}{% if swiper_thumbs_per_view %} data-swiper-thumbs="{{ swiper_thumbs_per_view }}"{% endif %}>
   <div class="slider_component">
     <div class="slider_component-wrapper">
       <div swiper="slider-main" class="swiper">

@@ -23,6 +23,7 @@ scripts:
   - js/promo-banner.js
   - js/promo-timer.js
   - js/checkout.js
+  - js/payment-logos.js
   - js/checkout-olympus-mv-full.js
 ---
 <div class="page-wrapper">
@@ -227,7 +228,7 @@ scripts:
                                       </svg></div>
                                     <div class="trust-badge--text">GUARANTEED<br>SAFE CHECKOUT</div>
                                   </div>
-                                </div><img loading="lazy" src="{{ 'images/credit-card-flags.svg' | campaign_asset }}" alt="" class="credit-card__flags">
+                                </div>{% campaign_include 'payment-logos.html' show_secure=false %}
                               </div>
                             </div>
                           </div>
