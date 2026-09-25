@@ -1034,6 +1034,33 @@ Upsell pages use a different set of attributes than checkout pages.
 <button data-next-upsell-action="skip">No thanks</button>
 ```
 
+### Composable upsell pages (apollo)
+
+Apollo upsell pages are assembled from `_includes/upsell/*` partials driven entirely by frontmatter: `upsell/announcement` → `upsell/header-bar` → `upsell/hero` → `countdown-timer` → `upsell/offer` (the shell; `upsell_offer.type` picks the quantity / tier control) → `upsell/body` (sections) → `upsell/closing-cta` → `footer`. Switch the offer type, media, layout, video, guarantees or body sections by changing data — never by editing partial markup. The shell owns the single `data-next-upsell="offer"` wrapper; the closing CTA's accept / skip are proxy buttons that fire the in-offer actions, so a page never has two SDK offers. Payment logos (`payment-logos.html`, also under the checkout submit button) show only the methods the campaign offers, read from the SDK campaign cache and then live data.
+
+Every key the `_includes/upsell/*` partials read. Copy keys accept HTML and the `upsell/copy.html` tokens `{package_name} {price} {compare_price} {discount} {price_1x} {discount_1x} {discount_max} {first_name}`.
+
+| Key | Values / sub-keys |
+|---|---|
+| `announcement_text`, `announcement_variant` | string (HTML); `primary` (default) · `danger` · `success` · `dark` · `light` |
+| `header_bar` | `steps` (default) · `logo` (include arg `variant=` overrides; `logo=` asset path) |
+| `upsell_hero` | `variant` band (default) · card · plain; `title`, `offer`, `suboffer` (band); `title`, `heading`, `text` (card, embeds `countdown_timer`); `title`, `text` (plain); `narrow` |
+| `countdown_timer` | `text`, `highlight`, `duration` (seconds, SDK timer) or `start` ("MM:SS", legacy), `persistence_id` |
+| `upsell_offer` | `type` tier-cards · tier-pills · stepper · single · mv; `package_id`; `selector_id`, `display_selector_id`, `display_bundle_id`; `voucher` (single); `bundle_id`, `items_json`, `vouchers_json`, `default_quantity`, `min_quantity`, `max_quantity` (stepper); `tier_count` (generated tiers); `variant_labels` (mv); `pricing_mode` discounted · compare_at · full_price · unit_total · unit_only; `price_rows` (force rows when `heading_prices`); copy: `pretitle`, `title`, `show_rating`, `rating_text`, `heading_prices`, `quantity_label`, `retail_label`, `price_label`, `unit_label`, `total_label`, `retail_shipping`, `offer_shipping`, `urgency_text`, `accept_text`, `accept_show_price`, `cta_note`, `social_proof`, `details_hint`, `ships_info_text` (legacy), `decline_text`, `closing_title`, `image`, `image_alt` |
+| `upsell_bundle_tiers[]` / `upsell_mv_tiers[]` | optional — generated from `package_id` when absent; `id`, `items_json`, `vouchers_json`, `label`, `hint`, `button_value`, `selected` / `id`, `quantity`, `vouchers_json`, `selected` |
+| `upsell_layout` | `style` card (default) · box; `boxed`; `media` carousel · image · grid · video · none; `media_position` right · left; `media_align` center · top · sticky; `media_width` narrow · medium · wide (box); `show_bullets`, `show_ships_info`, `show_payment_logos`, `show_decline` (box), `decline_position` below · column (card) |
+| `offer_bullets[]` | strings or `{ text }` (demo bullets when absent) |
+| `swiper_slides[]`, `swiper_thumbs[]`, `swiper_aspect`, `swiper_thumb_aspect`, `swiper_fit`, `swiper_thumbs_per_view` | carousel media: `{ src, alt }` lists; `16-9` · `3-2` · `4-3`; `contain` · `cover`; thumbs per row (default 6) |
+| `media_images[]` | `{ src, alt }` for `media: grid` |
+| `media_video` | same contract as `upsell_video`, for `media: video` |
+| `upsell_video` | `src`, `poster`, `title`, `autoplay` (default true → muted), `loop`, `controls`, `preload`, `id` — element carries `data-upsell-video` for a custom player |
+| `ships_info` | `icon`, `flag` ("" = none), `text` (`{flag}` token) |
+| `payment_flags` | per-method override only: `show_<code>` true/false (`bankcard`, `paypal`, `apple_pay`, `google_pay`, `klarna`, `affirm`, `link`, `twint`, `bancontact`, `ideal`, `sepa_debit`), `secure_text`, `style: flat`; otherwise logos resolve from the campaign's payment methods |
+| `upsell_guarantees[]` | `variant` stacked · row; `icon` lock · shield; `image`; `title`; `text` |
+| `upsell_body[]` | `type` reviews (`rating_text`, `title`, `items[] { title, body, author, avatar, verified }`) · features (`title`, `text`, `items[] { title, text }`) · comparison (`title`, `text`, `recommended_label`, `with { title, subtitle, items[] }`, `without {…}`) · steps (`title`, `text`, `steps[] { title, text }`) |
+| `closing_cta` | `variant` cta (default) · card; `title`, `note`, `image`, `background` surface · tint · none, `show_guarantees` |
+| `slot_personalization`, `order_personalization` | mv only — see Line-item properties |
+
 ### Direct upsell offer (simple / no offer-aware pricing)
 
 For single-package upsells without voucher-driven pricing. If the upsell uses Campaign Offers or per-tier vouchers, use the **Bundle upsell** pattern below instead.

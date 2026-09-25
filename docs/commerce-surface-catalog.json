@@ -185,7 +185,20 @@
         "social_proof",
         "urgency_text",
         "image",
-        "closing_title"
+        "closing_title",
+        "default_quantity",
+        "min_quantity",
+        "max_quantity",
+        "tier_count",
+        "variant_labels",
+        "price_rows",
+        "show_rating",
+        "retail_label",
+        "price_label",
+        "unit_label",
+        "total_label",
+        "details_hint",
+        "image_alt"
       ],
       "sourceOfTruth": [
         "CampaignSpec upsell/downsell pages",
@@ -303,7 +316,9 @@
         "show_payment_logos",
         "media_align",
         "media_width",
-        "style"
+        "style",
+        "decline_position",
+        "show_decline"
       ],
       "sourceOfTruth": [
         "CampaignSpec upsell page copy / design spec"
@@ -367,7 +382,8 @@
         "steps",
         "with",
         "without",
-        "rating_text"
+        "rating_text",
+        "recommended_label"
       ],
       "sourceOfTruth": [
         "CampaignSpec upsell page copy / design spec"
@@ -380,7 +396,9 @@
         "variant",
         "title",
         "note",
-        "image"
+        "image",
+        "background",
+        "show_guarantees"
       ],
       "sourceOfTruth": [
         "CampaignSpec upsell page copy / design spec"
@@ -408,6 +426,84 @@
         "Store shipping policy / fulfilment facts"
       ],
       "agentRule": "text is HTML with a {flag} token for the inline flag image; the defaults claim USPS from the USA within 1 business day — replace with the merchant's real carrier and origin, or set upsell_layout.show_ships_info: false."
+    },
+    "swiper_gallery": {
+      "purpose": "Carousel media for checkout and upsell pages (swiper-gallery.html).",
+      "canonicalKeys": [
+        "swiper_slides",
+        "swiper_thumbs",
+        "swiper_aspect",
+        "swiper_thumb_aspect",
+        "swiper_fit",
+        "swiper_thumbs_per_view"
+      ],
+      "sourceOfTruth": [
+        "Campaign product images / design spec"
+      ],
+      "agentRule": "swiper_slides / swiper_thumbs are { src, alt } lists; aspect 16-9 | 3-2 | 4-3 (default square); fit contain | cover; swiper_thumbs_per_view default 6. Requires the Swiper CDN CSS + JS in the page styles: / scripts:."
+    },
+    "media_images": {
+      "purpose": "2×2 image grid for upsell_layout.media: grid.",
+      "canonicalKeys": [
+        "src",
+        "alt"
+      ],
+      "sourceOfTruth": [
+        "Campaign product images"
+      ],
+      "agentRule": "Four { src, alt } entries; used only when upsell_layout.media is grid."
+    },
+    "media_video": {
+      "purpose": "Video in the upsell media column (upsell_layout.media: video).",
+      "canonicalKeys": [
+        "src",
+        "poster",
+        "title",
+        "autoplay",
+        "loop",
+        "controls",
+        "preload",
+        "id"
+      ],
+      "sourceOfTruth": [
+        "Campaign media on cdn.cachebucket.com"
+      ],
+      "agentRule": "Same contract as upsell_video; independent of it so a page can carry a content-column VSL and a media-column video."
+    },
+    "header_bar": {
+      "purpose": "Upsell top bar variant.",
+      "canonicalKeys": [
+        "header_bar"
+      ],
+      "sourceOfTruth": [
+        "Design spec"
+      ],
+      "agentRule": "steps (logo + Checkout › Upgrades › Summary) | logo (centered logo only)."
+    },
+    "announcement": {
+      "purpose": "Upsell top announcement bar.",
+      "canonicalKeys": [
+        "announcement_text",
+        "announcement_variant"
+      ],
+      "sourceOfTruth": [
+        "Design spec / campaign copy"
+      ],
+      "agentRule": "announcement_variant primary (default) | danger | success | dark | light; absent or \"\" text renders nothing."
+    },
+    "countdown_timer": {
+      "purpose": "Slim urgency bar + countdown (countdown-timer.html), used on checkout, upsells and inside the upsell hero card.",
+      "canonicalKeys": [
+        "text",
+        "highlight",
+        "duration",
+        "persistence_id",
+        "start"
+      ],
+      "sourceOfTruth": [
+        "Campaign offer rules / design spec"
+      ],
+      "agentRule": "duration (seconds) renders the SDK data-next-timer persisted per persistence_id — give each offer its own id; start (\"MM:SS\") is the legacy checkout.js-driven mode. Absent = nothing renders."
     }
   },
   "campaignSpecFixturePolicy": {

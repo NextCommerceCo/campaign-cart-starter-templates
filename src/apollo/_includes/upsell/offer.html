@@ -16,6 +16,8 @@
       upsell-container--box in a surface-colour section (no overlap), image left, centered copy, inline
       prices, no bullets / ships-info / decline (the decline lives in upsell-closing-cta). boxed (default true), media carousel|image|grid|video|none (default carousel — the swiper area; video reads media_video),
       media_position right|left (default right = content left, media right on desktop),
+      decline_position below (default — centered under the whole offer) | column (inside the content column,
+      after the CTA / guarantees, so decline sits with the accept button),
       media_align center (default) | top | sticky (sticky = stays in view while long copy scrolls; needs
       boxed: false, the shadowed container clips it), show_bullets,
       show_ships_info, show_payment_logos.
@@ -158,6 +160,7 @@
                   {%- campaign_include 'upsell/offer-prices.html' -%}
                   {%- campaign_include 'upsell/cta.html' -%}
                   {%- campaign_include 'upsell/guarantees.html' upsell_guarantees=upsell_guarantees -%}
+                  {%- if layout.decline_position == 'column' -%}{%- campaign_include 'upsell/decline.html' -%}{%- endif -%}
                 </div>
               </div>
             </div>
@@ -172,7 +175,7 @@
           </div>
         </div>
 
-        {%- campaign_include 'upsell/decline.html' -%}
+        {%- unless layout.decline_position == 'column' -%}{%- campaign_include 'upsell/decline.html' -%}{%- endunless -%}
       </div>
     </div>
   </section>

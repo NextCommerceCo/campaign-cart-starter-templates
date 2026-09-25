@@ -31,8 +31,9 @@ upsell_layout:
   media: carousel        # carousel | image | grid | none — the area the swiper takes; image reads upsell_offer.image, grid reads media_images
   media_position: left   # … copy, video and CTA on the right
   media_align: sticky    # center | top | sticky — long copy on the right, gallery stays in view
+  decline_position: column   # below (default) | column — decline link sits under the CTA / guarantees
   show_ships_info: false
-  show_payment_logos: true   # logos resolve from the live campaign's payment methods
+  show_payment_logos: false  # guarantees carry the trust message on this page
 # Payment logos resolve themselves from the live campaign (available_payment_methods) — nothing to set.
 # payment_flags.show_<method>: true|false is a per-method override, e.g.
 # payment_flags:

@@ -16,6 +16,17 @@ upsell_hero:
   # display-only selector upsell/offer.html renders outside the offer) so the hero always shows the 1× price.
   offer: 'Special Discount: Get 1 More {package_name} For Only {price_1x}'
   suboffer: 'Add this to your order and get a {discount_1x} discount'
+# Layout knobs for the offer shell (upsell/offer.html) — these are the defaults, change any of them:
+upsell_layout:
+  style: card              # card (band overlap + shadowed container) | box (bordered box, image left, centered copy)
+  boxed: true              # false = flat, no container shadow (pair with upsell_hero.variant: card)
+  media: carousel          # carousel (swiper_slides / swiper_thumbs) | image (upsell_offer.image) | grid (media_images) | video (media_video) | none
+  media_position: right    # right (content left) | left
+  media_align: center      # center | top | sticky (sticky needs boxed: false)
+  show_bullets: true       # offer_bullets list (demo bullets when absent)
+  show_ships_info: true    # upsell/ships-info.html row under the CTA
+  show_payment_logos: true # payment-logos.html (resolved from the campaign's payment methods)
+  decline_position: below  # below (under the whole offer) | column (inside the content column after the CTA)
 upsell_offer:
   type: tier-pills   # tier-cards | tier-pills | stepper | single | mv — the only switch needed; tiers are generated from package_id unless upsell_bundle_tiers is set
   package_id: 3

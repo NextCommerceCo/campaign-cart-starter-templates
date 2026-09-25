@@ -23,10 +23,15 @@ countdown_timer:
   highlight: "this one-time offer expires in"
   duration: 1800
   persistence_id: "upsell-single"
+# Layout knobs for the offer shell (upsell/offer.html) in the BOX style — values shown are what this page uses:
 upsell_layout:
-  style: box          # bordered box on the surface colour, image left, centered copy, inline prices
-  media: image           # carousel | image | grid | none — image reads upsell_offer.image
-  media_width: medium    # box style only: narrow | medium | wide
+  style: box               # box (bordered box on the surface colour, image left, centered copy, inline prices) | card
+  media: image             # carousel (swiper_slides / swiper_thumbs) | image (upsell_offer.image) | grid (media_images) | video (media_video) | none
+  media_width: medium      # box style only: narrow | medium | wide (image column width on desktop)
+  show_bullets: false      # box style hides the bullets unless true (offer_bullets)
+  show_decline: false      # box style keeps the decline in the closing card unless true
+  show_payment_logos: true # payment-logos.html (resolved from the campaign's payment methods)
+  # Not used by the box style: boxed, media_position, media_align, show_ships_info, decline_position (card style only)
 upsell_offer:
   type: single   # tier-cards | tier-pills | stepper | single | mv — the only switch needed; tiers are generated from package_id unless upsell_bundle_tiers is set
   package_id: 12
