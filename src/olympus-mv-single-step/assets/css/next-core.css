@@ -16465,16 +16465,17 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 /* CTA note */
 .upsell-cta__note {
   width: 100%;
-  margin: 0.75rem 0 0;
+  margin: 0.5rem 0 0;
   text-align: center;
-  font-size: var(--font-size--base);
-  font-weight: 600;
+  font-size: var(--font-size--sm);
+  font-weight: 500;
+  color: var(--brand--color--text-secondary);
 }
 
 /* Video (native <video>, 16:9 frame) */
 .upsell-video {
   width: 100%;
-  margin: 1.25rem 0;
+  margin: 0 0 1rem;
 }
 
 .upsell-video__title {
@@ -16768,19 +16769,200 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   }
 }
 
-/* Secondary (closing) offer */
-.upsell-secondary__inner {
+/* Closing CTA — closing_cta.background: surface (color-surface utility) | tint | none */
+.section.upsell-closing.cc-tint {
+  background-color: var(--brand--color--primary-light);
+}
+
+.upsell-closing__inner {
   display: flex;
   flex-flow: column;
   align-items: center;
   gap: 1rem;
 }
 
-.upsell-secondary__inner .button {
+.upsell-closing__inner .button {
   width: 100%;
-  max-width: 35rem;
 }
 
-.upsell-secondary__inner .cc-decline-wrapper {
+.upsell-closing__inner .upsell-cta__note {
+  margin-top: -0.5rem;
+}
+
+.upsell-closing__inner .cc-decline-wrapper {
   margin-top: 0;
+}
+
+/* Composable upsell — mobile rhythm (display-lg does not scale below 768px on its own) */
+@media screen and (max-width: 767px) {
+  .section.upsell-box.cc-plain .upsell-offer__card,
+  .section.upsell-box.cc-plain .upsell-offer__image-column {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .section.upsell-box.cc-plain .upsell-offer__card {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .upsell-offer__heading .display-lg,
+  .upsell-hero--plain .display-lg,
+  .upsell-reviews .display-lg {
+    font-size: var(--font-size--2xl);
+  }
+
+  .upsell-offer__pretitle,
+  .upsell-video__title {
+    font-size: var(--font-size--sm);
+  }
+
+  .upsell-offer__heading-price {
+    font-size: var(--font-size--2xl);
+  }
+
+  .upsell-offer__heading-compare {
+    font-size: var(--font-size--lg);
+  }
+
+  .upsell-guarantee {
+    gap: 0.75rem;
+    padding: 0.75rem 0.875rem;
+  }
+
+  .upsell-guarantee__badge {
+    width: 3rem;
+  }
+
+  .upsell-review {
+    gap: 0.5rem;
+    padding: 1rem 0;
+  }
+
+  .upsell-review__body {
+    font-size: var(--font-size--sm);
+  }
+
+  .announcement.cc-danger .announcement__text,
+  .announcement.cc-success .announcement__text,
+  .announcement.cc-light .announcement__text {
+    font-size: var(--font-size--sm);
+    line-height: 1.4;
+  }
+
+  .section.upsell-reviews,
+  .section.upsell-closing {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+}
+
+/* Countdown timer on narrow screens — let the label wrap and the pill drop under it, centered */
+@media screen and (max-width: 767px) {
+  .countdown-timer__inner {
+    flex-wrap: wrap;
+    row-gap: 0.35rem;
+  }
+
+  .countdown-timer__label {
+    font-size: var(--font-size--sm);
+    text-align: center;
+  }
+
+  .upsell-header-card__inner .countdown-timer {
+    width: 100%;
+  }
+}
+
+/* Box-style upsell (upsell_layout.style: box) on narrow screens — tighter hero→box gap and card padding */
+@media screen and (max-width: 767px) {
+  .upsell-hero--plain .heading-box {
+    margin-bottom: 0;
+  }
+
+  .upsell-hero--plain .heading-box p {
+    margin-bottom: 0;
+  }
+
+  .upsell-box--flat .upsell-container--box.margin-32 {
+    margin-top: 1.25rem;
+  }
+
+  .upsell-box--flat .upsell-offer__card {
+    padding: 1rem 1rem 1.25rem;
+  }
+
+  .upsell-box--flat .grid-full.gap-xl {
+    gap: 1rem;
+  }
+}
+
+/* Box-style upsell type scale on narrow screens */
+@media screen and (max-width: 767px) {
+  .upsell-hero--plain .heading-box p {
+    font-size: var(--font-size--lg);
+  }
+
+  .upsell-box--flat .upsell-content__column .display-md {
+    font-size: var(--font-size--xl);
+  }
+
+  .upsell-box--flat .badge.text-xl {
+    font-size: var(--font-size--base);
+  }
+
+  .upsell-box--flat .prices-text-wrapper .text-3xl {
+    font-size: var(--font-size--2xl);
+  }
+
+  .upsell-box--flat .color-destructive.text-lg {
+    font-size: var(--font-size--base);
+  }
+
+  .upsell-box--flat .upsell-content__column .review_component .text-sm {
+    font-size: var(--font-size--sm);
+  }
+
+  .upsell-box--flat .upsell-offer__card > .text-xl {
+    font-size: var(--font-size--base);
+  }
+}
+
+/* .section.cc-top-0 / .cc-bottom-0 / .cc-0 are declared before .section.cc-sm / .cc-lg (and their mobile
+   overrides), so at equal specificity the size modifiers win and the zero modifiers never apply.
+   Re-assert them LAST — keep this block at the end of the file. */
+.section.cc-top-0 {
+  padding-top: 0;
+}
+
+.section.cc-bottom-0 {
+  padding-bottom: 0;
+}
+
+.section.cc-0 {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Upsell payment logos — individual brand SVGs gated by payment_flags (upsell/payment-logos.html) */
+.payment-logos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.payment-logos__item {
+  display: block;
+  height: 1.5rem;
+  width: auto;
+  max-width: 6rem;
+}
+
+/* display:block above would beat the UA [hidden] rule — methods the campaign does not offer must not paint */
+.payment-logos__item[hidden] {
+  display: none;
 }

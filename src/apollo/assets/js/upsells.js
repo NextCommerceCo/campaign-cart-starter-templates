@@ -3,7 +3,7 @@
 //   initSwiperGalleries()    — media carousel (swiper-gallery.html) once Swiper + DOM are ready
 //   initBundleQtyToggle()    — tier-pills / mv quantity buttons → click the matching hidden bundle card
 //   initUpsellProxyActions() — data-upsell-proxy="add|skip" buttons OUTSIDE the SDK offer wrapper
-//                              (upsell/secondary-offer.html) forward to the real in-offer actions
+//                              (upsell/closing-cta.html) forward to the real in-offer actions
 //
 // Quantity UX: tier-pills uses hidden per-tier bundle cards + initBundleQtyToggle() because
 // data-next-upsell-quantity-toggle does not update bundle line items (see https://developers.nextcommerce.com/docs/campaigns/upsells).
@@ -46,9 +46,10 @@ function initBundleQtyToggle() {
   });
 }
 
+
 /**
  * Proxy actions — a closing CTA / decline rendered OUTSIDE [data-next-upsell="offer"]
- * (upsell/secondary-offer.html) forwards its click to the real SDK action inside the offer.
+ * (upsell/closing-cta.html) forwards its click to the real SDK action inside the offer.
  * One SDK offer per page: the secondary CTA always adds exactly what the main offer shows
  * (selected tier, quantity, variants, vouchers) instead of a drifting second offer wrapper.
  */

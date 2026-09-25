@@ -8,6 +8,7 @@ styles:
 scripts:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js
   - js/upsells.js
+  - js/payment-logos.js
 # VSL upsell — the long-form direct-response mix: warning bar · logo-only header · title band with an
 # overlapping offer card + countdown · unboxed two-column offer with the VIDEO under the heading · trust
 # cards · "N% took this deal" copy block · stacked reviews · closing CTA. Every block is one of the shared
@@ -31,7 +32,11 @@ upsell_layout:
   media_position: left   # … copy, video and CTA on the right
   media_align: sticky    # center | top | sticky — long copy on the right, gallery stays in view
   show_ships_info: false
-  show_payment_logos: false
+  show_payment_logos: true   # logos resolve from the live campaign's payment methods
+# Payment logos resolve themselves from the live campaign (available_payment_methods) — nothing to set.
+# payment_flags.show_<method>: true|false is a per-method override, e.g.
+# payment_flags:
+#   show_klarna: false
 upsell_offer:
   image: "images/1x1_1.svg"   # used by media: image
   type: stepper   # tier-cards | tier-pills | stepper | single | mv — the only switch needed; tiers are generated from package_id unless upsell_bundle_tiers is set
@@ -99,13 +104,14 @@ upsell_body:
       - title: "Best purchase this year"
         body: "Well made, does exactly what it says, and the one-time price made it an easy yes. Highly recommended."
         author: "Mary B."
-upsell_secondary:
-  variant: cta
+closing_cta:                 # repeated accept / decline at the bottom (same partial the single page uses as variant: card)
+  variant: cta               # cta = centered button + note + decline · card = boxed image + price rows + button + decline
+  show_guarantees: true      # the upsell_guarantees cards again
 ---
 {% comment %}
   Demo of the composable upsell page. Compare with upsell-bundle-stepper.html — same upsell_offer.type: stepper
   (one hidden bundle card + native −/+), a completely different page from data alone. The closing CTA uses
-  proxy actions (upsell/secondary-offer.html) so there is exactly one SDK offer wrapper on the page.
+  proxy actions (upsell/closing-cta.html) so there is exactly one SDK offer wrapper on the page.
 {% endcomment %}
 <div class="page-wrapper">
   <div class="main-wrapper">
@@ -114,7 +120,7 @@ upsell_secondary:
     {% campaign_include 'upsell/hero.html' upsell_hero=upsell_hero countdown_timer=countdown_timer %}
     {% campaign_include 'upsell/offer.html' %}
     {% campaign_include 'upsell/body.html' upsell_body=upsell_body %}
-    {% campaign_include 'upsell/secondary-offer.html' %}
+    {% campaign_include 'upsell/closing-cta.html' %}
     {% campaign_include 'footer.html' %}
   </div>
 </div>

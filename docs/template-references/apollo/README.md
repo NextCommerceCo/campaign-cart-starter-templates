@@ -1,6 +1,8 @@
 # Apollo Template Reference provenance
 
-The reference images in this directory originally captured `/apollo/checkout/` from starter-template source commit `e9a2fc17beefe572b8ddc0c4f9b1b8e2f97f9a59` with Campaign Cart SDK `0.4.37`. Their rendered checkout baseline was revalidated as unchanged with SDK `0.4.38` through source commit `38f5693a2839cb3a3f8587f0dffee841f13d6114`, including the unwired personalization partial's catalog wrapper and the parameterized upsell offer shipping strings (#149, a build of all 66 pages before and after that change is byte-for-byte identical).
+The reference images in this directory capture `/apollo/checkout/` with Campaign Cart SDK `0.4.38`. They were recaptured on 2026-09-25 on the composable-upsell-partials branch (based on `main` at `6c96525b6416872ad0e51918fe6ec82a9673808c`, the `source_commit` stamped in the catalog — this repo squash-merges, so the branch commit itself would not survive) after a visible checkout change: the flat payment-logo sprite under the submit button was replaced by the shared `payment-logos.html` partial, whose logos are revealed from the campaign's `available_payment_methods` (the capture shows the demo campaign's Visa, Mastercard, Amex, Discover, PayPal and Apple Pay). The same change appended the composable upsell block to `next-core.css`; nothing else on the checkout render moved (desktop height unchanged at 1491px, mobile 2650 → 2648px).
+
+Earlier history: originally captured from source commit `e9a2fc17beefe572b8ddc0c4f9b1b8e2f97f9a59` with SDK `0.4.37`, revalidated unchanged with SDK `0.4.38` through `38f5693a2839cb3a3f8587f0dffee841f13d6114` (#149).
 
 ## Reproduce
 
@@ -9,7 +11,7 @@ The reference images in this directory originally captured `/apollo/checkout/` f
 3. Disable animation and transitions, set `deviceScaleFactor: 1`, and take full-page screenshots with these browser viewports:
    - desktop viewport: `1440x900`
    - mobile viewport: `390x844`
-   Because the capture is full-page, the PNG width matches the viewport while its height matches the rendered document. The committed captures are therefore `1440x1491` and `390x2650`, respectively.
+   Because the capture is full-page, the PNG width matches the viewport while its height matches the rendered document. The committed captures are therefore `1440x1491` and `390x2648`, respectively.
 4. Store the captures as `checkout-desktop.png` and `checkout-mobile.png`.
 5. Update the rendered dimensions and SHA-256 values in `docs/commerce-surface-catalog.json`.
 6. Update `source_commit` to the commit the captures were taken from.
@@ -24,7 +26,7 @@ The reference images in this directory originally captured `/apollo/checkout/` f
 
 Either way the warning clears, and the next reader sees a reference whose provenance is honest about what it was checked against.
 
-The committed capture used Playwright Chromium with reduced motion and the following injected style before the screenshot:
+The committed capture used Playwright Chromium with reduced motion, the SDK initialised (payment logos resolved), the window scrollbar hidden so the layout width equals the viewport, and the following injected style before the screenshot:
 
 ```css
 *, *::before, *::after {

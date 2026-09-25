@@ -5,6 +5,7 @@ next_url: receipt.html
 decline_url: receipt.html
 scripts:
   - js/upsells.js
+  - js/payment-logos.js
 # Single-offer upsell: one package, one fixed price, accept or skip, no quantity tiers — upsell_offer.type: single.
 # Demo copy sells a protection plan; swap the strings for any add-on. Prices are SDK-driven.
 # `voucher` (optional) applies a coupon to the accepted line via a hidden linked bundle selector; prices
@@ -85,7 +86,7 @@ upsell_body:
         text: "Most claims are verified within 24 hours. No forms, no sending the old one back."
       - title: "Replacement ships free"
         text: "A fresh replacement is on its way to your door, shipping covered, every time."
-upsell_secondary:
+closing_cta:
   variant: card
   note: "Backed by our 60-day money-back guarantee — remove this protection any time before it's used."
   title: "Add lifetime protection to your order?"
@@ -94,7 +95,7 @@ upsell_secondary:
   Single-offer upsell composed from the upsell partial set: countdown → plain hero heading → box-style
   offer (upsell_layout.style: box — bordered card, image left, centered copy, inline price, accept) → body sections (features · comparison · steps) → closing card.
   The closing card's accept / skip are proxies that forward to the one SDK offer above
-  (upsell/secondary-offer.html), so both CTAs always add the same line. Keep data-next-show and
+  (upsell/closing-cta.html), so both CTAs always add the same line. Keep data-next-show and
   data-next-display on separate elements (SDK ≥0.4.31 skips hidden displays and never re-runs on unhide).
 {% endcomment %}
 <div class="page-wrapper">
@@ -105,7 +106,7 @@ upsell_secondary:
     {% campaign_include 'upsell/hero.html' upsell_hero=upsell_hero %}
     {% campaign_include 'upsell/offer.html' %}
     {% campaign_include 'upsell/body.html' upsell_body=upsell_body %}
-    {% campaign_include 'upsell/secondary-offer.html' %}
+    {% campaign_include 'upsell/closing-cta.html' %}
     {% campaign_include 'footer.html' %}
   </div>
 </div>

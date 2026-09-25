@@ -14,7 +14,7 @@
     upsell_bundle_tiers / upsell_mv_tiers: arrays — see upsell/offer-selector.html / upsell/offer-controls.html.
     upsell_layout: object. style card (default) | box — box is the upsell-single look: bordered
       upsell-container--box in a surface-colour section (no overlap), image left, centered copy, inline
-      prices, no bullets / ships-info / decline (the decline lives in upsell-secondary-offer). boxed (default true), media carousel|image|grid|video|none (default carousel — the swiper area; video reads media_video),
+      prices, no bullets / ships-info / decline (the decline lives in upsell-closing-cta). boxed (default true), media carousel|image|grid|video|none (default carousel — the swiper area; video reads media_video),
       media_position right|left (default right = content left, media right on desktop),
       media_align center (default) | top | sticky (sticky = stays in view while long copy scrolls; needs
       boxed: false, the shadowed container clips it), show_bullets,
@@ -40,7 +40,7 @@
         upsell/offer-bullets.html           → feature bullets
         upsell/offer-controls.html          → the ONLY piece that differs per offer type
         upsell/offer-prices.html            → pricing_mode-driven price rows
-        upsell/cta.html                     → accept · note · ships-info · payment logos
+        upsell/cta.html                     → accept · note · upsell/ships-info.html · payment-logos.html (shared with checkout)
         upsell/guarantees.html              → optional guarantee cards
       media column                          → upsell/offer-media.html (carousel / image / grid / video[media_video] — the swiper area)
       upsell/decline.html                   → skip link
@@ -165,7 +165,7 @@
             <div class="upsell-offer__image-column">
               {%- campaign_include 'upsell/offer-media.html' -%}
               {%- unless layout.show_payment_logos == false -%}
-              {% campaign_include 'upsell/payment-logos.html' wrapper_class="hide-tablet-down" %}
+              {% campaign_include 'payment-logos.html' wrapper_class="hide-tablet-down" %}
               {%- endunless -%}
             </div>
             {%- endunless -%}
