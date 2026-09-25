@@ -59,6 +59,7 @@ ideal||ideal-logo.svg|iDEAL|
 sepa_debit||sepa-logo.svg|SEPA Direct Debit|
   {%- endcapture -%}
   <div class="payment-logos" data-payment-logos aria-label="Accepted payment methods">
+    {%- comment -%} The split separator below is a LITERAL newline inside the quotes (Liquid has no \n escape) — it is intentional. {%- endcomment -%}
     {%- assign rows = logo_rows | strip | split: '
 ' -%}
     {%- for row in rows -%}
