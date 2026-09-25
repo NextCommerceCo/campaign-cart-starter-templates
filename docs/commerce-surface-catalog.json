@@ -1383,7 +1383,7 @@
               "data-next-upsell",
               "data-next-order-items"
             ],
-            "note": "Same composable upsell set as apollo (generated from _shared/upsell/; see the apollo 'Apollo bundle upsell pages' surface note). Demeter: upsell/offer-prices.html and upsell/offer-heading.html default pricing_mode full_price (brand contract); demo pages opt into discounted."
+            "note": "Same composable upsell set as apollo (generated from _shared/upsell/; see the apollo 'Apollo bundle upsell pages' surface note)."
           },
           {
             "name": "Demeter single-offer upsell page",
@@ -1439,7 +1439,7 @@
               "data-next-bundle-card",
               "data-next-timer"
             ],
-            "note": "Same composable upsell set as apollo (generated from _shared/upsell/; see the apollo 'Apollo bundle upsell pages' surface note). Demeter: upsell/offer-prices.html and upsell/offer-heading.html default pricing_mode full_price (brand contract); demo pages opt into discounted."
+            "note": "Same composable upsell set as apollo (generated from _shared/upsell/; see the apollo 'Apollo bundle upsell pages' surface note)."
           }
         ],
         "fixtures": [
