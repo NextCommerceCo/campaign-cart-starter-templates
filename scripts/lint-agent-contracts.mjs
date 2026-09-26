@@ -296,7 +296,7 @@ function validateIntentionalVariants() {
   for (const key of ['purpose', 'verified', 'regenerate', 'doNotReconcile', 'includes']) {
     if (!(key in iv)) errors.push(`catalog.intentionalVariants.${key}: missing`);
   }
-  const allowedSurfaces = ['orderBump', 'orderSummary', 'checkoutHeader', 'footer', 'footerLinks'];
+  const allowedSurfaces = ['orderBump', 'orderSummary', 'checkoutHeader', 'footer', 'footerLinks', 'upsell'];
   if (!iv.includes || typeof iv.includes !== 'object') {
     errors.push('catalog.intentionalVariants.includes: expected an object');
     return;

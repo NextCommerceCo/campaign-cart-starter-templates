@@ -1,0 +1,128 @@
+---
+title: "Olympus MV Single — Upsell (VSL)"
+page_type: upsell
+next_url: receipt.html
+decline_url: receipt.html
+styles:
+  - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
+scripts:
+  - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js
+  - js/upsells.js
+  - js/payment-logos.js
+# VSL upsell — the long-form direct-response mix: warning bar · logo-only header · title band with an
+# overlapping offer card + countdown · unboxed two-column offer with the VIDEO under the heading · trust
+# cards · "N% took this deal" copy block · stacked reviews · closing CTA. Every block is one of the shared
+# upsell partials, selected and filled from this frontmatter — the same set the bundle / single pages use.
+announcement_text: "Do not hit the “back” button – it may cause multiple changes to your cart"
+announcement_variant: danger
+header_bar: logo
+upsell_hero:
+  variant: card
+  title: "Wait! Your order is not yet complete!"
+  heading: "You just unlocked a final exclusive offer!"
+  text: 'Special Offer! Upgrade to the <strong>{package_name} and get {discount} off</strong>. We’ll ship it FREE with your other items.'
+countdown_timer:
+  text: "Act fast!"
+  highlight: "Offer ends in"
+  duration: 900
+  persistence_id: "upsell-vsl"
+upsell_layout:
+  boxed: false           # the hero card already overlaps the band — keep the offer flat
+  media: carousel        # carousel | image | grid | none — the area the swiper takes; image reads upsell_offer.image, grid reads media_images
+  media_position: left   # … copy, video and CTA on the right
+  media_align: sticky    # center | top | sticky — long copy on the right, gallery stays in view
+  decline_position: column   # below (default) | column — decline link sits under the CTA / guarantees
+  show_ships_info: false
+  show_payment_logos: false  # guarantees carry the trust message on this page
+# Payment logos resolve themselves from the live campaign (available_payment_methods) — nothing to set.
+# payment_flags.show_<method>: true|false is a per-method override, e.g.
+# payment_flags:
+#   show_klarna: false
+upsell_offer:
+  image: "images/1x1_1.svg"   # used by media: image
+  type: stepper   # tier-cards | tier-pills | stepper | single | mv — the only switch needed; tiers are generated from package_id unless upsell_bundle_tiers is set
+  pricing_mode: discounted   # struck retail + % badge; the shared contract default is full_price (one row)
+  package_id: 3
+  selector_id: "upsell-bundle"
+  bundle_id: "upsell-bundle-1x"
+  items_json: '[{"packageId":3,"quantity":1}]'
+  vouchers_json: '["UP50"]'
+  default_quantity: 1
+  min_quantity: 1
+  max_quantity: 5
+  pretitle: "Complete your order with the"
+  title: '<span class="color-primary">Premium</span> {package_name}'
+  rating_text: "19,569+ 5-Star Reviews"
+  heading_prices: true
+  quantity_label: "Select quantity"
+  retail_shipping: ""
+  offer_shipping: ""
+  accept_text: "YES, ADD THIS TO MY ORDER!"
+  cta_note: "We will ship it out to you FREE in the same order"
+  decline_text: "No, thank you. I don’t want to take advantage of this one-time offer"
+# Native <video>: autoplay + muted (browser policy), controls on, no player library. NEXT-hosted files
+# go through cdn.cachebucket.com (see CLAUDE.md). position: content = under the heading, above the bullets.
+upsell_video:
+  src: "https://cdn.cachebucket.com/media/demo/uploads/file_example_MP4_480_1_5MG.mp4"
+  poster: "images/1x1_1.svg"   # first frame shown until playback starts (always shown where autoplay is blocked) — replace with a 16:9 still
+  title: "See the difference"
+  autoplay: false
+  loop: true
+swiper_slides:
+  - { src: "images/1x1_1.svg", alt: "" }
+  - { src: "images/1x1_1.svg", alt: "" }
+  - { src: "images/1x1_1.svg", alt: "" }
+  - { src: "images/1x1_1.svg", alt: "" }
+swiper_thumbs:
+  - { src: "images/1x1_2.svg", alt: "" }
+  - { src: "images/1x1_2.svg", alt: "" }
+  - { src: "images/1x1_2.svg", alt: "" }
+  - { src: "images/1x1_2.svg", alt: "" }
+offer_bullets:
+  - "Ships FREE with the order you just placed"
+  - "Same premium quality as your main purchase"
+  - "Exclusive one-time customer price — not available anywhere else"
+  - "Covered by our money-back guarantee"
+upsell_guarantees:
+  - variant: stacked
+    icon: lock
+    title: "100% Secure & Safe Checkout"
+    text: "SSL Secure Payment, Risk-free"
+  - variant: row
+    image: "images/30d.webp"
+    title: "30 Day Money-Back Guarantee:"
+    text: "Not happy for any reason? Send the item(s) back in the original packaging within 30 days for a full refund or replacement, less S&H."
+upsell_body:
+  - type: reviews
+    rating_text: "4.9 Customer Rating"
+    title: '<span class="color-primary">10,000+ Customers</span><br>Love This, And So Will You.'
+    items:
+      - title: "Exactly what I hoped for"
+        body: "Great quality, packaged well and arrived with my order. I almost skipped this offer and I am glad I did not. Extremely happy with this buy."
+        author: "Ashley R."
+      - title: "Glad I added it"
+        body: "I took the deal on a whim right after checking out. It has turned out to be the part of the order I use the most. Would buy again."
+        author: "Jeff P."
+      - title: "Best purchase this year"
+        body: "Well made, does exactly what it says, and the one-time price made it an easy yes. Highly recommended."
+        author: "Mary B."
+closing_cta:                 # repeated accept / decline at the bottom (same partial the single page uses as variant: card)
+  variant: cta               # cta = centered button + note + decline · card = boxed image + price rows + button + decline
+  show_guarantees: true      # the upsell_guarantees cards again
+---
+{% comment %}
+  Demo of the composable upsell page. Compare with upsell-bundle-stepper.html — same upsell_offer.type: stepper
+  (one hidden bundle card + native −/+), a completely different page from data alone. The closing CTA uses
+  proxy actions (upsell/closing-cta.html) so there is exactly one SDK offer wrapper on the page.
+{% endcomment %}
+<div class="page-wrapper">
+  <div class="main-wrapper">
+    {% campaign_include 'upsell/announcement.html' announcement_text=announcement_text announcement_variant=announcement_variant %}
+    {% campaign_include 'upsell/header-bar.html' variant=header_bar %}
+    {% campaign_include 'upsell/hero.html' upsell_hero=upsell_hero countdown_timer=countdown_timer %}
+    {% campaign_include 'upsell/offer.html' %}
+    {% campaign_include 'upsell/body.html' upsell_body=upsell_body %}
+    {% campaign_include 'upsell/closing-cta.html' %}
+    {% campaign_include 'footer.html' %}
+  </div>
+</div>

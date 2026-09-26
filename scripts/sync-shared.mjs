@@ -7,15 +7,19 @@
  * Shared roots:
  *   _shared/analytics/_includes/*.html  ->  src/<family>/_includes/*.html
  *   _shared/analytics/js/*.js           ->  src/<family>/assets/js/*.js
- *   _shared/checkout/_includes/*.html   ->  src/<family>/_includes/*.html
- *   _shared/checkout/images/*.svg       ->  src/<family>/assets/images/*.svg
+ *   _shared/checkout/_includes/*.html   ->  src/<family>/_includes/*.html   (payment-methods, payment-logos)
+ *   _shared/checkout/images/*.svg       ->  src/<family>/assets/images/*.svg  (wallet + card-brand logos)
+ *   _shared/upsell/_includes/upsell/*.html -> src/<family>/_includes/upsell/*.html (the composable upsell set)
+ *   _shared/upsell/js/*.js              ->  src/<family>/assets/js/*.js       (upsells.js, payment-logos.js)
  *
  * Generated .html/.js files get a GENERATED header pointing back at the source; .svg copies are
  * byte-identical (an injected comment would sit before the XML declaration and break the file).
  * The analytics capability is inert until a campaign sets the matching id in _data/campaigns.json
  * (empty id = off), so syncing to a family adds the capability WITHOUT turning anything on. The
  * checkout payment-methods partial renders all method radios by default and the SDK filters them
- * to the campaign's available_payment_methods at runtime, so syncing it is likewise inert.
+ * to the campaign's available_payment_methods at runtime, so syncing it is likewise inert. The upsell
+ * set is pure partials + page JS: a family only renders it from pages that include upsell/offer.html.
+ * (upsells-mv.js stays per-family — MV families only.)
  *
  * Usage:
  *   node scripts/sync-shared.mjs           # write generated copies into every family
@@ -50,6 +54,13 @@ const SHARED_ROOTS = [
     dirs: [
       { sub: '_includes', ext: '.html', destDir: join('_includes'), kind: 'html' },
       { sub: 'images', ext: '.svg', destDir: join('assets', 'images'), kind: 'raw' },
+    ],
+  },
+  {
+    name: 'upsell',
+    dirs: [
+      { sub: join('_includes', 'upsell'), ext: '.html', destDir: join('_includes', 'upsell'), kind: 'html' },
+      { sub: 'js', ext: '.js', destDir: join('assets', 'js'), kind: 'js' },
     ],
   },
 ];

@@ -69,6 +69,7 @@ Each checkout template includes presell + landing pages, all upsell variants, an
 | `upsell-bundle-tier-pills` | Pill-style tier selector | [preview](https://nextcommerce-campaign-templates.netlify.app/apollo/upsell-bundle-tier-pills/) |
 | `upsell-bundle-tier-cards` | Card-style tier selector | [preview](https://nextcommerce-campaign-templates.netlify.app/apollo/upsell-bundle-tier-cards/) |
 | `upsell-single` | Single-offer add-on, one package at a fixed price (accept or skip, no tiers); demo is a protection plan | [preview](https://nextcommerce-campaign-templates.netlify.app/apollo/upsell-single/) |
+| `upsell-vsl` | Long-form VSL upsell: danger announcement bar, logo header, offer card + countdown, video under the heading, guarantees, reviews, closing CTA — same partials as the pages above, different frontmatter | [preview](https://nextcommerce-campaign-templates.netlify.app/apollo/upsell-vsl/) |
 | `upsell-mv` | Multi-variant upsell | [preview](https://nextcommerce-campaign-templates.netlify.app/apollo-mv-single-step/upsell-mv/) |
 
 **Receipt**
@@ -100,6 +101,8 @@ Starter `bump-check01.html` order bumps now default to a single visible sale pri
 **MV `selector_layout`** — on `apollo-mv-single-step`, `olympus-mv-single-step`, and `olympus-mv-two-step`, set `selector_layout: "grid" | "vertical"` under `checkout_step` (single-step) or `select_step` (two-step). Default `"grid"` keeps the current 3-up desktop layout; `"vertical"` stacks cards with `mv-cards--vertical`.
 
 **Two bump slots (Apollo and Apollo MV)** — `selector_order_bump_variant` controls the product-card `check03` bump immediately below the bundle/MV selector (`"check03"` or `"none"`). `order_bump_variant` controls only the later `.order-bumps` form-section slot (`"check01"`, `"switch01"`, `"check01+switch01"`, etc.) — not every bump on the page. Configure `check03` via `order_bump.check03.*` frontmatter only.
+
+**Composable upsell pages (all families)** — every upsell page in every family is built from one interchangeable partial set: `upsell-announcement` → `upsell-header-bar` (`steps` | `logo`) → `upsell-hero` (`band` | `card` with countdown) → `upsell-offer` (the shell; `offer_type` = `tier-cards` | `tier-pills` | `stepper` | `single`) → `upsell-body` (`reviews` | `features` | `comparison` | `steps` sections) → `upsell-closing-cta` (`cta` | `card`). Layout knobs live in `upsell_layout` (`boxed`, `media: carousel | image | grid | video`, `media_position`), a native video in `upsell_video`, trust cards in `upsell_guarantees`. Compare `upsell-bundle-stepper.html` with `upsell-vsl.html`: same offer type, completely different page from frontmatter alone.
 
 **Checkout reveal** — opt in with `checkout_reveal: true` and optional `checkout_reveal_cta` on Apollo and Apollo MV checkouts. Bundles and Add to Cart show first; the payment form reveals on click (`checkout-apollo.js` / `checkout-apollo-mv-full.js`).
 

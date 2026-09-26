@@ -8,7 +8,28 @@ styles:
 scripts:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js
   - js/upsells.js
+  - js/payment-logos.js
+announcement_text: "Special Offer Unlocked - Do Not Close This Page"
+upsell_hero:
+  title: "Wait! Your Order Isn't Complete"
+  # bundle.upsell-bundle.price moves with the qty selection — quote bundle.upsell-bundle-1x.* (the
+  # display-only selector upsell/offer.html renders outside the offer) so the hero always shows the 1× price.
+  offer: 'Special Discount: Get 1 More {package_name} For Only {price_1x}'
+  suboffer: 'Add this to your order and get a {discount_1x} discount'
+# Layout knobs for the offer shell (upsell/offer.html) — these are the defaults, change any of them:
+upsell_layout:
+  style: card              # card (band overlap + shadowed container) | box (bordered box, image left, centered copy)
+  boxed: true              # false = flat, no container shadow (pair with upsell_hero.variant: card)
+  media: carousel          # carousel (swiper_slides / swiper_thumbs) | image (upsell_offer.image) | grid (media_images) | video (media_video) | none
+  media_position: right    # right (content left) | left
+  media_align: center      # center | top | sticky (sticky needs boxed: false)
+  show_bullets: true       # offer_bullets list (demo bullets when absent)
+  show_ships_info: true    # upsell/ships-info.html row under the CTA
+  show_payment_logos: true # payment-logos.html (resolved from the campaign's payment methods)
+  decline_position: below  # below (under the whole offer) | column (inside the content column after the CTA)
 upsell_offer:
+  type: tier-pills   # tier-cards | tier-pills | stepper | single | mv — the only switch needed; tiers are generated from package_id unless upsell_bundle_tiers is set
+  pricing_mode: discounted   # struck retail + % badge; the shared contract default is full_price (one row)
   package_id: 3
   selector_id: "upsell-bundle"
   display_selector_id: "upsell-bundle-1x"
@@ -38,89 +59,38 @@ upsell_bundle_tiers:
     items_json: '[{"packageId":3,"quantity":5}]'
     vouchers_json: '["UP50"]'
 swiper_slides:
-  - src: "images/1x1_1.svg"
-    alt: ""
-  - src: "images/1x1_1.svg"
-    alt: ""
-  - src: "images/1x1_1.svg"
-    alt: ""
-  - src: "images/1x1_1.svg"
-    alt: ""
-  - src: "images/1x1_1.svg"
-    alt: ""
-  - src: "images/1x1_1.svg"
-    alt: ""
+  - { src: "images/1x1_1.svg", alt: "" }
+  - { src: "images/1x1_1.svg", alt: "" }
+  - { src: "images/1x1_1.svg", alt: "" }
+  - { src: "images/1x1_1.svg", alt: "" }
+  - { src: "images/1x1_1.svg", alt: "" }
+  - { src: "images/1x1_1.svg", alt: "" }
 swiper_thumbs:
-  - src: "images/1x1_2.svg"
-    alt: ""
-  - src: "images/1x1_2.svg"
-    alt: ""
-  - src: "images/1x1_2.svg"
-    alt: ""
-  - src: "images/1x1_2.svg"
-    alt: ""
-  - src: "images/1x1_2.svg"
-    alt: ""
-  - src: "images/1x1_2.svg"
-    alt: ""
+  - { src: "images/1x1_2.svg", alt: "" }
+  - { src: "images/1x1_2.svg", alt: "" }
+  - { src: "images/1x1_2.svg", alt: "" }
+  - { src: "images/1x1_2.svg", alt: "" }
+  - { src: "images/1x1_2.svg", alt: "" }
+  - { src: "images/1x1_2.svg", alt: "" }
 ---
-
 {% comment %}
-  APPROACH B — Bundle upsell (data-next-bundle-selector + data-next-upsell-context).
-  See upsell-bundle-stepper.html for one-card + native bundleQuantity stepper (not tier pills).
-  See upsell-bundle-tier-cards.html for visible tier cards (no initBundleQtyToggle).
-
-  Primary intent: one upsell package with a quantity-style control (1×–5× here) driving which
-  bundle tier is selected — not “stack N separate bundles of the same tier.” Per-step voucher
-  codes (e.g. UP50 / UP60 / UP70) are optional campaign examples of different coupons per qty;
-  simplify to one code or match your real Campaigns setup when cloning.
-
-  Reference pattern (0.4.x; match sdk_version in campaigns.json):
-    • Accept sends the selected tier’s voucher(s) via AddUpsellLine (example: 1× UP50, 2× UP60,
-      3× UP70, 4×–5× UP50 — configure codes in Campaigns).
-    • calculateBundlePrice merges tier vouchers at init and on card change.
-    • Quantity UI: hidden bundle cards per qty tier; initBundleQtyToggle() in assets/js/upsells.js
-      wires data-bundle-qty-btn to programmatically select the matching card (see file footer).
-    • Remote summary uses data-next-display="bundle.upsell-bundle.*" OUTSIDE cards — keep
-      data-next-format="currency" / "percentage" on those nodes (see https://developers.nextcommerce.com/docs/campaigns/campaign-cart/).
-    • data-next-upsell="offer" on .upsell-wrapper scopes add/skip actions.
-    • Header 1× price / % uses a display-only selector id upsell-bundle-1x outside the offer so
-      the first in-offer selector remains upsell-bundle (submit path); not data-next-upsell-action-for.
-
-  Optional upgrade (SDK 0.4.18+): for a single-tier offer, native bundle quantity (data-next-bundle-qty-for)
-  fits upsell-bundle-stepper.html; this page keeps tier cards + initBundleQtyToggle for per-tier vouchers.
-  See campaign-cart BundleSelector attributes.md — «Inline bundle-quantity controls».
-
-  Display note: remote bundle.upsell-bundle.unitPrice is not a supported remote path — use
-  per-card data-next-bundle-display for per-unit amounts on tier cards.
+  Bundle upsell — quantity PILLS (1×–5×) driving hidden per-tier bundle cards.
+  upsell_offer.type: tier-pills → upsell/offer-selector.html renders the hidden state-machine selector (first
+  in-offer selector → drives accept) and upsell/offer-controls.html renders the buttons; initBundleQtyToggle()
+  (upsells.js, auto-run on next:initialized) clicks the matching hidden card. Primary intent: one upsell
+  package with a quantity-style control choosing the tier — not "stack N bundles". Per-step vouchers
+  (UP50 / UP60 / UP70) are optional examples of different coupons per qty; simplify when cloning.
+  Accept sends the selected tier's voucher(s) via AddUpsellLine; calculateBundlePrice merges tier vouchers
+  at init and on card change; the price rows read remote bundle.upsell-bundle.* (data-next-format kept).
+  bundle.upsell-bundle.unitPrice is NOT a supported remote path — use per-card data-next-bundle-display
+  (upsell_offer.type: tier-cards) for per-unit amounts. For a native SDK stepper see upsell-bundle-stepper.html.
 {% endcomment %}
-
 <div class="page-wrapper">
   <div class="main-wrapper">
-    <div class="announcement">
-      <div class="announcement__block">
-        <div class="announcement__text"><strong>Special Offer Unlocked - Do Not Close This Page</strong></div>
-      </div>
-    </div>
-    {% campaign_include 'upsell-header-bar.html' %}
-    <section class="section upsell-header">
-      <div class="container">
-        <div class="upsell-header__inner">
-          <div class="upsell-header__title">Wait! Your Order Isn't Complete</div>
-          {% comment %} bundle.upsell-bundle.price updates with qty selection — use bundle.upsell-bundle-1x.price
-               (from the display-only selector below) for the header so it always shows the 1x price.
-               package.3.name reads the product name from campaign package data (3 = packageId). {% endcomment %}
-          <div class="upsell-header__offer">Special Discount: Get 1 More <span data-next-display="package.3.name">Product Title</span> For Only <span data-next-display="bundle.upsell-bundle-1x.price" data-next-format="currency">$14.95</span></div>
-          <div class="upsell-header__suboffer">Add this to your order and get a <span data-next-display="bundle.upsell-bundle-1x.discountPercentage" data-next-format="percentage">50%</span> discount<br></div>
-        </div>
-      </div>
-    </section>
-    {% campaign_include 'upsell-bundle-tier-pills-offer.html' %}
+    {% campaign_include 'upsell/announcement.html' announcement_text=announcement_text %}
+    {% campaign_include 'upsell/header-bar.html' %}
+    {% campaign_include 'upsell/hero.html' upsell_hero=upsell_hero %}
+    {% campaign_include 'upsell/offer.html' %}
     {% campaign_include 'footer.html' %}
   </div>
 </div>
-
-<script>
-  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', () => initSwiperGalleries()); } else { initSwiperGalleries(); }
-  window.addEventListener('next:initialized', function () { initBundleQtyToggle(); });
-</script>

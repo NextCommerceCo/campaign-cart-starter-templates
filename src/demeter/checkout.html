@@ -59,6 +59,7 @@ scripts:
   - js/promo-banner.js
   - js/promo-timer.js
   - js/checkout.js
+  - js/payment-logos.js
   - js/checkout-demeter.js
 ---
 <div class="page-wrapper">
@@ -315,7 +316,7 @@ scripts:
                               <div class="trust-badge--text">GUARANTEED<br>SAFE CHECKOUT</div>
                             </div>
                           </div>
-                          <img loading="lazy" src="{{ 'images/credit-card-flags.svg' | campaign_asset }}" alt="" class="credit-card__flags">
+                          {% campaign_include 'payment-logos.html' show_secure=false %}
                         </div>
                         <div class="guarantee-section">
                           <img loading="lazy" src="{{ 'images/90d.webp' | campaign_asset }}" alt="" class="guarantee-badge">

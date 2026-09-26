@@ -16277,3 +16277,692 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   color: var(--system-colors--destructive);
 }
 
+
+/* --- Composable upsell partials (_includes/upsell/*.html) ------------------ */
+/* ==========================================================================
+   Upsell page composed from interchangeable partials: announcement · header bar ·
+   hero (band | card) · offer shell (boxed | plain, media left | right, carousel |
+   image | grid | video) · heading · bullets · controls (tier-cards | tier-pills |
+   stepper | single | mv) · prices · cta · guarantees · body sections · secondary
+   offer. Only modifiers and the new blocks live here; everything else reuses the
+   existing upsell-* / next-bundle-qty* / review_component rules above.
+   ========================================================================== */
+
+/* Tier-card grid — promoted from the page-level .cc-upsell-bundle-tier-* block */
+.next-bundle-tier-heading {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0 0 0.75rem;
+}
+
+.next-bundle-tier-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .next-bundle-tier-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.next-bundle-tier-grid .os-card {
+  cursor: pointer;
+  margin: 0;
+  min-width: 0;
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.next-bundle-tier-grid .os-card.next-selected {
+  border-color: var(--component--color--outline, #111);
+  box-shadow: 0 0 0 1px var(--component--color--outline, #111);
+}
+
+.next-bundle-tier-card__inner {
+  padding: 0.85rem 0.75rem;
+  text-align: center;
+}
+
+.next-bundle-tier-card__label {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 0.35rem;
+}
+
+.next-bundle-tier-card__hint {
+  font-size: 0.75rem;
+  color: #5c5c5e;
+  margin: 0 0 0.5rem;
+  line-height: 1.25;
+}
+
+.next-bundle-tier-card__price {
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.next-bundle-tier-card__compare {
+  font-size: 0.8125rem;
+  color: #888;
+  text-decoration: line-through;
+  margin-top: 0.25rem;
+}
+
+.next-bundle-tier-card__badge {
+  display: inline-block;
+  margin-top: 0.4rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--brand--color--primary, #1a7f37);
+}
+
+/* Stepper value (replaces the inline min-width style) */
+.next-bundle-qty__value {
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+/* Offer shell modifiers */
+.section.upsell-box.cc-plain {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Box style (upsell_layout.style: box) sits directly under the plain hero: a column flex box so the
+   card's margin-top cannot collapse through the section's zero top padding and show the page background. */
+.section.upsell-box--flat {
+  display: flex;
+  flex-flow: column;
+}
+
+.upsell-container.cc-plain {
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
+}
+
+@media screen and (max-width: 991px) {
+  .section.upsell-box.cc-plain .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .cc-media-left .upsell-offer__image-column {
+    order: -1;
+  }
+
+  /* upsell_layout.media_align: top | sticky (default center via .upsell-offer__image-column align-self) */
+  .cc-media-top .upsell-offer__image-column,
+  .cc-media-sticky .upsell-offer__image-column {
+    align-self: flex-start;
+  }
+
+  .cc-media-sticky .upsell-offer__image-column {
+    position: sticky;
+    top: 1rem;
+  }
+}
+
+/* Heading extras */
+.upsell-offer__heading {
+  display: flex;
+  flex-flow: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.upsell-offer__pretitle {
+  margin: 0 0 0.25rem;
+  font-size: var(--font-size--base);
+  font-weight: 600;
+  color: var(--brand--color--text-secondary);
+}
+
+.upsell-offer__heading-prices {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  line-height: 1;
+}
+
+/* the compare and badge sit in data-next-show wrapper divs — make those flex items align too */
+.upsell-offer__heading-prices > div {
+  display: flex;
+  align-items: center;
+}
+
+.upsell-offer__heading-prices .badge {
+  line-height: 1.2;
+}
+
+.upsell-offer__heading-compare {
+  font-size: var(--font-size--xl);
+  color: #6c757d;
+  text-decoration: line-through;
+}
+
+.upsell-offer__heading-price {
+  font-size: var(--font-size--3xl);
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* CTA note */
+.upsell-cta__note {
+  width: 100%;
+  margin: 0.5rem 0 0;
+  text-align: center;
+  font-size: var(--font-size--sm);
+  font-weight: 500;
+  color: var(--brand--color--text-secondary);
+}
+
+/* Video (native <video>, 16:9 frame) */
+.upsell-video {
+  width: 100%;
+  margin: 0 0 1rem;
+}
+
+.upsell-video__title {
+  margin: 0 0 0.5rem;
+  font-size: var(--font-size--base);
+  font-weight: 700;
+}
+
+.upsell-video__frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #000;
+  border-radius: var(--radius-size--md);
+  overflow: hidden;
+}
+
+.upsell-video__player {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.upsell-offer__image-column .upsell-video {
+  margin: 0;
+}
+
+/* Media grid (2×2) */
+.upsell-media-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.upsell-media-grid__cell {
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-size--md);
+  overflow: hidden;
+}
+
+.upsell-media-grid__cell img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Guarantee cards */
+.upsell-guarantees {
+  display: flex;
+  flex-flow: column;
+  gap: 0.75rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.upsell-guarantee {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem 1.125rem;
+  background-color: var(--neutral--100);
+  border: 1px solid var(--brand--color--border);
+  border-radius: var(--radius-size--md);
+}
+
+.upsell-guarantee--stacked {
+  flex-flow: column;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.upsell-guarantee__icon {
+  flex: 0 0 auto;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--brand--color--text-secondary);
+}
+
+.upsell-guarantee__badge {
+  flex: 0 0 auto;
+  width: 3.5rem;
+}
+
+.upsell-guarantee__content {
+  display: flex;
+  flex-flow: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.upsell-guarantee__title {
+  margin: 0;
+  font-size: var(--font-size--base);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.upsell-guarantee__text {
+  margin: 0;
+  font-size: var(--font-size--sm);
+  line-height: 1.5;
+  color: var(--brand--color--text-secondary);
+}
+
+.upsell-guarantee__text strong {
+  color: var(--brand--color--foreground);
+}
+
+/* Header bar — logo-only variant */
+.upsell-header-bar--logo .upsell-header-bar__wrapper,
+.upsell-header-bar--logo .upsell-header-bar__left {
+  justify-content: center;
+}
+
+/* Announcement variants — announcement_variant: primary (default) | danger | success | dark | light */
+.announcement.cc-danger .announcement__block {
+  background-color: var(--system-colors--destructive-light);
+}
+
+.announcement.cc-danger .announcement__text {
+  color: var(--system-colors--destructive);
+}
+
+.announcement.cc-success .announcement__block {
+  background-color: var(--system-colors--success-light);
+}
+
+.announcement.cc-success .announcement__text {
+  color: var(--system-colors--success);
+}
+
+.announcement.cc-dark .announcement__block {
+  background-color: var(--brand--color--black);
+}
+
+.announcement.cc-light .announcement__block {
+  background-color: var(--neutral--100);
+  border-bottom: 1px solid var(--brand--color--border);
+}
+
+.announcement.cc-light .announcement__text {
+  color: var(--brand--color--foreground);
+}
+
+.announcement.cc-danger .announcement__text,
+.announcement.cc-success .announcement__text,
+.announcement.cc-light .announcement__text {
+  text-transform: none;
+  font-size: var(--font-size--base);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+/* Hero — card variant (short band + overlapping white card) */
+.upsell-header--card {
+  padding-bottom: 5rem;
+}
+
+.section.upsell-header-card {
+  margin-top: -4rem;
+  padding-top: 0;
+  padding-bottom: var(--spacing--2);
+}
+
+.upsell-header-card__inner {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  background-color: #fff;
+  border-radius: var(--radius--cards);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.upsell-header-card__heading {
+  margin: 0;
+  font-size: var(--font-size--3xl);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.upsell-header-card__text {
+  margin: 0;
+  max-width: 52rem;
+  font-size: var(--font-size--xl);
+  line-height: 1.5;
+}
+
+.upsell-header-card__inner .countdown-timer {
+  border-radius: var(--radius-size--md);
+  padding: 0.5rem 1rem;
+}
+
+@media screen and (max-width: 767px) {
+  .upsell-header--card {
+    padding-bottom: 3.5rem;
+  }
+
+  .section.upsell-header-card {
+    margin-top: -2.5rem;
+  }
+
+  .upsell-header-card__inner {
+    padding: 1.5rem 1rem;
+  }
+
+  .upsell-header-card__heading {
+    font-size: var(--font-size--2xl);
+  }
+
+  .upsell-header-card__text {
+    font-size: var(--font-size--base);
+  }
+}
+
+/* Reviews list */
+.upsell-reviews__list {
+  display: flex;
+  flex-flow: column;
+}
+
+.upsell-review {
+  display: flex;
+  flex-flow: column;
+  gap: 0.75rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--brand--color--border);
+}
+
+.upsell-review:last-child {
+  border-bottom: 0;
+}
+
+.upsell-review__title {
+  margin: 0;
+  font-size: var(--font-size--lg);
+  font-weight: 700;
+}
+
+.upsell-review__body {
+  margin: 0;
+  font-size: var(--font-size--base);
+  line-height: 1.6;
+}
+
+.upsell-review__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.upsell-review__avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.upsell-review__author {
+  margin: 0;
+  font-weight: 700;
+}
+
+.upsell-review__verified {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0;
+  font-size: var(--font-size--sm);
+  color: var(--system-colors--success-medium);
+}
+
+/* Box-style image column width (upsell_layout.media_width: narrow | medium | wide) — cc-narrow / cc-medium exist above */
+.upsell-offer__image-column.cc-wide {
+  flex: 0 0 32rem;
+  width: 32rem;
+  padding: 0;
+}
+
+@media screen and (max-width: 991px) {
+  .upsell-offer__image-column.cc-wide {
+    flex-basis: auto;
+    width: 100%;
+  }
+}
+
+/* Closing CTA — closing_cta.background: surface (color-surface utility) | tint | none */
+.section.upsell-closing.cc-tint {
+  background-color: var(--brand--color--primary-light);
+}
+
+.upsell-closing__inner {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.upsell-closing__inner .button {
+  width: 100%;
+}
+
+.upsell-closing__inner .upsell-cta__note {
+  margin-top: -0.5rem;
+}
+
+.upsell-closing__inner .cc-decline-wrapper {
+  margin-top: 0;
+}
+
+/* Composable upsell — mobile rhythm (display-lg does not scale below 768px on its own) */
+@media screen and (max-width: 767px) {
+  .section.upsell-box.cc-plain .upsell-offer__card,
+  .section.upsell-box.cc-plain .upsell-offer__image-column {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .section.upsell-box.cc-plain .upsell-offer__card {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .upsell-offer__heading .display-lg,
+  .upsell-hero--plain .display-lg,
+  .upsell-reviews .display-lg {
+    font-size: var(--font-size--2xl);
+  }
+
+  .upsell-offer__pretitle,
+  .upsell-video__title {
+    font-size: var(--font-size--sm);
+  }
+
+  .upsell-offer__heading-price {
+    font-size: var(--font-size--2xl);
+  }
+
+  .upsell-offer__heading-compare {
+    font-size: var(--font-size--lg);
+  }
+
+  .upsell-guarantee {
+    gap: 0.75rem;
+    padding: 0.75rem 0.875rem;
+  }
+
+  .upsell-guarantee__badge {
+    width: 3rem;
+  }
+
+  .upsell-review {
+    gap: 0.5rem;
+    padding: 1rem 0;
+  }
+
+  .upsell-review__body {
+    font-size: var(--font-size--sm);
+  }
+
+  .announcement.cc-danger .announcement__text,
+  .announcement.cc-success .announcement__text,
+  .announcement.cc-light .announcement__text {
+    font-size: var(--font-size--sm);
+    line-height: 1.4;
+  }
+
+  .section.upsell-reviews,
+  .section.upsell-closing {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+}
+
+/* Countdown timer on narrow screens — let the label wrap and the pill drop under it, centered */
+@media screen and (max-width: 767px) {
+  .countdown-timer__inner {
+    flex-wrap: wrap;
+    row-gap: 0.35rem;
+  }
+
+  .countdown-timer__label {
+    font-size: var(--font-size--sm);
+    text-align: center;
+  }
+
+  .upsell-header-card__inner .countdown-timer {
+    width: 100%;
+  }
+}
+
+/* Box-style upsell (upsell_layout.style: box) on narrow screens — tighter hero→box gap and card padding */
+@media screen and (max-width: 767px) {
+  .upsell-hero--plain .heading-box {
+    margin-bottom: 0;
+  }
+
+  .upsell-hero--plain .heading-box p {
+    margin-bottom: 0;
+  }
+
+  .upsell-box--flat .upsell-container--box.margin-32 {
+    margin-top: 1.25rem;
+  }
+
+  .upsell-box--flat .upsell-offer__card {
+    padding: 1rem 1rem 1.25rem;
+  }
+
+  .upsell-box--flat .grid-full.gap-xl {
+    gap: 1rem;
+  }
+}
+
+/* Box-style upsell type scale on narrow screens */
+@media screen and (max-width: 767px) {
+  .upsell-hero--plain .heading-box p {
+    font-size: var(--font-size--lg);
+  }
+
+  .upsell-box--flat .upsell-content__column .display-md {
+    font-size: var(--font-size--xl);
+  }
+
+  .upsell-box--flat .badge.text-xl {
+    font-size: var(--font-size--base);
+  }
+
+  .upsell-box--flat .prices-text-wrapper .text-3xl {
+    font-size: var(--font-size--2xl);
+  }
+
+  .upsell-box--flat .color-destructive.text-lg {
+    font-size: var(--font-size--base);
+  }
+
+  .upsell-box--flat .upsell-content__column .review_component .text-sm {
+    font-size: var(--font-size--sm);
+  }
+
+  .upsell-box--flat .upsell-offer__card > .text-xl {
+    font-size: var(--font-size--base);
+  }
+}
+
+/* .section.cc-top-0 / .cc-bottom-0 / .cc-0 are declared before .section.cc-sm / .cc-lg (and their mobile
+   overrides), so at equal specificity the size modifiers win and the zero modifiers never apply.
+   Re-assert them LAST — keep this block at the end of the file. */
+.section.cc-top-0 {
+  padding-top: 0;
+}
+
+.section.cc-bottom-0 {
+  padding-bottom: 0;
+}
+
+.section.cc-0 {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Upsell payment logos — individual brand SVGs gated by payment_flags (upsell/payment-logos.html) */
+.payment-logos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.payment-logos__item {
+  display: block;
+  height: 1.5rem;
+  width: auto;
+  max-width: 6rem;
+}
+
+/* display:block above would beat the UA [hidden] rule — methods the campaign does not offer must not paint */
+.payment-logos__item[hidden] {
+  display: none;
+}

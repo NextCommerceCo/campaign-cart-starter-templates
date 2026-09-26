@@ -267,7 +267,7 @@ function includeSuggestion(attr) {
     'data-next-toggle-card': "{% campaign_include 'bump-check01.html' %}",
     'data-next-skeleton': "{% campaign_include 'receipt-skeleton.html' %}",
     'data-next-order-items': "{% campaign_include 'receipt-orders.html' %}",
-    'data-next-upsell': "{% campaign_include 'upsell-offer.html' %}",
+    'data-next-upsell': "{% campaign_include 'upsell/offer.html' %}",
     'data-next-bundle-slot-template-id': "{% campaign_include 'mv-configurable-selector.html' %}",
     'data-next-bundle-slots-for': "{% campaign_include 'mv-slot-stage.html' %}",
     'data-next-bundle-qty-for': "{% campaign_include 'single-offer-quantity-selector.html' %}",
