@@ -459,9 +459,10 @@ window.nextConfig = {
   },
 
   addressConfig: {
-    // defaultCountry: 'US',             // Low-priority fallback when campaign list is empty
-    // showCountries: ['US', 'CA', 'GB'], // Deprecated – campaign API provides countries; fallback only
-    dontShowStates: ['AS', 'GU', 'PR', 'VI'], // state codes to hide
+    // Countries shown at checkout come from the campaign's shipping settings in the Campaigns App, not this file.
+    // Preselected country: the shopper's location if the campaign ships there, otherwise US, otherwise the first country listed.
+    // (showCountries only applies if the campaign has no shipping countries; defaultCountry only if no country is left at all — both rarely useful.)
+    dontShowStates: [], // US territories (AS, GU, MP, PR, VI, UM) are always hidden by the SDK; add other state/province codes to hide (note: a code is hidden in every country, see campaign-cart#107)
     // AUTOCOMPLETE PROVIDER:
     //   Option 1 (active): NextCommerce — enableAutocomplete: true, leave googleMaps.apiKey empty
     //   Option 2: Google Maps — fill in googleMaps.apiKey below; takes priority when apiKey is non-empty
@@ -1154,7 +1155,7 @@ Use these when implementing or verifying a specific task. Work through each item
 
 - [ ] `apiKey` set to the campaign's API key from the Campaigns App (`npm run config` or edit directly)
 - [ ] `storeName` set — required for Facebook purchase deduplication
-- [ ] `addressConfig.defaultCountry` set to the primary target market
+- [ ] Shipping countries set on the campaign in the Campaigns App — `config.js` does not control them. The preselected country follows the shopper's location (then US, then the first listed); `addressConfig.defaultCountry` / `showCountries` only apply when the campaign has no shipping countries
 - [ ] `paymentConfig.expressCheckout.enabled` — set `true` to show PayPal/Apple Pay/Google Pay buttons, `false` to hide
 - [ ] `analytics.providers.gtm.enabled` — set `true` when the campaign uses GTM; the container itself comes from `gtm_id` in `campaigns.json` (the layout injects the snippet — the SDK never loads GTM and reads no other `gtm` settings), and the SDK provider then pushes `dl_*` events to `window.dataLayer` for that container to consume
 - [ ] `analytics.providers.facebook.enabled` — set `true` and add `pixelId` to match the `fb_pixel_id` in `campaigns.json`; same two-part pattern as GTM
