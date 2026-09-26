@@ -461,7 +461,7 @@ window.nextConfig = {
   addressConfig: {
     // Countries shown at checkout come from the campaign's shipping settings in the Campaigns App, not this file.
     // Preselected country: the shopper's location if the campaign ships there, otherwise US, otherwise the first country listed.
-    // (defaultCountry / showCountries only apply if the campaign has no shipping countries — rarely useful.)
+    // (showCountries only applies if the campaign has no shipping countries; defaultCountry only if no country is left at all — both rarely useful.)
     dontShowStates: [], // US territories (AS, GU, MP, PR, VI, UM) are always hidden by the SDK; add other state/province codes to hide (note: a code is hidden in every country, see campaign-cart#107)
     // AUTOCOMPLETE PROVIDER:
     //   Option 1 (active): NextCommerce — enableAutocomplete: true, leave googleMaps.apiKey empty
