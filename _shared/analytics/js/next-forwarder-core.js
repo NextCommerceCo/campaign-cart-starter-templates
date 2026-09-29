@@ -132,9 +132,10 @@
   }
 
   // Phone must be E.164 (+<country><number>) or Triple Whale-style identity joins against the order/feed
-  // silently fail. SDK <= 0.4.38 puts an intl-tel-input instance on the field — use its getNumber().
-  // SDK >= 0.4.39 dropped intl-tel-input: the field shows the country's national mask ("(415) 555-2671")
-  // and the SDK keeps the E.164 internally with no public getter. So without an instance, only a number
+  // silently fail. Branches on whether an intl-tel-input instance is on the field — no SDK version is
+  // read. With one (SDK <= 0.4.38 puts it there), use its getNumber(). Without one (SDK >= 0.4.39 dropped
+  // intl-tel-input: the field shows the country's national mask, "(415) 555-2671", and the SDK keeps the
+  // E.164 internally with no public getter — requested in NextCommerceCo/campaign-cart#108), only a number
   // the shopper typed with its own "+" is used; anything else returns '' — field entry then sends no
   // phone, and the prospect-cart source delivers the SDK's own E.164. Never guesses a dial code.
   function phoneVal(el) {

@@ -34,7 +34,7 @@ Do not proceed with code generation until you have completed all four steps abov
 
 A campaign funnel built with:
 - **[next-campaign-page-kit](https://github.com/NextCommerceCo/next-campaign-page-kit)** — the build tool. Handles Liquid templating, per-campaign asset isolation, dev server, and CLI scripts.
-- **[Campaign Cart SDK](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/)** — the runtime. Loaded via CDN, drives all cart, checkout, upsell, and receipt behaviour through HTML attributes and meta tags.
+- **[Campaign Cart SDK](https://developers.nextcommerce.com/docs/campaigns)** — the runtime. Loaded via CDN, drives all cart, checkout, upsell, and receipt behaviour through HTML attributes and meta tags.
 
 ---
 
@@ -90,7 +90,7 @@ Market-sensitive starter copy is also a contract surface. If the campaign is cou
 
 Before making any changes that touch cart, checkout, upsells, or SDK wiring, read:
 
-- **Official docs:** https://developers.nextcommerce.com/docs/campaigns/campaign-cart/
+- **Official docs:** https://developers.nextcommerce.com/docs/campaigns
 - **SDK source:** https://github.com/NextCommerceCo/campaign-cart
 
 The docs are the source of truth for SDK behaviour. Do not invent `data-next-*` attribute names or values — only use what is documented.
@@ -596,7 +596,7 @@ Phone field is discovered via `data-next-checkout-field="phone"` → `input[name
 <span data-next-display="cart.savings"></span>
 ```
 
-**SDK 0.4.x:** `data-next-display="cart.discountCode"` is **not** wired in the cart-summary display resolver (Known #10 / BS-014). Use `data-next-discounts="voucher"` + `{discount.description}` to show the code string, `{discount.name}` for the display label. For bundle-line and summary tokens, use the [Campaign Cart SDK docs](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) and bundle selector reference in the [campaign-cart](https://github.com/NextCommerceCo/campaign-cart) repo as needed.
+**SDK 0.4.x:** `data-next-display="cart.discountCode"` is **not** wired in the cart-summary display resolver (Known #10 / BS-014). Use `data-next-discounts="voucher"` + `{discount.description}` to show the code string, `{discount.name}` for the display label. For bundle-line and summary tokens, use the [Campaign Cart SDK docs](https://developers.nextcommerce.com/docs/campaigns) and bundle selector reference in the [campaign-cart](https://github.com/NextCommerceCo/campaign-cart) repo as needed.
 
 ### Bundle tier display (`data-next-bundle-display`)
 
@@ -728,7 +728,7 @@ Live summary panel — updates on tier change, coupon apply, and bump toggle. Us
 </div>
 ```
 
-Key token semantics (0.4.11+): `{item.price}` / `{item.originalPrice}` = **line totals** (qty × price); `{item.unitPrice}` / `{item.originalUnitPrice}` = **per-unit**. `{item.hasDiscount}` returns `"show"` or `"hide"` as a CSS class value. Cross-check any additional `{item.*}` / `{line.*}` names against the SDK version you pin in `campaigns.json` — the [official docs](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) track supported summary tokens.
+Key token semantics (0.4.11+): `{item.price}` / `{item.originalPrice}` = **line totals** (qty × price); `{item.unitPrice}` / `{item.originalUnitPrice}` = **per-unit**. `{item.hasDiscount}` returns `"show"` or `"hide"` as a CSS class value. Cross-check any additional `{item.*}` / `{line.*}` names against the SDK version you pin in `campaigns.json` — the [official docs](https://developers.nextcommerce.com/docs/campaigns) track supported summary tokens.
 
 ### Line-item properties — personalization (SDK 0.4.26+; attributes renamed in 0.4.27)
 
@@ -992,7 +992,7 @@ Elements outside `<template>` render immediately and update in-place via `data-n
 
 **`cart.currency` node:** always leave empty — the SDK fills it. A hardcoded `"USD"` literal flashes before being overwritten.
 
-See the [Campaign Cart SDK documentation](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) for supported display paths, `data-next-format`, and cart-summary behavior (including avoiding flash on currency nodes).
+See the [Campaign Cart SDK documentation](https://developers.nextcommerce.com/docs/campaigns) for supported display paths, `data-next-format`, and cart-summary behavior (including avoiding flash on currency nodes).
 
 ---
 

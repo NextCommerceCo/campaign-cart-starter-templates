@@ -111,14 +111,16 @@ adapter declares `contactRequiresMarketingConsent` and `contactOnFieldEntry` whe
 Gating attribution identity on the newsletter box caps the attribution match rate at the newsletter opt-in
 rate (a checkout with the box unchecked by default would floor a Northbeam setup from day one). The core
 still passes `acceptsMarketing` in the contact object, and dedupes per adapter per identifier per page load,
-so an email seen on field blur and again on the prospect event fires each adapter once. A phone is sent
-only as E.164 (`+<country><number>`): the prospect cart carries the SDK's own E.164; on field entry the
-core uses intl-tel-input's `getNumber()` on SDK ≤ 0.4.38, while on SDK ≥ 0.4.39 (no intl-tel-input, the
-field shows the national mask, no public E.164 getter) it sends a field-entry phone only when the shopper
-typed it with its own `+` — otherwise field entry carries no phone and the prospect cart delivers it. It
-never guesses a dial code. Enabling any
+so an email seen on field blur and again on the prospect event fires each adapter once. Enabling any
 `*_enabled` flag still means the campaign has handled the region's rules for sending raw email/phone to
 that vendor.
+
+**Phone is sent only as E.164** (`+<country><number>`), never with a guessed dial code. The prospect cart
+carries the SDK's own E.164. On field entry the core uses an intl-tel-input instance's `getNumber()` when
+one is on the field (SDK ≤ 0.4.38). SDK ≥ 0.4.39 has no intl-tel-input — the field shows the national mask
+and there is no public E.164 getter ([campaign-cart#108](https://github.com/NextCommerceCo/campaign-cart/issues/108))
+— so a field-entry phone is sent only when the shopper typed it with its own `+`; otherwise field entry
+carries no phone and the prospect cart delivers it.
 
 **Northbeam on Shop Sync stores** (checkout on NEXT, orders pushed into Shopify): set
 `"northbeam_blocked_events": "dl_purchase, dl_upsell_purchase"` and rely on identity. The Shopify Connector
