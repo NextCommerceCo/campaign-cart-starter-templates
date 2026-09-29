@@ -1,6 +1,6 @@
 # Campaign Cart Starter Templates
 
-Starter templates for building headless campaign funnels using **[next-campaign-page-kit](https://github.com/NextCommerceCo/next-campaign-page-kit)** and the [Campaign Cart SDK](https://developers.nextcommerce.com/docs/campaigns) by NextCommerce.
+Starter templates for building headless campaign funnels using **[next-campaign-page-kit](https://github.com/NextCommerceCo/next-campaign-page-kit)** and the [Campaign Cart SDK](https://cart-sdk.nextcommerce.com/latest/) by NextCommerce.
 
 
 ## Getting started
@@ -151,7 +151,7 @@ For other AI tools: Cursor loads rules from `.cursor/rules/`, Windsurf from `.wi
 
 ## SDK documentation
 
-- [Official docs](https://developers.nextcommerce.com/docs/campaigns)
+- [Official docs](https://cart-sdk.nextcommerce.com/latest/)
 - [SDK source](https://github.com/NextCommerceCo/campaign-cart)
 
 ## Template verification evidence
