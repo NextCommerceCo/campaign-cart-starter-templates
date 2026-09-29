@@ -7,6 +7,7 @@
     section_title:    string, default "Step 2: Customer Information". Heading shown above the fields.
     is_first:         bool, default true. Adds form-section--first modifier (removes top border).
     show_phone:       bool, default true. Renders phone input row.
+    label_style:      string, default "inset". "floating" | "static" — adds cc-labels-floating / cc-labels-static to the section so the hand-written fields match the SDK address blocks' label_style. Also read from page frontmatter `address_form.label_style` (include arg wins), so one frontmatter knob styles the whole checkout form.
     phone_required:   bool, default false. Adds native `required` + `data-next-required="true"` to phone input. SDK reads these to gate submit on a non-empty, valid phone number.
   next_sdk_owns:
     - data-next-checkout-field (values: email, fname, lname, phone)
@@ -18,6 +19,7 @@
     - autocomplete tokens (given-name, family-name, email, tel-full) drive browser autofill; preserve
   next_gotchas:
     - Core fields (fname, lname, email) are always required by CheckoutValidator via data-next-checkout-field — no extra attribute needed
+    - Division of labor vs the SDK address block (data-next-address in shipping-address-form): the block skips any field already declared here, so fname/lname/phone being hand-written in this partial is a LAYOUT CHOICE (keeps them in the Customer Information step) — delete them here and the shipping block builds them itself (name after country, phone last, country-ordered). Email (and accepts_marketing) are the exception: the SDK never builds them, the page always writes email itself.
     - os-checkout-validate="required" is legacy and ignored by the SDK — do not use
     - Phone required status is controlled by native `required` + `data-next-required="true"` on the input; form uses noValidate so native required alone does not gate submit — SDK reads it
     - Email field is the dedup key for analytics; preserve its data-next-checkout-field="email" exactly
@@ -33,7 +35,8 @@
 {% assign sec_title = section_title | default: 'Step 2: Customer Information' -%}
 {% if is_first == nil %}{% assign is_first = true %}{% endif -%}
 {% if show_phone == nil %}{% assign show_phone = true %}{% endif -%}
-<div data-next-catalog-component="customer-info-form" class="form-section{% if is_first %} form-section--first{% endif %}">
+{% assign cif_label_style = label_style | default: address_form.label_style -%}
+<div data-next-catalog-component="customer-info-form" class="form-section{% if is_first %} form-section--first{% endif %}{% if cif_label_style == 'floating' %} cc-labels-floating{% elsif cif_label_style == 'static' %} cc-labels-static{% endif %}">
   <h2 class="form-section__title">{{ sec_title }}</h2>
   <div class="form-grid">
     <div data-next-component="shipping-field-row" class="form-grid__row">
