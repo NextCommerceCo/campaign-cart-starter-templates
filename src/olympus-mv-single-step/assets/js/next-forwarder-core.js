@@ -132,9 +132,12 @@
     return el && (el.iti || (window.intlTelInput && window.intlTelInput.getInstance && window.intlTelInput.getInstance(el)));
   }
 
-  // Phone must match the SDK's normalization (E.164 via intl-tel-input) or Triple Whale-style identity
-  // joins against the order/feed silently fail. Prefer the intl-tel-input instance's getNumber(); fall
-  // back to the raw input only if it isn't available. Mirrors ProspectCartEnhancer.getFormattedPhoneNumber.
+  // Phone must be E.164 (+<country><number>) or Triple Whale-style identity joins against the order/feed
+  // silently fail. SDK <= 0.4.38 puts an intl-tel-input instance on the field — use its getNumber().
+  // SDK >= 0.4.39 dropped intl-tel-input: the field shows the country's national mask ("(415) 555-2671")
+  // and the SDK keeps the E.164 internally with no public getter. So without an instance, only a number
+  // the shopper typed with its own "+" is used; anything else returns '' — field entry then sends no
+  // phone, and the prospect-cart source delivers the SDK's own E.164. Never guesses a dial code.
   function phoneVal(el) {
     el = el || document.querySelector(PHONE_SEL);
     if (!el) return '';
@@ -142,7 +145,8 @@
     if (iti && typeof iti.getNumber === 'function') {
       try { var e164 = iti.getNumber(); if (e164) return e164; } catch (err) {}
     }
-    return el.value ? el.value.trim() : '';
+    var raw = el.value ? el.value.trim() : '';
+    return raw.charAt(0) === '+' ? '+' + raw.replace(/\D/g, '') : '';
   }
 
   // Is the field's current value a usable phone? intl-tel-input's own verdict when present, else the
@@ -187,7 +191,7 @@
   function onProspectCartCreated(e) {
     var d = (e && e.detail) || {}, pc = d.prospectCart || {}, cart = d.cart || {};
     var email = pc.email || cart.email || fieldVal(EMAIL_SEL);
-    var phone = pc.phone || cart.phone || phoneVal(); // SDK-formatted E.164 preferred; raw only as last resort
+    var phone = pc.phone || cart.phone || phoneVal(); // SDK E.164 preferred; field fallback is E.164-or-nothing (phoneVal)
     dispatchContact({ email: email || undefined, phone: phone || undefined, source: 'prospect' }, false);
   }
 
