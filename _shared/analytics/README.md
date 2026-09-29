@@ -115,6 +115,13 @@ so an email seen on field blur and again on the prospect event fires each adapte
 `*_enabled` flag still means the campaign has handled the region's rules for sending raw email/phone to
 that vendor.
 
+**Phone is sent only as E.164** (`+<country><number>`), never with a guessed dial code. The prospect cart
+carries the SDK's own E.164. On field entry the core uses an intl-tel-input instance's `getNumber()` when
+one is on the field (SDK ≤ 0.4.38). SDK ≥ 0.4.39 has no intl-tel-input — the field shows the national mask
+and there is no public E.164 getter ([campaign-cart#108](https://github.com/NextCommerceCo/campaign-cart/issues/108))
+— so a field-entry phone is sent only when the shopper typed it with its own `+`; otherwise field entry
+carries no phone and the prospect cart delivers it.
+
 **Northbeam on Shop Sync stores** (checkout on NEXT, orders pushed into Shopify): set
 `"northbeam_blocked_events": "dl_purchase, dl_upsell_purchase"` and rely on identity. The Shopify Connector
 order is the order of record; the funnel purchase carries the NEXT order id and can never match the Shopify

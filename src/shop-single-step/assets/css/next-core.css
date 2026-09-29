@@ -12395,26 +12395,9 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 .payment-method__icon--google-pay-logo {
   width: 45px;
 }
-.iti__flag-container {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 3rem !important;
-  right: 0 !important;
-  left: auto !important;
-  padding: 1px;
-}
-
-.iti--allow-dropdown input,
-.iti--allow-dropdown input[type=text],
-.iti--allow-dropdown input[type=tel],
-.iti--separate-dial-code input,
-.iti--separate-dial-code input[type=text],
-.iti--separate-dial-code input[type=tel] {
-  padding-right: 52px !important;
-  padding-left: 12px !important;
-  margin-left: 0 !important;
-}
+/* Phone field: SDK >= 0.4.39 no longer uses intl-tel-input, so there is no .iti / .iti__* markup.
+   The SDK styles the flag itself (campaign-cart.css, loaded by the SDK loader); to restyle, target
+   .next-phone-field (the input's parent), .next-phone-flag (the <img>) and .next-phone-input. */
 
 /* ========== Prepurchase upsell (checkout add-on blocks) ========== */
 /* Isolated from upsell-page styles so checkout and upsell templates don’t share class names. */

@@ -34,7 +34,7 @@ Do not proceed with code generation until you have completed all four steps abov
 
 A campaign funnel built with:
 - **[next-campaign-page-kit](https://github.com/NextCommerceCo/next-campaign-page-kit)** — the build tool. Handles Liquid templating, per-campaign asset isolation, dev server, and CLI scripts.
-- **[Campaign Cart SDK](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/)** — the runtime. Loaded via CDN, drives all cart, checkout, upsell, and receipt behaviour through HTML attributes and meta tags.
+- **[Campaign Cart SDK](https://cart-sdk.nextcommerce.com/latest/)** — the runtime. Loaded via CDN, drives all cart, checkout, upsell, and receipt behaviour through HTML attributes and meta tags.
 
 ---
 
@@ -90,7 +90,7 @@ Market-sensitive starter copy is also a contract surface. If the campaign is cou
 
 Before making any changes that touch cart, checkout, upsells, or SDK wiring, read:
 
-- **Official docs:** https://developers.nextcommerce.com/docs/campaigns/campaign-cart/
+- **Official docs:** https://cart-sdk.nextcommerce.com/latest/ — generated from the SDK source and versioned: `/latest/` tracks the newest release, `/v<sdk_version>/` (e.g. `https://cart-sdk.nextcommerce.com/v0.4.40/`) matches the version pinned in `campaigns.json`.
 - **SDK source:** https://github.com/NextCommerceCo/campaign-cart
 
 The docs are the source of truth for SDK behaviour. Do not invent `data-next-*` attribute names or values — only use what is documented.
@@ -146,7 +146,7 @@ Registers every campaign. The `campaign` object in Liquid templates comes from h
   "my-campaign": {
     "name": "My Campaign",
     "entry_url": "presell",
-    "sdk_version": "0.4.38",
+    "sdk_version": "0.4.40",
     "store_name": "Acme Store",
     "store_url": "https://acme.com",
     "store_phone": "1-800-555-0100",
@@ -168,7 +168,7 @@ The top-level key is the campaign slug. Add any additional key to a campaign ent
 
 **`entry_url`** — optional. The page slug `npm run dev` opens in the browser (e.g. `"presell"`). Omit to use the kit default.
 
-**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.38"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
+**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.40"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
 
 **Per-campaign storage scope (SDK 0.4.34+)** — the SDK scopes cart/funnel/voucher storage per campaign automatically. The scope is a hash of the API key plus a **base-path token derived from page depth**: on a page **two or more** path segments deep (`/hu/checkout/`), the token is the first segment (`hu`); on a page **zero or one** segment deep (`/`, `/hu/`, `/checkout/`), the token is empty — the scope hashes the API key alone. The kit's `/<slug>/<page>/` URL shape is consistently two segments deep, so every page of a campaign derives the same scope with no extra config. The layout that breaks the derivation is a funnel that **mixes those depth buckets** — e.g. a landing page at `/hu/` (one segment → empty token) with its checkout at `/hu/checkout` (two segments → token `hu`) — which resolves to two different scopes and silently drops the cart mid-funnel (no build or console error). If you deploy a funnel shaped like that, declare the scope explicitly with `window.nextConfig.storageScope` (in `config.js`, which loads before the SDK) or `<meta name="next-storage-scope" content="...">` — the declared value must be identical on every page of the funnel.
 
@@ -536,17 +536,25 @@ The SDK is controlled entirely through HTML attributes. Do not write JavaScript 
 ```html
 <form data-next-checkout="form">
   <input data-next-checkout-field="email" type="email">
-  <input data-next-checkout-field="firstName" type="text">
-  <input data-next-checkout-field="lastName" type="text">
-  <input data-next-checkout-field="phone" type="tel">
+  <input data-next-checkout-field="fname" type="text">
+  <input data-next-checkout-field="lname" type="text">
+  <input data-next-checkout-field="phone" type="tel" name="phone" autocomplete="tel">
   <!-- address fields -->
   <input data-next-checkout-field="address1" type="text">
   <input data-next-checkout-field="city" type="text">
   <select data-next-checkout-field="country"></select>
   <select data-next-checkout-field="province"></select>
-  <input data-next-checkout-field="zip" type="text">
+  <input data-next-checkout-field="postal" type="text">
 </form>
 ```
+
+Field names are the SDK's, not camelCase: `fname` / `lname` (SDK 0.4.39+ also accepts `first_name` / `last_name`, the orders-API names), `postal` (not `zip`). The starter templates write the address inputs by hand, as above; SDK 0.4.39+ deprecates that in favour of `<div data-next-address="shipping"></div>` / `<div data-next-address="billing"></div>`, which build each country's fields from its address rules. Hand-written inputs still work — see the SDK's [checkout page guide — Contact and address](https://cart-sdk.nextcommerce.com/latest/pages/checkout-page/#contact-and-address) before migrating.
+
+**SDK 0.4.39+ checkout behaviour (templates pin 0.4.40):**
+- **Phone field** — no longer uses intl-tel-input, so there is no `.iti` / `.iti__*` markup and CSS targeting it matches nothing. The SDK formats the number in the country's mask as the shopper types (`(415) 555-2671`), shows a flag `<img class="next-phone-flag">` inside the input's right edge (it follows the country select), and sends E.164 to the API. Restyle with `.next-phone-field` (the input's parent), `.next-phone-flag`, `.next-phone-input`. The SDK replaces the input's `placeholder` with `Phone*` / `Phone (Optional)`. There is no public getter for the E.164 value — page JS reading `input.value` gets the national mask (the shared analytics forwarder accounts for this).
+- **Content-Security-Policy** — country lists, address/phone rules, states and the detected country/currency come from `i18n-rules.nextcommerce.com`. A page that sets a CSP must allow that host in `connect-src` **and** `img-src` (the flag). The templates set no CSP.
+- **Enter** in a checkout field moves to the next field; only the submit button places the order. **Emoji** are rejected in every field.
+- A `required` phone is enforced from `data-next-checkout-field="phone"` alone (before 0.4.39 it also needed `name="phone"`).
 
 ### Prospect cart (abandoned cart capture)
 
@@ -588,7 +596,7 @@ Phone field is discovered via `data-next-checkout-field="phone"` → `input[name
 <span data-next-display="cart.savings"></span>
 ```
 
-**SDK 0.4.x:** `data-next-display="cart.discountCode"` is **not** wired in the cart-summary display resolver (Known #10 / BS-014). Use `data-next-discounts="voucher"` + `{discount.description}` to show the code string, `{discount.name}` for the display label. For bundle-line and summary tokens, use the [Campaign Cart SDK docs](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) and bundle selector reference in the [campaign-cart](https://github.com/NextCommerceCo/campaign-cart) repo as needed.
+**SDK 0.4.x:** `data-next-display="cart.discountCode"` is **not** wired in the cart-summary display resolver (Known #10 / BS-014). Use `data-next-discounts="voucher"` + `{discount.description}` to show the code string, `{discount.name}` for the display label. For bundle-line and summary tokens, use the [Campaign Cart SDK docs](https://cart-sdk.nextcommerce.com/latest/) and bundle selector reference in the [campaign-cart](https://github.com/NextCommerceCo/campaign-cart) repo as needed.
 
 ### Bundle tier display (`data-next-bundle-display`)
 
@@ -720,7 +728,7 @@ Live summary panel — updates on tier change, coupon apply, and bump toggle. Us
 </div>
 ```
 
-Key token semantics (0.4.11+): `{item.price}` / `{item.originalPrice}` = **line totals** (qty × price); `{item.unitPrice}` / `{item.originalUnitPrice}` = **per-unit**. `{item.hasDiscount}` returns `"show"` or `"hide"` as a CSS class value. Cross-check any additional `{item.*}` / `{line.*}` names against the SDK version you pin in `campaigns.json` — the [official docs](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) track supported summary tokens.
+Key token semantics (0.4.11+): `{item.price}` / `{item.originalPrice}` = **line totals** (qty × price); `{item.unitPrice}` / `{item.originalUnitPrice}` = **per-unit**. `{item.hasDiscount}` returns `"show"` or `"hide"` as a CSS class value. Cross-check any additional `{item.*}` / `{line.*}` names against the SDK version you pin in `campaigns.json` — the [official docs](https://cart-sdk.nextcommerce.com/latest/) track supported summary tokens.
 
 ### Line-item properties — personalization (SDK 0.4.26+; attributes renamed in 0.4.27)
 
@@ -984,7 +992,7 @@ Elements outside `<template>` render immediately and update in-place via `data-n
 
 **`cart.currency` node:** always leave empty — the SDK fills it. A hardcoded `"USD"` literal flashes before being overwritten.
 
-See the [Campaign Cart SDK documentation](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) for supported display paths, `data-next-format`, and cart-summary behavior (including avoiding flash on currency nodes).
+See the [Campaign Cart SDK documentation](https://cart-sdk.nextcommerce.com/latest/) for supported display paths, `data-next-format`, and cart-summary behavior (including avoiding flash on currency nodes).
 
 ---
 

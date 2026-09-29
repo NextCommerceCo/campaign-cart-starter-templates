@@ -1,6 +1,6 @@
 # Campaign Cart Starter Templates
 
-Starter templates for building headless campaign funnels using **[next-campaign-page-kit](https://github.com/NextCommerceCo/next-campaign-page-kit)** and the [Campaign Cart SDK](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) by NextCommerce.
+Starter templates for building headless campaign funnels using **[next-campaign-page-kit](https://github.com/NextCommerceCo/next-campaign-page-kit)** and the [Campaign Cart SDK](https://cart-sdk.nextcommerce.com/latest/) by NextCommerce.
 
 
 ## Getting started
@@ -23,7 +23,7 @@ npx campaign-init
 2. Asks for your **campaign name** (display) and **slug** (URL path, e.g. `/my-campaign/`)
 3. Downloads only the chosen template's `src/<slug>/` files into your project
 4. Adds the matching entry to your `_data/campaigns.json` under your slug
-5. Optionally writes your [Campaigns App API key](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/) to `assets/config.js`
+5. Optionally writes your [Campaigns App API key](https://developers.nextcommerce.com/docs/campaigns) to `assets/config.js`
 
 Then start developing:
 
@@ -151,7 +151,7 @@ For other AI tools: Cursor loads rules from `.cursor/rules/`, Windsurf from `.wi
 
 ## SDK documentation
 
-- [Official docs](https://developers.nextcommerce.com/docs/campaigns/campaign-cart/)
+- [Official docs](https://cart-sdk.nextcommerce.com/latest/)
 - [SDK source](https://github.com/NextCommerceCo/campaign-cart)
 
 ## Template verification evidence
