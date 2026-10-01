@@ -837,6 +837,10 @@ Starter `bump-check01.html` partials expose three pricing args:
 
 Migration note for existing cloned campaigns: starter bumps now default to a single visible sale price row. Pass `show_compare_price=true` to restore the struck `originalUnitPrice` row for bumps that should visibly compare against a prior price.
 
+#### Order-bump upsell flag
+
+Every starter bump include (`bump-check01.html`, `bump-check02.html`, `bump-check03.html`, `bump-switch01.html`) takes `is_upsell`, a bool that defaults to `true`. The default is deliberate: the bump card renders `data-next-is-upsell="true"`, so an accepted bump is billed as an upsell line on the initial order. Pass `is_upsell=false` to the `campaign_include` when a bump (a guarantee or protection add-on, say) should stay a plain line on the initial order.
+
 Shared checkout templates also include `bump-check03.html`, an unsynced product-card bump for a single add-on offer (opt-in quantity sync via `order_bump.check03.sync_quantity`).
 
 **Two bump slots on Apollo and Apollo MV:** `selector_order_bump_variant` controls the check03 bump immediately below the bundle/MV selector (`"check03"` or `"none"`). `order_bump_variant` controls only the later `.order-bumps` form-section slot — do not use it to mean "all bumps on the page." On other families, select check03 with `order_bump_variant: "check03"` or include the partial directly when a checkout should show more than one bump.
