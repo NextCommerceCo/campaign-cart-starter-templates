@@ -10,7 +10,7 @@
     title:               string, default "Order Bump Title".
     description_prefix:  string before the SDK price display.
     show_unit_price:     bool, default true. Shows total + unit price when true.
-    is_upsell:           bool, default true (deliberate default). Renders data-next-is-upsell="true", so the bump is billed as an upsell line on the initial order. Pass false to keep the bump as a plain line on the initial order.
+    is_upsell:           bool, default true (deliberate). data-next-is-upsell flag; false keeps the bump a plain line on the initial order.
   next_sdk_owns:
     - data-next-package-toggle
     - data-next-toggle-card

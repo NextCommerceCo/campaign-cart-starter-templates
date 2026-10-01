@@ -25,7 +25,7 @@
     show_per_unit_price:  bool, LEGACY. Render Option A row (unitPrice/ea, plus originalUnitPrice/ea only when show_compare_price=true).
     show_line_total_price:bool, LEGACY. Render Option B row (originalPrice + price). Only honored when
                         pricing_mode is not set and at least one legacy bool is passed explicitly.
-    is_upsell:          bool, default true (deliberate default). Renders data-next-is-upsell="true", so the bump is billed as an upsell line on the initial order. Pass false to keep the bump as a plain line on the initial order.
+    is_upsell:          bool, default true (deliberate). data-next-is-upsell flag; false keeps the bump a plain line on the initial order.
   next_sdk_owns:
     - data-next-package-toggle
     - data-next-toggle-card
