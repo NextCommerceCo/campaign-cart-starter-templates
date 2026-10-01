@@ -1,6 +1,6 @@
 {% comment %}
   next_component: order-bump-card
-  next_version: 1.1.0
+  next_version: 1.2.0
   next_sdk_min: 0.4.x
   next_purpose: Checkbox-style pre-purchase order bump.
   next_params:
@@ -25,6 +25,7 @@
     show_per_unit_price:  bool, LEGACY. Render Option A row (unitPrice/ea, plus originalUnitPrice/ea only when show_compare_price=true).
     show_line_total_price:bool, LEGACY. Render Option B row (originalPrice + price). Only honored when
                         pricing_mode is not set and at least one legacy bool is passed explicitly.
+    is_upsell:          bool, default true (deliberate default). Renders data-next-is-upsell="true", so the bump is billed as an upsell line on the initial order. Pass false to keep the bump as a plain line on the initial order.
   next_sdk_owns:
     - data-next-package-toggle
     - data-next-toggle-card
@@ -38,6 +39,7 @@
     - Keep data-next-package-sync only when the bump should scale with main quantity.
 {% endcomment %}
 {% assign bump = order_bump.check01 -%}
+{% if is_upsell == nil %}{% assign is_upsell = true %}{% endif -%}
 {% assign pkg_id = package_id | default: packages.prepurchase_1 | default: bump.package_id | default: 7 -%}
 {% assign sync_qty = sync_quantity | default: bump.sync_quantity | default: packages.main_package | default: 1 -%}
 {% assign b_title = bump_title | default: bump.title | default: 'Order Bump Title' -%}
@@ -65,7 +67,7 @@
      Option B (line total, scales): originalPrice + price — multiplies with data-next-package-sync qty {% endcomment %}
 <div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="check01" data-next-await="">
   <div data-next-package-toggle>
-    <div class="bump-card" data-next-toggle-card data-next-is-upsell="true" data-next-package-sync="{{ sync_qty }}" data-next-package-id="{{ pkg_id }}">
+    <div class="bump-card" data-next-toggle-card{% if is_upsell %} data-next-is-upsell="true"{% endif %} data-next-package-sync="{{ sync_qty }}" data-next-package-id="{{ pkg_id }}">
       {% comment %} Bump header — visual only, whole card is the toggle target {% endcomment %}
       <div class="bump__header-left">
         <div class="bump__header-content">

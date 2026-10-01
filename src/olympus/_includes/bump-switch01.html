@@ -1,6 +1,6 @@
 {% comment %}
   next_component: order-bump-card
-  next_version: 1.1.0
+  next_version: 1.2.0
   next_sdk_min: 0.4.18
   next_purpose: Toggle-switch pre-purchase order bump.
   next_params:
@@ -10,6 +10,7 @@
     bump_title:          string, default "Order Bump Title".
     description_prefix:  string before the SDK price display.
     show_unit_price:     bool, default true. Shows total + unit price when true.
+    is_upsell:           bool, default true (deliberate default). Renders data-next-is-upsell="true", so the bump is billed as an upsell line on the initial order. Pass false to keep the bump as a plain line on the initial order.
   next_sdk_owns:
     - data-next-package-toggle
     - data-next-toggle-card
@@ -32,13 +33,14 @@
     - cart-summary (will list the bump as an additional line)
 {% endcomment %}
 {% assign bump = order_bump.switch01 -%}
+{% if is_upsell == nil %}{% assign is_upsell = true %}{% endif -%}
 {% assign pkg_id = package_id | default: bump.package_id | default: packages.prepurchase_2 | default: 9 -%}
 {% assign sw_title = bump_title | default: bump.title | default: 'Order Bump Title' -%}
 {% assign sw_desc = description_prefix | default: bump.description_prefix | default: 'Order bump description before price' -%}
 {% if show_unit_price == nil and bump.show_unit_price == nil %}{% assign show_unit = true %}{% elsif show_unit_price != nil %}{% assign show_unit = show_unit_price %}{% else %}{% assign show_unit = bump.show_unit_price %}{% endif -%}
 <div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="switch" data-next-await="">
   <div data-next-package-toggle>
-    <div class="bump-card bump-card--switch" data-next-toggle-card data-next-is-upsell="true" data-next-package-id="{{ pkg_id }}">
+    <div class="bump-card bump-card--switch" data-next-toggle-card{% if is_upsell %} data-next-is-upsell="true"{% endif %} data-next-package-id="{{ pkg_id }}">
       <div class="bump__header-left bump__head--switch">
         <div class="bump__header-content bump__head-inner">
           <span class="bump__title">{{ sw_title }}</span>
