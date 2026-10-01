@@ -3,7 +3,7 @@
   next_params:
     package_id: number, default 77 (demo add-on). data-next-package-id (the bump's package). Also settable via order_bump.check01.package_id.
     product_sync: number|false, default 400 (demo "T Shirt" product_id). data-next-product-sync — sums qty across every variant of the product (see comment below). Set false to disable sync. Also settable via order_bump.check01.product_sync.
-    show_compare_price: bool, default false. Explicitly render struck originalUnitPrice in Option A.
+    show_compare_price: bool, default false. Explicitly render struck originalUnitPrice in Option A; it shows only while the SDK reports a discount (hasDiscount).
     show_per_unit_price: bool, default true. Render Option A row (unitPrice/ea).
     show_line_total_price: bool, default false. Render Option B row (originalPrice + price).
     is_upsell: bool, default true (deliberate). data-next-is-upsell flag; false keeps the bump a plain line on the initial order.
@@ -52,14 +52,14 @@
               {% if b_unit %}
               {% comment %} Option A: per-unit pricing — stable across tier changes (SDK 0.4.14+) {% endcomment -%}
               <div class="bump__price-row">
-                {% if b_compare %}<div class="bump__price-unit"><span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span></div>{% endif %}
+                {% if b_compare %}<div class="bump__price-unit" data-next-toggle-display="hasDiscount"><span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span></div>{% endif %}
                 <div class="bump__price-unit"><span data-next-toggle-display="unitPrice" class="bump__price-sale">--</span><span class="text-xl">/ea</span></div>
               </div>
               {% endif %}
               {% if b_line_total %}
               {% comment %} Option B: line total pricing — scales with synced qty {% endcomment -%}
               <div class="bump__price-row">
-                <div data-next-toggle-display="originalPrice" class="bump__price-reg">--</div>
+                <div data-next-toggle-display="hasDiscount"><div data-next-toggle-display="originalPrice" class="bump__price-reg">--</div></div>
                 <div data-next-toggle-display="price" class="bump__price-total">--</div>
               </div>
               {% endif %}
