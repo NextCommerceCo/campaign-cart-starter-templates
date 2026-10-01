@@ -86,11 +86,22 @@
 {%- assign media_align = layout.media_align | default: 'center' -%}
 {%- assign boxed = true -%}
 {%- if layout.boxed == false -%}{%- assign boxed = false -%}{%- endif -%}
-{%- comment -%} Copy tokens for upsell/copy.html — every span is built from the resolved ids above. {%- endcomment -%}
+{%- comment -%} Copy tokens for upsell/copy.html — every span is built from the resolved ids above. Copy renders
+     outside the offer wrapper (the hero, the closing card), where no data-next-package-id ancestor scopes the
+     bare package.* paths, so the single/no-voucher tokens name the package explicitly (package.<id>.*). {%- endcomment -%}
+{%- if price_is_scoped -%}
+  {%- assign tok_price_path = 'package.' | append: package_id | append: '.price' -%}
+  {%- assign tok_compare_path = 'package.' | append: package_id | append: '.price_retail' -%}
+  {%- assign tok_pct_path = 'package.' | append: package_id | append: '.savingsPercentage' -%}
+{%- else -%}
+  {%- assign tok_price_path = price_path -%}
+  {%- assign tok_compare_path = compare_path -%}
+  {%- assign tok_pct_path = pct_path -%}
+{%- endif -%}
 {%- capture tok_package_name -%}<span data-next-display="{{ package_name_path }}">Product</span>{%- endcapture -%}
-{%- capture tok_price -%}<span data-next-display="{{ price_path }}" data-next-format="currency">$0.00</span>{%- endcapture -%}
-{%- capture tok_compare_price -%}<span data-next-display="{{ compare_path }}" data-next-format="currency">$0.00</span>{%- endcapture -%}
-{%- capture tok_discount -%}<span data-next-display="{{ pct_path }}" data-next-format="percentage">0%</span>{%- endcapture -%}
+{%- capture tok_price -%}<span data-next-display="{{ tok_price_path }}" data-next-format="currency">$0.00</span>{%- endcapture -%}
+{%- capture tok_compare_price -%}<span data-next-display="{{ tok_compare_path }}" data-next-format="currency">$0.00</span>{%- endcapture -%}
+{%- capture tok_discount -%}<span data-next-display="{{ tok_pct_path }}" data-next-format="percentage">0%</span>{%- endcapture -%}
 {%- if upsell_type == 'tier-cards' or upsell_type == 'tier-pills' or upsell_type == 'mv' -%}
   {%- capture tok_price_1x -%}<span data-next-display="bundle.{{ display_selector_id }}.price" data-next-format="currency">$0.00</span>{%- endcapture -%}
   {%- capture tok_discount_1x -%}<span data-next-display="bundle.{{ display_selector_id }}.discountPercentage" data-next-format="percentage">0%</span>{%- endcapture -%}
