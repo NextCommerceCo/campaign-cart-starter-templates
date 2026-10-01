@@ -839,7 +839,7 @@ Migration note for existing cloned campaigns: starter bumps now default to a sin
 
 #### Order-bump upsell flag
 
-Every starter bump include (`bump-check01.html`, `bump-check02.html`, `bump-check03.html`, `bump-switch01.html`) takes `is_upsell`, a bool that defaults to `true`. The default is deliberate: the bump card renders `data-next-is-upsell="true"`, so an accepted bump is billed as an upsell line on the initial order. Pass `is_upsell=false` to the `campaign_include` when a bump (a guarantee or protection add-on, say) should stay a plain line on the initial order.
+Every starter bump include (`bump-check01.html`, `bump-check02.html`, `bump-check03.html`, `bump-switch01.html`) takes `is_upsell`, a bool that defaults to `true`. The default is deliberate: the bump card renders `data-next-is-upsell="true"`, which tags the bump line as an upsell in order reports. It does not change what the customer pays. Pass `is_upsell=false` to the `campaign_include` when a bump (a guarantee or protection add-on, say) should be reported as a core line instead.
 
 Shared checkout templates also include `bump-check03.html`, an unsynced product-card bump for a single add-on offer (opt-in quantity sync via `order_bump.check03.sync_quantity`).
 
