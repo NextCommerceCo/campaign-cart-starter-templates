@@ -17,8 +17,8 @@
                         which price rows render:
                         full_price/unit_only = unitPrice/ea only (one visible price);
                         discounted/compare_at = struck originalUnitPrice + unitPrice/ea — IDENTICAL on this
-                        surface by design: data-next-toggle-display has no hasDiscount gating, so the struck
-                        original is always shown either way (compare_at semantics);
+                        surface: the struck original shows only while the SDK reports a discount
+                        (data-next-toggle-display="hasDiscount");
                         unit_total = unitPrice/ea + line total (scales with synced qty).
                         Pick the mode here — campaign CSS must never display:none price rows.
     show_compare_price:   bool, LEGACY. Explicitly include the struck originalUnitPrice in Option A; it shows only while the SDK reports a discount (hasDiscount).
@@ -101,8 +101,8 @@
               {% comment %} pricing_mode-driven price rows — never hide rows with campaign CSS; pick the mode instead {% endcomment %}
               {% case bump_pricing_mode %}
               {% when 'discounted', 'compare_at' %}
-              {% comment %} One shared branch by design: toggle-display has no hasDiscount gating, so the struck
-                   originalUnitPrice is always shown — both modes resolve to compare_at semantics here. {% endcomment %}
+              {% comment %} One shared branch: both modes render the struck originalUnitPrice, shown only while the
+                   SDK reports a discount (hasDiscount). {% endcomment %}
               <div class="bump__price-row">
                 <div class="bump__price-unit" data-next-toggle-display="hasDiscount"><span data-next-toggle-display="originalUnitPrice" class="bump__price-reg">--</span></div>
                 <div class="bump__price-unit"><span data-next-toggle-display="unitPrice" class="bump__price-sale">--</span><span class="text-xl">/ea</span></div>
