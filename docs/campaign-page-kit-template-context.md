@@ -863,6 +863,14 @@ CSS required for checkbox state (already in `next-core.css` — only add if usin
 [data-next-bump][class*="next-active"] [os-component="check"] { display: flex; }
 ```
 
+### Payment method radios (`payment-methods.html`)
+
+The shared `payment-methods.html` partial renders every method radio (credit card + PayPal/Klarna/Apple Pay/Google Pay/TWINT/Affirm/Bancontact/iDEAL/SEPA Direct Debit/Link); the SDK runtime-hides any the campaign's `available_payment_methods` can't charge, so campaign config is the source of truth. Presentation knobs (include args, or a `payment_methods` frontmatter object — include args win):
+
+- `show_<method>=false` omits a radio entirely (a deliberate presentation choice, e.g. a method already offered via the express button bar).
+- `method_order: "paypal,credit"` — comma list of method keys; radios render in this order, and methods you don't list follow in the canonical order, so a partial list works. Unknown keys are ignored.
+- `default_method: "paypal"` — which method is selected and expanded on load (default `credit`). For a non-credit default the partial ships a small inline script that applies the selection after SDK init (the SDK's startup pass otherwise snaps back to its stored credit-card default), **once per session** — an existing checkout session's state always wins. Two rules: the default must be a method the campaign reliably offers (a runtime-hidden default is ignored and the card stays selected), and PayPal / Apple Pay / Google Pay defaults re-apply only on the session's first checkout load — the SDK deliberately resets express methods to card on reload.
+
 ### Express checkout
 
 ```html
