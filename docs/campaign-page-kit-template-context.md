@@ -146,7 +146,7 @@ Registers every campaign. The `campaign` object in Liquid templates comes from h
   "my-campaign": {
     "name": "My Campaign",
     "entry_url": "presell",
-    "sdk_version": "0.4.40",
+    "sdk_version": "0.4.38",
     "store_name": "Acme Store",
     "store_url": "https://acme.com",
     "store_phone": "1-800-555-0100",
@@ -168,7 +168,7 @@ The top-level key is the campaign slug. Add any additional key to a campaign ent
 
 **`entry_url`** — optional. The page slug `npm run dev` opens in the browser (e.g. `"presell"`). Omit to use the kit default.
 
-**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.40"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
+**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.38"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
 
 **Per-campaign storage scope (SDK 0.4.34+)** — the SDK scopes cart/funnel/voucher storage per campaign automatically. The scope is a hash of the API key plus a **base-path token derived from page depth**: on a page **two or more** path segments deep (`/hu/checkout/`), the token is the first segment (`hu`); on a page **zero or one** segment deep (`/`, `/hu/`, `/checkout/`), the token is empty — the scope hashes the API key alone. The kit's `/<slug>/<page>/` URL shape is consistently two segments deep, so every page of a campaign derives the same scope with no extra config. The layout that breaks the derivation is a funnel that **mixes those depth buckets** — e.g. a landing page at `/hu/` (one segment → empty token) with its checkout at `/hu/checkout` (two segments → token `hu`) — which resolves to two different scopes and silently drops the cart mid-funnel (no build or console error). If you deploy a funnel shaped like that, declare the scope explicitly with `window.nextConfig.storageScope` (in `config.js`, which loads before the SDK) or `<meta name="next-storage-scope" content="...">` — the declared value must be identical on every page of the funnel.
 
@@ -550,7 +550,7 @@ The SDK is controlled entirely through HTML attributes. Do not write JavaScript 
 
 Field names are the SDK's, not camelCase: `fname` / `lname` (SDK 0.4.39+ also accepts `first_name` / `last_name`, the orders-API names), `postal` (not `zip`). The starter templates write the address inputs by hand, as above; SDK 0.4.39+ deprecates that in favour of `<div data-next-address="shipping"></div>` / `<div data-next-address="billing"></div>`, which build each country's fields from its address rules. Hand-written inputs still work — see the SDK's [checkout page guide — Contact and address](https://cart-sdk.nextcommerce.com/latest/pages/checkout-page/#contact-and-address) before migrating.
 
-**SDK 0.4.39+ checkout behaviour (templates pin 0.4.40):**
+**SDK 0.4.39+ checkout behaviour (templates pin 0.4.38 until campaign-cart#110 is fixed; this applies once they move to 0.4.39+):**
 - **Phone field** — no longer uses intl-tel-input, so there is no `.iti` / `.iti__*` markup and CSS targeting it matches nothing. The SDK formats the number in the country's mask as the shopper types (`(415) 555-2671`), shows a flag `<img class="next-phone-flag">` inside the input's right edge (it follows the country select), and sends E.164 to the API. Restyle with `.next-phone-field` (the input's parent), `.next-phone-flag`, `.next-phone-input`. The SDK replaces the input's `placeholder` with `Phone*` / `Phone (Optional)`. There is no public getter for the E.164 value — page JS reading `input.value` gets the national mask (the shared analytics forwarder accounts for this).
 - **Content-Security-Policy** — country lists, address/phone rules, states and the detected country/currency come from `i18n-rules.nextcommerce.com`. A page that sets a CSP must allow that host in `connect-src` **and** `img-src` (the flag). The templates set no CSP.
 - **Enter** in a checkout field moves to the next field; only the submit button places the order. **Emoji** are rejected in every field.
