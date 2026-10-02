@@ -6,7 +6,7 @@
   next_params:
     payment_methods:    optional frontmatter object for method_order and default_method (include args win).
     method_order:       comma list of method keys (credit, paypal, klarna, apple_pay, google_pay, twint, affirm, bancontact, ideal, sepa_debit, link), default the canonical order above. Radios render in this order; methods NOT listed follow in canonical order, so a partial list works ("paypal" alone puts PayPal first). Unknown keys are ignored.
-    default_method:     method key, default "credit". Which method renders checked + next-selected + expanded on load. MUST name a method that is rendered (not show_<method>=false) AND that the campaign reliably offers — the SDK runtime-hides radios absent from available_payment_methods (the card never is), and a hidden default leaves no visible selection until the customer picks one.
+    default_method:     method key, default "credit". Which method renders checked + next-selected + expanded on load. Whitelisted against the known method keys — an unknown, empty, or malformed value falls back to credit. MUST name a method that is rendered (not show_<method>=false) AND that the campaign reliably offers — the SDK runtime-hides radios absent from available_payment_methods (the card never is), and a hidden default leaves no visible selection until the customer picks one.
     show_paypal:        bool, default true. Pass false to omit the PayPal radio + form.
     show_klarna:        bool, default true. Pass false to omit the Klarna radio + form.
     show_apple_pay:     bool, default true. Pass false to omit the Apple Pay radio + form.
@@ -60,6 +60,14 @@
 {% assign pm = payment_methods -%}
 {% assign pm_order = method_order | default: pm.method_order | default: 'credit,paypal,klarna,apple_pay,google_pay,twint,affirm,bancontact,ideal,sepa_debit,link' -%}
 {% assign pm_default = default_method | default: pm.default_method | default: 'credit' -%}
+{% comment %} Whitelist the default against the known method keys: an unknown, empty, or malformed value
+   (including anything that could break out of the inline script's selector string below) falls back to
+   credit — the same graceful degradation as a runtime-hidden default. {% endcomment -%}
+{% assign pm_default = pm_default | strip | downcase -%}
+{% capture pm_default_probe %}|{{ pm_default }}|{% endcapture -%}
+{% unless '|credit|paypal|klarna|apple_pay|google_pay|twint|affirm|bancontact|ideal|sepa_debit|link|' contains pm_default_probe -%}
+{% assign pm_default = 'credit' -%}
+{% endunless -%}
 {% assign pm_tokens = pm_order | split: ',' -%}
 {% capture pm_listed %}{% for pm_t in pm_tokens %}|{{ pm_t | strip }}{% endfor %}|{% endcapture -%}
 {% capture pm_block_credit -%}
@@ -541,9 +549,15 @@
     if (wrap.classList.contains('next-hidden') || wrap.offsetParent === null) return;
     radio.click();
   };
-  /* Inline body scripts always parse before SDK init completes (init awaits the campaign API),
-     so a listener is sufficient — same pattern as js/payment-logos.js. */
-  window.addEventListener('next:initialized', apply, { once: true });
+  /* Normally this inline script parses before SDK init completes (init awaits the campaign API),
+     so the next:initialized listener fires — same pattern as js/payment-logos.js. But if init has
+     already happened (e.g. cached campaign data), the event is gone; getCampaignData() returning
+     data is the proof init finished AND the radio listeners are bound, so applying immediately is
+     safe. Never apply before init: the startup pass would snap the selection back to the store. */
+  var initDone = false;
+  try { initDone = !!(window.next && window.next.getCampaignData && window.next.getCampaignData()); } catch (e) {}
+  if (initDone) { apply(); }
+  else { window.addEventListener('next:initialized', apply, { once: true }); }
 })();
 </script>
 {% endif -%}
