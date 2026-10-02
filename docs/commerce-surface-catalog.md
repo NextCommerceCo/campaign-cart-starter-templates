@@ -191,9 +191,10 @@ Some shared includes legitimately differ across families by design. These lineag
 
 | Include | Lineages (families that share one body) |
 |---|---|
-| `bump-check01.html` | **olympus + apollo** · **mv-trio** (mv-single + apollo-mv + mv-two; uses `data-next-product-sync` for variant-safe qty sync) · **shop-pair** (shop-single + shop-three) · **demeter** |
-| `bump-check03.html` | **all eight checkout template families** (shared unsynced product-card bump with optional PackageToggle line-item property field) |
-| `bump-switch01.html` | **demeter** · **rest** (olympus, apollo, mv-trio, shop-pair) |
+| `bump-check01.html` | **all eight** — GENERATED from `_shared/checkout/` since #194 (byte-identical, `lint:shared`-enforced). Superset contract: `pricing_mode` + legacy `show_*` bools; `package_sync`/`sync_quantity` AND `product_sync` (product_id match for MV mains, wins when both set); per-family demo values live in page frontmatter |
+| `bump-check02.html` | **all eight** — GENERATED from `_shared/checkout/` since #194 (byte-identical, `lint:shared`-enforced) |
+| `bump-check03.html` | **all eight** — GENERATED from `_shared/checkout/` since #194 (byte-identical, `lint:shared`-enforced); unsynced product-card bump with optional PackageToggle line-item property field |
+| `bump-switch01.html` | **all eight** — GENERATED from `_shared/checkout/` since #194 (byte-identical, `lint:shared`-enforced); intentionally never quantity-synced |
 | `checkout-header.html` | **olympus + mv-pair** · **apollo-pair** (apollo + apollo-mv; trust-bar layout, CSS in next-core) · **demeter** · **shop-pair** (`checkout-header--lg` top bar) |
 | `cart-summary03.html` | **apollo + olympus** (annotated reference) · **mv-trio + shop-pair** (shared body) · **demeter** (parameterized: heading/subtitle/feature_package) |
 | `cart-summary04.html` | **olympus + apollo + demeter + mv-trio** · **shop-pair** (shop structural rewrite, 188 vs 143 lines) |

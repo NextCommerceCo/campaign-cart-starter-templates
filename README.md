@@ -90,7 +90,9 @@ Every checkout template includes `presell.html` and `landing.html` — a full pr
 
 ## Migration notes
 
-Starter `bump-check01.html` order bumps now default to a single visible sale price row. Existing cloned campaigns that want the struck `originalUnitPrice` row should pass `show_compare_price=true`; leave it unset when the bump should render only the current `unitPrice`/ea price.
+Starter `bump-check01.html` order bumps default to a single visible sale price row. Existing cloned campaigns that want the struck `originalUnitPrice` row should set `pricing_mode: discounted` (the legacy `show_compare_price=true` still works); leave both unset when the bump should render only the current `unitPrice`/ea price.
+
+All four bump partials (`bump-check01/02/03.html`, `bump-switch01.html`) are now a single canonical source in `_shared/checkout/_includes/`, generated into every family by `npm run sync:shared` — edit the `_shared` source, never a family copy.
 
 ### Template configuration (Apollo and MV)
 

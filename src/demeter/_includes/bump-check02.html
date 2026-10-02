@@ -1,28 +1,46 @@
+{%- comment -%} GENERATED from _shared/checkout/_includes/bump-check02.html — edit the source and run `npm run sync:shared`. Do not edit this copy. {%- endcomment -%}
 {% comment %}
   next_component: order-bump-card
-  next_version: 1.1.0
+  next_version: 1.2.0
   next_sdk_min: 0.4.18
   next_purpose: Pre-purchase add-on offer rendered as an expanded checkbox-style card.
   next_params:
     packages:             object, optional. Dict with main_package, prepurchase_1, prepurchase_2 keys.
-    order_bump.check02:   optional frontmatter object for package_id, sync_quantity, title, image_src, image_alt, description_prefix, description_suffix.
+    order_bump.check02:   optional frontmatter object for package_id, sync_quantity, title, image_src, image_alt, description_prefix, description_suffix, and is_upsell.
     package_id:           number, default packages.prepurchase_2 or 9.
     package_sync:         number|false, default packages.main_package or 1. Set false to disable sync.
-    is_upsell:            bool, default true.
+    is_upsell:            bool, default true (deliberate). data-next-is-upsell flag; false keeps the bump a plain line on the initial order.
   next_sdk_owns:
     - data-next-package-toggle
     - data-next-toggle-card
+    - data-next-is-upsell
+    - data-next-package-id
     - data-next-toggle-display
     - data-next-toggle-image
-    - data-next-package-sync
+    - data-next-package-sync (mirrors main bundle quantity)
     - data-next-display (package.<id>.name)
+    - data-next-await
+  next_theming:
+    classes_designer_owns: [.bump__header, .bump__header-content, .bump__checkbox, .bump__title, .bump__arrow, .bump__body, .bump__description, .bump__image]
+    css_vars_designer_owns: []
   next_dont_touch:
-    - data-next-toggle-display="price" is the selected bump line total.
+    - package_id and package_sync define the add-on package and synced quantity behavior
+    - data-next-toggle-display="price" is the selected bump line total
+    - data-next-display="package.<id>.name" is package-scoped display syntax, not Liquid
+  next_variants:
+    - check01 (checkbox card)
+    - check02 (this; expanded checkbox layout)
+    - check03 (product-card bump)
+    - switch01 (toggle-switch UI; same SDK contract)
+  next_related:
+    - bundle-selector (the main cart this bump augments)
+    - cart-summary (will list the bump as an additional line)
 {% endcomment %}
 {% assign bump = order_bump.check02 -%}
 {% assign pkg_id = package_id | default: bump.package_id | default: packages.prepurchase_2 | default: 9 -%}
 {% if package_sync == nil and bump.sync_quantity == nil %}{% assign sync_qty = packages.main_package | default: 1 %}{% elsif package_sync != nil %}{% assign sync_qty = package_sync %}{% else %}{% assign sync_qty = bump.sync_quantity %}{% endif -%}
-{% if is_upsell == nil %}{% assign is_upsell = true %}{% endif -%}
+{% comment %} Resolve into a private local — never assign the public arg name: campaign_include shares scope, so a public assign here would leak into sibling bumps on the page and defeat their own frontmatter fallbacks. {% endcomment -%}
+{% if is_upsell != nil %}{% assign b_is_upsell = is_upsell %}{% elsif bump.is_upsell != nil %}{% assign b_is_upsell = bump.is_upsell %}{% else %}{% assign b_is_upsell = true %}{% endif -%}
 {% assign b_title = bump_title | default: bump.title | default: 'Order Bump Title' -%}
 {% assign b_image_src = bump.image_src | default: 'images/icon.svg' -%}
 {% assign b_image_alt = bump.image_alt | default: '' -%}
@@ -30,7 +48,7 @@
 {% assign b_desc_suffix = bump.description_suffix | default: 'order bump description after price' -%}
 <div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="check02" data-next-await="">
   <div data-next-package-toggle>
-    <div data-next-toggle-card{% if is_upsell %} data-next-is-upsell="true"{% endif %}{% if sync_qty %} data-next-package-sync="{{ sync_qty }}"{% endif %} data-next-package-id="{{ pkg_id }}" class="next-active">
+    <div data-next-toggle-card{% if b_is_upsell %} data-next-is-upsell="true"{% endif %}{% if sync_qty %} data-next-package-sync="{{ sync_qty }}"{% endif %} data-next-package-id="{{ pkg_id }}" class="next-active">
       <div data-next-toggle="toggle" class="bump__header next-active">
         <div class="bump__header-content">
           <div class="bump__checkbox">

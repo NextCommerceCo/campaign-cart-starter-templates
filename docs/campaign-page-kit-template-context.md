@@ -828,18 +828,21 @@ Live examples are wired on the MV templates (`apollo-mv-*` flagship, `olympus-mv
 </div>
 ```
 
-#### Order-bump pricing args
+#### Order-bump pricing and sync args
 
-Starter `bump-check01.html` partials expose three pricing args:
-- `show_per_unit_price` defaults to `true` and renders the stable `unitPrice`/ea row.
-- `show_line_total_price` defaults to `false` and opts into the line-total `originalPrice + price` row.
-- `show_compare_price` defaults to `false`; set it to `true` only when the campaign deliberately wants a struck `originalUnitPrice` visible. The starter demos intentionally do not pass it, so bump previews show a single sale price.
+The starter `bump-check01.html` partial is identical in every template family (one canonical source). Pricing is declarative:
+- `pricing_mode` (include arg or `order_bump.check01.pricing_mode`): `full_price` (default — one visible `unitPrice`/ea row) · `discounted` / `compare_at` (adds the struck `originalUnitPrice`, shown only while the SDK reports a discount) · `unit_total` (`unitPrice`/ea + line total) · `unit_only`. Pick the mode — never hide price rows with campaign CSS.
+- Legacy bools still work when passed explicitly *without* `pricing_mode`: `show_per_unit_price` (default `true`, the stable `unitPrice`/ea row), `show_line_total_price` (default `false`, the line-total `originalPrice + price` row), `show_compare_price` (default `false`, the struck `originalUnitPrice`). If both styles are passed, `pricing_mode` wins and the legacy bools are ignored.
 
-Migration note for existing cloned campaigns: starter bumps now default to a single visible sale price row. Pass `show_compare_price=true` to restore the struck `originalUnitPrice` row for bumps that should visibly compare against a prior price.
+Quantity sync supports both SDK models:
+- `package_sync` / `order_bump.check01.sync_quantity` → `data-next-package-sync` (packageId match; default `packages.main_package` or 1). Right for single-package main products. Set `false` to disable sync.
+- `product_sync` / `order_bump.check01.product_sync` → `data-next-product-sync` (product_id match, SDK 0.4.25+; sums quantity across every variant of the product). Required when the main product is MV/configurable — packageId matching under-counts on variant swap. Wins over `package_sync` when both are set; `false` disables sync entirely.
+
+Migration note for existing cloned campaigns: starter bumps default to a single visible sale price row. Pass `pricing_mode='discounted'` (or legacy `show_compare_price=true`) to restore the struck `originalUnitPrice` row for bumps that should visibly compare against a prior price.
 
 #### Order-bump upsell flag
 
-Every starter bump include (`bump-check01.html`, `bump-check02.html`, `bump-check03.html`, `bump-switch01.html`) takes `is_upsell`, a bool that defaults to `true`. The default is deliberate: the bump card renders `data-next-is-upsell="true"`, which tags the bump line as an upsell in order reports. It does not change what the customer pays. Pass `is_upsell=false` to the `campaign_include` when a bump (a guarantee or protection add-on, say) should be reported as a core line instead.
+Every starter bump include (`bump-check01.html`, `bump-check02.html`, `bump-check03.html`, `bump-switch01.html`) takes `is_upsell`, a bool that defaults to `true`. The default is deliberate: the bump card renders `data-next-is-upsell="true"`, which tags the bump line as an upsell in order reports. It does not change what the customer pays. Pass `is_upsell=false` to the `campaign_include` — or set `order_bump.<variant>.is_upsell: false` in the page frontmatter — when a bump (a guarantee or protection add-on, say) should be reported as a core line instead.
 
 Shared checkout templates also include `bump-check03.html`, an unsynced product-card bump for a single add-on offer (opt-in quantity sync via `order_bump.check03.sync_quantity`).
 
