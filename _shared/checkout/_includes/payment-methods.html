@@ -1,9 +1,12 @@
 {% comment %}
   next_component: payment-method-presentation
-  next_version: 2.0.0
+  next_version: 2.1.0
   next_sdk_min: 0.4.35 (redirect payment methods; 0.4.18 for the card/PayPal/Klarna/Apple Pay/Google Pay subset)
   next_purpose: Customer-facing payment method picker (credit card + optional PayPal/Klarna/Apple Pay/Google Pay/Twint/Affirm/Bancontact/iDEAL/SEPA Direct Debit/Link) with Spreedly iframe-mounted credit card form. Includes billing-address-form via campaign_include.
   next_params:
+    payment_methods:    optional frontmatter object for method_order and default_method (include args win).
+    method_order:       comma list of method keys (credit, paypal, klarna, apple_pay, google_pay, twint, affirm, bancontact, ideal, sepa_debit, link), default the canonical order above. Radios render in this order; methods NOT listed follow in canonical order, so a partial list works ("paypal" alone puts PayPal first). Unknown keys are ignored.
+    default_method:     method key, default "credit". Which method renders checked + next-selected + expanded on load. Whitelisted against the known method keys — an unknown, empty, or malformed value falls back to credit. MUST name a method that is rendered (not show_<method>=false) AND that the campaign reliably offers — the SDK runtime-hides radios absent from available_payment_methods (the card never is), and a hidden default leaves no visible selection until the customer picks one.
     show_paypal:        bool, default true. Pass false to omit the PayPal radio + form.
     show_klarna:        bool, default true. Pass false to omit the Klarna radio + form.
     show_apple_pay:     bool, default true. Pass false to omit the Apple Pay radio + form.
@@ -53,13 +56,27 @@
     - express-checkout / express-checkout-inline (parallel express button bar surfaces)
     - submit-block (the actual submit button; lives outside this partial)
 {% endcomment %}
-<div data-next-catalog-component="payment-method-presentation" class="payment-methods">
-  <div data-next-payment-method="credit" class="payment-method next-selected">
-    <div class="payment-method__header"><label for="combo_mode_credit" combo_mode="credit" class="payment-method__label"><input type="radio" name="payment_method" id="combo_mode_credit" data-name="Combo Mode" class="payment-method__input" checked="" value="credit">
+{% comment %} ORDER + DEFAULT — resolved into private pm_* locals (campaign_include shares scope; never assign the public arg names). Each method block is captured once below, then emitted in pm_order; methods not listed follow in the canonical order, so a partial list works. {% endcomment -%}
+{% assign pm = payment_methods -%}
+{% assign pm_order = method_order | default: pm.method_order | default: 'credit,paypal,klarna,apple_pay,google_pay,twint,affirm,bancontact,ideal,sepa_debit,link' -%}
+{% assign pm_default = default_method | default: pm.default_method | default: 'credit' -%}
+{% comment %} Whitelist the default against the known method keys: an unknown, empty, or malformed value
+   (including anything that could break out of the inline script's selector string below) falls back to
+   credit — the same graceful degradation as a runtime-hidden default. {% endcomment -%}
+{% assign pm_default = pm_default | strip | downcase -%}
+{% capture pm_default_probe %}|{{ pm_default }}|{% endcapture -%}
+{% unless '|credit|paypal|klarna|apple_pay|google_pay|twint|affirm|bancontact|ideal|sepa_debit|link|' contains pm_default_probe -%}
+{% assign pm_default = 'credit' -%}
+{% endunless -%}
+{% assign pm_tokens = pm_order | split: ',' -%}
+{% capture pm_listed %}{% for pm_t in pm_tokens %}|{{ pm_t | strip }}{% endfor %}|{% endcapture -%}
+{% capture pm_block_credit -%}
+  <div data-next-payment-method="credit" class="payment-method{% if pm_default == 'credit' %} next-selected{% endif %}">
+    <div class="payment-method__header"><label for="combo_mode_credit" combo_mode="credit" class="payment-method__label"><input type="radio" name="payment_method" id="combo_mode_credit" data-name="Combo Mode" class="payment-method__input"{% if pm_default == 'credit' %} checked=""{% endif %} value="credit">
         <div class="payment-method__title">Credit Card</div>
         <div class="payment-method__icons"><img loading="lazy" src="{{ 'images/cc-visa.svg' | campaign_asset }}" alt="" class="payment-method__icon payment-method__icon--visa"><img loading="lazy" src="{{ 'images/cc_master.svg' | campaign_asset }}" alt="" class="payment-method__icon payment-method__icon--mastercard"><img loading="lazy" src="{{ 'images/cc_amex.svg' | campaign_asset }}" alt="" class="payment-method__icon payment-method__icon--amex"><img loading="lazy" src="{{ 'images/cc_discover.svg' | campaign_asset }}" alt="" class="payment-method__icon payment-method__icon--discover"></div>
       </label></div>
-    <div data-next-payment-form="credit" os-checkout-element="credit-form" os-shipping-method-same="true" class="payment-method__form payment-method__form--expanded">
+    <div data-next-payment-form="credit" os-checkout-element="credit-form" os-shipping-method-same="true" class="payment-method__form payment-method__form--{% if pm_default == 'credit' %}expanded{% else %}collapsed{% endif %}">
       <div class="payment-method__content">
         <div data-next-component="credit-error" class="next-toast-handler">
           <div class="tip1_bar is-warning">
@@ -127,13 +144,15 @@
       </div>
     </div>
   </div>
-  {% unless show_paypal == false %}
-  <div data-next-payment-method="paypal" class="payment-method">
-    <div class="payment-method__header"><label for="combo_mode_paypal" combo_mode="paypal" class="payment-method__label"><input type="radio" name="payment_method" id="combo_mode_paypal" data-name="Combo Mode" class="payment-method__input" value="paypal">
+  
+{%- endcapture %}
+{% unless show_paypal == false %}{% capture pm_block_paypal -%}
+  <div data-next-payment-method="paypal" class="payment-method{% if pm_default == 'paypal' %} next-selected{% endif %}">
+    <div class="payment-method__header"><label for="combo_mode_paypal" combo_mode="paypal" class="payment-method__label"><input type="radio" name="payment_method" id="combo_mode_paypal" data-name="Combo Mode" class="payment-method__input"{% if pm_default == 'paypal' %} checked=""{% endif %} value="paypal">
         <div class="payment-method__title">PayPal</div>
         <div class="payment-method__icons"><img loading="lazy" src="{{ 'images/paypal-logo.svg' | campaign_asset }}" alt="" class="payment-method__icon--paypal-logo"><img loading="lazy" src="{{ 'images/paypal-txt.svg' | campaign_asset }}" alt="" class="payment-method__icon--paypal-txt"></div>
       </label></div>
-    <div data-next-payment-form="paypal" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
+    <div data-next-payment-form="paypal" os-checkout-element="credit-form" class="payment-method__form payment-method__form--{% if pm_default == 'paypal' %}expanded{% else %}collapsed{% endif %}">
       <div class="payment-method__content">
         <div data-next-component="paypal-error" class="next-toast-handler">
           <div class="tip1_bar is-warning">
@@ -149,19 +168,19 @@
       </div>
     </div>
   </div>
-  {% endunless %}
-  {% unless show_klarna == false %}
-  <div data-next-payment-method="klarna" class="payment-method">
+{%- endcapture %}{% endunless %}
+{% unless show_klarna == false %}{% capture pm_block_klarna -%}
+  <div data-next-payment-method="klarna" class="payment-method{% if pm_default == 'klarna' %} next-selected{% endif %}">
     <div class="payment-method__header">
       <label for="combo_mode_klarna" combo_mode="klarna" class="payment-method__label">
-        <input type="radio" name="payment_method" id="combo_mode_klarna" data-name="Combo Mode" class="payment-method__input" value="klarna">
+        <input type="radio" name="payment_method" id="combo_mode_klarna" data-name="Combo Mode" class="payment-method__input"{% if pm_default == 'klarna' %} checked=""{% endif %} value="klarna">
         <div class="payment-method__title">Klarna - Flexible Payments</div>
         <div class="payment-method__icons">
           <img loading="lazy" src="{{ 'images/klarna-logo.svg' | campaign_asset }}" alt="" class="payment-method__icon--klarna-logo">
         </div>
       </label>
     </div>
-    <div data-next-payment-form="klarna" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
+    <div data-next-payment-form="klarna" os-checkout-element="credit-form" class="payment-method__form payment-method__form--{% if pm_default == 'klarna' %}expanded{% else %}collapsed{% endif %}">
       <div class="payment-method__content">
         <div data-next-component="klarna-error" class="next-toast-handler">
           <div class="tip1_bar is-warning">
@@ -185,19 +204,19 @@
       </div>
     </div>
   </div>
-  {% endunless %}
-  {% unless show_apple_pay == false %}
-  <div data-next-payment-method="apple_pay" class="payment-method">
+{%- endcapture %}{% endunless %}
+{% unless show_apple_pay == false %}{% capture pm_block_apple_pay -%}
+  <div data-next-payment-method="apple_pay" class="payment-method{% if pm_default == 'apple_pay' %} next-selected{% endif %}">
     <div class="payment-method__header">
       <label for="combo_mode_apple_pay" combo_mode="apple_pay" class="payment-method__label">
-        <input type="radio" name="payment_method" id="combo_mode_apple_pay" data-name="Combo Mode" class="payment-method__input" value="apple_pay">
+        <input type="radio" name="payment_method" id="combo_mode_apple_pay" data-name="Combo Mode" class="payment-method__input"{% if pm_default == 'apple_pay' %} checked=""{% endif %} value="apple_pay">
         <div class="payment-method__title">Apple Pay</div>
         <div class="payment-method__icons">
           <img loading="lazy" src="{{ 'images/apple-pay-logo.svg' | campaign_asset }}" alt="" class="payment-method__icon--apple-pay-logo">
         </div>
       </label>
     </div>
-    <div data-next-payment-form="apple_pay" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
+    <div data-next-payment-form="apple_pay" os-checkout-element="credit-form" class="payment-method__form payment-method__form--{% if pm_default == 'apple_pay' %}expanded{% else %}collapsed{% endif %}">
       <div class="payment-method__content">
         <div data-next-component="apple_pay-error" class="next-toast-handler">
           <div class="tip1_bar is-warning">
@@ -221,19 +240,19 @@
       </div>
     </div>
   </div>
-  {% endunless %}
-  {% unless show_google_pay == false %}
-  <div data-next-payment-method="google_pay" class="payment-method">
+{%- endcapture %}{% endunless %}
+{% unless show_google_pay == false %}{% capture pm_block_google_pay -%}
+  <div data-next-payment-method="google_pay" class="payment-method{% if pm_default == 'google_pay' %} next-selected{% endif %}">
     <div class="payment-method__header">
       <label for="combo_mode_google_pay" combo_mode="google_pay" class="payment-method__label">
-        <input type="radio" name="payment_method" id="combo_mode_google_pay" data-name="Combo Mode" class="payment-method__input" value="google_pay">
+        <input type="radio" name="payment_method" id="combo_mode_google_pay" data-name="Combo Mode" class="payment-method__input"{% if pm_default == 'google_pay' %} checked=""{% endif %} value="google_pay">
         <div class="payment-method__title">Google Pay</div>
         <div class="payment-method__icons">
           <img loading="lazy" src="{{ 'images/google-pay-logo.svg' | campaign_asset }}" alt="" class="payment-method__icon--google-pay-logo">
         </div>
       </label>
     </div>
-    <div data-next-payment-form="google_pay" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
+    <div data-next-payment-form="google_pay" os-checkout-element="credit-form" class="payment-method__form payment-method__form--{% if pm_default == 'google_pay' %}expanded{% else %}collapsed{% endif %}">
       <div class="payment-method__content">
         <div data-next-component="google_pay-error" class="next-toast-handler">
           <div class="tip1_bar is-warning">
@@ -257,19 +276,19 @@
       </div>
     </div>
   </div>
-  {% endunless %}
-  {% unless show_twint == false %}
-  <div data-next-payment-method="twint" class="payment-method">
+{%- endcapture %}{% endunless %}
+{% unless show_twint == false %}{% capture pm_block_twint -%}
+  <div data-next-payment-method="twint" class="payment-method{% if pm_default == 'twint' %} next-selected{% endif %}">
     <div class="payment-method__header">
       <label for="combo_mode_twint" combo_mode="twint" class="payment-method__label">
-        <input type="radio" name="payment_method" id="combo_mode_twint" data-name="Combo Mode" class="payment-method__input" value="twint">
+        <input type="radio" name="payment_method" id="combo_mode_twint" data-name="Combo Mode" class="payment-method__input"{% if pm_default == 'twint' %} checked=""{% endif %} value="twint">
         <div class="payment-method__title">TWINT</div>
         <div class="payment-method__icons">
           <img loading="lazy" src="{{ 'images/twint-logo.svg' | campaign_asset }}" alt="" class="payment-method__icon--twint-logo">
         </div>
       </label>
     </div>
-    <div data-next-payment-form="twint" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
+    <div data-next-payment-form="twint" os-checkout-element="credit-form" class="payment-method__form payment-method__form--{% if pm_default == 'twint' %}expanded{% else %}collapsed{% endif %}">
       <div class="payment-method__content">
         <div data-next-component="twint-error" class="next-toast-handler">
           <div class="tip1_bar is-warning">
@@ -293,19 +312,19 @@
       </div>
     </div>
   </div>
-  {% endunless %}
-  {% unless show_affirm == false %}
-  <div data-next-payment-method="affirm" class="payment-method">
+{%- endcapture %}{% endunless %}
+{% unless show_affirm == false %}{% capture pm_block_affirm -%}
+  <div data-next-payment-method="affirm" class="payment-method{% if pm_default == 'affirm' %} next-selected{% endif %}">
     <div class="payment-method__header">
       <label for="combo_mode_affirm" combo_mode="affirm" class="payment-method__label">
-        <input type="radio" name="payment_method" id="combo_mode_affirm" data-name="Combo Mode" class="payment-method__input" value="affirm">
+        <input type="radio" name="payment_method" id="combo_mode_affirm" data-name="Combo Mode" class="payment-method__input"{% if pm_default == 'affirm' %} checked=""{% endif %} value="affirm">
         <div class="payment-method__title">Affirm - Flexible Payments</div>
         <div class="payment-method__icons">
           <img loading="lazy" src="{{ 'images/affirm-logo.svg' | campaign_asset }}" alt="" class="payment-method__icon--affirm-logo">
         </div>
       </label>
     </div>
-    <div data-next-payment-form="affirm" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
+    <div data-next-payment-form="affirm" os-checkout-element="credit-form" class="payment-method__form payment-method__form--{% if pm_default == 'affirm' %}expanded{% else %}collapsed{% endif %}">
       <div class="payment-method__content">
         <div data-next-component="affirm-error" class="next-toast-handler">
           <div class="tip1_bar is-warning">
@@ -329,19 +348,19 @@
       </div>
     </div>
   </div>
-  {% endunless %}
-  {% unless show_bancontact == false %}
-  <div data-next-payment-method="bancontact" class="payment-method">
+{%- endcapture %}{% endunless %}
+{% unless show_bancontact == false %}{% capture pm_block_bancontact -%}
+  <div data-next-payment-method="bancontact" class="payment-method{% if pm_default == 'bancontact' %} next-selected{% endif %}">
     <div class="payment-method__header">
       <label for="combo_mode_bancontact" combo_mode="bancontact" class="payment-method__label">
-        <input type="radio" name="payment_method" id="combo_mode_bancontact" data-name="Combo Mode" class="payment-method__input" value="bancontact">
+        <input type="radio" name="payment_method" id="combo_mode_bancontact" data-name="Combo Mode" class="payment-method__input"{% if pm_default == 'bancontact' %} checked=""{% endif %} value="bancontact">
         <div class="payment-method__title">Bancontact</div>
         <div class="payment-method__icons">
           <img loading="lazy" src="{{ 'images/bancontact-logo.svg' | campaign_asset }}" alt="" class="payment-method__icon--bancontact-logo">
         </div>
       </label>
     </div>
-    <div data-next-payment-form="bancontact" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
+    <div data-next-payment-form="bancontact" os-checkout-element="credit-form" class="payment-method__form payment-method__form--{% if pm_default == 'bancontact' %}expanded{% else %}collapsed{% endif %}">
       <div class="payment-method__content">
         <div data-next-component="bancontact-error" class="next-toast-handler">
           <div class="tip1_bar is-warning">
@@ -365,19 +384,19 @@
       </div>
     </div>
   </div>
-  {% endunless %}
-  {% unless show_ideal == false %}
-  <div data-next-payment-method="ideal" class="payment-method">
+{%- endcapture %}{% endunless %}
+{% unless show_ideal == false %}{% capture pm_block_ideal -%}
+  <div data-next-payment-method="ideal" class="payment-method{% if pm_default == 'ideal' %} next-selected{% endif %}">
     <div class="payment-method__header">
       <label for="combo_mode_ideal" combo_mode="ideal" class="payment-method__label">
-        <input type="radio" name="payment_method" id="combo_mode_ideal" data-name="Combo Mode" class="payment-method__input" value="ideal">
+        <input type="radio" name="payment_method" id="combo_mode_ideal" data-name="Combo Mode" class="payment-method__input"{% if pm_default == 'ideal' %} checked=""{% endif %} value="ideal">
         <div class="payment-method__title">iDEAL</div>
         <div class="payment-method__icons">
           <img loading="lazy" src="{{ 'images/ideal-logo.svg' | campaign_asset }}" alt="" class="payment-method__icon--ideal-logo">
         </div>
       </label>
     </div>
-    <div data-next-payment-form="ideal" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
+    <div data-next-payment-form="ideal" os-checkout-element="credit-form" class="payment-method__form payment-method__form--{% if pm_default == 'ideal' %}expanded{% else %}collapsed{% endif %}">
       <div class="payment-method__content">
         <div data-next-component="ideal-error" class="next-toast-handler">
           <div class="tip1_bar is-warning">
@@ -401,19 +420,19 @@
       </div>
     </div>
   </div>
-  {% endunless %}
-  {% unless show_sepa_debit == false %}
-  <div data-next-payment-method="sepa_debit" class="payment-method">
+{%- endcapture %}{% endunless %}
+{% unless show_sepa_debit == false %}{% capture pm_block_sepa_debit -%}
+  <div data-next-payment-method="sepa_debit" class="payment-method{% if pm_default == 'sepa_debit' %} next-selected{% endif %}">
     <div class="payment-method__header">
       <label for="combo_mode_sepa_debit" combo_mode="sepa_debit" class="payment-method__label">
-        <input type="radio" name="payment_method" id="combo_mode_sepa_debit" data-name="Combo Mode" class="payment-method__input" value="sepa_debit">
+        <input type="radio" name="payment_method" id="combo_mode_sepa_debit" data-name="Combo Mode" class="payment-method__input"{% if pm_default == 'sepa_debit' %} checked=""{% endif %} value="sepa_debit">
         <div class="payment-method__title">SEPA Direct Debit</div>
         <div class="payment-method__icons">
           <img loading="lazy" src="{{ 'images/sepa-logo.svg' | campaign_asset }}" alt="" class="payment-method__icon--sepa-logo">
         </div>
       </label>
     </div>
-    <div data-next-payment-form="sepa_debit" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
+    <div data-next-payment-form="sepa_debit" os-checkout-element="credit-form" class="payment-method__form payment-method__form--{% if pm_default == 'sepa_debit' %}expanded{% else %}collapsed{% endif %}">
       <div class="payment-method__content">
         <div data-next-component="sepa_debit-error" class="next-toast-handler">
           <div class="tip1_bar is-warning">
@@ -437,19 +456,19 @@
       </div>
     </div>
   </div>
-  {% endunless %}
-  {% unless show_link == false %}
-  <div data-next-payment-method="link" class="payment-method">
+{%- endcapture %}{% endunless %}
+{% unless show_link == false %}{% capture pm_block_link -%}
+  <div data-next-payment-method="link" class="payment-method{% if pm_default == 'link' %} next-selected{% endif %}">
     <div class="payment-method__header">
       <label for="combo_mode_link" combo_mode="link" class="payment-method__label">
-        <input type="radio" name="payment_method" id="combo_mode_link" data-name="Combo Mode" class="payment-method__input" value="link">
+        <input type="radio" name="payment_method" id="combo_mode_link" data-name="Combo Mode" class="payment-method__input"{% if pm_default == 'link' %} checked=""{% endif %} value="link">
         <div class="payment-method__title">Link</div>
         <div class="payment-method__icons">
           <img loading="lazy" src="{{ 'images/link-logo.svg' | campaign_asset }}" alt="" class="payment-method__icon--link-logo">
         </div>
       </label>
     </div>
-    <div data-next-payment-form="link" os-checkout-element="credit-form" class="payment-method__form payment-method__form--collapsed">
+    <div data-next-payment-form="link" os-checkout-element="credit-form" class="payment-method__form payment-method__form--{% if pm_default == 'link' %}expanded{% else %}collapsed{% endif %}">
       <div class="payment-method__content">
         <div data-next-component="link-error" class="next-toast-handler">
           <div class="tip1_bar is-warning">
@@ -473,5 +492,72 @@
       </div>
     </div>
   </div>
-  {% endunless %}
+{%- endcapture %}{% endunless %}
+<div data-next-catalog-component="payment-method-presentation" class="payment-methods">
+{% for pm_t in pm_tokens %}{% assign pm_key = pm_t | strip %}{% case pm_key %}
+  {% when 'credit' %}{{ pm_block_credit }}
+  {% when 'paypal' %}{{ pm_block_paypal }}
+  {% when 'klarna' %}{{ pm_block_klarna }}
+  {% when 'apple_pay' %}{{ pm_block_apple_pay }}
+  {% when 'google_pay' %}{{ pm_block_google_pay }}
+  {% when 'twint' %}{{ pm_block_twint }}
+  {% when 'affirm' %}{{ pm_block_affirm }}
+  {% when 'bancontact' %}{{ pm_block_bancontact }}
+  {% when 'ideal' %}{{ pm_block_ideal }}
+  {% when 'sepa_debit' %}{{ pm_block_sepa_debit }}
+  {% when 'link' %}{{ pm_block_link }}
+  {% endcase %}{% endfor %}
+{% unless pm_listed contains '|credit|' %}{{ pm_block_credit }}{% endunless %}
+{% unless pm_listed contains '|paypal|' %}{{ pm_block_paypal }}{% endunless %}
+{% unless pm_listed contains '|klarna|' %}{{ pm_block_klarna }}{% endunless %}
+{% unless pm_listed contains '|apple_pay|' %}{{ pm_block_apple_pay }}{% endunless %}
+{% unless pm_listed contains '|google_pay|' %}{{ pm_block_google_pay }}{% endunless %}
+{% unless pm_listed contains '|twint|' %}{{ pm_block_twint }}{% endunless %}
+{% unless pm_listed contains '|affirm|' %}{{ pm_block_affirm }}{% endunless %}
+{% unless pm_listed contains '|bancontact|' %}{{ pm_block_bancontact }}{% endunless %}
+{% unless pm_listed contains '|ideal|' %}{{ pm_block_ideal }}{% endunless %}
+{% unless pm_listed contains '|sepa_debit|' %}{{ pm_block_sepa_debit }}{% endunless %}
+{% unless pm_listed contains '|link|' %}{{ pm_block_link }}{% endunless %}
 </div>
+{% if pm_default != 'credit' -%}
+<script>
+/* default_method runtime assist. The SDK's startup pass (initializePaymentForms) snaps every
+   radio/panel to its checkout store, whose paymentMethod defaults to credit-card — so the markup
+   default above is overridden on init for any non-credit method. This applies the template default
+   as a real selection (a radio click, so the SDK's own change handler stores it and expands the
+   panel) exactly once per session: a sessionStorage next-checkout-store key existing before SDK
+   init means a checkout session is already underway and the shopper's state wins. Note the SDK
+   deliberately does NOT persist express methods (paypal / apple_pay / google_pay reset to card on
+   reload), so an express default re-applies only on the session's first checkout load, by design.
+   Key match: exact legacy name OR scoped next-checkout-store__<scope> prefix — never a hardcoded
+   scoped key. */
+(function () {
+  var hadStore = false;
+  try {
+    for (var i = 0; i < sessionStorage.length; i++) {
+      var k = sessionStorage.key(i);
+      if (k === 'next-checkout-store' || (k && k.indexOf('next-checkout-store__') === 0)) { hadStore = true; break; }
+    }
+  } catch (e) { /* storage unavailable — treat as a fresh session */ }
+  if (hadStore) return;
+  var apply = function () {
+    var wrap = document.querySelector('[data-next-payment-method="{{ pm_default }}"]');
+    var radio = wrap && wrap.querySelector('input[name="payment_method"]');
+    if (!radio || radio.checked) return;
+    /* The SDK hides radios the campaign cannot charge (display:none / .next-hidden); a hidden
+       default is left alone so the SDK's card selection stands. */
+    if (wrap.classList.contains('next-hidden') || wrap.offsetParent === null) return;
+    radio.click();
+  };
+  /* Normally this inline script parses before SDK init completes (init awaits the campaign API),
+     so the next:initialized listener fires — same pattern as js/payment-logos.js. But if init has
+     already happened (e.g. cached campaign data), the event is gone; getCampaignData() returning
+     data is the proof init finished AND the radio listeners are bound, so applying immediately is
+     safe. Never apply before init: the startup pass would snap the selection back to the store. */
+  var initDone = false;
+  try { initDone = !!(window.next && window.next.getCampaignData && window.next.getCampaignData()); } catch (e) {}
+  if (initDone) { apply(); }
+  else { window.addEventListener('next:initialized', apply, { once: true }); }
+})();
+</script>
+{% endif -%}
