@@ -1,16 +1,17 @@
+{%- comment -%} GENERATED from _shared/checkout/_includes/bump-check03.html — edit the source and run `npm run sync:shared`. Do not edit this copy. {%- endcomment -%}
 {% comment %}
   next_component: order-bump-card
-  next_version: 1.0.0
+  next_version: 1.1.0
   next_sdk_min: 0.4.27
   next_purpose: Product-card pre-purchase upsell with an optional line-item property field. Unsynced by default (one add-on product); can opt into quantity-sync with the main bundle.
   next_params:
-    order_bump.check03: optional frontmatter object for package_id, title, subtitle, image_src, image_alt, badge_text, savings_text, personalization, exclude_property, and sync_quantity.
-    package_id:         number, default order_bump.check03.package_id or packages.prepurchase_2 or 78 (distinct from bump-check01's hardcoded 77, so the two bumps never share a package when both render with unset ids).
+    order_bump.check03: optional frontmatter object for package_id, title, subtitle, image_src, image_alt, badge_text, savings_text, personalization, exclude_property, sync_quantity, and is_upsell.
+    package_id:         number, default order_bump.check03.package_id or packages.prepurchase_2 or 78 (distinct from bump-check01's demo defaults, so the two bumps never share a package when both render with unset ids).
     NOTE: the toggles below are read from order_bump.check03 (frontmatter) ONLY, not bare include args — sibling bumps leak shared arg names into campaign_include's scope (see the assign block below).
     order_bump.check03.sync_quantity:      number|nil. data-next-package-sync — the packageId whose cart quantity the bump mirrors (set to packages.main_package to scale the add-on with the main bundle selection). Default nil (unsynced).
     order_bump.check03.price_mode:         'total' (default) | 'unit'. 'total' shows originalPrice + price (LINE TOTALS that multiply with synced qty). 'unit' shows unitPrice/ea (per-unit, STABLE — does not change on sync, like bump-check01). Savings line (savings_text) renders in both modes.
     order_bump.check03.show_compare_price: bool, default true. Render the struck compare price (originalPrice in 'total' mode, originalUnitPrice in 'unit' mode). It, the badge and the savings line show only while the SDK reports a discount (hasDiscount), so a no-discount add-on shows its price alone.
-    is_upsell:          bool, default true.
+    is_upsell:          bool, default true (deliberate). data-next-is-upsell flag; false keeps the bump a plain line on the initial order.
   next_sdk_owns:
     - data-next-package-toggle
     - data-next-toggle-card
@@ -26,8 +27,9 @@
   next_note:
     - The optional personalization input sits INSIDE the PackageToggle click target (data-next-toggle-card).
       A click/keydown inside the field must NOT toggle the bump; that protection is guardBumpPersonalization(),
-      which ships ONLY in the MV checkout JS (checkout-olympus-mv-full.js). So personalization is wired safely
-      on olympus-mv-single-step / olympus-mv-two-step only. Before enabling order_bump.check03.personalization
+      which ships in checkout-apollo.js and the MV checkout JS (checkout-apollo-mv-full.js /
+      checkout-olympus-mv-full.js). Personalization is wired safely on apollo, apollo-mv-single-step,
+      olympus-mv-single-step, and olympus-mv-two-step. Before enabling order_bump.check03.personalization
       on any other family (demeter, olympus, shop-single-step, shop-three-step), port
       guardBumpPersonalization into that template's checkout JS or a field click will toggle the bump.
 {% endcomment %}
@@ -37,6 +39,7 @@
 {% assign bump_sync = bump.sync_quantity -%}
 {% assign b_price_mode = bump.price_mode | default: 'total' -%}
 {% if bump.show_compare_price != nil %}{% assign b_compare = bump.show_compare_price %}{% else %}{% assign b_compare = true %}{% endif -%}
+{% if is_upsell == nil %}{% assign is_upsell = bump.is_upsell %}{% endif -%}
 {% if is_upsell == nil %}{% assign is_upsell = true %}{% endif -%}
 {% assign b_title = bump_title | default: bump.title | default: 'Add a personalized add-on' -%}
 {% assign b_subtitle = bump_subtitle | default: bump.subtitle | default: 'Perfect companion for your order' -%}
