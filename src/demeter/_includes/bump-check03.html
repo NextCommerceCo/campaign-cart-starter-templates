@@ -39,8 +39,8 @@
 {% assign bump_sync = bump.sync_quantity -%}
 {% assign b_price_mode = bump.price_mode | default: 'total' -%}
 {% if bump.show_compare_price != nil %}{% assign b_compare = bump.show_compare_price %}{% else %}{% assign b_compare = true %}{% endif -%}
-{% if is_upsell == nil %}{% assign is_upsell = bump.is_upsell %}{% endif -%}
-{% if is_upsell == nil %}{% assign is_upsell = true %}{% endif -%}
+{% comment %} Resolve into a private local — never assign the public arg name: campaign_include shares scope, so a public assign here would leak into sibling bumps on the page and defeat their own frontmatter fallbacks. {% endcomment -%}
+{% if is_upsell != nil %}{% assign b_is_upsell = is_upsell %}{% elsif bump.is_upsell != nil %}{% assign b_is_upsell = bump.is_upsell %}{% else %}{% assign b_is_upsell = true %}{% endif -%}
 {% assign b_title = bump_title | default: bump.title | default: 'Add a personalized add-on' -%}
 {% assign b_subtitle = bump_subtitle | default: bump.subtitle | default: 'Perfect companion for your order' -%}
 {% assign b_image_src = bump.image_src | default: 'images/1x1_1.svg' -%}
@@ -51,7 +51,7 @@
 {% assign b_personalization = bump.personalization -%}
 <div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="check03" data-next-await="">
   <div data-next-package-toggle>
-    <div class="bump-card bump-card--product" data-next-toggle-card{% if is_upsell %} data-next-is-upsell="true"{% endif %}{% if bump_sync %} data-next-package-sync="{{ bump_sync }}"{% endif %} data-next-package-id="{{ pkg_id }}"{% if b_exclude != "" %} data-next-exclude-property="{{ b_exclude }}"{% endif %}>
+    <div class="bump-card bump-card--product" data-next-toggle-card{% if b_is_upsell %} data-next-is-upsell="true"{% endif %}{% if bump_sync %} data-next-package-sync="{{ bump_sync }}"{% endif %} data-next-package-id="{{ pkg_id }}"{% if b_exclude != "" %} data-next-exclude-property="{{ b_exclude }}"{% endif %}>
       {% if b_badge_text != "" %}<div class="bump__badge" data-next-toggle-display="hasDiscount"><span data-next-toggle-display="discountPercentage" data-next-format="percentage">{{ b_badge_text }}</span> OFF</div>{% endif %}
       <div class="bump-product__main">
         <div class="bump__checkbox" aria-hidden="true">

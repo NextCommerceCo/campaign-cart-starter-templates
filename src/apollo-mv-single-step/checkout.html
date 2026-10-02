@@ -102,6 +102,7 @@ order_bump:
     #                                         product_id (400 is the demo "T Shirt"; false = fixed qty 1).
     #                                         MV mains need product_sync, not packageId sync — see _includes/bump-check01.html
     #   pricing_mode: full_price|discounted|compare_at|unit_total|unit_only (default full_price, one "$X/ea" row)
+    #                 (legacy show_per_unit_price / show_compare_price / show_line_total_price still honored when passed without pricing_mode — see the partial)
     package_id: 77
     product_sync: 400
     title: "Get Extended Warranty"

@@ -50,6 +50,7 @@ order_bump:
     #   sync_quantity: <main packageId>    -> add-on qty mirrors the main bundle (omit = fixed qty 1)
     #   pricing_mode: full_price|discounted|compare_at|unit_total|unit_only (default full_price, one "$X/ea" row;
     #                 discounted adds the struck originalUnitPrice, shown only while the SDK reports a discount)
+    #                 (legacy show_per_unit_price / show_compare_price / show_line_total_price still honored when passed without pricing_mode — see the partial)
     package_id: 7
     sync_quantity: 1
     title: "Get Extended Warranty"

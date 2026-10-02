@@ -39,8 +39,8 @@
 {% assign bump = order_bump.check02 -%}
 {% assign pkg_id = package_id | default: bump.package_id | default: packages.prepurchase_2 | default: 9 -%}
 {% if package_sync == nil and bump.sync_quantity == nil %}{% assign sync_qty = packages.main_package | default: 1 %}{% elsif package_sync != nil %}{% assign sync_qty = package_sync %}{% else %}{% assign sync_qty = bump.sync_quantity %}{% endif -%}
-{% if is_upsell == nil %}{% assign is_upsell = bump.is_upsell %}{% endif -%}
-{% if is_upsell == nil %}{% assign is_upsell = true %}{% endif -%}
+{% comment %} Resolve into a private local — never assign the public arg name: campaign_include shares scope, so a public assign here would leak into sibling bumps on the page and defeat their own frontmatter fallbacks. {% endcomment -%}
+{% if is_upsell != nil %}{% assign b_is_upsell = is_upsell %}{% elsif bump.is_upsell != nil %}{% assign b_is_upsell = bump.is_upsell %}{% else %}{% assign b_is_upsell = true %}{% endif -%}
 {% assign b_title = bump_title | default: bump.title | default: 'Order Bump Title' -%}
 {% assign b_image_src = bump.image_src | default: 'images/icon.svg' -%}
 {% assign b_image_alt = bump.image_alt | default: '' -%}
@@ -48,7 +48,7 @@
 {% assign b_desc_suffix = bump.description_suffix | default: 'order bump description after price' -%}
 <div data-next-catalog-component="order-bump-card" data-component="prepurchase-upsell" data-variant="check02" data-next-await="">
   <div data-next-package-toggle>
-    <div data-next-toggle-card{% if is_upsell %} data-next-is-upsell="true"{% endif %}{% if sync_qty %} data-next-package-sync="{{ sync_qty }}"{% endif %} data-next-package-id="{{ pkg_id }}" class="next-active">
+    <div data-next-toggle-card{% if b_is_upsell %} data-next-is-upsell="true"{% endif %}{% if sync_qty %} data-next-package-sync="{{ sync_qty }}"{% endif %} data-next-package-id="{{ pkg_id }}" class="next-active">
       <div data-next-toggle="toggle" class="bump__header next-active">
         <div class="bump__header-content">
           <div class="bump__checkbox">
