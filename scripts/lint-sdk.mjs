@@ -198,6 +198,21 @@ function lintRendered() {
     }
     for (const file of files) {
       const content = blankIgnoredMarkup(readFileSync(file, 'utf8'));
+      // A data-upsell-proxy button (upsell/closing-cta.html) only forwards its click to the real
+      // action inside the offer (initUpsellProxyActions in upsells.js). With no target the click
+      // does nothing: a shopper cannot accept or decline from it.
+      for (const action of ['add', 'skip']) {
+        const proxyIdx = content.indexOf(`data-upsell-proxy="${action}"`);
+        if (proxyIdx === -1) continue;
+        if (!offerElements(content).some((offer) => offer.includes(`data-next-upsell-action="${action}"`))) {
+          violations.push({
+            kind: 'dead-upsell-proxy',
+            file: relative(repoRoot, file),
+            line: lineOf(content, proxyIdx),
+            action,
+          });
+        }
+      }
       // For each SDK attr occurrence, walk back through the rendered HTML to verify
       // the nearest ancestor with data-next-catalog-component="<name>" exists.
       // Cheap heuristic without a full parser: find each attr index, then search
@@ -223,6 +238,29 @@ function lintRendered() {
     }
   }
   return violations;
+}
+
+// The markup of each [data-next-upsell="offer"] <div>, matched to its closing tag by div depth
+// (the same cheap walk hasOpenCatalogWrapper uses): the proxy only reaches actions inside it.
+function offerElements(content) {
+  const offers = [];
+  const attrRe = /data-next-upsell="offer"/g;
+  let attr;
+  while ((attr = attrRe.exec(content))) {
+    const start = content.lastIndexOf('<div', attr.index);
+    if (start === -1) continue;
+    let depth = 0;
+    const tagRe = /<\/?div\b/gi;
+    tagRe.lastIndex = start;
+    let match;
+    let end = content.length;
+    while ((match = tagRe.exec(content))) {
+      depth += match[0].startsWith('</') ? -1 : 1;
+      if (depth === 0) { end = match.index; break; }
+    }
+    offers.push(content.slice(start, end));
+  }
+  return offers;
 }
 
 function hasOpenCatalogWrapper(content, idx) {
@@ -290,6 +328,9 @@ function fmt(v) {
   if (v.kind === 'inlined-sdk-root') {
     return `  ${v.file}:${v.line}\n    SDK attr [${v.attr}] inlined in page template\n    suggested: ${v.suggestion}\n    snippet:   ${v.snippet}`;
   }
+  if (v.kind === 'dead-upsell-proxy') {
+    return `  ${v.file}:${v.line}\n    data-upsell-proxy="${v.action}" has no data-next-upsell-action="${v.action}" inside the offer to forward to\n    required:  render the in-offer action (it may be hidden) so the proxy click reaches the SDK`;
+  }
   if (v.kind === 'raw-cart-summary-tax-token') {
     return `  ${v.file}:${v.line}\n    unsupported raw tax token [${v.token}] in checkout cart summary\n    required:  bind the row with order.hasTax and order.tax`;
   }
@@ -314,7 +355,7 @@ if (wantSource) {
 if (wantRendered) {
   console.log(`[lint-sdk] mode=rendered  scope=${scope}`);
   const v = lintRendered();
-  if (v.length === 0) console.log('  ✓ all SDK roots in rendered HTML are inside catalog wrappers\n');
+  if (v.length === 0) console.log('  ✓ all SDK roots in rendered HTML are inside catalog wrappers; every upsell proxy has a target\n');
   else {
     console.log(`  ✗ ${v.length} violation(s):`);
     for (const it of v) console.log(fmt(it));
