@@ -15,7 +15,8 @@
     upsell_bundle_tiers / upsell_mv_tiers: arrays — see upsell/offer-selector.html / upsell/offer-controls.html.
     upsell_layout: object. style card (default) | box — box is the upsell-single look: bordered
       upsell-container--box in a surface-colour section (no overlap), image left, centered copy, inline
-      prices, no bullets / ships-info / decline (the decline lives in upsell-closing-cta). boxed (default true), media carousel|image|grid|video|none (default carousel — the swiper area; video reads media_video),
+      prices, no bullets / ships-info / visible decline (the decline lives in upsell-closing-cta, which proxies
+      to a hidden in-offer skip unless show_decline is true). boxed (default true), media carousel|image|grid|video|none (default carousel — the swiper area; video reads media_video),
       media_position right|left (default right = content left, media right on desktop),
       decline_position below (default — centered under the whole offer) | column (inside the content column,
       after the CTA / guarantees, so decline sits with the accept button),
@@ -95,7 +96,9 @@
               {%- endif -%}
               {%- campaign_include 'upsell/cta.html' cta_style='box' -%}
               {%- campaign_include 'upsell/guarantees.html' upsell_guarantees=upsell_guarantees -%}
-              {%- if layout.show_decline -%}{%- campaign_include 'upsell/decline.html' show_icon=false -%}{%- endif -%}
+              {%- comment -%} Always in the offer: the closing card's decline proxies to this skip, so with
+                show_decline off it is rendered hidden rather than left out. {%- endcomment -%}
+              {%- if layout.show_decline -%}{%- campaign_include 'upsell/decline.html' show_icon=false -%}{%- else -%}{%- campaign_include 'upsell/decline.html' show_icon=false hidden=true -%}{%- endif -%}
             </div>
           </div>
           {%- if offer.details_hint %}
