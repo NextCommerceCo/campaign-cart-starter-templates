@@ -9,13 +9,14 @@
       "% OFF" badge, no divider — the upsell-single look; pair with price_layout='inline').
     offer.pretitle: small line above the title.
     offer.title: HTML string override (upsell/copy.html tokens allowed, e.g. 'Premium {package_name}'); default = the package name span.
-    offer.show_rating: false hides the stars row. offer.rating_text: default "(19,569 Ratings)".
+    offer.show_rating: false hides the stars row (box and card styles). offer.rating_text: default "(19,569 Ratings)".
     offer.heading_prices: true renders an inline strip — struck compare · price · "X% OFF" — under the rating
       (the fluff-style header). The main price rows still render in upsell/offer-prices.html.
   next_dont_touch: data-next-display, data-next-format, data-next-show
 {% endcomment %}
 {%- if heading_style == 'box' -%}
 {%- assign h_pricing_mode = pricing_mode | default: offer.pricing_mode | default: 'full_price' -%}
+{%- unless offer.show_rating == false %}
 <div class="review_component cc-sm">
   <div class="review_component-wrapper">
     <div class="review_stars-wrapper cc-color cc-black">
@@ -24,6 +25,7 @@
     <div class="text-sm">{{ offer.rating_text | default: '<strong>4.8/5</strong> - 19,569+ Reviews' }}</div>
   </div>
 </div>
+{%- endunless %}
 <h2 class="display-md">{% if offer.title %}{% campaign_include 'upsell/copy.html' text=offer.title %}{% else %}<span data-next-display="{{ package_name_path }}">Product Title</span>{% endif %}</h2>
 {%- if h_pricing_mode == 'discounted' %}
 <div{% if price_is_scoped %} data-next-show="package.hasSavings"{% endif %}>
