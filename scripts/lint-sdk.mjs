@@ -204,7 +204,7 @@ function lintRendered() {
       for (const action of ['add', 'skip']) {
         const proxyIdx = content.indexOf(`data-upsell-proxy="${action}"`);
         if (proxyIdx === -1) continue;
-        if (!/data-next-upsell="offer"/.test(content) || !content.includes(`data-next-upsell-action="${action}"`)) {
+        if (!offerElements(content).some((offer) => offer.includes(`data-next-upsell-action="${action}"`))) {
           violations.push({
             kind: 'dead-upsell-proxy',
             file: relative(repoRoot, file),
@@ -238,6 +238,29 @@ function lintRendered() {
     }
   }
   return violations;
+}
+
+// The markup of each [data-next-upsell="offer"] <div>, matched to its closing tag by div depth
+// (the same cheap walk hasOpenCatalogWrapper uses): the proxy only reaches actions inside it.
+function offerElements(content) {
+  const offers = [];
+  const attrRe = /data-next-upsell="offer"/g;
+  let attr;
+  while ((attr = attrRe.exec(content))) {
+    const start = content.lastIndexOf('<div', attr.index);
+    if (start === -1) continue;
+    let depth = 0;
+    const tagRe = /<\/?div\b/gi;
+    tagRe.lastIndex = start;
+    let match;
+    let end = content.length;
+    while ((match = tagRe.exec(content))) {
+      depth += match[0].startsWith('</') ? -1 : 1;
+      if (depth === 0) { end = match.index; break; }
+    }
+    offers.push(content.slice(start, end));
+  }
+  return offers;
 }
 
 function hasOpenCatalogWrapper(content, idx) {
