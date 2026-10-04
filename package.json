@@ -8,7 +8,6 @@
     "dev": "npx campaign-dev",
     "build": "npx campaign-build",
     "build:preview": "node scripts/build-preview-shell.mjs",
-    "build:tailwind": "node scripts/build-tailwind.mjs",
     "clone": "npx campaign-clone",
     "config": "npx campaign-config",
     "compress": "npx campaign-compress",
@@ -34,7 +33,6 @@
     "lint:agent-contracts": "node scripts/lint-agent-contracts.mjs",
     "sync:shared": "node scripts/sync-shared.mjs",
     "lint:shared": "node scripts/sync-shared.mjs --check",
-    "lint:tailwind": "node scripts/build-tailwind.mjs --check",
     "lint:upstream": "node scripts/lint-upstream-analytics.mjs"
   },
   "dependencies": {

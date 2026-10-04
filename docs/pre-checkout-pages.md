@@ -56,9 +56,7 @@ The presell is a **ready-to-use** advertorial-style article page, included in ev
 
 ## Tailwind CSS
 
-Landing and presell layouts load the Tailwind Play **CDN only in development** (`npm run dev`). Every other build links a compiled `css/tailwind.css`, which this repo ships pre-built for each checkout family (`npm run build:tailwind` regenerates them all; `npm run lint:tailwind` fails when one is stale). After adding utility classes to a landing or presell page, regenerate it before deploying, or the production page won't have those styles.
-
-To compile it yourself in your own project:
+Landing and presell layouts load Tailwind via **CDN** — fine for development and prototyping. For production:
 
 1. Copy `tailwind.input.css` from this repo root into your project root (skip if already there)
 2. Install Tailwind v4 if not already a devDependency:
@@ -75,7 +73,7 @@ To compile it yourself in your own project:
    ```bash
    npx @tailwindcss/cli -i tailwind.input.css -o src/[slug]/assets/css/tailwind.css --minify
    ```
-5. The shipped `base-landing.html` / `base-presell.html` already link it from the layout's non-development branch (older copies: replace the CDN `<script>` block with this hardcoded `<link>` **directly in the layout file**) — do **not** list the generated file in page frontmatter `styles:`:
+5. In `base-landing.html` / `base-presell.html`, replace the CDN `<script>` block with a hardcoded `<link>` tag **directly in the layout file** — do **not** list the generated file in page frontmatter `styles:`:
    ```html
    <link rel="stylesheet" href="{{ 'css/tailwind.css' | campaign_asset }}">
    ```

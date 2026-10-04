@@ -25,10 +25,7 @@
   {% comment %} Swiper {% endcomment %}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 
-  {% comment %} Tailwind: the Play CDN (+ design token color aliases) in development only.
-       Every other build links the compiled stylesheet; regenerate it with
-       `npm run build:tailwind` after adding utility classes. {% endcomment %}
-  {% if environment == "development" %}
+  {% comment %} Tailwind CDN + design token color aliases {% endcomment %}
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -52,9 +49,6 @@
       }
     }
   </script>
-  {% else %}
-  <link rel="stylesheet" href="{{ 'css/tailwind.css' | campaign_asset }}">
-  {% endif %}
 
   {% comment %} Design tokens + any page-level styles {% endcomment %}
   <link rel="stylesheet" href="{{ 'css/landing/tokens.css' | campaign_asset }}">
