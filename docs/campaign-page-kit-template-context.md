@@ -129,7 +129,7 @@ Pre-checkout pages have **no checkout form, cart, or upsell UI**, but a **live**
 
 - **`landing/`** (starter) — **section showcase**: copy `_includes/` into your slug. **Cross-slug CTAs** use a root-relative checkout URL in `next_url`, not `campaign_link`.
 - **`presell/`** — **ready-to-use article** in the **same campaign slug** as `checkout.html`; use **`campaign_link`** for the checkout CTA.
-- **Tailwind** — CDN in dev; compile `tailwind.css` for production.
+- **Tailwind** — the layouts load the Play CDN only when `environment == "development"` and link the compiled `css/tailwind.css` otherwise; recompile it after adding utility classes.
 
 **Full guide:** [docs/pre-checkout-pages.md](./pre-checkout-pages.md) (clone this repo) — canonical copy on GitHub:  
 <https://github.com/NextCommerceCo/campaign-cart-starter-templates/blob/main/docs/pre-checkout-pages.md>  

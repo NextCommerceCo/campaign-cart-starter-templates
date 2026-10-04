@@ -45,6 +45,8 @@ jobs:
         run: npm run lint:next-logo
       - name: Lint shared analytics sync (families match _shared/analytics)
         run: npm run lint:shared
+      - name: Lint compiled Tailwind (landing/presell production CSS is current)
+        run: npm run lint:tailwind
       - name: Test template verification evidence
         run: npm run test:template-verification
       - name: Validate template verification evidence

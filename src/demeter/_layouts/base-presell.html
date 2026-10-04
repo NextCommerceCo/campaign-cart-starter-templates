@@ -20,7 +20,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
-  {% comment %} Tailwind CDN + design token color aliases {% endcomment %}
+  {% comment %} Tailwind: the Play CDN (+ design token color aliases) in development only.
+       Every other build links the compiled stylesheet; regenerate it with
+       `npm run build:tailwind` after adding utility classes. {% endcomment %}
+  {% if environment == "development" %}
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -44,6 +47,9 @@
       }
     }
   </script>
+  {% else %}
+  <link rel="stylesheet" href="{{ 'css/tailwind.css' | campaign_asset }}">
+  {% endif %}
   {% for style in styles %}
   <link rel="stylesheet" href="{{ style | campaign_asset }}">
   {% endfor %}
@@ -58,6 +64,9 @@
   <meta name="next-page-type" content="{{ page_type }}">
   {% endif %}
   <script src="https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v{{ campaign.sdk_version }}/dist/loader.js" type="module"></script>
+
+  <link href="{{ 'images/favicon.png' | campaign_asset }}" rel="shortcut icon" type="image/x-icon">
+  <link href="{{ 'images/webclip.png' | campaign_asset }}" rel="apple-touch-icon">
 
   {% campaign_include 'analytics-head.html' %}
 </head>
