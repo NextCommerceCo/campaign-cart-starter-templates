@@ -67,6 +67,9 @@
   {% endif %}
   <script src="https://cdn.jsdelivr.net/gh/NextCommerceCo/campaign-cart@v{{ campaign.sdk_version }}/dist/loader.js" type="module"></script>
 
+  <link href="{{ 'images/favicon.png' | campaign_asset }}" rel="shortcut icon" type="image/x-icon">
+  <link href="{{ 'images/webclip.png' | campaign_asset }}" rel="apple-touch-icon">
+
   {% campaign_include 'analytics-head.html' %}
 </head>
 <body class="font-sans bg-white text-[var(--text-primary)]">
