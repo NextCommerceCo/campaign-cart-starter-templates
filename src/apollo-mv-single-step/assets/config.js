@@ -17,8 +17,10 @@ window.nextConfig = {
       requiredFields: ['email', 'fname', 'lname'], // Fields required for express checkout radio option
       methodOrder: ['paypal', 'apple_pay', 'google_pay'] // Display order of express payment method buttons
     },
-    // Card number / CVV fields (SDK 0.4.41+: 29next's own payment fields, loaded from payments.29next.com).
+    // Card number / CVV fields (SDK 0.4.41+): created by 29next's payment wrapper (payments.29next.com) —
+    // still Spreedly hosted fields underneath, but the key/certificate/nonce come from payment_env_key server-side.
     // Only these options apply; Spreedly-only options (fieldType, fraud, nonce, ...) are ignored.
+    // `labels` is aria-only (no visible label inside the iframe); `placeholders` is what the shopper sees.
     // cardInputConfig: {
     //   numberFormat: "prettyFormat", // 'prettyFormat' | 'plainFormat' | 'maskedFormat'
     //   labels: { number: "", cvv: "" },

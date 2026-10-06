@@ -563,9 +563,20 @@ Hand-written address inputs (`data-next-checkout-field="address1" | "city" | "co
 - A `required` phone is enforced from `data-next-checkout-field="phone"` alone (before 0.4.39 it also needed `name="phone"`).
 
 **SDK 0.4.41 changes (card fields, coupons):**
-- **Card number and CVV are 29next's own payment fields**, no longer Spreedly iframes. They still mount into `data-next-checkout-field="cc-number"` / `"cvv"`, so the template markup is unchanged. The payment key comes from the campaign's `payment_env_key` only — `next-spreedly-key`, `next-payment-env-key` and `window.nextConfig.spreedlyEnvironmentKey` are no longer read.
+- **Card number and CVV are created by 29next's payment wrapper** (`payments.29next.com/js/v1/payment.js`, loaded by the SDK), not by the page. Under the wrapper they are still **Spreedly hosted fields** — the iframes come from `core.spreedly.com` — but the environment key, certificate and nonce are obtained server-side from the campaign's `payment_env_key`. They still mount into `data-next-checkout-field="cc-number"` / `"cvv"`, so the template markup is unchanged, and the `checkout_reveal` rule (keep the panel off-screen, never `display:none`) still applies because the iframes need real dimensions to mount. `next-spreedly-key`, `next-payment-env-key` and `window.nextConfig.spreedlyEnvironmentKey` are no longer read.
 - **`checkout:payment-ready`** is the event to listen for; `checkout:spreedly-ready` still fires but is deprecated.
-- **`cardInputConfig`** — only `numberFormat`, `labels`, `titles`, `placeholders` and `styles` apply; Spreedly-only options (`fieldType`, `fraud`, `nonce`, …) are ignored.
+- **`cardInputConfig`** is still read and forwarded to the wrapper. What each key does:
+
+  | Key | Reaches Spreedly as | Visible to the shopper? |
+  |---|---|---|
+  | `numberFormat` (`prettyFormat` default · `plainFormat` · `maskedFormat`) | `setNumberFormat` | yes — spacing of the typed number |
+  | `placeholders.number` / `.cvv` | `setPlaceholder` | yes — the grey text in the empty field |
+  | `titles.number` / `.cvv` | `setTitle` | yes — hover tooltip |
+  | `labels.number` / `.cvv` | `setLabel` → the input's `aria-label` | **no** — screen readers only; there is no `<label>` inside the iframe |
+  | `styles.number` / `.cvv` / `.placeholder` | `setStyles` / `setPlaceholderStyles` | yes |
+  | `fieldType`, `fraud`, `nonce`, anything else Spreedly-specific | — | ignored (the SDK logs `NextPayment ignores these card options` at debug level); the wrapper forces `text` fields and `required` |
+
+  Without `styles.*` the wrapper applies its own default (system-ui font, `#212529` text, `#595c5f` placeholder), which is why unstyled fields can look marginally different from 0.4.40. A **visible** label is the template's job, outside the iframe: a `<label class="label-checkout">` in the same `.form-input` wrapper as the host is picked up by the SDK and floats like the address labels; add `data-label-behavior="placeholder"` on the host so the hosted placeholder is blanked while the label shows. The starter `payment-methods.html` ships without one (placeholder-only), by choice.
 - **`next.applyCoupon(code)`** refuses a coupon that does not change the total. Check `result.success` — `message` wording changed and now follows the page language, so do not match on it.
 - Card fields left open for an hour are replaced without a reload; card and decline copy follows the page language; the `data-next-address="billing"` block is laid out for the billing country (campaign-cart#110).
 
