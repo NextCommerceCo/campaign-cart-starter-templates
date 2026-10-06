@@ -710,6 +710,8 @@ Note: Inside `<template>` elements, tokens use single braces `{item.field}`, not
 
 Live summary panel — updates on tier change, coupon apply, and bump toggle. Use `data-summary-lines` for line rows; tokens use `{item.*}` (SDK 0.4.11+). **Do not use `{line.*}` legacy names — removed in 0.4.11, render silently blank.**
 
+**Inside the summary `<template>`, use the summary's own tokens, never a nested `data-next-display`.** The enhancer rebuilds the template's HTML on every cart update, so a `data-next-display` span inside it is a fresh, un-enhanced node each time — on SDK 0.4.41 it stays empty on first paint and only fills after a later cart change (the starter badge `<span data-next-display="cart.totalDiscountPercentage"></span> OFF` showed as a bare "OFF" on the shop checkouts). Totals tokens, all rendered on every paint: `{subtotal}`, `{shipping}`, `{total}`, `{discounts}`, `{totalDiscount}`, `{totalDiscountPercentage}` (e.g. `60%`), `{shippingDiscountAmount}`, `{shippingDiscountPercentage}`. The starter badge is now `{totalDiscountPercentage} OFF`. Anything that needs `data-next-display` / `data-next-show` must sit **outside** the `<template>`, like the coupon form does.
+
 ```html
 <div data-next-cart-summary>
   <div data-summary-lines>
@@ -1004,8 +1006,9 @@ All templates ship three ready-to-use cart summary partials in `_includes/`. Swa
 <div data-next-cart-summary>
   <!-- Static chrome (heading, product image) here — not inside <template> -->
   <template>
-    <!-- CartSummaryEnhancer tokens: {subtotal}, {shipping}, {total}, {discounts} -->
+    <!-- CartSummaryEnhancer tokens: {subtotal}, {shipping}, {total}, {discounts}, {totalDiscountPercentage} -->
     <!-- data-summary-lines + inner <template> for cart item rows -->
+    <!-- No data-next-display / data-next-show in here: the template is re-rendered as HTML, so those nodes are never enhanced. -->
   </template>
 </div>
 ```
