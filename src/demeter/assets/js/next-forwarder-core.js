@@ -133,15 +133,21 @@
   }
 
   // Phone must be E.164 (+<country><number>) or Triple Whale-style identity joins against the order/feed
-  // silently fail. Branches on whether an intl-tel-input instance is on the field — no SDK version is
-  // read. With one (SDK <= 0.4.38 puts it there), use its getNumber(). Without one (SDK >= 0.4.39 dropped
-  // intl-tel-input: the field shows the country's national mask, "(415) 555-2671", and the SDK keeps the
-  // E.164 internally with no public getter — requested in NextCommerceCo/campaign-cart#108), only a number
-  // the shopper typed with its own "+" is used; anything else returns '' — field entry then sends no
-  // phone, and the prospect-cart source delivers the SDK's own E.164. Never guesses a dial code.
+  // silently fail. Three sources, by what is on the field — no SDK version is read:
+  //   1. data-next-phone-e164 on the input (SDK >= 0.4.41, NextCommerceCo/campaign-cart#108). The SDK
+  //      writes it only while the parsed number is valid and removes it otherwise, so it is never stale.
+  //   2. An intl-tel-input instance (SDK <= 0.4.38 put one on the field): its getNumber().
+  //   3. Neither (SDK 0.4.39 / 0.4.40: the field shows the country's national mask, "(415) 555-2671",
+  //      and the E.164 is not exposed): only a number the shopper typed with its own "+" is used.
+  // Anything else returns '' — field entry then sends no phone, and the prospect-cart source delivers
+  // the SDK's own E.164. Never guesses a dial code.
+  var E164_ATTR = 'data-next-phone-e164';
+
   function phoneVal(el) {
     el = el || document.querySelector(PHONE_SEL);
     if (!el) return '';
+    var attr = el.getAttribute(E164_ATTR);
+    if (attr) return attr;
     var iti = itiFor(el);
     if (iti && typeof iti.getNumber === 'function') {
       try { var e164 = iti.getNumber(); if (e164) return e164; } catch (err) {}
@@ -150,11 +156,13 @@
     return raw.charAt(0) === '+' ? '+' + raw.replace(/\D/g, '') : '';
   }
 
-  // Is the field's current value a usable phone? intl-tel-input's own verdict when present, else the
-  // SDK's prospect digit-count threshold.
+  // Is the field's current value a usable phone? The SDK's own verdict when it exposes one (the E.164
+  // attribute is present only for a valid number; intl-tel-input's isValidNumber()), else the SDK's
+  // prospect digit-count threshold.
   function validPhone(el) {
     var raw = (el && el.value) ? el.value.trim() : '';
     if (!raw) return false;
+    if (el.getAttribute(E164_ATTR)) return true;
     var iti = itiFor(el);
     if (iti && typeof iti.isValidNumber === 'function') {
       try { return !!iti.isValidNumber(); } catch (err) {}
