@@ -535,20 +535,26 @@ The SDK is controlled entirely through HTML attributes. Do not write JavaScript 
 
 ```html
 <form data-next-checkout="form">
-  <input data-next-checkout-field="email" type="email">
-  <input data-next-checkout-field="fname" type="text">
-  <input data-next-checkout-field="lname" type="text">
-  <input data-next-checkout-field="phone" type="tel" name="phone" autocomplete="tel">
-  <!-- address fields -->
-  <input data-next-checkout-field="address1" type="text">
-  <input data-next-checkout-field="city" type="text">
-  <select data-next-checkout-field="country"></select>
-  <select data-next-checkout-field="province"></select>
-  <input data-next-checkout-field="postal" type="text">
+  <input data-next-checkout-field="email" type="email">          <!-- always hand-written: the SDK never builds email -->
+  <div data-next-component="shipping-form">
+    <div data-next-address="shipping"></div>                     <!-- SDK builds country → name → address → city/state/postal → phone -->
+  </div>
+  <!-- in the credit-card section (billing-address-form.html): -->
+  <input data-next-checkout-field="use_shipping_address" type="checkbox" checked>
+  <div data-next-address="billing"></div>
 </form>
 ```
 
-Field names are the SDK's, not camelCase: `fname` / `lname` (SDK 0.4.39+ also accepts `first_name` / `last_name`, the orders-API names), `postal` (not `zip`). The starter templates write the address inputs by hand, as above; SDK 0.4.39+ deprecates that in favour of `<div data-next-address="shipping"></div>` / `<div data-next-address="billing"></div>`, which build each country's fields from its address rules. Hand-written inputs still work — see the SDK's [checkout page guide — Contact and address](https://cart-sdk.nextcommerce.com/latest/pages/checkout-page/#contact-and-address) before migrating.
+**Address blocks (SDK ≥ 0.4.41 — every starter template uses them).** `<div data-next-address="shipping|billing">` renders the selected country's fields, in that country's order, from the i18n address rules, and re-renders on country change with entered values preserved (`data-next-address-state="loading|ready"` is set on the block). Rules:
+- The block **skips any field the form already declares**, so hand-writing `fname` / `lname` / `phone` outside it (apollo's `customer-info-form.html` keeps them in the Contact step) is a layout choice; delete them and the block builds them itself. **Email (and `accepts_marketing`) are never SDK-built** — the page always writes email.
+- Keep the `data-next-component="shipping-form"` wrapper around the shipping block (the SDK clones billing from it). Do not put field markup inside a block — the SDK owns everything inside.
+- Billing lives in `billing-address-form.html` (inside `payment-methods.html`): the "use shipping address" toggle plus `data-next-address="billing"`. It replaced the legacy `os-checkout-component="billing-form"` injected form.
+- `address_form.label_style` page frontmatter — `inset` (default) · `floating` · `static` — styles the SDK blocks and the hand-written contact fields together (include arg `label_style=` wins on the partials). Styling for the blocks is the "SDK address blocks" section of `next-core.css` (`.next-address-control` / `.next-address-label` mirror `.input-flds` / `.label-checkout`).
+- **Row gating is on or off** — `address_form.gated: true` (apollo, apollo-mv, olympus, both olympus-mv) shows only the Address field until the shopper types an address, then Apartment / City / State / Postal / Phone appear; `false` (demeter, shop-single-step, shop-three-step) shows every field from the start. The block carries `cc-gated` or `cc-ungated` accordingly (include arg `gated=` wins on `shipping-address-form.html`). There is deliberately no third state: on its own the SDK half-gates (Apartment shown, City/State/Postal hidden), and the templates never render it bare. The shipping `address1` control also carries the magnifier icon (CSS background) the hand-written field had.
+- Needs SDK ≥ 0.4.41: on 0.4.40 the billing block did not re-render when the billing country changed (campaign-cart#110). Do not pin a project using the blocks below 0.4.41.
+- Validation: the SDK validates the shipping postcode on submit (blocks the order on a bad format). The **billing** postcode is not validated client-side on 0.4.41 — the API rejects it for some countries (GB) and accepts it for others (CA). Known SDK gap, not something the template can fix.
+
+Hand-written address inputs (`data-next-checkout-field="address1" | "city" | "country" | "province" | "postal"`) still work — field names are the SDK's, not camelCase: `fname` / `lname` (SDK 0.4.39+ also accepts `first_name` / `last_name`, the orders-API names), `postal` (not `zip`) — but they are deprecated since 0.4.39; see the SDK's [checkout page guide — Contact and address](https://cart-sdk.nextcommerce.com/latest/pages/checkout-page/#contact-and-address).
 
 **SDK 0.4.39+ checkout behaviour (templates pin 0.4.41):**
 - **Phone field** — no longer uses intl-tel-input, so there is no `.iti` / `.iti__*` markup and CSS targeting it matches nothing. The SDK formats the number in the country's mask as the shopper types (`(415) 555-2671`), shows a flag `<img class="next-phone-flag">` inside the input's right edge (it follows the country select), and sends E.164 to the API. Restyle with `.next-phone-field` (the input's parent), `.next-phone-flag`, `.next-phone-input`. The SDK replaces the input's `placeholder` with `Phone*` / `Phone (Optional)`. Page JS reading `input.value` gets the national mask; from 0.4.41 the input carries `data-next-phone-e164` (the E.164 value) and `data-next-phone-country` — read those, never parse `input.value`.

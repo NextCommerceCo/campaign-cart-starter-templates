@@ -16949,3 +16949,292 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
 .payment-logos__item[hidden] {
   display: none;
 }
+
+/* === SDK address blocks (data-next-address) ===============================
+   AddressFormEnhancer (SDK 0.4.40+) renders per-country address fields into
+   <div data-next-address="shipping|billing">. Generated structure:
+     .next-address-row > .form-group.next-address-field
+       > .next-address-control (input|select) + .next-address-label
+   .form-group is the template's own class (the SDK emits it), so column
+   layout comes for free; these rules restyle the SDK control/label to match
+   .input-flds / .label-checkout. The label follows its control and every
+   input carries a placeholder, so the floating label is pure CSS via
+   :placeholder-shown — no has-value JS. Selects have no placeholder state;
+   their label shows whenever a value is chosen (:valid on required selects,
+   which country always is). */
+
+[data-next-address] {
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+  flex-flow: column;
+  display: flex;
+}
+
+/* Hold one row of space while a country layout loads, so the form
+   doesn't collapse and reflow on first paint / country switch */
+[data-next-address][data-next-address-state="loading"] {
+  min-height: 3rem;
+}
+
+.next-address-row {
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+  flex-direction: row;
+  justify-content: space-between;
+  display: flex;
+}
+
+/* SDK toggles next-hidden on country-gated rows (data-next-component=location) */
+.next-address-row.next-hidden {
+  display: none;
+}
+
+.next-address-field {
+  position: relative;
+  /* Equal columns per row, matching the template's .form-group grid (flex: 1).
+     The SDK sets an inline flex-grow per field from the country layout's span
+     values (e.g. city 2 / state 1 / zip 1), which renders uneven columns and
+     truncates the province select — !important is needed to beat that inline
+     style. flex-basis 0 makes the split exact, min-width 0 lets fields shrink. */
+  flex-grow: 1 !important;
+  flex-shrink: 1;
+  flex-basis: 0;
+  min-width: 0;
+}
+
+.next-address-control {
+  border-radius: var(--radius--input);
+  outline-offset: 0px;
+  background-color: #fff;
+  border: 1px solid #b9b9b9;
+  outline: 3px #000;
+  width: 100%;
+  height: 3rem;
+  margin-bottom: 0;
+  padding-left: 12px;
+  padding-right: 12px;
+  font-size: .925rem;
+  font-family: inherit;
+  color: inherit;
+  transition: all .12s;
+  position: relative;
+  box-shadow: 0 0 0 1px #0000;
+}
+
+.next-address-control:hover {
+  background-color: #fdfdfd;
+}
+
+.next-address-control:focus {
+  border-color: var(--brand--color--primary);
+  box-shadow: 0 0 0 1px var(--brand--color--primary-dark);
+}
+
+.next-address-control.next-focused {
+  border-color: var(--brand--color--primary-dark);
+  box-shadow: 0 0 0 1px var(--brand--color--primary-dark);
+}
+
+.next-address-control.next-error-field {
+  background-color: #fff;
+  border-color: #c51a00;
+  box-shadow: 0 0 0 1px #c51a00;
+}
+
+select.next-address-control {
+  cursor: pointer;
+  padding: 0 34px 0 12px;
+  -webkit-appearance: none;
+  appearance: none;
+  /* the SDK renders a bare <select> (no .select-form-wrapper/.caret-down),
+     so the chevron is drawn here */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none' stroke='%23333' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='2 4.75 7 9.25 12 4.75'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px 14px;
+}
+
+.next-address-label {
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  color: #b3b3b3;
+  letter-spacing: 0;
+  font-size: .65rem;
+  font-weight: 400;
+  transition-property: all;
+  transition-duration: .2s;
+  transition-timing-function: ease;
+  position: absolute;
+  top: .5em;
+  left: 13px;
+  transform: translate(0, .3em);
+}
+
+/* Selects have no :placeholder-shown — show the label only when a real
+   (non-empty-value) option is chosen, so it never overlaps a
+   "Select Province"-style placeholder option (:valid can't tell them apart
+   when the select isn't required) */
+input.next-address-control:not(:placeholder-shown) + .next-address-label,
+select.next-address-control:has(option:checked:not([value=""])) + .next-address-label {
+  opacity: 100;
+  transform: translate(0);
+}
+
+/* While the label is shown, push the value down clear of it — mirrors the
+   inline padding-top:14px the checkout enhancer sets on hand-written
+   .input-flds when they gain a value */
+input.next-address-control:not(:placeholder-shown),
+select.next-address-control:has(option:checked:not([value=""])) {
+  padding-top: 14px;
+}
+
+/* Floating-on-border label variant — the .label-checkout--floating /
+   .input-flds--floating look (black label on a white chip that lifts onto the
+   field's top border when filled). Opt in per block by adding cc-floating to
+   the wrapper: <div data-next-address="shipping" class="cc-floating"> —
+   the SDK re-renders the block's children but leaves the wrapper's own
+   classes alone. */
+[data-next-address].cc-floating .next-address-control {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+[data-next-address].cc-floating select.next-address-control {
+  padding: 12px 34px 12px 12px;
+}
+
+[data-next-address].cc-floating .next-address-label {
+  color: #000;
+  margin-left: -4px;
+  padding-left: 4px;
+  padding-right: 4px;
+  font-size: var(--font-size--xs);
+}
+
+[data-next-address].cc-floating input.next-address-control:not(:placeholder-shown) + .next-address-label,
+[data-next-address].cc-floating select.next-address-control:has(option:checked:not([value=""])) + .next-address-label {
+  background-color: #fff;
+  transform: translate(0, -1.2em);
+}
+
+/* Static (non-floating) label variant — the label is always visible above
+   the field, classic form style. Opt in per block with cc-static on the
+   wrapper. The field flexes column-reverse so the SDK's control-then-label
+   order paints label-first; the placeholder duplicates the label text, so
+   it is hidden (the visible label carries the meaning). */
+[data-next-address].cc-static .next-address-field {
+  flex-direction: column-reverse;
+  gap: .25rem;
+  display: flex;
+}
+
+[data-next-address].cc-static .next-address-label {
+  opacity: 100;
+  pointer-events: auto;
+  color: #333;
+  font-size: var(--font-size--sm);
+  position: static;
+  transform: none;
+  /* the field's flex gap is the spacing; without this the global
+     label { margin-bottom: .25rem } doubles it */
+  margin-bottom: 0;
+}
+
+[data-next-address].cc-static .next-address-control::placeholder {
+  color: transparent;
+}
+
+/* static labels sit above the field, so the filled-state padding-top shift
+   (which makes room for the inset/floating in-field label) must not apply —
+   keeps field height and text position identical whether empty or filled,
+   matching the .cc-labels-static contact fields. !important because the
+   select's filled rule (:has(option:checked…)) out-specifies this one. */
+[data-next-address].cc-static .next-address-control {
+  padding-top: 0 !important;
+}
+
+/* Hand-written checkout fields — label_style variants to match the SDK
+   address blocks, driven by one modifier on the form section
+   (customer-info-form adds cc-labels-floating / cc-labels-static from the
+   same address_form.label_style frontmatter knob). The floating rules mirror
+   .input-flds--floating / .label-checkout--floating without needing the
+   per-element classes on every input. */
+.cc-labels-floating .input-flds {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.cc-labels-floating .label-checkout {
+  color: #000;
+  margin-left: -4px;
+  padding-left: 4px;
+  padding-right: 4px;
+  font-size: var(--font-size--xs);
+}
+
+.cc-labels-floating .label-checkout.has-value {
+  opacity: 100;
+  background-color: #fff;
+  transform: translate(0, -1.2em);
+}
+
+/* Static: the label (which precedes its input in the hand-written markup)
+   flows above the field; the placeholder duplicates it, so it is hidden.
+   !important beats the inline padding-top the checkout enhancer sets on
+   filled inputs, keeping empty and filled fields the same height. */
+.cc-labels-static .label-checkout {
+  opacity: 100;
+  pointer-events: auto;
+  color: #333;
+  font-size: var(--font-size--sm);
+  position: static;
+  transform: none;
+  /* spacing comes from the global label { margin-bottom: .25rem } —
+     matches the .cc-static flex gap on the SDK blocks */
+}
+
+.cc-labels-static .input-flds {
+  padding-top: 0 !important;
+}
+
+.cc-labels-static .input-flds::placeholder {
+  color: transparent;
+}
+
+@media screen and (max-width: 767px) {
+  .next-address-row {
+    grid-column-gap: 1rem;
+    grid-row-gap: 1rem;
+    flex-flow: column;
+  }
+}
+
+/* Address autocomplete affordance: the magnifier the hand-written address field carried
+   (.form-input-icon), on the SDK-built shipping address1 control. The SDK owns the markup
+   inside the block, so the icon is a background image rather than an element. */
+[data-next-address="shipping"] .next-address-field[data-next-address-field="address1"] .next-address-control {
+  padding-right: 2.75rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none' stroke='%23919191' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='6' cy='6' r='4'/%3E%3Cpath d='m9.25 9.25 2.5 2.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 1.25rem 1.25rem;
+}
+
+/* .cc-gated (opt-in modifier on the block): every row after the Address row stays hidden until
+   an address is typed. The hand-written olympus-mv layout gated apartment + phone this way; the
+   SDK itself only gates city/state/postal (data-next-component=location). Pure CSS via :has() on
+   the address1 control's :placeholder-shown — the SDK gives every block input a placeholder.
+   !important: once the SDK has revealed its own location row it keeps an inline display on it,
+   which would otherwise win when the shopper clears the address again. */
+[data-next-address].cc-gated .next-address-row:has(.next-address-control[data-next-checkout-field="address1"]:placeholder-shown) ~ .next-address-row {
+  display: none !important;
+}
+
+/* .cc-ungated (opt-in modifier on the block): every row is visible from the start — no
+   country-gating of city/state/postal. The hand-written demeter and shop layouts showed the
+   whole address at once. The SDK hides its location rows with an inline display:none (and
+   next-location-hidden), so !important is what un-hides them. */
+[data-next-address].cc-ungated .next-address-row.next-location-hidden {
+  display: flex !important;
+}
