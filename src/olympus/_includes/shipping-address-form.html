@@ -32,7 +32,9 @@
 {% assign sec_title = section_title | default: 'Step 3: Shipping Information' -%}
 {% if is_first == nil %}{% assign is_first = false %}{% endif -%}
 {% assign saf_label_style = label_style | default: address_form.label_style -%}
-{% if gated == nil %}{% assign gate_on = address_form.gated %}{% else %}{% assign gate_on = gated %}{% endif -%}
+{% if gated == nil %}{% assign gate_raw = address_form.gated %}{% else %}{% assign gate_raw = gated %}{% endif -%}
+{% comment %} Liquid treats any non-empty string as truthy, so a quoted `gated: "false"` must not switch gating on {% endcomment -%}
+{% if gate_raw == true or gate_raw == 'true' %}{% assign gate_on = true %}{% else %}{% assign gate_on = false %}{% endif -%}
 <div data-next-catalog-component="shipping-address-form" class="form-section{% if is_first %} form-section--first{% endif %}">
   <h1 class="form-section__title">{{ sec_title }}</h1>
   <div data-next-address="shipping" class="{% if gate_on %}cc-gated{% else %}cc-ungated{% endif %}{% if saf_label_style == 'floating' %} cc-floating{% elsif saf_label_style == 'static' %} cc-static{% endif %}"></div>

@@ -87,7 +87,7 @@ address_form:
                             <h1 class="form-section__title">Shipping</h1>
                             <div data-next-component="shipping-form">
                               {% comment %} SDK-built address block (SDK >= 0.4.41): renders the selected country's fields in that country's order; fields already declared elsewhere in the form (email) are skipped. Hand-written address inputs are deprecated — see _includes/shipping-address-form.html in apollo for the partial form of this. address_form.gated (frontmatter): true = only the Address field shows until an address is typed; false = every field visible. {% endcomment %}
-                              <div data-next-address="shipping" class="{% if address_form.gated %}cc-gated{% else %}cc-ungated{% endif %}{% if address_form.label_style == 'floating' %} cc-floating{% elsif address_form.label_style == 'static' %} cc-static{% endif %}"></div>
+                              <div data-next-address="shipping" class="{% if address_form.gated == true or address_form.gated == 'true' %}cc-gated{% else %}cc-ungated{% endif %}{% if address_form.label_style == 'floating' %} cc-floating{% elsif address_form.label_style == 'static' %} cc-static{% endif %}"></div>
                             </div>
                           </div>
                           <div class="form-section form-section--last">
