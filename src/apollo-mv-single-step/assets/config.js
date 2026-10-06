@@ -17,11 +17,9 @@ window.nextConfig = {
       requiredFields: ['email', 'fname', 'lname'], // Fields required for express checkout radio option
       methodOrder: ['paypal', 'apple_pay', 'google_pay'] // Display order of express payment method buttons
     },
+    // Card number / CVV fields (SDK 0.4.41+: 29next's own payment fields, loaded from payments.29next.com).
+    // Only these options apply; Spreedly-only options (fieldType, fraud, nonce, ...) are ignored.
     // cardInputConfig: {
-    //   fieldType: {
-    //     number: "tel",   // 'number' | 'text' | 'tel'
-    //     cvv: "tel"
-    //   },
     //   numberFormat: "prettyFormat", // 'prettyFormat' | 'plainFormat' | 'maskedFormat'
     //   labels: { number: "", cvv: "" },
     //   titles: { number: "", cvv: "" },
