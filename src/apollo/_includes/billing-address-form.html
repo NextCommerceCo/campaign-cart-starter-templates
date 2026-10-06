@@ -24,7 +24,7 @@
   next_gotchas:
     - Custom checkout HTML can regress shipping/billing mounts. This component keeps the canonical SDK-owned structure intact when templates are edited.
     - Field set and order are country-driven, same i18n rules service as shipping-address-form
-    - KNOWN SDK BUG (0.4.40, campaign-cart#110): the billing block does NOT re-render when the billing country is changed — the fields keep the previous country's layout while the form state and autocomplete follow the new country. Shipping is unaffected. Remove this note when the fix ships.
+    - Needs SDK >= 0.4.41: on 0.4.40 the billing block did not re-render when the billing country changed (campaign-cart#110, fixed in 0.4.41 — verified CA -> GB re-renders and survives a reload). Do not pin a template using this block below 0.4.41.
   next_variants:
     - inline (default; expands inline on uncheck)
   next_related:

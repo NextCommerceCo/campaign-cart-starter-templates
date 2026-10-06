@@ -17209,3 +17209,32 @@ select.next-address-control:has(option:checked:not([value=""])) {
     flex-flow: column;
   }
 }
+
+/* Address autocomplete affordance: the magnifier the hand-written address field carried
+   (.form-input-icon), on the SDK-built shipping address1 control. The SDK owns the markup
+   inside the block, so the icon is a background image rather than an element. */
+[data-next-address="shipping"] .next-address-field[data-next-address-field="address1"] .next-address-control {
+  padding-right: 2.75rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none' stroke='%23919191' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='6' cy='6' r='4'/%3E%3Cpath d='m9.25 9.25 2.5 2.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 1.25rem 1.25rem;
+}
+
+/* .cc-gated (opt-in modifier on the block): every row after the Address row stays hidden until
+   an address is typed. The hand-written olympus-mv layout gated apartment + phone this way; the
+   SDK itself only gates city/state/postal (data-next-component=location). Pure CSS via :has() on
+   the address1 control's :placeholder-shown — the SDK gives every block input a placeholder.
+   !important: once the SDK has revealed its own location row it keeps an inline display on it,
+   which would otherwise win when the shopper clears the address again. */
+[data-next-address].cc-gated .next-address-row:has(.next-address-control[data-next-checkout-field="address1"]:placeholder-shown) ~ .next-address-row {
+  display: none !important;
+}
+
+/* .cc-ungated (opt-in modifier on the block): every row is visible from the start — no
+   country-gating of city/state/postal. The hand-written demeter and shop layouts showed the
+   whole address at once. The SDK hides its location rows with an inline display:none (and
+   next-location-hidden), so !important is what un-hides them. */
+[data-next-address].cc-ungated .next-address-row.next-location-hidden {
+  display: flex !important;
+}

@@ -6,6 +6,7 @@
   next_params:
     section_title:    string, default "Step 3: Shipping Information". Heading shown above the fields.
     is_first:         bool, default false. Adds form-section--first modifier.
+    gated:            bool, default from page frontmatter `address_form.gated` (false when neither is set). true = cc-gated: only the Address field shows until the shopper types an address, then Apartment / City / State / Postal / Phone appear. false = cc-ungated: every field visible from the start. There is no third state — the SDK's own half-gating (Apartment shown, City/State/Postal hidden) is never used.
     label_style:      string, default "inset" (label floats in at the top of the field when filled). "floating" = cc-floating, label lifts onto the field's top border on a white chip when filled (the .label-checkout--floating look). "static" = cc-static, non-floating — label always visible above the field, placeholder hidden. Also toggleable per page without an include arg via frontmatter `address_form.label_style` (the include arg wins when both are set).
   next_sdk_owns:
     - data-next-address="shipping" (the block; SDK renders .next-address-row / .form-group.next-address-field / .next-address-control + .next-address-label into it)
@@ -31,7 +32,8 @@
 {% assign sec_title = section_title | default: 'Step 3: Shipping Information' -%}
 {% if is_first == nil %}{% assign is_first = false %}{% endif -%}
 {% assign saf_label_style = label_style | default: address_form.label_style -%}
+{% if gated == nil %}{% assign gate_on = address_form.gated %}{% else %}{% assign gate_on = gated %}{% endif -%}
 <div data-next-catalog-component="shipping-address-form" class="form-section{% if is_first %} form-section--first{% endif %}">
   <h1 class="form-section__title">{{ sec_title }}</h1>
-  <div data-next-address="shipping"{% if saf_label_style == 'floating' %} class="cc-floating"{% elsif saf_label_style == 'static' %} class="cc-static"{% endif %}></div>
+  <div data-next-address="shipping" class="{% if gate_on %}cc-gated{% else %}cc-ungated{% endif %}{% if saf_label_style == 'floating' %} cc-floating{% elsif saf_label_style == 'static' %} cc-static{% endif %}"></div>
 </div>
