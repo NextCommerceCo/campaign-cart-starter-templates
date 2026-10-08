@@ -524,7 +524,7 @@ Run `npm run config` to set the API key interactively. The API key comes from th
 |----------|-------|--------|
 | `next-funnel` | `meta_tags.next-funnel`, else `{{ campaign.name }}` | `meta_tags` preferred, legacy fallback |
 | `next-page-type` | `meta_tags.next-page-type`, else `{{ page_type }}` | `meta_tags` preferred, legacy fallback |
-| `next-success-url` | `meta_tags.next-success-url`, else `{{ success_url \| campaign_link }}`, else `{{ next_url \| campaign_link }}` | `meta_tags` preferred, legacy fallback |
+| `next-success-url` | `meta_tags.next-success-url`, else `{{ success_url \| default: next_url \| campaign_link }}` | `meta_tags` preferred, legacy fallback |
 | `next-upsell-accept-url` | `meta_tags.next-upsell-accept-url`, else `{{ next_url \| campaign_link }}` | `meta_tags` preferred, legacy fallback |
 | `next-upsell-decline-url` | `meta_tags.next-upsell-decline-url`, else `{{ decline_url \| campaign_link }}` | `meta_tags` preferred, legacy fallback |
 

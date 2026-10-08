@@ -28,7 +28,11 @@ function handleCheckoutNavigate() {
   if (!btn) return;
   // The button is a real link to the next step (href from the page's next_url).
   // next-success-url is where payment leads, not the next step, so it is never read here.
-  btn.addEventListener('click', () => {
+  btn.addEventListener('click', (event) => {
+    const href = btn.getAttribute('href');
+    if (!href) return;
+    event.preventDefault();
+
     const spinner = btn.querySelector('[data-pb-element="checkout-button-spinner"]');
     const info = btn.querySelector('[data-pb-element="checkout-button-info"]');
     if (spinner) spinner.style.display = '';
@@ -36,11 +40,11 @@ function handleCheckoutNavigate() {
 
     // Carry this page's query params (currency, country, UTMs) to the checkout step,
     // as the SDK does for data-next-checkout-step navigation.
-    const url = new URL(btn.href, window.location.href);
+    const url = new URL(href, window.location.href);
     new URLSearchParams(window.location.search).forEach((value, key) => {
       if (!url.searchParams.has(key)) url.searchParams.set(key, value);
     });
-    btn.href = url.toString();
+    window.location.href = url.toString();
   });
 }
 

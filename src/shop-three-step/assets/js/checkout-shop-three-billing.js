@@ -90,7 +90,9 @@
     // here: postal/province depend on country rules this script cannot see before
     // the SDK boots, and the SDK does not require a shipping method to leave step 2.
     // validateStep is internal to the SDK (not on window.next), so it cannot be
-    // called from here.
+    // called from here. When bumping sdk_version, re-check this list against the
+    // step 1/2 requiredFields in campaign-cart
+    // src/features/checkout/validation/step-validation.ts.
     var hasRequiredData = true;
     var missingFields = [];
     var redirectToStep = 1;
