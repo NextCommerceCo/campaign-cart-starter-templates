@@ -29,7 +29,9 @@
     {% endfor %}
     {% else %}
     <meta name="next-funnel" content="{{ campaign.name }}">
-    {% if next_url %}<meta name="next-success-url" content="{{ next_url | campaign_link }}">{% endif %}
+    {% comment %} success_url: where payment leads, for checkout_step / select pages whose next_url is the next step (express checkout on those pages reads next-success-url). Absent = next_url. {% endcomment %}
+    {% assign success_target = success_url | default: next_url %}
+    {% if success_target %}<meta name="next-success-url" content="{{ success_target | campaign_link }}">{% endif %}
     {% if next_url %}<meta name="next-upsell-accept-url" content="{{ next_url | campaign_link }}">{% endif %}
     {% if decline_url %}<meta name="next-upsell-decline-url" content="{{ decline_url | campaign_link }}">{% endif %}
     <meta name="next-page-type" content="{{ page_type }}">

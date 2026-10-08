@@ -250,6 +250,7 @@ title: "Page Title"
 page_layout: base.html               # optional — defaults to base.html; set to use a named layout
 page_type: checkout          # checkout | upsell | receipt | product
 next_url: upsell.html        # checkout pages: where to go after order
+success_url: upsell.html     # step / select pages only: where payment leads (see below)
 next_url: up02.html        # upsell pages: accept destination
 decline_url: receipt.html    # upsell pages: decline destination
 styles:
@@ -263,6 +264,7 @@ scripts:
 - `page_layout` is optional — omit to use `base.html`. Set to a named layout file (e.g. `base-landing.html`) when a slug contains pages that need different layout stacks side by side, such as a landing page alongside checkout pages.
 - `page_type` is required — it tells the SDK how to behave on this page
 - `next_url` is required on checkout pages
+- `success_url` is for multi-page checkouts. On a page that comes before the payment page (a select page, or an information/shipping step), `next_url` is the next step, but an express checkout button on that page still places an order, and the SDK sends that order to `next-success-url`. Set `success_url` to the payment page's `next_url` (the first upsell) so express orders land there. When `success_url` is absent, `next-success-url` uses `next_url`.
 - `next_url` / `decline_url` are required on upsell pages
 - `styles` / `scripts` are page-specific; `next-core.css` and `config.js` are loaded by `base.html` for every page
 - **Apollo / Apollo MV checkout** — promoted checkout component styles (header, bundle cards, promo blocks, checkout reveal, MV selector layout) live in shared `next-core.css` (byte-identical across all eight families). Do not add per-page CSS for those surfaces; typical checkout `styles:` is Swiper CDN only plus any route-specific files (`variant-picker.css`, `exit-intent-popup.css`).
@@ -423,7 +425,8 @@ meta_tags:
 When `meta_tags` is absent, layouts preserve the legacy fallback:
 
 ```liquid
-{% if next_url %}<meta name="next-success-url" content="{{ next_url | campaign_link }}">{% endif %}
+{% assign success_target = success_url | default: next_url %}
+{% if success_target %}<meta name="next-success-url" content="{{ success_target | campaign_link }}">{% endif %}
 {% if next_url %}<meta name="next-upsell-accept-url" content="{{ next_url | campaign_link }}">{% endif %}
 {% if decline_url %}<meta name="next-upsell-decline-url" content="{{ decline_url | campaign_link }}">{% endif %}
 ```
@@ -521,7 +524,7 @@ Run `npm run config` to set the API key interactively. The API key comes from th
 |----------|-------|--------|
 | `next-funnel` | `meta_tags.next-funnel`, else `{{ campaign.name }}` | `meta_tags` preferred, legacy fallback |
 | `next-page-type` | `meta_tags.next-page-type`, else `{{ page_type }}` | `meta_tags` preferred, legacy fallback |
-| `next-success-url` | `meta_tags.next-success-url`, else `{{ next_url \| campaign_link }}` | `meta_tags` preferred, legacy fallback |
+| `next-success-url` | `meta_tags.next-success-url`, else `{{ success_url \| campaign_link }}`, else `{{ next_url \| campaign_link }}` | `meta_tags` preferred, legacy fallback |
 | `next-upsell-accept-url` | `meta_tags.next-upsell-accept-url`, else `{{ next_url \| campaign_link }}` | `meta_tags` preferred, legacy fallback |
 | `next-upsell-decline-url` | `meta_tags.next-upsell-decline-url`, else `{{ decline_url \| campaign_link }}` | `meta_tags` preferred, legacy fallback |
 
@@ -607,9 +610,16 @@ Phone field is discovered via `data-next-checkout-field="phone"` → `input[name
 
 ### Multi-step navigation
 
+The step attributes go on the checkout form, not on a button. The form's submit button validates this step's fields and, if they pass, the SDK navigates to the URL in `data-next-checkout-step` (no order is placed). The payment page's form carries no step attribute.
+
 ```html
-<button data-next-checkout-step="{{ 'billing.html' | campaign_link }}">Continue</button>
+<form data-next-checkout="form" data-next-checkout-step="{{ 'shipping.html' | campaign_link }}" data-next-step-number="1">
+  …
+  <button type="submit">Continue to shipping</button>
+</form>
 ```
+
+Forward navigation never reads `next-success-url`. On step pages that meta tag is where payment leads (set `success_url`, see Page Frontmatter); a page without a checkout form, such as a select page, links to the next step with a plain `href` from `next_url`.
 
 ### Dynamic display
 
