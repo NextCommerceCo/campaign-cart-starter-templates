@@ -146,7 +146,7 @@ Registers every campaign. The `campaign` object in Liquid templates comes from h
   "my-campaign": {
     "name": "My Campaign",
     "entry_url": "presell",
-    "sdk_version": "0.4.41",
+    "sdk_version": "0.4.42",
     "store_name": "Acme Store",
     "store_url": "https://acme.com",
     "store_phone": "1-800-555-0100",
@@ -168,7 +168,7 @@ The top-level key is the campaign slug. Add any additional key to a campaign ent
 
 **`entry_url`** — optional. The page slug `npm run dev` opens in the browser (e.g. `"presell"`). Omit to use the kit default.
 
-**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.41"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
+**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.42"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
 
 **Per-campaign storage scope (SDK 0.4.34+)** — the SDK scopes cart/funnel/voucher storage per campaign automatically. The scope is a hash of the API key plus a **base-path token derived from page depth**: on a page **two or more** path segments deep (`/hu/checkout/`), the token is the first segment (`hu`); on a page **zero or one** segment deep (`/`, `/hu/`, `/checkout/`), the token is empty — the scope hashes the API key alone. The kit's `/<slug>/<page>/` URL shape is consistently two segments deep, so every page of a campaign derives the same scope with no extra config. The layout that breaks the derivation is a funnel that **mixes those depth buckets** — e.g. a landing page at `/hu/` (one segment → empty token) with its checkout at `/hu/checkout` (two segments → token `hu`) — which resolves to two different scopes and silently drops the cart mid-funnel (no build or console error). If you deploy a funnel shaped like that, declare the scope explicitly with `window.nextConfig.storageScope` (in `config.js`, which loads before the SDK) or `<meta name="next-storage-scope" content="...">` — the declared value must be identical on every page of the funnel.
 
@@ -552,15 +552,20 @@ The SDK is controlled entirely through HTML attributes. Do not write JavaScript 
 - `address_form.label_style` page frontmatter — `inset` (default) · `floating` · `static` — styles the SDK blocks and the hand-written contact fields together (include arg `label_style=` wins on the partials). Styling for the blocks is the "SDK address blocks" section of `next-core.css` (`.next-address-control` / `.next-address-label` mirror `.input-flds` / `.label-checkout`).
 - **Row gating is on or off** — `address_form.gated: true` (apollo, apollo-mv, olympus, both olympus-mv) shows only the Address field until the shopper types an address, then Apartment / City / State / Postal / Phone appear; `false` (demeter, shop-single-step, shop-three-step) shows every field from the start. The block carries `cc-gated` or `cc-ungated` accordingly (include arg `gated=` wins on `shipping-address-form.html`). There is deliberately no third state: on its own the SDK half-gates (Apartment shown, City/State/Postal hidden), and the templates never render it bare. The shipping `address1` control also carries the magnifier icon (CSS background) the hand-written field had.
 - Needs SDK ≥ 0.4.41: on 0.4.40 the billing block did not re-render when the billing country changed (campaign-cart#110). Do not pin a project using the blocks below 0.4.41.
-- Validation: the SDK validates the shipping postcode on submit (blocks the order on a bad format). The **billing** postcode is not validated client-side on 0.4.41 — the API rejects it for some countries (GB) and accepts it for others (CA). Known SDK gap, not something the template can fix.
+- Validation: the SDK validates the shipping postcode on submit (blocks the order on a bad format). Since 0.4.42 the **billing** block is validated the same way (postcode, state, country rules, shown as the shopper types); on 0.4.41 the billing postcode was not checked client-side and the API rejected it for some countries (GB) but not others (CA).
 
 Hand-written address inputs (`data-next-checkout-field="address1" | "city" | "country" | "province" | "postal"`) still work — field names are the SDK's, not camelCase: `fname` / `lname` (SDK 0.4.39+ also accepts `first_name` / `last_name`, the orders-API names), `postal` (not `zip`) — but they are deprecated since 0.4.39; see the SDK's [checkout page guide — Contact and address](https://cart-sdk.nextcommerce.com/latest/pages/checkout-page/#contact-and-address).
 
-**SDK 0.4.39+ checkout behaviour (templates pin 0.4.41):**
+**SDK 0.4.39+ checkout behaviour (templates pin 0.4.42):**
 - **Phone field** — no longer uses intl-tel-input, so there is no `.iti` / `.iti__*` markup and CSS targeting it matches nothing. The SDK formats the number in the country's mask as the shopper types (`(415) 555-2671`), shows a flag `<img class="next-phone-flag">` inside the input's right edge (it follows the country select), and sends E.164 to the API. Restyle with `.next-phone-field` (the input's parent), `.next-phone-flag`, `.next-phone-input`. The SDK replaces the input's `placeholder` with `Phone*` / `Phone (Optional)`. Page JS reading `input.value` gets the national mask; from 0.4.41 the input carries `data-next-phone-e164` (the E.164 value) and `data-next-phone-country` — read those, never parse `input.value`.
 - **Content-Security-Policy** — country lists, address/phone rules, states and the detected country/currency come from `i18n-rules.nextcommerce.com`. A page that sets a CSP must allow that host in `connect-src` **and** `img-src` (the flag). From 0.4.41 the card fields are loaded by 29next's wrapper from `payments.29next.com` (`script-src`), which in turn loads Spreedly's hosted-fields SDK and mounts its iframes from `core.spreedly.com` — allow that host in `script-src` **and** `frame-src` too. A policy that omits either host shows no card fields. The templates set no CSP.
 - **Enter** in a checkout field moves to the next field; only the submit button places the order. **Emoji** are rejected in every field.
 - A `required` phone is enforced from `data-next-checkout-field="phone"` alone (before 0.4.39 it also needed `name="phone"`).
+
+**SDK 0.4.42 changes (billing validation, country change) — per the release notes, not browser-verified in the templates:**
+- Billing address validated like shipping: postcode, state and country rules, with messages shown immediately rather than on submit. "Use shipping as billing" skips billing checks. Billing phone is validated in E.164 for the billing country.
+- Changing country clears street, city, state and postcode but keeps name, email and phone; a marked phone or postcode is re-checked against the new country. The state list always follows the current country.
+- Nothing is renamed or removed; the changes sit inside the SDK-owned `data-next-address` blocks, so templates need no markup change.
 
 **SDK 0.4.41 changes (card fields, coupons):**
 - **Card number and CVV are created by 29next's payment wrapper** (`payments.29next.com/js/v1/payment.js`, loaded by the SDK), not by the page. Under the wrapper they are still **Spreedly hosted fields** — the iframes come from `core.spreedly.com` — but the environment key, certificate and nonce are obtained server-side from the campaign's `payment_env_key`. They still mount into `data-next-checkout-field="cc-number"` / `"cvv"`, so the template markup is unchanged, and the `checkout_reveal` rule (keep the panel off-screen, never `display:none`) still applies because the iframes need real dimensions to mount. `next-spreedly-key`, `next-payment-env-key` and `window.nextConfig.spreedlyEnvironmentKey` are no longer read.
