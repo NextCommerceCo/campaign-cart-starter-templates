@@ -1,8 +1,8 @@
 ---
 title: "Olympus MV — Select"
 page_type: checkout
-next_url: checkout.html
-success_url: upsell-mv.html # where payment leads (express checkout on this page); keep equal to the payment page's next_url
+next_url: upsell-mv.html
+next_step: checkout.html # this form's next step (step pages only); next_url stays where a completed order goes, as on every checkout page
 promo_sale: "default"
 scripts:
   - js/promo-banner.js
@@ -212,7 +212,7 @@ variant_slots:
                               </div>
                             </div>
                             <div class="checkout_cta-sec">
-                              <a href="{{ next_url | campaign_link }}" data-next-action="checkout" class="button cc-gold">
+                              <a href="{{ next_step | default: 'checkout.html' | campaign_link }}" data-next-action="checkout" class="button cc-gold">
                                 <div data-pb-element="checkout-button-spinner" class="submit-button__loader">
                                   <div class="three-quarter-spinner black"></div>
                                 </div>

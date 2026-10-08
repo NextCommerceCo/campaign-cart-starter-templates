@@ -26,7 +26,7 @@ function handleStepTransition() {
 function handleCheckoutNavigate() {
   const btn = document.querySelector('[data-next-action="checkout"]');
   if (!btn) return;
-  // The button is a real link to the next step (href from the page's next_url).
+  // The button is a real link to the next step (href from the page's next_step).
   // next-success-url is where payment leads, not the next step, so it is never read here.
   btn.addEventListener('click', (event) => {
     const href = btn.getAttribute('href');

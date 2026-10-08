@@ -1,8 +1,8 @@
 ---
 title: "Shop Three Step — Shipping"
 page_type: checkout
-next_url: billing.html
-success_url: upsell-bundle-stepper.html # where payment leads (express checkout on this page); keep equal to the payment page's next_url
+next_url: upsell-bundle-stepper.html
+next_step: billing.html # this form's next step (step pages only); next_url stays where a completed order goes, as on every checkout page
 scripts:
   - js/checkout.js
   - js/checkout-shop-three-billing.js
@@ -63,7 +63,7 @@ window.CHECKOUT_CONFIG = {
                     <div class="steps-text">Payment<br></div>
                   </div>
                   <div class="checkout-form">
-                    <form data-next-checkout="form" id="combo_form" method="post" data-next-checkout-step="{{ 'billing.html' | campaign_link }}" data-next-step-number="2">
+                    <form data-next-checkout="form" id="combo_form" method="post" data-next-checkout-step="{{ next_step | default: 'billing.html' | campaign_link }}" data-next-step-number="2">
                       <div class="form-content">
                         <div class="form-sections">
                           <div class="form-section">
