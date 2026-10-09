@@ -1,6 +1,6 @@
 # CampaignSpec Agent Fixtures
 
-These JSON files are small CampaignSpec-shaped examples for agent reasoning and human review. They follow the real Map Builder export dialect (`schema_version` 4.3) but are not live Campaigns App exports and should not be used as production campaign data.
+These JSON files are small CampaignSpec-shaped examples for agent reasoning and human review. They follow the real Map Builder export dialect (`schema_version` 4.3, or 5.0 for the multi-step checkout fixtures) but are not live Campaigns App exports and should not be used as production campaign data.
 
 What they are for:
 
@@ -10,16 +10,16 @@ What they are for:
 
 Fixture conventions (real-export dialect):
 
-- Specs are stamped `"schema_version": "4.3"` and pin the SDK via `global_config.sdk_version`.
+- The six single-step specs are stamped `"schema_version": "4.3"`; the two multi-step specs (`shop-three-step-dynamic-shipping.json`, `olympus-mv-two-step-configurable.json`) are stamped `"5.0"` because they use v5 page types. Every spec pins the SDK via `global_config.sdk_version`.
 - Page `packages[]` use `qty` and the boolean role flags `is_upsell` / `is_order_bump` (mutually exclusive; a package with neither flag is the main product; no `role` field).
 - Offers — page-level and root catalog — are identified by `ref_id`.
 - Every page carries `sdk_hints.sdk_page_type` (`product` | `checkout` | `upsell` | `receipt`): `presell` and `landing` pages map to `product`, `thankyou` maps to `receipt`, and `select`, `checkout_step` and `checkout` all map to `checkout`.
-- Multi-page checkouts use the CampaignSpec v5 page types from campaigns-os#641: `select` is a package picker before checkout, `checkout_step` is a checkout form that collects details and moves on without placing an order, and `checkout` is the page that takes payment. `shop-three-step-dynamic-shipping.json` uses `checkout_step` for its information and shipping pages, which the v4 schema does not accept, so it validates downstream only once the v5 schema lands.
+- Multi-page checkouts use the CampaignSpec v5 page types from campaigns-os#641: `select` is a package picker before checkout, `checkout_step` is a checkout form that collects details and moves on without placing an order, and `checkout` is the page that takes payment. `shop-three-step-dynamic-shipping.json` uses `checkout_step` for its information and shipping pages, which only the v5 schema accepts, so a fixture that uses `checkout_step` must be stamped 5.0.
 - Shipping methods live only in the root `shipping_methods[]` catalog, not on pages.
 - `sdk_hints.template_family` and `sdk_hints.frontmatter` are template-handoff extensions, not part of a live export. `template_family` names the intended starter family for the fixture only; `frontmatter` shows the values an agent would write into the template.
 - Numeric `ref_id` values are illustrative. Replace them from the target Campaigns API.
 - `shipping_methods[].key` mirrors the starter frontmatter vocabulary, such as `standard` and `free`.
 
-These fixtures are synced verbatim into `NextCommerceCo/campaigns-os` (`contracts/fixtures/campaign-specs/`) by its catalog refresh, where they must pass the CampaignSpec v4 schema conformance gate. Keep them in the dialect above or the downstream gate fails.
+These fixtures are synced verbatim into `NextCommerceCo/campaigns-os` (`contracts/fixtures/campaign-specs/`) by its catalog refresh, where each must pass the CampaignSpec schema conformance gate for its `schema_version` (v4 for 4.3, v5 for 5.0). Keep them in the dialect above or the downstream gate fails.
 
 Run `npm run lint:agent-contracts` after changing these fixtures or `docs/commerce-surface-catalog.json`.
