@@ -270,6 +270,7 @@ title: "Page Title"
 page_layout: base.html               # optional — defaults to base.html; use named layouts (e.g. base-landing.html) when multiple layout stacks coexist in one slug
 page_type: product | checkout | upsell | receipt
 next_url: up01.html          # checkout pages only
+next_step: shipping.html     # multi-page checkout only: on select / step pages, the form's data-next-checkout-step / the select link href; next_url stays the post-order destination
 next_url: up02.html        # upsell pages only
 decline_url: receipt.html    # upsell pages only
 styles:

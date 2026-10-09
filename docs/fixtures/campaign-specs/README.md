@@ -13,7 +13,8 @@ Fixture conventions (real-export dialect):
 - Specs are stamped `"schema_version": "4.3"` and pin the SDK via `global_config.sdk_version`.
 - Page `packages[]` use `qty` and the boolean role flags `is_upsell` / `is_order_bump` (mutually exclusive; a package with neither flag is the main product; no `role` field).
 - Offers — page-level and root catalog — are identified by `ref_id`.
-- Every page carries `sdk_hints.sdk_page_type` (`product` | `checkout` | `upsell` | `receipt`): `presell` and `landing` pages (including variant-selection pages) map to `product`, `thankyou` maps to `receipt`.
+- Every page carries `sdk_hints.sdk_page_type` (`product` | `checkout` | `upsell` | `receipt`): `presell` and `landing` pages map to `product`, `thankyou` maps to `receipt`, and `select`, `checkout_step` and `checkout` all map to `checkout`.
+- Multi-page checkouts use the CampaignSpec v5 page types from campaigns-os#641: `select` is a package picker before checkout, `checkout_step` is a checkout form that collects details and moves on without placing an order, and `checkout` is the page that takes payment. `shop-three-step-dynamic-shipping.json` uses `checkout_step` for its information and shipping pages, which the v4 schema does not accept, so it validates downstream only once the v5 schema lands.
 - Shipping methods live only in the root `shipping_methods[]` catalog, not on pages.
 - `sdk_hints.template_family` and `sdk_hints.frontmatter` are template-handoff extensions, not part of a live export. `template_family` names the intended starter family for the fixture only; `frontmatter` shows the values an agent would write into the template.
 - Numeric `ref_id` values are illustrative. Replace them from the target Campaigns API.

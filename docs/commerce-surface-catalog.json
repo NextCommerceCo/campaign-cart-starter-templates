@@ -2398,7 +2398,6 @@
       ],
       "canonicalSurfaces": {
         "selectStep": "mv-selection-step",
-        "checkoutSelector": "mv-selected-bundle-review",
         "variantSlots": "bundle-slot-selector",
         "personalization": "per-slot picker (data-next-property per slot, toggled by slot_personalization); order-wide default via personalization-field (ships unwired)",
         "orderSummary": "cart-summary03|cart-summary04",

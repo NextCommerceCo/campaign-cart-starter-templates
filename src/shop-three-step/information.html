@@ -1,7 +1,8 @@
 ---
 title: "Shop Three Step — Information"
 page_type: checkout
-next_url: shipping.html
+next_url: upsell-bundle-stepper.html
+next_step: shipping.html # this form's next step (step pages only); next_url stays where a completed order goes, as on every checkout page
 order_bump_variant: "check02"
 packages:
   main_package: 1
@@ -85,7 +86,7 @@ address_form:
                   </div>
                   {% campaign_include 'express-checkout.html' %}
                   <div class="checkout-form">
-                    <form data-next-checkout="form" id="combo_form" method="post" data-next-checkout-step="{{ 'shipping.html' | campaign_link }}" data-next-step-number="1">
+                    <form data-next-checkout="form" id="combo_form" method="post" data-next-checkout-step="{{ next_step | default: 'shipping.html' | campaign_link }}" data-next-step-number="1">
                       <div class="form-content">
                         <div class="form-sections">
                           <div class="form-section form-section--first">
