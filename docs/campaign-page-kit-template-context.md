@@ -974,7 +974,7 @@ Precedence: `forceBundleId` → `data-next-selected="true"` → first card. If t
 
 ### Package swap selector (legacy / 0.3.x pattern)
 
-Still functional but **not offer-aware** — tier pricing must be set per-package in the Campaigns App. Use bundle selector for new campaigns.
+Still functional but **not offer-aware**: each card swaps in a separate package, so tier pricing has to live on those packages. Multi-unit packages with their own quantity and retail price exist only on legacy campaigns that have **Enable Package Retail Price & Quantity** turned on. On new campaigns, add the product once and create one offer per quantity tier in the Campaigns App (Buy 1, Buy 2, Buy 3 over the same product), then present the tiers with the bundle selector.
 
 ```html
 <div data-next-cart-selector data-next-selection-mode="swap">
@@ -1234,7 +1234,7 @@ Use these when implementing or verifying a specific task. Work through each item
 - [ ] Optional: `gtm_id` / `fb_pixel_id` in campaigns.json — real container and pixel IDs for production; omit keys to disable layout-injected tags
 - [ ] Optional: direct vendor analytics (GA4, TikTok, RudderStack, …) — add the vendor's keys to the campaign's entry per [Direct vendor analytics — Route C](#direct-vendor-analytics--route-c-ga4_id-tiktok_pixel_id-); keys are not pre-seeded, absent = off
 - [ ] API key is set in `assets/config.js` (run `npm run config` or edit directly)
-- [ ] All `data-next-package-id` values updated to real package IDs from the Campaigns App
+- [ ] All `data-next-package-id` values updated to real package IDs from the campaign's **Products** tab in the Campaigns App (each row shows `ID - <ref_id>`)
 - [ ] Exactly one selector card per selector group has `data-next-selected="true"`
 - [ ] All `data-next-package-sync` values updated to the new main package IDs
 - [ ] All pages have correct `page_type` in frontmatter
@@ -1255,7 +1255,7 @@ Use these when implementing or verifying a specific task. Work through each item
 - [ ] Clickable header has `data-next-toggle="toggle"`
 - [ ] `os-component="check"` element exists inside the header for the checkmark
 - [ ] CSS for `[data-next-bump][class*="next-active"] [os-component="check"]` is present in the stylesheet
-- [ ] Bump package ID exists as a real package in the Campaigns App
+- [ ] Bump package ID exists as a product on the campaign's **Products** tab (selecting it in an offer adds it; use **Add Products** for a full-price add-on no offer covers)
 
 ### Adding a new upsell step
 
@@ -1314,7 +1314,7 @@ Available sale names: `newyear` · `valentinesday` · `stpatricks` · `easter` �
 - [ ] Confirm `config.js` loads before the SDK in rendered `<head>` source
 - [ ] Confirm `apiKey` in `config.js` is correct for this campaign
 - [ ] Inspect rendered HTML — verify `<meta name="next-page-type">` and URL meta tags are present with correct values; when `meta_tags` is present, values should match the spec verbatim
-- [ ] Check all `data-next-package-id` values match real package IDs in the Campaigns App — wrong IDs produce no output silently
+- [ ] Check all `data-next-package-id` values match real package IDs on the campaign's **Products** tab — wrong IDs produce no output silently
 - [ ] For form submission issues: check DevTools → Network for 4xx API responses
 - [ ] For display not updating: confirm the element has a valid `data-next-display` token and the SDK is loaded
 
