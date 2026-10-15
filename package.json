@@ -36,7 +36,7 @@
     "lint:upstream": "node scripts/lint-upstream-analytics.mjs"
   },
   "dependencies": {
-    "next-campaign-page-kit": "^0.2.0"
+    "next-campaign-page-kit": "^0.3.0"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.3",
