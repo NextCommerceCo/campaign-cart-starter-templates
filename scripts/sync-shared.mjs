@@ -7,7 +7,7 @@
  * Shared roots:
  *   _shared/analytics/_includes/*.html  ->  src/<family>/_includes/*.html
  *   _shared/analytics/js/*.js           ->  src/<family>/assets/js/*.js
- *   _shared/checkout/_includes/*.html   ->  src/<family>/_includes/*.html   (payment-methods, payment-logos)
+ *   _shared/checkout/_includes/*.html   ->  src/<family>/_includes/*.html   (payment-methods, payment-logos, bumps, promo-banner)
  *   _shared/checkout/images/*.svg       ->  src/<family>/assets/images/*.svg  (wallet + card-brand logos)
  *   _shared/upsell/_includes/upsell/*.html -> src/<family>/_includes/upsell/*.html (the composable upsell set)
  *   _shared/upsell/js/*.js              ->  src/<family>/assets/js/*.js       (upsells.js, payment-logos.js)

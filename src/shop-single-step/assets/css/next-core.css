@@ -15179,6 +15179,166 @@ os-dropdown[next-variant-option="color"] os-dropdown-item.next-oos::after {
   font-weight: 800;
 }
 
+/* ==========================================================================
+   Classic promo-banner — code bar + optional top bar and countdown
+   (promo-banner.html, promo_banner.variant: classic). Light-DOM port of the
+   retired <promo-banner> web component, rendered at build time (issue #233).
+   No fixed height: the markup is in the first paint, so the bar sizes to its
+   copy before anything is drawn. Only the countdown boxes are fixed-size,
+   because their digits change after paint.
+   ?banner=n / ?topbar= toggle html classes in an inline pre-paint script.
+   ========================================================================== */
+
+html.cc-promo-banner-off [data-promo-banner] {
+  display: none;
+}
+
+.promo-banner--classic {
+  --promo-banner-topbar-bg: #000;
+  --promo-banner-highlight: #acf4a1;
+  background-color: transparent;
+  border-radius: 0;
+  color: var(--brand--color--white);
+  letter-spacing: normal;
+  font-size: 1.0625rem;
+  text-align: center;
+}
+
+.promo-banner--classic .promo-banner__topbar {
+  background-color: var(--promo-banner-topbar-bg);
+  padding: .9375rem 0;
+}
+
+.promo-banner--classic.promo-banner--topbar-off .promo-banner__topbar,
+html.cc-promo-topbar-off .promo-banner--classic .promo-banner__topbar {
+  display: none;
+}
+
+html.cc-promo-topbar-on .promo-banner--classic .promo-banner__topbar {
+  display: block;
+}
+
+.promo-banner--classic .promo-banner__topbar-text {
+  margin: 0;
+  font-weight: 700;
+}
+
+.promo-banner--classic .promo-banner__break {
+  display: none;
+}
+
+.promo-banner--classic .promo-banner__highlight {
+  color: var(--promo-banner-highlight);
+}
+
+.promo-banner--classic .promo-banner__bar {
+  background-color: var(--brand--color--primary, #000);
+  padding: .5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.promo-banner--classic .promo-banner__text {
+  margin: 0;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.promo-banner--classic .promo-banner__label {
+  font-weight: 400;
+  margin-left: .25rem;
+}
+
+.promo-banner--classic .promo-banner__code {
+  display: inline-block;
+  background-color: #ffffff30;
+  border-radius: 8px;
+  padding: .3125rem .75rem;
+  margin: 0 .5rem;
+  font-size: 1.125rem;
+  white-space: nowrap;
+}
+
+.promo-banner--classic .promo-banner__timer {
+  display: flex;
+  gap: .8125rem;
+  margin-left: .625rem;
+}
+
+.promo-banner--classic .promo-banner__timer-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.promo-banner--classic .promo-banner__timer-box {
+  background-color: #000;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px #0003;
+  width: 2rem;
+  height: 1.875rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.promo-banner--classic .promo-banner__timer-label {
+  font-size: .75rem;
+  font-weight: 700;
+  line-height: 1.25rem;
+}
+
+@media screen and (max-width: 991px) {
+  .promo-banner--classic {
+    font-size: .9375rem;
+  }
+
+  .promo-banner--classic .promo-banner__topbar {
+    padding: .375rem 0;
+  }
+
+  .promo-banner--classic .promo-banner__topbar-text {
+    line-height: 1.25rem;
+  }
+
+  .promo-banner--classic .promo-banner__break {
+    display: inline;
+  }
+
+  .promo-banner--classic .promo-banner__bar {
+    flex-direction: column;
+    gap: .5rem;
+    padding: .3125rem .625rem;
+  }
+
+  .promo-banner--classic .promo-banner__text {
+    display: block;
+    white-space: normal;
+  }
+
+  .promo-banner--classic .promo-banner__code {
+    font-size: 1rem;
+    margin: 0 .3125rem;
+  }
+
+  .promo-banner--classic .promo-banner__timer {
+    margin-left: 0;
+  }
+}
+
+@media screen and (max-width: 392px) {
+  .promo-banner--classic,
+  .promo-banner--classic .promo-banner__code {
+    font-size: .8125rem;
+  }
+}
+
 /* --- Apollo as-seen-in (formerly page-level CSS) ------------------------------- */
 /* ==========================================================================
    Apollo as-seen-in — "AS SEEN IN" press-logo strip + divider.

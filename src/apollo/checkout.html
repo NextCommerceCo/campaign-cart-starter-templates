@@ -1,7 +1,6 @@
 ---
 title: "Apollo Checkout"
 page_type: checkout
-promo_sale: "default"
 next_url: upsell-bundle-stepper.html
 cart_summary_variant: "01"
 # Product-card bump shown immediately after the bundle selector. Set to "none" to remove it.
@@ -25,7 +24,7 @@ as_seen_in:
       alt: "Press logo"
     - src: "images/landing/_shared/16x9.svg"
       alt: "Press logo"
-promo_banner:
+promo_banner: # slim (default) | classic — delete this block to remove the banner (see _includes/promo-banner.html)
   emoji: "✨"
   highlight: "Up to 60% off"
   lead: "your"
@@ -175,9 +174,7 @@ bundles:
 <div class="page-wrapper">
       <div class="main-wrapper">
 
-        <div data-next-hide="param.banner=='n'" class="section_header">
-          {% campaign_include 'promo-banner.html' promo_banner=promo_banner %}
-        </div>
+        {% campaign_include 'promo-banner.html' promo_banner=promo_banner %}
         {% campaign_include 'checkout-header.html' %}
         <div class="section-checkout cc-gray">
           <div class="container">

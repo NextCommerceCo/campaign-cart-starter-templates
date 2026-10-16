@@ -2,7 +2,13 @@
 title: "Demeter Checkout"
 page_type: checkout
 next_url: upsell-bundle-stepper.html
-promo_sale: "default"
+promo_sale: "default" # <promo-timer> only (its own sale list in js/promo-timer.js); the banner reads promo_banner
+promo_banner: # delete this block to remove the banner (see _includes/promo-banner.html)
+  variant: classic # slim | classic
+  text: "GET UP TO 69% OFF NOW!"
+  code_label: "USE PROMO CODE:"
+  code: "XXCODE"
+  suffix: "- LIMITED TIME OFFER"
 cart_summary_variant: "03"
 order_bump_variant: "check01+switch01"
 price_display_variant: "compare-unit-total"
@@ -57,7 +63,6 @@ bundles:
     total_tone_class: "os-dark"
     shipping_label: "+ Free Shipping"
 scripts:
-  - js/promo-banner.js
   - js/promo-timer.js
   - js/checkout.js
   - js/payment-logos.js
@@ -69,9 +74,7 @@ address_form:
 <div class="page-wrapper">
 
       <div class="main-wrapper">
-        <div data-next-hide="param.banner=='n'" class="section_header">
-          <promo-banner{% if promo_sale %} force-sale="{{ promo_sale }}"{% endif %}{% if promo_topbar %} show-topbar="{{ promo_topbar }}"{% endif %}></promo-banner>
-        </div>
+        {% campaign_include 'promo-banner.html' promo_banner=promo_banner %}
         {% campaign_include 'checkout-header.html' %}
         <div class="encrypted-banner">
           <div class="container cc-small">

@@ -2,7 +2,13 @@
 title: "Olympus MV Single Checkout"
 page_type: checkout
 next_url: upsell-mv.html
-promo_sale: "default"
+promo_sale: "default" # <promo-timer> only (its own sale list in js/promo-timer.js); the banner reads promo_banner
+promo_banner: # delete this block to remove the banner (see _includes/promo-banner.html)
+  variant: classic # slim | classic
+  text: "GET UP TO 69% OFF NOW!"
+  code_label: "USE PROMO CODE:"
+  code: "XXCODE"
+  suffix: "- LIMITED TIME OFFER"
 # payment_methods: { method_order, default_method } — payment radio order + first-open method; keys and rules in _includes/payment-methods.html
 order_bump:
   check01:
@@ -49,7 +55,6 @@ order_bump:
 styles:
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css
 scripts:
-  - js/promo-banner.js
   - js/promo-timer.js
   - https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js
   - js/checkout.js
@@ -147,9 +152,7 @@ address_form:
 <div class="page-wrapper">
       <div class="main-wrapper">
 
-        <div data-next-hide="param.banner=='n'" class="section_header">
-          <promo-banner{% if promo_sale %} force-sale="{{ promo_sale }}"{% endif %}{% if promo_topbar %} show-topbar="{{ promo_topbar }}"{% endif %}></promo-banner>
-        </div>
+        {% campaign_include 'promo-banner.html' promo_banner=promo_banner %}
         {% campaign_include 'checkout-header.html' %}
         <div class="encrypted-banner">
           <div class="padding-global">
