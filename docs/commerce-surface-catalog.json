@@ -813,7 +813,7 @@
         "id": "template-reference-apollo",
         "family": "apollo",
         "version": "sdk-0.4.38-composable-upsells-2026-09-25",
-        "source_commit": "1a3bf7218e7f10ef5733ceba84d2856eeca2cfbd",
+        "source_commit": "ac529485f0a728cf9c6ac8dbcde81041bd1c6ba8",
         "provenance_path": "docs/template-references/apollo/README.md",
         "provenance_url": "https://raw.githubusercontent.com/NextCommerceCo/campaign-cart-starter-templates/main/docs/template-references/apollo/README.md",
         "contract_path": "docs/commerce-surface-catalog.json",
