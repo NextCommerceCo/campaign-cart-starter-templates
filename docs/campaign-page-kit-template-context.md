@@ -1290,19 +1290,25 @@ Use these when implementing or verifying a specific task. Work through each item
 
 ### Configuring the promo banner and timer
 
-**Apollo and Apollo MV** use frontmatter-driven partials (`promo-banner.html`, `countdown-timer.html`) — not `<promo-banner>` / `<promo-timer>` web components. Configure via `promo_banner`, `countdown_timer`, and optional `promo_sale` frontmatter. `countdown-timer.html` has two modes chosen by the data: `countdown_timer.duration` (seconds) renders the SDK-native `data-next-timer`, persisted per `persistence_id` so a reload does not restart it (used on upsell pages); `countdown_timer.start` (`"MM:SS"`) renders the legacy `[data-next-element="timer"]` span counted down by `checkout.js` (used on checkout). It renders nothing when `countdown_timer` is absent. No `promo-banner.js` / `promo-timer.js` on Apollo checkout.
+**Banner — every family:** `_includes/promo-banner.html`, rendered at build time from `promo_banner` frontmatter. There is no `<promo-banner>` web component and no `promo-banner.js` any more: the old component built the bar after first paint and pushed the whole checkout down (CLS ~0.09–0.16).
 
-**Other families (olympus, demeter, olympus-mv)** still ship the web-component path:
+- [ ] Banner on: `promo_banner` block in the page frontmatter + `{% campaign_include 'promo-banner.html' promo_banner=promo_banner %}` at the top of `main-wrapper` (the partial renders its own `section_header` wrapper)
+- [ ] Banner off: delete the `promo_banner` block (or the include). Nothing renders: no wrapper, no reserved space
+- [ ] Pick a look with `promo_banner.variant`: `slim` (default; Apollo one-line bar: `emoji`, `highlight`, `lead`, `strong`, `trail`) or `classic` (code bar: `text`, `code_label`, `code`, `suffix`; optional `countdown_end` and a `topbar { show, emoji, title, offer1, offer2, background, highlight_color }` row)
+- [ ] Switching sales: edit `promo_banner` (copy, code, `countdown_end`) and redeploy. There is no date schedule; what is in the frontmatter is what renders
+- [ ] `countdown_end` is an ISO date-time (`"2026-11-29T23:59:59"`) read in the visitor's local time; an inline script fills the digits as the bar is parsed, so the first paint already shows them
+- [ ] URL overrides, applied by an inline script before first paint: `?banner=n` hides the banner, `?topbar=on` / `?topbar=off` shows / hides the classic top bar. Do not hide or resize the banner from a deferred script or `data-next-hide`: that collapses it after paint and shifts the page the other way
+- [ ] Banner CSS is in `next-core.css` (`.promo-banner--apollo` = slim, `.promo-banner--classic`); no fixed bar height — only the countdown boxes are fixed-size
 
-- [ ] `promo-banner.js` and `promo-timer.js` added to `scripts:` in page frontmatter
-- [ ] `promo_sale: "default"` set in frontmatter (or a specific sale name to force a promotion year-round)
-- [ ] `<promo-banner>` placed at the top of the page inside `<div data-next-hide="param.banner=='n'" class="section_header">`
-- [ ] `<promo-timer>` placed above `<div class="checkout-form">` in the checkout left column
-- [ ] Both components wired with `{% if promo_sale %} force-sale="{{ promo_sale }}"{% endif %}`
-- [ ] To hide the banner top bar, add `promo_topbar: "false"` to frontmatter and wire with `{% if promo_topbar %} show-topbar="{{ promo_topbar }}"{% endif %}`
-- [ ] To edit sale dates or promo codes, update the `sales` array in both `promo-banner.js` and `promo-timer.js` — keep them in sync
+**Checkout timer.** Apollo and Apollo MV use `countdown-timer.html` (`countdown_timer` frontmatter). `countdown_timer.duration` (seconds) renders the SDK-native `data-next-timer`, persisted per `persistence_id` so a reload does not restart it (used on upsell pages); `countdown_timer.start` (`"MM:SS"`) renders the legacy `[data-next-element="timer"]` span counted down by `checkout.js` (used on checkout). It renders nothing when `countdown_timer` is absent.
 
-Available sale names: `newyear` · `valentinesday` · `stpatricks` · `easter` · `mothersday` · `memorialday` · `fathersday` · `4thofjuly` · `summersale` · `backtoschool` · `halloween` · `veteransday` · `blackfriday` · `cybermonday` · `xmas` · `yearend`
+**Other families (olympus, demeter, olympus-mv)** still ship the `<promo-timer>` web component in the checkout column:
+
+- [ ] `promo-timer.js` added to `scripts:` in page frontmatter
+- [ ] `<promo-timer{% if promo_sale %} force-sale="{{ promo_sale }}"{% endif %}></promo-timer>` placed above `<div class="checkout-form">`
+- [ ] `promo_sale: "default"` (or a sale name) picks the timer's promo code from the `sales` array in `promo-timer.js`. `promo_sale` drives only the timer; when you force a sale there, put the same code in `promo_banner.code`
+
+Timer sale names: `newyear` · `valentinesday` · `stpatricks` · `easter` · `mothersday` · `memorialday` · `fathersday` · `4thofjuly` · `summersale` · `backtoschool` · `halloween` · `veteransday` · `blackfriday` · `cybermonday` · `xmas` · `yearend` · `newyear2027`
 
 ---
 
