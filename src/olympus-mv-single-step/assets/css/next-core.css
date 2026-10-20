@@ -3189,6 +3189,19 @@ figcaption {
   color: #fff;
 }
 
+/* Shop Pay (SDK 0.4.43+). Like PayPal and Apple Pay above, the page styles the SDK-built express button.
+   The SDK's icon is currentColor and sized only by Tailwind utility classes (inert here), so give it the
+   official purple, a white wordmark, and an explicit height. */
+.payment-btn.cc-shop-pay {
+  background-color: #5a31f4;
+  color: #fff;
+}
+
+.payment-btn.cc-shop-pay svg {
+  height: 22px;
+  width: auto;
+}
+
 .payment-btn__logo {
   height: 1.5rem;
 }
