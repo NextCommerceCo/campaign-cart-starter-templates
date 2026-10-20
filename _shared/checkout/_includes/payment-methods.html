@@ -1,11 +1,11 @@
 {% comment %}
   next_component: payment-method-presentation
-  next_version: 2.1.0
-  next_sdk_min: 0.4.35 (redirect payment methods; 0.4.18 for the card/PayPal/Klarna/Apple Pay/Google Pay subset)
-  next_purpose: Customer-facing payment method picker (credit card + optional PayPal/Klarna/Apple Pay/Google Pay/Twint/Affirm/Bancontact/iDEAL/SEPA Direct Debit/Link) with Spreedly iframe-mounted credit card form. Includes billing-address-form via campaign_include.
+  next_version: 2.2.0
+  next_sdk_min: 0.4.35 (redirect payment methods; 0.4.43 for Shop Pay; 0.4.18 for the card/PayPal/Klarna/Apple Pay/Google Pay subset)
+  next_purpose: Customer-facing payment method picker (credit card + optional PayPal/Klarna/Apple Pay/Google Pay/Twint/Affirm/Bancontact/iDEAL/SEPA Direct Debit/Link/Shop Pay) with Spreedly iframe-mounted credit card form. Includes billing-address-form via campaign_include.
   next_params:
     payment_methods:    optional frontmatter object for method_order and default_method (include args win).
-    method_order:       comma list of method keys (credit, paypal, klarna, apple_pay, google_pay, twint, affirm, bancontact, ideal, sepa_debit, link), default the canonical order above. Radios render in this order; methods NOT listed follow in canonical order, so a partial list works ("paypal" alone puts PayPal first). Unknown keys are ignored.
+    method_order:       comma list of method keys (credit, paypal, klarna, apple_pay, google_pay, twint, affirm, bancontact, ideal, sepa_debit, link, shop_pay), default the canonical order above. Radios render in this order; methods NOT listed follow in canonical order, so a partial list works ("paypal" alone puts PayPal first). Unknown keys are ignored.
     default_method:     method key, default "credit". Which method renders checked + next-selected + expanded on load. Whitelisted against the known method keys — an unknown, empty, or malformed value falls back to credit. MUST name a method that is rendered (not show_<method>=false) AND that the campaign reliably offers — the SDK runtime-hides radios absent from available_payment_methods (the card never is), and a hidden default leaves no visible selection until the customer picks one.
     show_paypal:        bool, default true. Pass false to omit the PayPal radio + form.
     show_klarna:        bool, default true. Pass false to omit the Klarna radio + form.
@@ -17,12 +17,13 @@
     show_ideal:         bool, default true. Pass false to omit the iDEAL radio + form.
     show_sepa_debit:    bool, default true. Pass false to omit the SEPA Direct Debit radio + form.
     show_link:          bool, default true. Pass false to omit the Link radio + form.
+    show_shop_pay:      bool, default true. Pass false to omit the Shop Pay radio + form (SDK 0.4.43+).
     # All method radios render by default; the SDK (0.4.35+) hides any the campaign's
     # available_payment_methods can't charge, so campaign config is the source of truth.
     # Pass show_<method>=false only for a deliberate presentation choice — e.g. a method
     # offered via its express button where the radio would be a duplicate surface.
   next_sdk_owns:
-    - data-next-payment-method (values: credit, paypal, klarna, apple_pay, google_pay, twint, affirm, bancontact, ideal, sepa_debit, link — underscore spellings are canonical per SDK 0.4.35; legacy apple-pay/google-pay still accepted)
+    - data-next-payment-method (values: credit, paypal, klarna, apple_pay, google_pay, twint, affirm, bancontact, ideal, sepa_debit, link, shop_pay — underscore spellings are canonical per SDK 0.4.35; legacy apple-pay/google-pay still accepted)
     - data-next-payment-form
     - data-next-component (values: credit-error, credit-error-text, paypal-error, etc.)
     - data-next-checkout-field (values: cc-number, exp-month, exp-year, cvv)
@@ -45,6 +46,7 @@
     - Klarna / Apple Pay / Google Pay / Twint / Affirm / Bancontact / iDEAL / SEPA / Link info-text panels ship a generic SVG placeholder; designer can swap to a brand-aligned graphic
     - Twint / Affirm / Bancontact / iDEAL / SEPA Direct Debit are redirect-only methods (no express button exists for them) — the radio here is the only way to offer them
     - Link ALSO ships as an express button (SDK 0.4.35+): a page enabling both the express-checkout Link button and show_link renders Link twice — pick one surface per page
+    - Shop Pay likewise (SDK 0.4.43+): express button AND radio; a store offering it shows both unless show_shop_pay=false is passed. The radio is the only Shop Pay surface on a page without the express bar.
     - Method identifiers follow the campaigns API (twint, affirm, bancontact, ideal, sepa_debit, link); SEPA is sepa_debit ONLY — the platform payment-methods guide's sepa_direct is refused by the orders API and the SDK
     - Redirect-flow mapping for these methods requires SDK 0.4.35+ (campaign-cart#74); on older SDKs any unmapped radio value falls back to the card path and never redirects
   next_variants:
@@ -58,14 +60,14 @@
 {% endcomment %}
 {% comment %} ORDER + DEFAULT — resolved into private pm_* locals (campaign_include shares scope; never assign the public arg names). Each method block is captured once below, then emitted in pm_order; methods not listed follow in the canonical order, so a partial list works. {% endcomment -%}
 {% assign pm = payment_methods -%}
-{% assign pm_order = method_order | default: pm.method_order | default: 'credit,paypal,klarna,apple_pay,google_pay,twint,affirm,bancontact,ideal,sepa_debit,link' -%}
+{% assign pm_order = method_order | default: pm.method_order | default: 'credit,paypal,klarna,apple_pay,google_pay,twint,affirm,bancontact,ideal,sepa_debit,link,shop_pay' -%}
 {% assign pm_default = default_method | default: pm.default_method | default: 'credit' -%}
 {% comment %} Whitelist the default against the known method keys: an unknown, empty, or malformed value
    (including anything that could break out of the inline script's selector string below) falls back to
    credit — the same graceful degradation as a runtime-hidden default. {% endcomment -%}
 {% assign pm_default = pm_default | strip | downcase -%}
 {% capture pm_default_probe %}|{{ pm_default }}|{% endcapture -%}
-{% unless '|credit|paypal|klarna|apple_pay|google_pay|twint|affirm|bancontact|ideal|sepa_debit|link|' contains pm_default_probe -%}
+{% unless '|credit|paypal|klarna|apple_pay|google_pay|twint|affirm|bancontact|ideal|sepa_debit|link|shop_pay|' contains pm_default_probe -%}
 {% assign pm_default = 'credit' -%}
 {% endunless -%}
 {% assign pm_tokens = pm_order | split: ',' -%}
@@ -493,6 +495,42 @@
     </div>
   </div>
 {%- endcapture %}{% endunless %}
+{% unless show_shop_pay == false %}{% capture pm_block_shop_pay -%}
+  <div data-next-payment-method="shop_pay" class="payment-method{% if pm_default == 'shop_pay' %} next-selected{% endif %}">
+    <div class="payment-method__header">
+      <label for="combo_mode_shop_pay" combo_mode="shop_pay" class="payment-method__label">
+        <input type="radio" name="payment_method" id="combo_mode_shop_pay" data-name="Combo Mode" class="payment-method__input"{% if pm_default == 'shop_pay' %} checked=""{% endif %} value="shop_pay">
+        <div class="payment-method__title">Shop Pay</div>
+        <div class="payment-method__icons">
+          <img loading="lazy" src="{{ 'images/shop-pay-logo.svg' | campaign_asset }}" alt="" class="payment-method__icon--shop-pay-logo">
+        </div>
+      </label>
+    </div>
+    <div data-next-payment-form="shop_pay" os-checkout-element="credit-form" class="payment-method__form payment-method__form--{% if pm_default == 'shop_pay' %}expanded{% else %}collapsed{% endif %}">
+      <div class="payment-method__content">
+        <div data-next-component="shop_pay-error" class="next-toast-handler">
+          <div class="tip1_bar is-warning">
+            <div data-next-component="shop_pay-error-text" class="text-sm">Error message</div>
+          </div>
+        </div>
+        <div class="payment-method__info">
+          <div class="payment-method__info-image">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-252.3 356.1 163 80.9" preserveAspectRatio="xMidYMid meet" width="100%" height="100%" class="zjrzY">
+              <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2" d="M-108.9 404.1v30c0 1.1-.9 2-2 2H-231c-1.1 0-2-.9-2-2v-75c0-1.1.9-2 2-2h120.1c1.1 0 2 .9 2 2v37m-124.1-29h124.1"></path>
+              <circle cx="-227.8" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <circle cx="-222.2" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <circle cx="-216.6" cy="361.9" r="1.8" fill="currentColor"></circle>
+              <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2" d="M-128.7 400.1H-92m-3.6-4.1 4 4.1-4 4.1"></path>
+            </svg>
+          </div>
+          <h4 class="payment-method__info-title">
+            After clicking "Complete Purchase", you will be redirected to Shop Pay to complete your purchase securely.
+          </h4>
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endcapture %}{% endunless %}
 <div data-next-catalog-component="payment-method-presentation" class="payment-methods">
 {% for pm_t in pm_tokens %}{% assign pm_key = pm_t | strip %}{% case pm_key %}
   {% when 'credit' %}{{ pm_block_credit }}
@@ -506,6 +544,7 @@
   {% when 'ideal' %}{{ pm_block_ideal }}
   {% when 'sepa_debit' %}{{ pm_block_sepa_debit }}
   {% when 'link' %}{{ pm_block_link }}
+  {% when 'shop_pay' %}{{ pm_block_shop_pay }}
   {% endcase %}{% endfor %}
 {% unless pm_listed contains '|credit|' %}{{ pm_block_credit }}{% endunless %}
 {% unless pm_listed contains '|paypal|' %}{{ pm_block_paypal }}{% endunless %}
@@ -518,6 +557,7 @@
 {% unless pm_listed contains '|ideal|' %}{{ pm_block_ideal }}{% endunless %}
 {% unless pm_listed contains '|sepa_debit|' %}{{ pm_block_sepa_debit }}{% endunless %}
 {% unless pm_listed contains '|link|' %}{{ pm_block_link }}{% endunless %}
+{% unless pm_listed contains '|shop_pay|' %}{{ pm_block_shop_pay }}{% endunless %}
 </div>
 {% if pm_default != 'credit' -%}
 <script>
