@@ -146,7 +146,7 @@ Registers every campaign. The `campaign` object in Liquid templates comes from h
   "my-campaign": {
     "name": "My Campaign",
     "entry_url": "presell",
-    "sdk_version": "0.4.42",
+    "sdk_version": "0.4.43",
     "store_name": "Acme Store",
     "store_url": "https://acme.com",
     "store_phone": "1-800-555-0100",
@@ -168,7 +168,7 @@ The top-level key is the campaign slug. Add any additional key to a campaign ent
 
 **`entry_url`** — optional. The page slug `npm run dev` opens in the browser (e.g. `"presell"`). Omit to use the kit default.
 
-**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.42"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
+**`sdk_version`** — must be a **pinned semver string** from the starter reference (e.g. `"0.4.43"`), never `"latest"`. A wrong or stale version causes subtle Campaign Cart runtime behaviour with no obvious build error.
 
 **Per-campaign storage scope (SDK 0.4.34+)** — the SDK scopes cart/funnel/voucher storage per campaign automatically. The scope is a hash of the API key plus a **base-path token derived from page depth**: on a page **two or more** path segments deep (`/hu/checkout/`), the token is the first segment (`hu`); on a page **zero or one** segment deep (`/`, `/hu/`, `/checkout/`), the token is empty — the scope hashes the API key alone. The kit's `/<slug>/<page>/` URL shape is consistently two segments deep, so every page of a campaign derives the same scope with no extra config. The layout that breaks the derivation is a funnel that **mixes those depth buckets** — e.g. a landing page at `/hu/` (one segment → empty token) with its checkout at `/hu/checkout` (two segments → token `hu`) — which resolves to two different scopes and silently drops the cart mid-funnel (no build or console error). If you deploy a funnel shaped like that, declare the scope explicitly with `window.nextConfig.storageScope` (in `config.js`, which loads before the SDK) or `<meta name="next-storage-scope" content="...">` — the declared value must be identical on every page of the funnel.
 
@@ -456,7 +456,7 @@ window.nextConfig = {
       enabled: true,
       requireValidation: true,
       requiredFields: ['email', 'fname', 'lname'],
-      methodOrder: ['paypal', 'apple_pay', 'google_pay']
+      methodOrder: ['paypal', 'apple_pay', 'google_pay', 'shop_pay', 'link']
     }
   },
 
@@ -558,11 +558,16 @@ The SDK is controlled entirely through HTML attributes. Do not write JavaScript 
 
 Hand-written address inputs (`data-next-checkout-field="address1" | "city" | "country" | "province" | "postal"`) still work — field names are the SDK's, not camelCase: `fname` / `lname` (SDK 0.4.39+ also accepts `first_name` / `last_name`, the orders-API names), `postal` (not `zip`) — but they are deprecated since 0.4.39; see the SDK's [checkout page guide — Contact and address](https://cart-sdk.nextcommerce.com/latest/pages/checkout-page/#contact-and-address).
 
-**SDK 0.4.39+ checkout behaviour (templates pin 0.4.42):**
+**SDK 0.4.39+ checkout behaviour (templates pin 0.4.43):**
 - **Phone field** — no longer uses intl-tel-input, so there is no `.iti` / `.iti__*` markup and CSS targeting it matches nothing. The SDK formats the number in the country's mask as the shopper types (`(415) 555-2671`), shows a flag `<img class="next-phone-flag">` inside the input's right edge (it follows the country select), and sends E.164 to the API. Restyle with `.next-phone-field` (the input's parent), `.next-phone-flag`, `.next-phone-input`. The SDK replaces the input's `placeholder` with `Phone*` / `Phone (Optional)`. Page JS reading `input.value` gets the national mask; from 0.4.41 the input carries `data-next-phone-e164` (the E.164 value) and `data-next-phone-country` — read those, never parse `input.value`.
 - **Content-Security-Policy** — country lists, address/phone rules, states and the detected country/currency come from `i18n-rules.nextcommerce.com`. A page that sets a CSP must allow that host in `connect-src` **and** `img-src` (the flag). From 0.4.41 the card fields are loaded by 29next's wrapper from `payments.29next.com` (`script-src`), which in turn loads Spreedly's hosted-fields SDK and mounts its iframes from `core.spreedly.com` — allow that host in `script-src` **and** `frame-src` too. A policy that omits either host shows no card fields. The templates set no CSP.
 - **Enter** in a checkout field moves to the next field; only the submit button places the order. **Emoji** are rejected in every field.
 - A `required` phone is enforced from `data-next-checkout-field="phone"` alone (before 0.4.39 it also needed `name="phone"`).
+
+**SDK 0.4.43 changes (Shop Pay) — per the release notes, not browser-verified in the templates (no demo store offers it):**
+- `shop_pay` is a payment method: a radio value for `data-next-payment-method` / `data-next-payment-form` (a redirect method, so the form can be empty) and an express button the SDK injects when the campaign lists it, in the default order PayPal · Apple Pay · Google Pay · Shop Pay · Link. A shopper who leaves Shop Pay without paying is returned to card payment. Receipts show "Shop Pay".
+- The button carries a white logo and the SDK ships no background for it; the templates' `next-core.css` gives `.payment-btn.cc-shop-pay` the official purple `#5a31f4`.
+- A `paymentConfig.expressCheckout.methodOrder` that lists methods explicitly must include `shop_pay`, or the button is never built. The shared `payment-methods.html` radio partial does not yet render a Shop Pay radio.
 
 **SDK 0.4.42 changes (billing validation, country change) — per the release notes, not browser-verified in the templates:**
 - Billing address validated like shipping: postcode, state and country rules, with messages shown immediately rather than on submit. "Use shipping as billing" skips billing checks. Billing phone is validated in E.164 for the billing country.
@@ -1220,7 +1225,7 @@ Use these when implementing or verifying a specific task. Work through each item
 - [ ] `apiKey` set to the campaign's API key from the Campaigns App (`npm run config` or edit directly)
 - [ ] `storeName` set — required for Facebook purchase deduplication
 - [ ] Shipping countries set on the campaign in the Campaigns App — `config.js` does not control them. The preselected country follows the shopper's location (then US, then the first listed); `addressConfig.defaultCountry` / `showCountries` only apply when the campaign has no shipping countries
-- [ ] `paymentConfig.expressCheckout.enabled` — set `true` to show PayPal/Apple Pay/Google Pay buttons, `false` to hide
+- [ ] `paymentConfig.expressCheckout.enabled` — set `true` to show PayPal/Apple Pay/Google Pay/Shop Pay/Link buttons, `false` to hide
 - [ ] `analytics.providers.gtm.enabled` — set `true` when the campaign uses GTM; the container itself comes from `gtm_id` in `campaigns.json` (the layout injects the snippet — the SDK never loads GTM and reads no other `gtm` settings), and the SDK provider then pushes `dl_*` events to `window.dataLayer` for that container to consume
 - [ ] `analytics.providers.facebook.enabled` — set `true` and add `pixelId` to match the `fb_pixel_id` in `campaigns.json`; same two-part pattern as GTM
 - [ ] Address autocomplete — choose one option: (1) NextCommerce: `addressConfig.enableAutocomplete: true`, leave `googleMaps.apiKey` empty. (2) Google Maps: set `googleMaps.apiKey`; Google Maps takes priority when non-empty. (3) Disabled: remove `enableAutocomplete` from `addressConfig` and leave `googleMaps.apiKey` empty.
