@@ -18,8 +18,8 @@
       maestro, dankort; empty = all) is not in the campaign payload. So when bankcard is offered the row
       shows the four common tiles (visa, mastercard, american_express, discover) and the other four are
       opt-in: payment_flags.show_jcb: true etc. Any brand can be forced off (show_american_express: false).
-      Methods: show_paypal, show_apple_pay, show_google_pay, show_klarna, show_affirm, show_link, show_twint,
-      show_bancontact, show_ideal, show_sepa_debit — true forces on, false forces off.
+      Methods: show_paypal, show_apple_pay, show_google_pay, show_klarna, show_affirm, show_link, show_shop_pay,
+      show_twint, show_bancontact, show_ideal, show_sepa_debit — true forces on, false forces off.
       secure_text overrides the lock line. style: "flat" renders the legacy upsell-payment-logos.svg sprite
       with no runtime gating.
   next_dont_touch: data-payment-logo / data-card-brand / data-card-default / data-payment-force — the runtime
@@ -54,6 +54,7 @@ google_pay||google-pay-logo.svg|Google Pay|
 klarna||klarna-logo.svg|Klarna|
 affirm||affirm-logo.svg|Affirm|
 link||link-logo.svg|Link|
+shop_pay||shop-pay-logo.svg|Shop Pay|
 twint||twint-logo.svg|TWINT|
 bancontact||bancontact-logo.svg|Bancontact|
 ideal||ideal-logo.svg|iDEAL|

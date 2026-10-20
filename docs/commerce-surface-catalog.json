@@ -259,6 +259,7 @@
         "show_apple_pay",
         "show_google_pay",
         "show_link",
+        "show_shop_pay",
         "show_affirm",
         "show_twint",
         "show_bancontact",
