@@ -566,7 +566,7 @@ Hand-written address inputs (`data-next-checkout-field="address1" | "city" | "co
 
 **SDK 0.4.43 changes (Shop Pay) — per the release notes, not browser-verified in the templates (no demo store offers it):**
 - `shop_pay` is a payment method: a radio value for `data-next-payment-method` / `data-next-payment-form` (a redirect method, so the form can be empty) and an express button the SDK injects when the campaign lists it, in the default order PayPal · Apple Pay · Google Pay · Shop Pay · Link. A shopper who leaves Shop Pay without paying is returned to card payment. Receipts show "Shop Pay".
-- The button carries a white logo and the SDK ships no background for it; the templates' `next-core.css` gives `.payment-btn.cc-shop-pay` the official purple `#5a31f4`.
+- The SDK button renders empty on 0.4.43: its icon has no size and no colour, and the SDK stylesheet sets no background. That is an SDK defect, not something the template patches; the templates carry no `.cc-shop-pay` rule.
 - A `paymentConfig.expressCheckout.methodOrder` that lists methods explicitly must include `shop_pay`, or the button is never built. The shared `payment-logos.html` row shows a Shop Pay tile when the campaign offers it; the `payment-methods.html` radio partial deliberately renders no Shop Pay radio (the express button is the surface).
 
 **SDK 0.4.42 changes (billing validation, country change) — per the release notes, not browser-verified in the templates:**

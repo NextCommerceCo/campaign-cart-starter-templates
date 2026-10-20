@@ -3189,11 +3189,6 @@ figcaption {
   color: #fff;
 }
 
-/* Shop Pay (SDK 0.4.43+): the SDK button carries a white logo and ships no background of its own. Official Shop Pay purple. */
-.payment-btn.cc-shop-pay {
-  background-color: #5a31f4;
-}
-
 .payment-btn__logo {
   height: 1.5rem;
 }
