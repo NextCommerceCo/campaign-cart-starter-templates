@@ -456,7 +456,7 @@ window.nextConfig = {
       enabled: true,
       requireValidation: true,
       requiredFields: ['email', 'fname', 'lname'],
-      methodOrder: ['paypal', 'apple_pay', 'google_pay', 'shop_pay', 'link']
+      methodOrder: ['paypal', 'apple_pay', 'google_pay', 'shop_pay', 'link'] // order AND filter: an offered method missing here gets no button
     }
   },
 
@@ -567,7 +567,7 @@ Hand-written address inputs (`data-next-checkout-field="address1" | "city" | "co
 **SDK 0.4.43 changes (Shop Pay) — per the release notes, not browser-verified in the templates (no demo store offers it):**
 - `shop_pay` is a payment method: a radio value for `data-next-payment-method` / `data-next-payment-form` (a redirect method, so the form can be empty) and an express button the SDK injects when the campaign lists it, in the default order PayPal · Apple Pay · Google Pay · Shop Pay · Link. A shopper who leaves Shop Pay without paying is returned to card payment. Receipts show "Shop Pay".
 - The SDK builds the express button but, as with PayPal and Apple Pay, the page styles it. Its icon is `currentColor` and sized only by Tailwind classes, so `next-core.css` gives `.payment-btn.cc-shop-pay` the official purple `#5a31f4`, white text and an explicit 22px icon height; without those rules the button is a blank black bar.
-- A `paymentConfig.expressCheckout.methodOrder` that lists methods explicitly must include `shop_pay`, or the button is never built. The shared `payment-logos.html` row shows a Shop Pay tile when the campaign offers it; the `payment-methods.html` radio partial deliberately renders no Shop Pay radio (the express button is the surface).
+- **`paymentConfig.expressCheckout.methodOrder` is a filter as well as an order.** The SDK builds a button only for codes in that list, so a method the store offers but the list omits never renders, with no error. Templates before this bump shipped a three-item list that silently dropped Link and would drop Shop Pay; the full list is now `['paypal', 'apple_pay', 'google_pay', 'shop_pay', 'link']` (the SDK's own default order). An existing campaign built from an older copy needs that one-line change in `config.js` to show Shop Pay or Link. To deliberately hide an express button the store offers, remove its code from the list. The shared `payment-logos.html` row shows a Shop Pay tile when the campaign offers it; the `payment-methods.html` radio partial deliberately renders no Shop Pay radio (the express button is the surface).
 
 **SDK 0.4.42 changes (billing validation, country change) — per the release notes, not browser-verified in the templates:**
 - Billing address validated like shipping: postcode, state and country rules, with messages shown immediately rather than on submit. "Use shipping as billing" skips billing checks. Billing phone is validated in E.164 for the billing country.
@@ -1226,6 +1226,7 @@ Use these when implementing or verifying a specific task. Work through each item
 - [ ] `storeName` set — required for Facebook purchase deduplication
 - [ ] Shipping countries set on the campaign in the Campaigns App — `config.js` does not control them. The preselected country follows the shopper's location (then US, then the first listed); `addressConfig.defaultCountry` / `showCountries` only apply when the campaign has no shipping countries
 - [ ] `paymentConfig.expressCheckout.enabled` — set `true` to show PayPal/Apple Pay/Google Pay/Shop Pay/Link buttons, `false` to hide
+- [ ] `paymentConfig.expressCheckout.methodOrder` — keep all five codes; the SDK only builds buttons for codes listed here, so an omitted method the store offers never renders. Remove a code only to hide that button on purpose
 - [ ] `analytics.providers.gtm.enabled` — set `true` when the campaign uses GTM; the container itself comes from `gtm_id` in `campaigns.json` (the layout injects the snippet — the SDK never loads GTM and reads no other `gtm` settings), and the SDK provider then pushes `dl_*` events to `window.dataLayer` for that container to consume
 - [ ] `analytics.providers.facebook.enabled` — set `true` and add `pixelId` to match the `fb_pixel_id` in `campaigns.json`; same two-part pattern as GTM
 - [ ] Address autocomplete — choose one option: (1) NextCommerce: `addressConfig.enableAutocomplete: true`, leave `googleMaps.apiKey` empty. (2) Google Maps: set `googleMaps.apiKey`; Google Maps takes priority when non-empty. (3) Disabled: remove `enableAutocomplete` from `addressConfig` and leave `googleMaps.apiKey` empty.
