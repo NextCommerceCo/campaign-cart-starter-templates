@@ -3202,6 +3202,19 @@ figcaption {
   width: auto;
 }
 
+/* Link (SDK 0.4.35+). Same arrangement: the SDK's icon has no size and its wordmark is near-black with a green
+   dot, drawn for a light background, so give the button white with a hairline border and an explicit icon height. */
+.payment-btn.cc-link {
+  background-color: #fff;
+  color: #011e0f;
+  border: 1px solid #e5e5e5;
+}
+
+.payment-btn.cc-link svg {
+  height: 22px;
+  width: auto;
+}
+
 .payment-btn__logo {
   height: 1.5rem;
 }
