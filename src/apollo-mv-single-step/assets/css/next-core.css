@@ -3202,17 +3202,46 @@ figcaption {
   width: auto;
 }
 
-/* Link (SDK 0.4.35+). Same arrangement: the SDK's icon has no size and its wordmark is near-black with a green
-   dot, drawn for a light background, so give the button white with a hairline border and an explicit icon height. */
+/* Link (SDK 0.4.35+). Stripe's official Link button is Link green with a dark wordmark, a dark circle and a
+   white arrow. The SDK ships the light-background icon (green circle, dark arrow, currentColor wordmark) with no
+   size, so recolour its two fixed fills and size it. If the SDK ever ships a different icon the fill selectors
+   simply stop matching and the button stays green with that icon. */
 .payment-btn.cc-link {
-  background-color: #fff;
+  background-color: #00d66f;
   color: #011e0f;
-  border: 1px solid #e5e5e5;
 }
 
 .payment-btn.cc-link svg {
   height: 22px;
   width: auto;
+}
+
+.payment-btn.cc-link svg path[fill="#00D66F"] {
+  fill: #011e0f;
+}
+
+.payment-btn.cc-link svg path[fill="#011e0f"] {
+  fill: #fff;
+}
+
+/* Centre every SDK-built express logo. The SDK leaves the <svg> inline on the text baseline, so the browser keeps
+   descender space under it (PayPal's 22px logo sat 6px high in a 28px wrapper); block + a flex wrapper centres any
+   icon shorter than the wrapper. Apple Pay and Google Pay artwork carry ~4px of blank space above the ink, so nudge
+   those two up by half of it. Measured 2026-10-20: all five within 0.5px of centre. */
+.payment-btn svg {
+  display: block;
+}
+
+.payment-btn .payment-btn__logo,
+.payment-btn .paypal-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.payment-btn.cc-apple-pay svg,
+.payment-btn.cc-google-pay svg {
+  transform: translateY(-2px);
 }
 
 .payment-btn__logo {
@@ -17134,6 +17163,16 @@ html.cc-promo-topbar-on .promo-banner--classic .promo-banner__topbar {
 /* display:block above would beat the UA [hidden] rule — methods the campaign does not offer must not paint */
 .payment-logos__item[hidden] {
   display: none;
+}
+
+/* Wordmark tiles with no card frame read larger than the card tiles at the shared 1.5rem; bring the two widest
+   down so they sit level with Apple Pay. */
+.payment-logos__item[data-payment-logo="link"] {
+  height: 1.125rem;
+}
+
+.payment-logos__item[data-payment-logo="shop_pay"] {
+  height: 1.2rem;
 }
 
 /* === SDK address blocks (data-next-address) ===============================
