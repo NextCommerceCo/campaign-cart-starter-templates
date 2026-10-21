@@ -18,6 +18,10 @@
     show_sepa_debit:    bool, default true. Pass false to omit the SEPA Direct Debit radio + form.
     show_link:          bool, default true. Pass false to omit the Link radio + form.
     show_shop_pay:      bool, default true. Pass false to omit the Shop Pay radio + form (SDK 0.4.43+).
+    # Link and Shop Pay also ship as express buttons. The radios stay ON by default on purpose (decided 2026-10-20):
+    # every SDK-accepted method has a radio block and the campaign decides what is charged, so a page without the
+    # express bar still offers them. A page that renders the express bar on a store offering Link/Shop Pay shows
+    # that method twice; pass show_link=false / show_shop_pay=false there to keep one surface.
     # All method radios render by default; the SDK (0.4.35+) hides any the campaign's
     # available_payment_methods can't charge, so campaign config is the source of truth.
     # Pass show_<method>=false only for a deliberate presentation choice — e.g. a method
@@ -452,7 +456,7 @@
             </svg>
           </div>
           <h4 class="payment-method__info-title">
-            After clicking "Complete Purchase", you'll be taken to a secure page to authorise your SEPA Direct Debit payment.
+            After clicking "Complete Purchase", you'll be taken to a secure page to authorize your SEPA Direct Debit payment.
           </h4>
         </div>
       </div>

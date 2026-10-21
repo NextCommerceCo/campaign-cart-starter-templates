@@ -3190,6 +3190,9 @@ figcaption {
 }
 
 /* Shop Pay (SDK 0.4.43+). Like PayPal and Apple Pay above, the page styles the SDK-built express button.
+   Selectors below depend on SDK internals verified against 0.4.43 (the cc-shop-pay class and an inline <svg> in
+   .payment-btn__logo, from express-checkout-container.enhancer.ts); re-check on every SDK bump — if they stop
+   matching the button silently falls back to the plain black .payment-btn.
    The SDK's icon is currentColor and sized only by Tailwind utility classes (inert here), so give it the
    official purple, a white wordmark, and an explicit height. */
 .payment-btn.cc-shop-pay {
@@ -3202,7 +3205,7 @@ figcaption {
   width: auto;
 }
 
-/* Link (SDK 0.4.35+). Stripe's official Link button is Link green with a dark wordmark, a dark circle and a
+/* Link (SDK 0.4.35+; selectors verified against 0.4.43, same re-check rule as Shop Pay). Stripe's official Link button is Link green with a dark wordmark, a dark circle and a
    white arrow. The SDK ships the light-background icon (green circle, dark arrow, currentColor wordmark) with no
    size, so recolour its two fixed fills and size it. If the SDK ever ships a different icon the fill selectors
    simply stop matching and the button stays green with that icon. */
