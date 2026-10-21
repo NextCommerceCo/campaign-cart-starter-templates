@@ -3207,8 +3207,9 @@ figcaption {
 
 /* Link (SDK 0.4.35+; selectors verified against 0.4.43, same re-check rule as Shop Pay). Stripe's official Link button is Link green with a dark wordmark, a dark circle and a
    white arrow. The SDK ships the light-background icon (green circle, dark arrow, currentColor wordmark) with no
-   size, so recolour its two fixed fills and size it. If the SDK ever ships a different icon the fill selectors
-   simply stop matching and the button stays green with that icon. */
+   size, so recolour its two fixed fills and size it. The fill selectors are element-agnostic and case-insensitive
+   (0.4.43 emits <path fill="#00D66F">; the repo's own link-logo.svg writes <circle fill="#00d66f">), because a miss
+   is not cosmetic: an unrecoloured green circle vanishes into the green button. Re-check on every SDK bump. */
 .payment-btn.cc-link {
   background-color: #00d66f;
   color: #011e0f;
@@ -3219,11 +3220,11 @@ figcaption {
   width: auto;
 }
 
-.payment-btn.cc-link svg path[fill="#00D66F"] {
+.payment-btn.cc-link svg [fill="#00d66f" i] {
   fill: #011e0f;
 }
 
-.payment-btn.cc-link svg path[fill="#011e0f"] {
+.payment-btn.cc-link svg [fill="#011e0f" i] {
   fill: #fff;
 }
 
