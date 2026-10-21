@@ -7,6 +7,8 @@
     payment_methods:    optional frontmatter object for method_order and default_method (include args win).
     method_order:       comma list of method keys (credit, paypal, klarna, apple_pay, google_pay, twint, affirm, bancontact, ideal, sepa_debit, link, shop_pay), default the canonical order above. Radios render in this order; methods NOT listed follow in canonical order, so a partial list works ("paypal" alone puts PayPal first). Unknown keys are ignored.
     default_method:     method key, default "credit". Which method renders checked + next-selected + expanded on load. Whitelisted against the known method keys — an unknown, empty, or malformed value falls back to credit. MUST name a method that is rendered (not show_<method>=false) AND that the campaign reliably offers — the SDK runtime-hides radios absent from available_payment_methods (the card never is), and a hidden default leaves no visible selection until the customer picks one.
+    show_<method>:      bool, default true. Pass false to omit that radio + form. Include arg (show_paypal=false) OR
+                        frontmatter (payment_methods: { show_paypal: false }); either one hides it.
     show_paypal:        bool, default true. Pass false to omit the PayPal radio + form.
     show_klarna:        bool, default true. Pass false to omit the Klarna radio + form.
     show_apple_pay:     bool, default true. Pass false to omit the Apple Pay radio + form.
@@ -21,7 +23,8 @@
     # Express methods (PayPal, Apple Pay, Google Pay, Link, Shop Pay) are offered BOTH ways by design: as an
     # express button at the top of the checkout and as a radio here. That has always been the layout for PayPal /
     # Apple Pay / Google Pay; Link and Shop Pay follow it (decided 2026-10-20). The button is the fast path, the
-    # radio serves the shopper who fills in the form first. Pass show_<method>=false to drop a radio on purpose.
+    # radio serves the shopper who fills in the form first. To drop a radio on purpose, set
+    # payment_methods: { show_paypal: false } in the page frontmatter (or show_paypal=false on the include).
     # All method radios render by default; the SDK (0.4.35+) hides any the campaign's
     # available_payment_methods can't charge, so campaign config is the source of truth.
     # Pass show_<method>=false only for a deliberate presentation choice — e.g. a method
@@ -152,7 +155,7 @@
   </div>
   
 {%- endcapture %}
-{% unless show_paypal == false %}{% capture pm_block_paypal -%}
+{% unless show_paypal == false or pm.show_paypal == false %}{% capture pm_block_paypal -%}
   <div data-next-payment-method="paypal" class="payment-method{% if pm_default == 'paypal' %} next-selected{% endif %}">
     <div class="payment-method__header"><label for="combo_mode_paypal" combo_mode="paypal" class="payment-method__label"><input type="radio" name="payment_method" id="combo_mode_paypal" data-name="Combo Mode" class="payment-method__input"{% if pm_default == 'paypal' %} checked=""{% endif %} value="paypal">
         <div class="payment-method__title">PayPal</div>
@@ -175,7 +178,7 @@
     </div>
   </div>
 {%- endcapture %}{% endunless %}
-{% unless show_klarna == false %}{% capture pm_block_klarna -%}
+{% unless show_klarna == false or pm.show_klarna == false %}{% capture pm_block_klarna -%}
   <div data-next-payment-method="klarna" class="payment-method{% if pm_default == 'klarna' %} next-selected{% endif %}">
     <div class="payment-method__header">
       <label for="combo_mode_klarna" combo_mode="klarna" class="payment-method__label">
@@ -211,7 +214,7 @@
     </div>
   </div>
 {%- endcapture %}{% endunless %}
-{% unless show_apple_pay == false %}{% capture pm_block_apple_pay -%}
+{% unless show_apple_pay == false or pm.show_apple_pay == false %}{% capture pm_block_apple_pay -%}
   <div data-next-payment-method="apple_pay" class="payment-method{% if pm_default == 'apple_pay' %} next-selected{% endif %}">
     <div class="payment-method__header">
       <label for="combo_mode_apple_pay" combo_mode="apple_pay" class="payment-method__label">
@@ -247,7 +250,7 @@
     </div>
   </div>
 {%- endcapture %}{% endunless %}
-{% unless show_google_pay == false %}{% capture pm_block_google_pay -%}
+{% unless show_google_pay == false or pm.show_google_pay == false %}{% capture pm_block_google_pay -%}
   <div data-next-payment-method="google_pay" class="payment-method{% if pm_default == 'google_pay' %} next-selected{% endif %}">
     <div class="payment-method__header">
       <label for="combo_mode_google_pay" combo_mode="google_pay" class="payment-method__label">
@@ -283,7 +286,7 @@
     </div>
   </div>
 {%- endcapture %}{% endunless %}
-{% unless show_twint == false %}{% capture pm_block_twint -%}
+{% unless show_twint == false or pm.show_twint == false %}{% capture pm_block_twint -%}
   <div data-next-payment-method="twint" class="payment-method{% if pm_default == 'twint' %} next-selected{% endif %}">
     <div class="payment-method__header">
       <label for="combo_mode_twint" combo_mode="twint" class="payment-method__label">
@@ -319,7 +322,7 @@
     </div>
   </div>
 {%- endcapture %}{% endunless %}
-{% unless show_affirm == false %}{% capture pm_block_affirm -%}
+{% unless show_affirm == false or pm.show_affirm == false %}{% capture pm_block_affirm -%}
   <div data-next-payment-method="affirm" class="payment-method{% if pm_default == 'affirm' %} next-selected{% endif %}">
     <div class="payment-method__header">
       <label for="combo_mode_affirm" combo_mode="affirm" class="payment-method__label">
@@ -355,7 +358,7 @@
     </div>
   </div>
 {%- endcapture %}{% endunless %}
-{% unless show_bancontact == false %}{% capture pm_block_bancontact -%}
+{% unless show_bancontact == false or pm.show_bancontact == false %}{% capture pm_block_bancontact -%}
   <div data-next-payment-method="bancontact" class="payment-method{% if pm_default == 'bancontact' %} next-selected{% endif %}">
     <div class="payment-method__header">
       <label for="combo_mode_bancontact" combo_mode="bancontact" class="payment-method__label">
@@ -391,7 +394,7 @@
     </div>
   </div>
 {%- endcapture %}{% endunless %}
-{% unless show_ideal == false %}{% capture pm_block_ideal -%}
+{% unless show_ideal == false or pm.show_ideal == false %}{% capture pm_block_ideal -%}
   <div data-next-payment-method="ideal" class="payment-method{% if pm_default == 'ideal' %} next-selected{% endif %}">
     <div class="payment-method__header">
       <label for="combo_mode_ideal" combo_mode="ideal" class="payment-method__label">
@@ -427,7 +430,7 @@
     </div>
   </div>
 {%- endcapture %}{% endunless %}
-{% unless show_sepa_debit == false %}{% capture pm_block_sepa_debit -%}
+{% unless show_sepa_debit == false or pm.show_sepa_debit == false %}{% capture pm_block_sepa_debit -%}
   <div data-next-payment-method="sepa_debit" class="payment-method{% if pm_default == 'sepa_debit' %} next-selected{% endif %}">
     <div class="payment-method__header">
       <label for="combo_mode_sepa_debit" combo_mode="sepa_debit" class="payment-method__label">
@@ -463,7 +466,7 @@
     </div>
   </div>
 {%- endcapture %}{% endunless %}
-{% unless show_link == false %}{% capture pm_block_link -%}
+{% unless show_link == false or pm.show_link == false %}{% capture pm_block_link -%}
   <div data-next-payment-method="link" class="payment-method{% if pm_default == 'link' %} next-selected{% endif %}">
     <div class="payment-method__header">
       <label for="combo_mode_link" combo_mode="link" class="payment-method__label">
@@ -499,7 +502,7 @@
     </div>
   </div>
 {%- endcapture %}{% endunless %}
-{% unless show_shop_pay == false %}{% capture pm_block_shop_pay -%}
+{% unless show_shop_pay == false or pm.show_shop_pay == false %}{% capture pm_block_shop_pay -%}
   <div data-next-payment-method="shop_pay" class="payment-method{% if pm_default == 'shop_pay' %} next-selected{% endif %}">
     <div class="payment-method__header">
       <label for="combo_mode_shop_pay" combo_mode="shop_pay" class="payment-method__label">
