@@ -3212,7 +3212,7 @@ figcaption {
 }
 
 .payment-btn.cc-link svg {
-  height: 22px;
+  height: 18px; /* the wordmark is 3:1, so 22px reads larger than the other buttons' logos */
   width: auto;
 }
 
