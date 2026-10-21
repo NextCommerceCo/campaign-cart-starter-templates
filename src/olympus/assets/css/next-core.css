@@ -3189,6 +3189,65 @@ figcaption {
   color: #fff;
 }
 
+/* Shop Pay (SDK 0.4.43+). Like PayPal and Apple Pay above, the page styles the SDK-built express button.
+   Selectors below depend on SDK internals verified against 0.4.43 (the cc-shop-pay class and an inline <svg> in
+   .payment-btn__logo, from express-checkout-container.enhancer.ts); re-check on every SDK bump — if they stop
+   matching the button silently falls back to the plain black .payment-btn.
+   The SDK's icon is currentColor and sized only by Tailwind utility classes (inert here), so give it the
+   official purple, a white wordmark, and an explicit height. */
+.payment-btn.cc-shop-pay {
+  background-color: #5a31f4;
+  color: #fff;
+}
+
+.payment-btn.cc-shop-pay svg {
+  height: 22px;
+  width: auto;
+}
+
+/* Link (SDK 0.4.35+; selectors verified against 0.4.43, same re-check rule as Shop Pay). Stripe's official Link button is Link green with a dark wordmark, a dark circle and a
+   white arrow. The SDK ships the light-background icon (green circle, dark arrow, currentColor wordmark) with no
+   size, so recolour its two fixed fills and size it. The fill selectors are element-agnostic and case-insensitive
+   (0.4.43 emits <path fill="#00D66F">; the repo's own link-logo.svg writes <circle fill="#00d66f">), because a miss
+   is not cosmetic: an unrecoloured green circle vanishes into the green button. Re-check on every SDK bump. */
+.payment-btn.cc-link {
+  background-color: #00d66f;
+  color: #011e0f;
+}
+
+.payment-btn.cc-link svg {
+  height: 18px; /* the wordmark is 3:1, so 22px reads larger than the other buttons' logos */
+  width: auto;
+}
+
+.payment-btn.cc-link svg [fill="#00d66f" i] {
+  fill: #011e0f;
+}
+
+.payment-btn.cc-link svg [fill="#011e0f" i] {
+  fill: #fff;
+}
+
+/* Centre every SDK-built express logo. The SDK leaves the <svg> inline on the text baseline, so the browser keeps
+   descender space under it (PayPal's 22px logo sat 6px high in a 28px wrapper); block + a flex wrapper centres any
+   icon shorter than the wrapper. Apple Pay and Google Pay artwork carry ~4px of blank space above the ink, so nudge
+   those two up by half of it. Measured 2026-10-20: all five within 0.5px of centre. */
+.payment-btn svg {
+  display: block;
+}
+
+.payment-btn .payment-btn__logo,
+.payment-btn .paypal-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.payment-btn.cc-apple-pay svg,
+.payment-btn.cc-google-pay svg {
+  transform: translateY(-2px);
+}
+
 .payment-btn__logo {
   height: 1.5rem;
 }
@@ -17108,6 +17167,16 @@ html.cc-promo-topbar-on .promo-banner--classic .promo-banner__topbar {
 /* display:block above would beat the UA [hidden] rule — methods the campaign does not offer must not paint */
 .payment-logos__item[hidden] {
   display: none;
+}
+
+/* Wordmark tiles with no card frame read larger than the card tiles at the shared 1.5rem; bring the two widest
+   down so they sit level with Apple Pay. */
+.payment-logos__item[data-payment-logo="link"] {
+  height: 1.125rem;
+}
+
+.payment-logos__item[data-payment-logo="shop_pay"] {
+  height: 1.2rem;
 }
 
 /* === SDK address blocks (data-next-address) ===============================

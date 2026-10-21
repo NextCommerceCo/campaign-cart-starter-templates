@@ -49,7 +49,7 @@ packages:
   main_package: 1
   prepurchase_1: 7
   prepurchase_2: 9
-# payment_methods: { method_order, default_method } — payment radio order + first-open method; keys and rules in _includes/payment-methods.html
+# payment_methods: { method_order, default_method, show_<method>: false } — payment radio order, first-open method, and which radios to drop (e.g. show_paypal: false); keys and rules in _includes/payment-methods.html
 order_bump:
   check01:
     # Pre-purchase add-on (checkbox card). Optional keys (full list: _includes/bump-check01.html):
