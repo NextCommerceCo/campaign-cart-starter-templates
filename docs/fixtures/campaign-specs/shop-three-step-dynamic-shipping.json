@@ -65,7 +65,9 @@
             "sdk_page_type": "checkout",
             "template_family": "shop-three-step",
             "frontmatter": {
-              "next_url": "shipping.html"
+              "next_url": "upsell-bundle-stepper.html",
+              "next_step": "shipping.html",
+              "step_number": 1
             }
           }
         },
@@ -81,8 +83,10 @@
             "sdk_page_type": "checkout",
             "template_family": "shop-three-step",
             "frontmatter": {
-              "next_url": "billing.html",
-              "runtime_shipping_source": "window.next.getShippingMethods()"
+              "next_url": "upsell-bundle-stepper.html",
+              "runtime_shipping_source": "window.next.getShippingMethods()",
+              "next_step": "billing.html",
+              "step_number": 2
             }
           }
         },
