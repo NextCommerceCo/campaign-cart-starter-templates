@@ -10,7 +10,7 @@ scripts:
 ---
 <script>
 window.CHECKOUT_CONFIG = {
-  currentStep: 2,
+  currentStep: {{ step_number | default: 2 }},
   redirectUrl: "{{ 'information.html' | campaign_link }}",
   stepUrls: {
     1: "{{ 'information.html' | campaign_link }}",
@@ -63,7 +63,7 @@ window.CHECKOUT_CONFIG = {
                     <div class="steps-text">Payment<br></div>
                   </div>
                   <div class="checkout-form">
-                    <form data-next-checkout="form" id="combo_form" method="post" data-next-checkout-step="{{ next_step | default: 'billing.html' | campaign_link }}" data-next-step-number="2">
+                    <form data-next-checkout="form" id="combo_form" method="post" data-next-checkout-step="{{ next_step | default: 'billing.html' | campaign_link }}" data-next-step-number="{{ step_number | default: 2 }}">
                       <div class="form-content">
                         <div class="form-sections">
                           <div class="form-section">

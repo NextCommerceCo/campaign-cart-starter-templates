@@ -85,7 +85,7 @@ address_form:
                   </div>
                   {% campaign_include 'express-checkout.html' %}
                   <div class="checkout-form">
-                    <form data-next-checkout="form" id="combo_form" method="post" data-next-checkout-step="{{ next_step | default: 'shipping.html' | campaign_link }}" data-next-step-number="1">
+                    <form data-next-checkout="form" id="combo_form" method="post" data-next-checkout-step="{{ next_step | default: 'shipping.html' | campaign_link }}" data-next-step-number="{{ step_number | default: 1 }}">
                       <div class="form-content">
                         <div class="form-sections">
                           <div class="form-section form-section--first">
