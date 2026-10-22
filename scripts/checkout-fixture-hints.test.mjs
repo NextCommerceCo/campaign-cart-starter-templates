@@ -58,9 +58,9 @@ function assertShopGuard(document, page) {
   runInNewContext(configScript, { window: configWindow }, { timeout: 1000 });
   const config = configWindow.CHECKOUT_CONFIG;
   assert.equal(config.currentStep, page.id === 'shipping' ? 2 : 3);
-  if (page.type === 'checkout_step') {
+  if (page.id === 'shipping') {
     const forms = findNodes(document, node => node.tagName === 'form' && attr(node, 'data-next-checkout') === 'form');
-    assert.equal(forms.length, 1);
+    assert.equal(forms.length, 1, `${page.id}: exactly one checkout form must carry the step ordinal`);
     assert.equal(config.currentStep, Number(attr(forms[0], 'data-next-step-number')), `${page.id}: guard and form ordinals must agree`);
   }
   for (const [index, name] of ['information', 'shipping', 'billing'].entries()) {
@@ -77,18 +77,21 @@ function assertShopGuard(document, page) {
     key: index => Object.keys(entries)[index] ?? null,
     getItem: key => entries[key] ?? null,
   });
-  for (const storageMode of ['legacy', 'scoped-session-metadata', 'scoped-local-metadata']) {
-    for (const [step, destination, missingData] of [
+  for (const storageMode of ['legacy', 'scoped-session-metadata', 'scoped-local-metadata', 'scoped-unmatched', 'empty']) {
+    const scenarios = ['scoped-unmatched', 'empty'].includes(storageMode) ? [
+      [3, route('shop-three-step', 'information.html'), false],
+    ] : [
       [1, route('shop-three-step', 'information.html'), false],
       [2, page.id === 'billing' ? route('shop-three-step', 'shipping.html') : undefined, false],
       [3, undefined, false],
       [3, route('shop-three-step', 'information.html'), true],
-    ]) {
+    ];
+    for (const [step, destination, missingData] of scenarios) {
       const redirects = [];
       const errors = [];
       const formData = missingData ? {} : { email: 'fixture@example.test', fname: 'Fixture', lname: 'Buyer', country: 'US', address1: '1 Example St', city: 'Example' };
       const store = JSON.stringify({ state: { step, formData } });
-      const sessionEntries = storageMode === 'legacy' ? { 'next-checkout-store': store } : {
+      const sessionEntries = storageMode === 'empty' ? {} : storageMode === 'legacy' ? { 'next-checkout-store': store } : {
         // The unrelated campaign is deliberately first: a guard that takes the
         // first scoped store could incorrectly allow an incomplete checkout.
         'next-checkout-store__other': JSON.stringify({ state: { step: 3, formData: { ...formData, email: 'other@example.test' } } }),
@@ -98,6 +101,7 @@ function assertShopGuard(document, page) {
       const localEntries = {};
       if (storageMode === 'scoped-session-metadata') sessionEntries.next_funnel_name__fixture = funnelName;
       if (storageMode === 'scoped-local-metadata') localEntries.next_funnel_name__fixture = funnelName;
+      if (storageMode === 'scoped-unmatched') sessionEntries.next_funnel_name__fixture = 'Another fixture campaign';
       runInNewContext(guard, {
         window: { CHECKOUT_CONFIG: config, location: { replace: url => redirects.push(url) } },
         sessionStorage: storage(sessionEntries),
