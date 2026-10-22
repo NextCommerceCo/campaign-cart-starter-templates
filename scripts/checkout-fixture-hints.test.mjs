@@ -4,6 +4,7 @@ import { createRequire } from 'node:module';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
+import { runInNewContext } from 'node:vm';
 import { parse } from 'parse5';
 
 const require = createRequire(import.meta.url);
@@ -39,8 +40,40 @@ function assertFixtureRoutes(funnel, family) {
     })) {
       if (target === undefined) continue;
       const destination = funnel.pages.find(candidate => candidate.template === `src/${family}/${target}`);
-      assert.ok(destination && existsSync(join(repoRoot, destination.template)), `${page.id}: ${key} ${JSON.stringify(target)} must resolve to a template in the same funnel`);
+      assert.ok(destination && existsSync(join(repoRoot, destination.template)), `${page.id}: ${key} ${JSON.stringify(target)} must resolve to a template in the same funnel for this self-contained local fixture`);
     }
+  }
+}
+
+function assertShopGuard(document, page) {
+  if (!['shipping', 'billing'].includes(page.id)) return;
+  const scripts = findNodes(document, node => node.tagName === 'script');
+  const configScript = scripts.map(script => script.childNodes.map(node => node.value || '').join(''))
+    .find(source => source.includes('window.CHECKOUT_CONFIG ='));
+  assert.ok(configScript, `${page.id}: expected the Shop guard configuration`);
+  const configWindow = {};
+  runInNewContext(configScript, { window: configWindow }, { timeout: 1000 });
+  const config = configWindow.CHECKOUT_CONFIG;
+  assert.equal(config.currentStep, page.id === 'shipping' ? 2 : 3);
+  for (const [index, name] of ['information', 'shipping', 'billing'].entries()) {
+    assert.equal(config.stepUrls[index + 1], route('shop-three-step', `${name}.html`));
+  }
+  const guard = readFileSync(join(srcRoot, 'shop-three-step/assets/js/checkout-shop-three-billing.js'), 'utf8');
+  for (const [step, destination, missingData] of [
+    [1, route('shop-three-step', 'information.html'), false],
+    [2, page.id === 'billing' ? route('shop-three-step', 'shipping.html') : undefined, false],
+    [3, undefined, false],
+    [3, route('shop-three-step', 'information.html'), true],
+  ]) {
+    const redirects = [];
+    const formData = missingData ? {} : { email: 'fixture@example.test', fname: 'Fixture', lname: 'Buyer', country: 'US', address1: '1 Example St', city: 'Example' };
+    runInNewContext(guard, {
+      window: { CHECKOUT_CONFIG: config, location: { replace: url => redirects.push(url) } },
+      sessionStorage: { getItem: key => key === 'next-checkout-store' ? JSON.stringify({ state: { step, formData } }) : null },
+      document: { querySelector: () => null },
+      console: { log() {}, warn() {}, error() {} },
+    }, { timeout: 1000 });
+    assert.deepEqual(redirects, destination ? [destination] : [], `${page.id}: guard behavior for stored step ${step}, missingData=${missingData}`);
   }
 }
 
@@ -70,6 +103,7 @@ for (const [family, fixture] of [
     for (const target of ['next_page', 'next_url', 'next_step']) {
       const funnel = structuredClone(originalSpec.funnels[0]);
       const page = funnel.pages.find(page => ['select', 'checkout_step'].includes(page.type));
+      assert.ok(page?.sdk_hints?.frontmatter, `${family}: fixture funnel[0] needs a Select/Checkout Step with frontmatter to mutate`);
       (target === 'next_page' ? page : page.sdk_hints.frontmatter)[target] = 'missing.html';
       assert.throws(() => assertFixtureRoutes(funnel, family), /must resolve to a template in the same funnel/);
     }
@@ -104,6 +138,7 @@ for (const [family, fixture] of [
             assert.equal(successMeta.length, 1, `${page.id}: one payment-success destination`);
             assert.equal(attr(successMeta[0], 'content'), route(family, successUrl));
             const forms = findNodes(document, node => node.tagName === 'form' && attr(node, 'data-next-checkout') === 'form');
+            if (family === 'shop-three-step') assertShopGuard(document, page);
 
             if (page.type === 'checkout') {
               assert.equal(hints.next_step, undefined, `${page.id}: payment has no next form`);
@@ -116,20 +151,11 @@ for (const [family, fixture] of [
               assert.equal(hints.next_step, page.next_page, `${page.id}: hint must identify the next form/link`);
               assert.equal(data.next_step, page.next_page, `${page.id}: template must agree with the fixture`);
               if (page.type === 'checkout_step') {
-                assert.equal(hints.step_number, stepNumber, `${page.id}: Checkout Step ordinal`);
+                assert.equal(hints.step_number, undefined, `${page.id}: fixed Shop ordinals are not a frontmatter knob`);
+                assert.equal(data.step_number, undefined, `${page.id}: no unsupported step_number override`);
                 assert.equal(forms.length, 1);
                 assert.equal(attr(forms[0], 'data-next-checkout-step'), route(family, page.next_page));
                 assert.equal(attr(forms[0], 'data-next-step-number'), String(stepNumber));
-                // A distinct value proves the frontmatter is consumed rather than
-                // merely coinciding with the template's default literal.
-                const override = hints.step_number + 3;
-                const customized = await renderTemplate(engine, family, page, { ...data, step_number: override }, content);
-                const customForms = findNodes(customized, node => node.tagName === 'form' && attr(node, 'data-next-checkout') === 'form');
-                assert.equal(attr(customForms[0], 'data-next-step-number'), String(override), `${page.id}: step_number override must reach the form`);
-                if (page.id === 'shipping') {
-                  const scripts = findNodes(customized, node => node.tagName === 'script');
-                  assert.ok(scripts.some(script => script.childNodes.some(node => node.value?.includes(`currentStep: ${override},`))), 'shipping guard must use the same step_number as its form');
-                }
               } else {
                 assert.equal(hints.step_number, undefined, 'Select is a link, not a checkout form step');
                 assert.equal(forms.length, 0);
