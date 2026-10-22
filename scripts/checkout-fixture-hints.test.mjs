@@ -48,6 +48,9 @@ function assertFixtureRoutes(funnel, family) {
 function assertShopGuard(document, page) {
   if (!['shipping', 'billing'].includes(page.id)) return;
   const scripts = findNodes(document, node => node.tagName === 'script');
+  const guardUrl = '/shop-three-step/js/checkout-shop-three-billing.js';
+  const guardScripts = scripts.filter(script => attr(script, 'src') === guardUrl);
+  assert.equal(guardScripts.length, 1, `${page.id}: page must load the expected checkout guard ${guardUrl}`);
   const configScript = scripts.map(script => script.childNodes.map(node => node.value || '').join(''))
     .find(source => source.includes('window.CHECKOUT_CONFIG ='));
   assert.ok(configScript, `${page.id}: expected the Shop guard configuration`);
@@ -55,25 +58,57 @@ function assertShopGuard(document, page) {
   runInNewContext(configScript, { window: configWindow }, { timeout: 1000 });
   const config = configWindow.CHECKOUT_CONFIG;
   assert.equal(config.currentStep, page.id === 'shipping' ? 2 : 3);
+  if (page.type === 'checkout_step') {
+    const forms = findNodes(document, node => node.tagName === 'form' && attr(node, 'data-next-checkout') === 'form');
+    assert.equal(forms.length, 1);
+    assert.equal(config.currentStep, Number(attr(forms[0], 'data-next-step-number')), `${page.id}: guard and form ordinals must agree`);
+  }
   for (const [index, name] of ['information', 'shipping', 'billing'].entries()) {
     assert.equal(config.stepUrls[index + 1], route('shop-three-step', `${name}.html`));
   }
-  const guard = readFileSync(join(srcRoot, 'shop-three-step/assets/js/checkout-shop-three-billing.js'), 'utf8');
-  for (const [step, destination, missingData] of [
-    [1, route('shop-three-step', 'information.html'), false],
-    [2, page.id === 'billing' ? route('shop-three-step', 'shipping.html') : undefined, false],
-    [3, undefined, false],
-    [3, route('shop-three-step', 'information.html'), true],
-  ]) {
-    const redirects = [];
-    const formData = missingData ? {} : { email: 'fixture@example.test', fname: 'Fixture', lname: 'Buyer', country: 'US', address1: '1 Example St', city: 'Example' };
-    runInNewContext(guard, {
-      window: { CHECKOUT_CONFIG: config, location: { replace: url => redirects.push(url) } },
-      sessionStorage: { getItem: key => key === 'next-checkout-store' ? JSON.stringify({ state: { step, formData } }) : null },
-      document: { querySelector: () => null },
-      console: { log() {}, warn() {}, error() {} },
-    }, { timeout: 1000 });
-    assert.deepEqual(redirects, destination ? [destination] : [], `${page.id}: guard behavior for stored step ${step}, missingData=${missingData}`);
+  const guardAsset = attr(guardScripts[0], 'src').slice('/shop-three-step/'.length);
+  const guard = readFileSync(join(srcRoot, 'shop-three-step/assets', guardAsset), 'utf8');
+  const funnelMeta = findNodes(document, node => node.tagName === 'meta' && attr(node, 'name') === 'next-funnel');
+  assert.equal(funnelMeta.length, 1, `${page.id}: scoped storage needs the rendered funnel identity`);
+  const funnelName = attr(funnelMeta[0], 'content');
+  assert.ok(funnelName, `${page.id}: funnel identity must be nonempty`);
+  const storage = (entries) => ({
+    length: Object.keys(entries).length,
+    key: index => Object.keys(entries)[index] ?? null,
+    getItem: key => entries[key] ?? null,
+  });
+  for (const storageMode of ['legacy', 'scoped-session-metadata', 'scoped-local-metadata']) {
+    for (const [step, destination, missingData] of [
+      [1, route('shop-three-step', 'information.html'), false],
+      [2, page.id === 'billing' ? route('shop-three-step', 'shipping.html') : undefined, false],
+      [3, undefined, false],
+      [3, route('shop-three-step', 'information.html'), true],
+    ]) {
+      const redirects = [];
+      const errors = [];
+      const formData = missingData ? {} : { email: 'fixture@example.test', fname: 'Fixture', lname: 'Buyer', country: 'US', address1: '1 Example St', city: 'Example' };
+      const store = JSON.stringify({ state: { step, formData } });
+      const sessionEntries = storageMode === 'legacy' ? { 'next-checkout-store': store } : {
+        // The unrelated campaign is deliberately first: a guard that takes the
+        // first scoped store could incorrectly allow an incomplete checkout.
+        'next-checkout-store__other': JSON.stringify({ state: { step: 3, formData: { ...formData, email: 'other@example.test' } } }),
+        'next_funnel_name__other': 'Unrelated fixture campaign',
+        'next-checkout-store__fixture': store,
+      };
+      const localEntries = {};
+      if (storageMode === 'scoped-session-metadata') sessionEntries.next_funnel_name__fixture = funnelName;
+      if (storageMode === 'scoped-local-metadata') localEntries.next_funnel_name__fixture = funnelName;
+      runInNewContext(guard, {
+        window: { CHECKOUT_CONFIG: config, location: { replace: url => redirects.push(url) } },
+        sessionStorage: storage(sessionEntries),
+        localStorage: storage(localEntries),
+        document: { querySelector: selector => selector === 'meta[name="next-funnel"]' ? { getAttribute: name => name === 'content' ? funnelName : null } : null },
+        console: { log() {}, warn() {}, error: (...args) => errors.push(args.map(String).join(' ')) },
+      }, { timeout: 1000 });
+      const label = `${page.id}: ${storageMode}, stored step ${step}, missingData=${missingData}`;
+      assert.deepEqual(errors, [], `${label}: guard must not swallow a storage/sandbox error`);
+      assert.deepEqual(redirects, destination ? [destination] : [], `${label}: guard behavior`);
+    }
   }
 }
 
