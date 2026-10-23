@@ -1,16 +1,15 @@
 import assert from 'node:assert/strict';
-import { cpSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { cpSync, existsSync, mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
-import { globSync } from 'node:fs';
 import { injectShowcaseKeys, TOP_LEVEL_API_KEY } from './inject-showcase-keys.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const keys = JSON.parse(readFileSync(join(root, 'scripts/showcase-keys.json'), 'utf8'));
-const configs = globSync('src/*/assets/config.js', { cwd: root });
-const families = configs.map(path => path.split('/')[1]).sort();
+const families = readdirSync(join(root, 'src')).filter(f => existsSync(join(root, 'src', f, 'assets/config.js'))).sort();
+const configs = families.map(f => `src/${f}/assets/config.js`);
 
 test('every committed family config ships with an empty commerce apiKey', () => {
   assert.ok(configs.length >= 8);
