@@ -97,7 +97,9 @@
                   "quantity": 3,
                   "shipping_method": "free"
                 }
-              ]
+              ],
+              "next_url": "upsell-mv.html",
+              "next_step": "checkout.html"
             }
           }
         },
@@ -113,7 +115,8 @@
             "sdk_page_type": "checkout",
             "template_family": "olympus-mv-two-step",
             "frontmatter": {
-              "checkout_step.selector_id": "main"
+              "checkout_step.selector_id": "main",
+              "next_url": "upsell-mv.html"
             }
           }
         },
