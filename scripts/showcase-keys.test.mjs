@@ -4,10 +4,12 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
-import { injectShowcaseKeys, TOP_LEVEL_API_KEY } from './inject-showcase-keys.mjs';
+import { injectShowcaseKeys, KEY_SHAPE, TOP_LEVEL_API_KEY } from './inject-showcase-keys.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const keys = JSON.parse(readFileSync(join(root, 'scripts/showcase-keys.json'), 'utf8'));
+// Families without assets/config.js (landing: a component library with no SDK
+// config) have no commerce key to inject and are expected to be skipped.
 const families = readdirSync(join(root, 'src')).filter(f => existsSync(join(root, 'src', f, 'assets/config.js'))).sort();
 const configs = families.map(f => `src/${f}/assets/config.js`);
 
@@ -18,12 +20,16 @@ test('every committed family config ships with an empty commerce apiKey', () => 
     const match = source.match(TOP_LEVEL_API_KEY);
     assert.ok(match, `${path}: top-level apiKey line missing`);
     assert.equal(match[0], '  apiKey: "",', `${path}: the demo key must not be committed; run the showcase inject only in the showcase build`);
+    // Any quoting or indentation: no key-shaped value may sit on an apiKey property.
+    for (const m of source.matchAll(/apiKey\s*:\s*(['"])([^'"\n]*)\1/g)) {
+      assert.ok(!KEY_SHAPE.test(m[2]), `${path}: key-shaped apiKey value committed: ${m[0]}`);
+    }
   }
 });
 
 test('the showcase key map covers exactly the families that have a config', () => {
   assert.deepEqual(Object.keys(keys).sort(), families);
-  for (const key of Object.values(keys)) assert.match(key, /^[A-Za-z0-9]{20,}$/);
+  for (const key of Object.values(keys)) assert.match(key, KEY_SHAPE);
 });
 
 test('inject writes only the top-level key and is idempotent', () => {
