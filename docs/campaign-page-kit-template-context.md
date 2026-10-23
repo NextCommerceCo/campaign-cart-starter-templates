@@ -1059,6 +1059,7 @@ Do not carry starter/demo shipping IDs or codes between campaigns. `campaign-bui
 | `.next-active` | active/enabled button |
 | `.next-disabled` | disabled button |
 | `.next-loading` | element in loading state |
+| `.next-discounts-empty` / `.next-discounts-has-items` | a `data-next-discounts` list with no rows / with rows (set on the list element itself) |
 
 ---
 

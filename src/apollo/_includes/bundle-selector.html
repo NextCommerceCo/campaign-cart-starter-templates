@@ -74,9 +74,11 @@
     {% capture items_2x %}[{"packageId":{{ _pkg }},"quantity":2}]{% endcapture -%}
     {% capture items_3x %}[{"packageId":{{ _pkg }},"quantity":3}]{% endcapture -%}
     {% capture sub_3x %}{% if shipping_methods.free %}+ Free Shipping{% endif %}{% endcapture -%}
+    {%- comment -%} 3x uses shipping_methods.free when a page still maps one (legacy two-method setup), else the one standard method. {%- endcomment -%}
+    {% assign _ship_3x = shipping_methods.free | default: shipping_methods.standard -%}
     {% campaign_include 'bundle-card.html' card_style=card_style bundle_id='bundle-1x' items=items_1x package_id=_pkg shipping_id=shipping_methods.standard selected=true title_prefix='1x ' badge_text='Most Popular' badge_tone='popular' badge_pill_class='os-card__label--pill-primary' %}
     {% campaign_include 'bundle-card.html' card_style=card_style bundle_id='bundle-2x' items=items_2x package_id=_pkg shipping_id=shipping_methods.standard title_prefix='2x ' badge_text='Best Deal' badge_tone='deal' badge_pill_class='os-card__label--pill-secondary' %}
-    {% campaign_include 'bundle-card.html' card_style=card_style bundle_id='bundle-3x' items=items_3x package_id=_pkg shipping_id=shipping_methods.free title_prefix='3x ' subtitle=sub_3x shipping_label=sub_3x %}
+    {% campaign_include 'bundle-card.html' card_style=card_style bundle_id='bundle-3x' items=items_3x package_id=_pkg shipping_id=_ship_3x title_prefix='3x ' subtitle=sub_3x shipping_label=sub_3x %}
     {%- endif %}
   </div>
 </div>
