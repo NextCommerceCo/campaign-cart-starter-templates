@@ -25,7 +25,7 @@ promo_banner: # slim (default) | classic — delete this block to remove the ban
   highlight: "Up to 60% off"
   lead: "your"
   strong: "Product Name"
-  trail: "- Today only · Free USA shipping"
+  trail: "- Today only · Free shipping on 2+"
 countdown_timer:
   text: "Discount"
   highlight: "Activated"
@@ -170,10 +170,11 @@ order_personalization:
   placeholder: "e.g. Team Eagles"
   maxlength: 24
 shipping_methods:
-  # Starter/demo Campaigns App shipping method ref_ids.
-  # Replace these from the target CampaignSpec/Campaigns App when cloning the Apollo MV shape.
-  standard: 2
-  free: 1
+  # One shipping method on every tier. A campaign lists each storefront shipping method once, so a
+  # cheaper tier gets a coupon (`vouchers`), not a second method. Price the method at the highest tier
+  # rate; the coupon is a "percentage off shipping" Code Offer (100% = free). Replace the ref_id and the
+  # `vouchers` codes with your campaign's own. See "Shipping by tier" in docs/campaign-page-kit-template-context.md.
+  standard: 1
 variant_slots:
   - id: "buy1"
     quantity: 1
@@ -184,13 +185,15 @@ variant_slots:
   - id: "buy2"
     quantity: 2
     shipping_method: "standard"
+    vouchers: "FREESHIP"
     title: "2x Units"
     card_sup: "Next Commerce Shirts"
     label_text: "Most Popular"
     label_class: "os-card__label-2 os-card__label--middle-center os-card__label--pill-primary"
   - id: "buy3"
     quantity: 3
-    shipping_method: "free"
+    shipping_method: "standard"
+    vouchers: "FREESHIP"
     title: "3x Units"
     card_sup: "Next Commerce Shirts"
     label_text: "Best Deal"

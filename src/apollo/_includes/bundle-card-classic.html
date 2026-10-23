@@ -3,7 +3,7 @@
   One of the interchangeable bundle card styles dispatched by bundle-card.html.
   Reads the shared card arg contract (see bundle-card.html). SDK attrs preserved.
 {%- endcomment -%}
-<div data-next-bundle-card data-next-bundle-id="{{ bundle_id }}"{% if shipping_id and shipping_id != "" %} data-next-shipping-id="{{ shipping_id }}"{% endif %} data-next-bundle-items='{{ items }}'{% if selected %} data-next-selected="true"{% endif %} role="button" class="os-card">
+<div data-next-bundle-card data-next-bundle-id="{{ bundle_id }}"{% if shipping_id and shipping_id != "" %} data-next-shipping-id="{{ shipping_id }}"{% endif %}{% if bundle_vouchers and bundle_vouchers != "" %} data-next-bundle-vouchers="{{ bundle_vouchers }}"{% endif %} data-next-bundle-items='{{ items }}'{% if selected %} data-next-selected="true"{% endif %} role="button" class="os-card">
   <div class="os-card__header-slot"></div>
   <div class="os-card__wrapper">
     <div class="os-card__content os--align-middle" data-next-package-id="{{ package_id }}">

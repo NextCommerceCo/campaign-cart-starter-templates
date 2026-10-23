@@ -20,7 +20,7 @@ Fixture conventions (real-export dialect):
 - Shipping methods live only in the root `shipping_methods[]` catalog, not on pages.
 - `sdk_hints.template_family` and `sdk_hints.frontmatter` are template-handoff extensions, not part of a live export. `template_family` names the intended starter family for the fixture only; `frontmatter` shows the values an agent would write into the template.
 - Numeric `ref_id` values are illustrative. Replace them from the target Campaigns API.
-- `shipping_methods[].key` mirrors the starter frontmatter vocabulary, such as `standard` and `free`.
+- `shipping_methods[].key` mirrors the starter frontmatter vocabulary (`standard`). A campaign lists each storefront shipping method once, so the tiered fixtures carry one method priced at the highest tier rate plus a `FREESHIP` Code Offer (`shipping_percentage` 100%, min 2 units) that the 2x/3x tiers apply via `vouchers`. `shop-three-step-dynamic-shipping.json` keeps a second, genuinely different method (`express`) because its shipping step lists every method. (`olympus-tiered-standard-free.json` keeps its file name because campaigns-os syncs it by name.)
 
 These fixtures are synced verbatim into `NextCommerceCo/campaigns-os` (`contracts/fixtures/campaign-specs/`) by its catalog refresh, where each must pass the CampaignSpec schema conformance gate for its `schema_version` (v4 for 4.3, v5 for 5.0). Keep them in the dialect above or the downstream gate fails.
 

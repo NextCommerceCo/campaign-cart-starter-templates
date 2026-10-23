@@ -29,7 +29,7 @@ promo_banner: # slim (default) | classic — delete this block to remove the ban
   highlight: "Up to 60% off"
   lead: "your"
   strong: "Product Name"
-  trail: "- Today only · Free USA shipping"
+  trail: "- Today only · Free shipping on 2+"
 countdown_timer:
   text: "Discount"
   highlight: "Activated"
@@ -146,10 +146,11 @@ order_bump:
     badge_text: "Add-on"
     savings_text: "Instant savings:"
 shipping_methods:
-  # Starter/demo Campaigns App shipping method ref_ids.
-  # Replace these from the target CampaignSpec/Campaigns App when cloning the Apollo shape.
-  standard: 2
-  free: 1
+  # One shipping method on every tier. A campaign lists each storefront shipping method once, so a
+  # cheaper tier gets a coupon (`vouchers`), not a second method. Price the method at the highest tier
+  # rate; the coupon is a "percentage off shipping" Code Offer (100% = free). Replace the ref_id and the
+  # `vouchers` codes with your campaign's own. See "Shipping by tier" in docs/campaign-page-kit-template-context.md.
+  standard: 1
 bundles:
   - id: "bundle-1x"
     quantity: 1
@@ -161,12 +162,15 @@ bundles:
   - id: "bundle-2x"
     quantity: 2
     shipping_method: "standard"
+    vouchers: "FREESHIP"
+    shipping_label: "+ Free Shipping"
     title_prefix: "2x "
     badge_text: "Best Deal"
     badge_pill_class: "os-card__label--pill-secondary"
   - id: "bundle-3x"
     quantity: 3
-    shipping_method: "free"
+    shipping_method: "standard"
+    vouchers: "FREESHIP"
     title_prefix: "3x "
     total_tone_class: "os-dark"
     shipping_label: "+ Free Shipping"
@@ -228,7 +232,7 @@ bundles:
                               <div
                                 data-next-bundle-selector
                                 data-next-selector-id="main"
-                                data-next-bundles='[{"id":"bundle-1x","title":"1x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":"SPEC_STANDARD_SHIPPING_REF","labelSlotClass":"","totalToneClass":"","badgeText":"Most Popular","badgePillClass":"os-card__label--pill-primary","items":[{"packageId":1,"quantity":1}],"selected":true},{"id":"bundle-2x","title":"2x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":"SPEC_STANDARD_SHIPPING_REF","labelSlotClass":"","totalToneClass":"","badgeText":"Best Deal","badgePillClass":"os-card__label--pill-secondary","items":[{"packageId":1,"quantity":2}]},{"id":"bundle-3x","title":"3x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":"SPEC_FREE_SHIPPING_REF","labelSlotClass":"hide","totalToneClass":"os-dark","badgeText":"","badgePillClass":"","items":[{"packageId":1,"quantity":3}]}]'
+                                data-next-bundles='[{"id":"bundle-1x","title":"1x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":"SPEC_STANDARD_SHIPPING_REF","labelSlotClass":"","totalToneClass":"","badgeText":"Most Popular","badgePillClass":"os-card__label--pill-primary","items":[{"packageId":1,"quantity":1}],"selected":true},{"id":"bundle-2x","title":"2x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":"SPEC_STANDARD_SHIPPING_REF","vouchers":["SPEC_FREE_SHIPPING_COUPON"],"labelSlotClass":"","totalToneClass":"","badgeText":"Best Deal","badgePillClass":"os-card__label--pill-secondary","items":[{"packageId":1,"quantity":2}]},{"id":"bundle-3x","title":"3x Package Title","imageSrc":"{{ 'images/1x1_1.svg' | campaign_asset }}","shippingId":"SPEC_STANDARD_SHIPPING_REF","vouchers":["SPEC_FREE_SHIPPING_COUPON"],"labelSlotClass":"hide","totalToneClass":"os-dark","badgeText":"","badgePillClass":"","items":[{"packageId":1,"quantity":3}]}]'
                                 data-next-selection-mode="swap"
                                 data-next-include-shipping="true"
                                 class="os-option os-cards__vertical os--gap-xl"

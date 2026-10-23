@@ -15952,6 +15952,14 @@ html.cc-promo-topbar-on .promo-banner--classic .promo-banner__topbar {
   background-color: var(--system-colors--destructive);
 }
 
+/* Coupon badges/rows on bundle cards show on cart.hasCoupon(), but a shipping-only coupon (e.g. free
+   shipping on 2+) has nothing to list there — card prices exclude shipping — so the SDK marks the list
+   next-discounts-empty. Hide it instead of rendering an empty pill (data-next-show clears its inline display
+   when showing, so this rule decides). */
+[data-next-bundle-card] [data-next-discounts="voucher"].next-discounts-empty {
+  display: none;
+}
+
 /* Tier badges keep their previous pill coloring */
 .bundle-card__badge--popular {
   background-color: var(--brand--color--pill-primary-surface);
