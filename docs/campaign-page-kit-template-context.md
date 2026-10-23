@@ -75,7 +75,7 @@ Current first-class families include `apollo`, `apollo-mv-single-step`, `olympus
 For each first-class family, read `families[family].agentContract` in the JSON catalog before patching checkout, upsell, or receipt frontmatter. Treat `sharedFrontmatterVocabulary` as the cross-family dictionary:
 
 - `packages.*` values come from CampaignSpec page packages and Campaigns API package `ref_id`s.
-- `shipping_methods.*` values come from CampaignSpec/API shipping method `ref_id`s and are checkout/cart behavior only.
+- `shipping_methods.*` values come from CampaignSpec/API shipping method `ref_id`s and are checkout/cart behavior only. Starter checkouts use one method on every tier; a cheaper tier carries a shipping coupon in `vouchers` (see "Shipping by tier").
 - `bundles` and `variant_slots` define selector rows; prefer `quantity` plus `packages.main_package` over hand-written item JSON unless the spec needs custom item sets.
 - `order_bump`, `upsell_offer`, and `upsell_bundle_tiers` must be removed or changed when the target campaign does not expose the referenced package/voucher.
 - `receipt_summary` preserves SDK order-item template ids; do not rewrite receipt item templates when frontmatter can express the change.
@@ -688,7 +688,8 @@ These tokens work inside `data-next-bundle-card` (SDK 0.4.23+) and inside bundle
 ```yaml
 bundles:
   - id: "bundle-3x"
-    shipping_method: "free"
+    shipping_method: "standard"
+    vouchers: "FREESHIP"               # the coupon that makes this tier's shipping free
     shipping_label: "+ Free Shipping"  # rendered unconditionally when set
 ```
 
@@ -699,7 +700,7 @@ bundles:
 - Files per template: `_includes/variant-picker.html`, `assets/js/variant-picker.js`, `assets/js/variant-picker-fixture.js`, `assets/css/variant-picker.css`, and a standalone `variant-picker.html` reference page. To use it on checkout, `{% campaign_include 'variant-picker.html' %}` in place of the default selector and add the css/js to the page frontmatter.
 - **One declared variant source.** `variant_picker.variants[]` (`{ value, label, package_id, image }`) is emitted once and feeds BOTH the dropdown swatch `src` AND the JS `value→packageId` / `value→image` maps — no second map to drift. Replace the demo image paths with your CampaignSpec per-variant package images.
 - **Image precedence:** live API `getPackageImage(packageId)` > declared template swatch. The swatch is the offline source of truth, not a placeholder.
-- **Per-tier shipping** is supported via `variant_picker.tiers[].shipping_method` (resolved through `shipping_methods` into `data-next-shipping-id`), so it is a full drop-in alternative selector, not only a variant-selection demo.
+- **Per-tier shipping** is supported via `variant_picker.tiers[].shipping_method` (resolved through `shipping_methods` into `data-next-shipping-id`) and `tiers[].vouchers` (a shipping coupon, rendered as `data-next-bundle-vouchers` — see "Shipping by tier"), so it is a full drop-in alternative selector, not only a variant-selection demo.
 - **Layout hook:** the inline "Label: [dropdown]" row uses `.os-card__variant-group.cc-row` (next-core), which overrides next-core's default `flex-flow: column` so the label does not stack above the control.
 
 ### Conditional visibility
@@ -993,19 +994,53 @@ Still functional but **not offer-aware**: each card swaps in a separate package,
 </div>
 ```
 
-### Per-card shipping (`data-next-shipping-id`)
+### Shipping by tier (one method + a card coupon)
 
-Sets the shipping method when a card is selected. Works on both `data-next-selector-card` (swap mode) and `data-next-bundle-card` (SDK 0.4.12+). Value is the shipping method `ref_id` from the Campaigns App.
+A campaign lists each storefront shipping method **once** — the Campaigns App does not take a second copy of the same storefront method. So when tiers charge different shipping (1x pays, 2+ ships free), the tier price comes from a **coupon**, not from a second shipping method:
+
+1. **One method, priced at the highest tier rate.** Set the campaign price of the storefront method every tier uses (e.g. Standard Shipping at $9.99). Coupons can only take a *percentage off* shipping, so the method carries the most expensive rate and the coupon brings cheaper tiers down: 100% = free, 50% = half.
+2. **A Code Offer per discounted rate.** On the campaign's Offers tab, add an Offer of type Code with the discount type "Apply a percentage off shipping price" ([Campaigns App docs](https://docs.nextcommerce.com/docs/apps/campaigns-app/campaigns-offers-and-discounts)). Give it a condition matching its tiers (e.g. minimum 2 units): the code is visible in the cart summary and accepted by any coupon box, so the condition is what keeps it off a 1-pack. Prefer a code that is hard to guess.
+3. **The code on the tier card.** `data-next-bundle-vouchers` (JSON array or comma list) applies the code while that card is selected and removes it when the shopper switches to a card without it; coupons the shopper typed are kept ([SDK reference](https://cart-sdk.nextcommerce.com/v0.4.43/reference/data-attributes/#voucher-codes)). Don't also offer the same code in a coupon box on that page.
 
 ```html
-<!-- Bundle cards — functional from SDK 0.4.12 -->
-<div data-next-bundle-card data-next-bundle-id="buy1" data-next-shipping-id="SPEC_STANDARD_SHIPPING_REF" ...>1x — $5 shipping</div>
-<div data-next-bundle-card data-next-bundle-id="buy3" data-next-shipping-id="SPEC_FREE_SHIPPING_REF" ...>3x — Free shipping</div>
+<div data-next-bundle-card data-next-bundle-id="buy1" data-next-shipping-id="SPEC_SHIPPING_REF" ...>1x — + $9.99 shipping</div>
+<div data-next-bundle-card data-next-bundle-id="buy2" data-next-shipping-id="SPEC_SHIPPING_REF" data-next-bundle-vouchers="SPEC_FREE_SHIPPING_COUPON" ...>2x — Free shipping</div>
 ```
 
-All cards in a selector should have `data-next-shipping-id` if any do — cards without it will not change the active shipping method when selected.
+In the starter checkouts (every selector partial: `bundle-selector`, `editorial-tier-selector`, `mv-configurable-selector`, `mv-selection-step`, `variant-picker`) that is frontmatter:
 
-Do not carry starter/demo shipping IDs between campaigns. `campaign-build` renders template frontmatter as-is; it does not validate a CampaignSpec or remap shipping refs. In starter templates that expose selector shipping, use `shipping_methods.standard` / `shipping_methods.free` in checkout frontmatter, replacing the starter refs with target Campaigns App shipping method `ref_id`s. If the target campaign does not have tier-specific shipping, leave those values blank or remove `shipping_method` from the bundle rows.
+```yaml
+shipping_methods:
+  standard: 1                # the one storefront method, priced at the highest tier rate
+bundles:                     # variant_slots / variant_picker.tiers on MV pages
+  - id: "bundle-1x"
+    shipping_method: "standard"
+  - id: "bundle-2x"
+    shipping_method: "standard"
+    vouchers: "FREESHIP"     # string, comma list or YAML list → data-next-bundle-vouchers
+    shipping_label: "+ Free Shipping"
+```
+
+- Card prices (`data-next-bundle-display`) do not include shipping, so the difference shows in the summary's `{shipping}` line and the static `shipping_label`. The code also appears in the summary's coupon (`data-next-discounts="voucher"`) rows.
+- The cards' coupon badge (`data-next-discounts="voucher"` + `cart.hasCoupon()`) has nothing to list for a shipping-only coupon; `next-core.css` hides it while the SDK marks it `next-discounts-empty`, so no empty pill renders.
+- **Checkout-only funnels** (no bundle cards, e.g. `shop-single-step`): there is no card to carry the code, and SDK 0.4.43 has no coupon attribute on add-to-cart and no coupon URL parameter. Use an automatic Offer (below), or apply the code from your own page script with `next.applyCoupon(code)` (queue it on `window.nextReady` so it runs after boot). `applyCoupon` checks the code with the campaign first: it refuses one that does not exist or gives no discount on the current cart — below the offer's minimum quantity, or a shipping coupon while the method costs $0. `shop-three-step` needs neither: its shipping step lets the shopper choose between the campaign's methods.
+- **Alternative — an automatic Offer** (no code) with the same shipping discount and a minimum-quantity condition. It needs no `vouchers` on the cards and no link script, because the platform applies it to any cart that qualifies, on every page of the campaign. The trade-off: it follows the cart's quantity, not the card, so it cannot single out one tier when two tiers have the same quantity, and the shopper cannot remove it. Use the card coupon when the discount belongs to a specific card.
+- **Going live:** create the Code Offer first, then ship the page, then raise the method's price. A card code (`data-next-bundle-vouchers`) that does not exist still goes on the cart — the SDK does not check it — and the price calculation ignores it (no discount, no error); placing an order with one is untested, so don't rely on it.
+
+### Per-card shipping method (`data-next-shipping-id`)
+
+Sets the shipping method when a card is selected. Works on both `data-next-selector-card` (swap mode) and `data-next-bundle-card` (SDK 0.4.12+). Value is the shipping method `ref_id` from the Campaigns App. Put the same method on every card (as above) so switching cards always puts the cart back on it.
+
+Different methods on different cards still work, but only when they are genuinely different **storefront** shipping methods (e.g. Standard 3–5 days vs Express 1–2 days), not price versions of one method — the campaign cannot hold two copies of the same storefront method. A merchant could create extra storefront shipping methods to price tiers, but every storefront method also shows on the storefront's own checkout, so use coupons for price differences.
+
+```html
+<div data-next-bundle-card data-next-bundle-id="buy1" data-next-shipping-id="SPEC_STANDARD_SHIPPING_REF" ...>1x — Standard shipping</div>
+<div data-next-bundle-card data-next-bundle-id="buy3" data-next-shipping-id="SPEC_EXPRESS_SHIPPING_REF" ...>3x — Express shipping included</div>
+```
+
+All cards in a selector should have `data-next-shipping-id` if any do — cards without it will not change the active shipping method when selected. Where the shopper chooses the method (e.g. `shop-three-step`'s shipping step lists every campaign method), leave it off the cards.
+
+Do not carry starter/demo shipping IDs or codes between campaigns. `campaign-build` renders template frontmatter as-is; it does not validate a CampaignSpec or remap shipping refs or coupon codes. In the starter checkouts, replace `shipping_methods.standard` and every `vouchers` code with the target campaign's shipping method `ref_id` and Code Offer codes. If the target campaign has no tier-specific shipping, remove the `vouchers` lines (and `shipping_method` too if the campaign has one method — the SDK then uses the campaign's first method).
 
 ### Add to cart button
 
@@ -1024,6 +1059,7 @@ Do not carry starter/demo shipping IDs between campaigns. `campaign-build` rende
 | `.next-active` | active/enabled button |
 | `.next-disabled` | disabled button |
 | `.next-loading` | element in loading state |
+| `.next-discounts-empty` / `.next-discounts-has-items` | a `data-next-discounts` list with no rows / with rows (set on the list element itself) |
 
 ---
 

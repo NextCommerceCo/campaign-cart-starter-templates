@@ -6,37 +6,41 @@ styles:
 scripts:
   - js/variant-picker-fixture.js
   - js/variant-picker.js
-# Starter/demo Campaigns App shipping method ref_ids — replace from the target CampaignSpec.
 shipping_methods:
-  standard: 2
-  free: 1
+  # One shipping method on every tier. A campaign lists each storefront shipping method once, so a
+  # cheaper tier gets a coupon (`vouchers`), not a second method. Price the method at the highest tier
+  # rate; the coupon is a "percentage off shipping" Code Offer (100% = free). Replace the ref_id and the
+  # `vouchers` codes with your campaign's own. See "Shipping by tier" in docs/campaign-page-kit-template-context.md.
+  standard: 1
 variant_picker:
   selector_id: "vp-main"
   selector_heading: "Select Bundle Discount"
   slot_heading: "Select your color"
   variant_label: "Color:"
   card_sup: "Next Commerce Shirts"
-  # Optional per-tier shipping (parity with mv-configurable-selector): tiers[].shipping_method
-  # resolves through shipping_methods into data-next-shipping-id on the card. Replace these
-  # starter Campaigns App ref_ids from the target CampaignSpec/Campaigns App when cloning.
+  # Per-tier shipping (parity with mv-configurable-selector): tiers[].shipping_method resolves
+  # through shipping_methods into data-next-shipping-id; tiers[].vouchers renders
+  # data-next-bundle-vouchers (the tier's shipping coupon). See the shipping_methods note above.
   tiers:
     - id: "buy1"
       quantity: 1
       title: "1x Unit"
       shipping_method: "standard"
-      shipping_label: "+ $4.95 shipping"
+      shipping_label: "+ $9.99 shipping"
       selected: true
     - id: "buy2"
       quantity: 2
       title: "2x Units"
       shipping_method: "standard"
-      shipping_label: "+ $4.95 shipping"
+      vouchers: "FREESHIP"
+      shipping_label: "Free Shipping"
       label_text: "Most Popular"
       label_class: "os-card__label-2 os-card__label--middle-center os-card__label--pill-primary"
     - id: "buy3"
       quantity: 3
       title: "3x Units"
-      shipping_method: "free"
+      shipping_method: "standard"
+      vouchers: "FREESHIP"
       shipping_label: "Free Shipping"
       label_text: "Best Deal"
       label_class: "os-card__label-2 os-card__label--middle-center os-card__label--pill-secondary"
