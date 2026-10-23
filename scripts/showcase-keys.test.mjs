@@ -20,9 +20,11 @@ test('every committed family config ships with an empty commerce apiKey', () => 
     const match = source.match(TOP_LEVEL_API_KEY);
     assert.ok(match, `${path}: top-level apiKey line missing`);
     assert.equal(match[0], '  apiKey: "",', `${path}: the demo key must not be committed; run the showcase inject only in the showcase build`);
-    // Any quoting or indentation: no key-shaped value may sit on an apiKey property.
+    // The templates are a public library: no apiKey property anywhere in the
+    // file (commerce, Google Maps, custom analytics) may carry a key-shaped
+    // value, under any quoting or indentation.
     for (const m of source.matchAll(/apiKey\s*:\s*(['"])([^'"\n]*)\1/g)) {
-      assert.ok(!KEY_SHAPE.test(m[2]), `${path}: key-shaped apiKey value committed: ${m[0]}`);
+      assert.ok(!KEY_SHAPE.test(m[2]), `${path}: a key-shaped value is committed on an apiKey property (${m[0]}); templates ship with every key empty, showcase keys are injected at build time`);
     }
   }
 });

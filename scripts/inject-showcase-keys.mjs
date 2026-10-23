@@ -11,12 +11,12 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const TOP_LEVEL_API_KEY = /^  apiKey: "[^"\n]*",$/m;
-export const KEY_SHAPE = /^[A-Za-z0-9]{20,}$/;
+export const KEY_SHAPE = /^[A-Za-z0-9_-]{20,}$/;
 
 export function injectShowcaseKeys(root, keys) {
   const written = [];
   for (const [family, key] of Object.entries(keys)) {
-    if (!KEY_SHAPE.test(key)) throw new Error(`${family}: showcase key must be 20+ alphanumeric characters`);
+    if (!KEY_SHAPE.test(key)) throw new Error(`${family}: showcase key must be 20+ characters from [A-Za-z0-9_-]`);
     const path = join(root, 'src', family, 'assets', 'config.js');
     let source;
     try { source = readFileSync(path, 'utf8'); } catch (error) {
