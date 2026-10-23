@@ -38,6 +38,8 @@ That's it, you've got your first campaign up and running on your local machine r
 > [!TIP]
 > Skip the API key during init? Run `npm run config` later to set it.
 
+The committed templates ship with an empty `apiKey`, so a fresh scaffold carries no live campaign: the SDK does not boot without a key, and the pages render with placeholder prices until you set one. The live previews above take orders because the Netlify build runs `npm run showcase:keys` first, writing the demo campaign keys from `scripts/showcase-keys.json`. Run it locally to point a checkout of this repo at the demo campaigns; don't commit the result.
+
 ---
 
 ## Available templates

@@ -49,6 +49,8 @@ jobs:
         run: npm run test:template-verification
       - name: Validate template verification evidence
         run: npm run validate:template-verification
+      - name: Committed configs ship no demo key; showcase inject is isolated
+        run: npm run test:showcase-keys
       - name: Build all template families
         run: npm run build
       - name: Lint SDK markup (all families, source + rendered)

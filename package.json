@@ -8,6 +8,8 @@
     "dev": "npx campaign-dev",
     "build": "npx campaign-build",
     "build:preview": "node scripts/build-preview-shell.mjs",
+    "showcase:keys": "node scripts/inject-showcase-keys.mjs",
+    "test:showcase-keys": "node --test scripts/showcase-keys.test.mjs",
     "clone": "npx campaign-clone",
     "config": "npx campaign-config",
     "compress": "npx campaign-compress",

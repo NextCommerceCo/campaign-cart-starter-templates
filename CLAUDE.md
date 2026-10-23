@@ -68,6 +68,8 @@ Note: the developer renames the folder to their product/campaign name (e.g. `win
 
 Base URL: `https://nextcommerce-campaign-templates.netlify.app` — append the localhost paths above (always trailing slash).
 
+The committed `config.js` files carry an empty `apiKey`. The Netlify build runs `npm run showcase:keys` before `npm run build` to write the demo campaign keys from `scripts/showcase-keys.json`; `npm run test:showcase-keys` (CI) fails if a demo key is ever committed. A local checkout runs the same script to use the demo campaigns.
+
 | Template | Links |
 |----------|-------|
 | apollo | [presell](https://nextcommerce-campaign-templates.netlify.app/apollo/presell/) · [landing](https://nextcommerce-campaign-templates.netlify.app/apollo/landing/) · [checkout](https://nextcommerce-campaign-templates.netlify.app/apollo/checkout/) · [upsell-bundle-stepper](https://nextcommerce-campaign-templates.netlify.app/apollo/upsell-bundle-stepper/) · [upsell-bundle-tier-pills](https://nextcommerce-campaign-templates.netlify.app/apollo/upsell-bundle-tier-pills/) · [upsell-bundle-tier-cards](https://nextcommerce-campaign-templates.netlify.app/apollo/upsell-bundle-tier-cards/) · [upsell-single](https://nextcommerce-campaign-templates.netlify.app/apollo/upsell-single/) · [upsell-vsl](https://nextcommerce-campaign-templates.netlify.app/apollo/upsell-vsl/) · [receipt](https://nextcommerce-campaign-templates.netlify.app/apollo/receipt/) |
