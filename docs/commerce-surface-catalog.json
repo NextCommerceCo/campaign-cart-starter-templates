@@ -1829,7 +1829,7 @@
           ],
           "removeWhenUnsupported": [
             "variant slot rows unsupported by the target spec/API",
-            "free shipping row if no free method exists",
+            "variant_slots[].vouchers when no tier-specific shipping price exists",
             "upsell pages not present in the funnel"
           ]
         },
@@ -2150,7 +2150,7 @@
           "removeWhenUnsupported": [
             "variant slot rows unsupported by the target spec/API",
             "selector_order_bump_variant when no selector-area bump package exists",
-            "free shipping row if no free method exists",
+            "variant_slots[].vouchers when no tier-specific shipping price exists",
             "upsell pages not present in the funnel"
           ]
         },
@@ -2512,7 +2512,7 @@
           ],
           "removeWhenUnsupported": [
             "variant slot rows unsupported by the target spec/API",
-            "free shipping row if no free method exists",
+            "variant_slots[].vouchers when no tier-specific shipping price exists",
             "upsell pages not present in the funnel"
           ]
         },
