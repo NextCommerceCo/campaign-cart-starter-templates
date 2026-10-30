@@ -105,18 +105,27 @@ the Axon adapter also by `npm run test:axon-adapter` (in `lint:sdk:ci`).
   `view_item`, `begin_checkout` and `purchase`). The adapter sends `item_category_id` only when the SDK's
   value is a positive integer, otherwise the campaign's `axon_item_category_id`
   (`window.__axonItemCategoryId`), otherwise not at all. Set `axon_item_category_id` per campaign (e.g.
-  `469` Health & Beauty) or Axon's Pixel Helper warns once per item.
+  `469` Health & Beauty) or Axon's Pixel Helper warns once per item. The fallback applies to **every
+  item** in the campaign, so on a campaign that sells products from different taxonomy branches pick the
+  main product's id (or leave it empty and accept the per-item warning).
 - **Enhanced matching (`user_data`) is sent by default** on `purchase`, `begin_checkout` and
   `add_payment_info`: Axon flags a `purchase` without `user_data.email` as an error. Source is the SDK's
   `user_properties` (`customer_email`, `customer_phone`, `customer_id`). Axon's `pixel.js` hashes email
   and phone in the browser, so the adapter passes them normalised but unhashed: email trimmed and
-  lowercased, phone as E.164 digits without the `+` (a phone not entered in E.164 is left out), `user_id`
-  only when it is at least 6 characters. Browse events and `page_view` stay anonymous. Opt out per
-  campaign with `axon_send_user_data: "false"` (sets `window.__axonSendUserData = false`).
+  lowercased, phone as E.164 digits without the `+` (the SDK only sets an E.164 `customer_phone`), and
+  `user_id` only when it is at least 6 characters. Any one of the three is enough to send `user_data`.
+  Browse events and `page_view` stay anonymous. Unlike the opt-in `onContact` vendors, this is **not**
+  gated on `accepts_marketing`. Opt out per campaign with `axon_send_user_data: "false"` (`"no"`,
+  `"off"` and `"0"` work too; sets `window.__axonSendUserData = false`).
+- A purchase whose event has no `customer_email` still goes out, but Axon flags it, and the adapter logs
+  `[axon.adapter] purchase sent without user_data.email` to the console.
 - **`payment_type`** is mapped to Axon's enum (`credit_card`, `redeemable`, `deferred`,
   `payment_on_delivery`, `wallet`, `other`); the SDK sends labels such as "Credit Card".
 - **`image_url`** is sent only when it ends in `.png`/`.jpg`/`.jpeg` (Axon's rule). The SDK's package
   thumbnails are `.webp`, so most items go without one.
+- **Ahead of upstream.** These fixes are not yet in `analytics-tracking-docs/examples/direct-axon/axon.adapter.js`,
+  so `lint:upstream` reports drift for `axon.adapter.js` and `next-forwarder-core.js` until they land there.
+  Do not copy the upstream files over `_shared/` before then: `npm run test:axon-adapter` (in CI) fails on a revert.
 
 ### Identity: the `accepts_marketing` gate is per adapter
 

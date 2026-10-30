@@ -124,11 +124,13 @@
   window.__axonAllowedEvents = "{{ campaign.axon_allowed_events }}";
   window.__axonBlockedEvents = "{{ campaign.axon_blocked_events }}";
   // Integer Google product-taxonomy id for items whose SDK item_category is text (the campaign name,
-  // which Axon rejects with HTTP 400). "" = send item_category_id only when the SDK's is numeric.
+  // which Axon rejects with HTTP 400). Applies to EVERY item in the campaign. "" = send
+  // item_category_id only when the SDK's is numeric.
   window.__axonItemCategoryId = "{{ campaign.axon_item_category_id }}";
   // user_data (email/phone/user_id, hashed by Axon's pixel.js) rides on purchase + checkout events;
-  // Axon requires it on purchase. Opt out with axon_send_user_data: "false".
-  {% if campaign.axon_send_user_data == false or campaign.axon_send_user_data == "false" %}window.__axonSendUserData = false;{% endif %}
+  // Axon requires it on purchase. Opt out with axon_send_user_data: "false" (or "no" / "off" / "0").
+  {%- assign _axon_user_data = campaign.axon_send_user_data | append: "" | strip | downcase %}
+  {% if _axon_user_data == "false" or _axon_user_data == "no" or _axon_user_data == "off" or _axon_user_data == "0" %}window.__axonSendUserData = false;{% endif %}
 </script>
 {% endif %}
 {% if campaign.taboola_account_id and campaign.taboola_account_id != "" %}
