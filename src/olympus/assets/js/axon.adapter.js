@@ -18,7 +18,18 @@
  *   - `purchase` REQUIRES currency, items, value, tax, shipping, transaction_id (SDK provides all;
  *     upsells carry tax:0/shipping:0).
  *   - Identifier is an EVENT KEY, not a pixel id.
- * Enhanced matching (`user_data` hashed email/phone) is NOT sent — see README (needs hashing+consent).
+ *   - item_category_id is an INTEGER Google product-taxonomy id. The SDK's item_category is the campaign
+ *     NAME (text), which Axon rejects with HTTP 400 for the whole event — so it is sent only when it is a
+ *     positive integer, else the per-campaign window.__axonItemCategoryId (campaigns.json
+ *     axon_item_category_id), else left out.
+ *   - image_url must end in .png/.jpg/.jpeg; the SDK's .webp package thumbnails are dropped.
+ *   - payment_type is an enum (credit_card / redeemable / deferred / payment_on_delivery / wallet / other);
+ *     the SDK's labels ("Credit Card", "Apple Pay", …) are mapped onto it.
+ * Enhanced matching: `user_data` is sent on purchase + the checkout events (USER_DATA_EVENTS) from the SDK's
+ * user_properties (customer_email / customer_phone / customer_id). Axon requires user_data.email on
+ * purchase. Axon's pixel.js hashes email/phone in the browser, so they are passed plaintext: email trimmed
+ * and lowercased, phone as E.164 digits without '+', user_id only when >= 6 chars. ON by default; turn off
+ * with window.__axonSendUserData = false (campaigns.json axon_send_user_data: "false").
  *
  * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus().
  */
@@ -56,6 +67,47 @@
     search:           ['search_term']
   };
 
+  // Events that carry user_data when the shopper is known. page_view and browse events stay anonymous.
+  var USER_DATA_EVENTS = { purchase: 1, begin_checkout: 1, add_payment_info: 1 };
+
+  function userData(evt) {
+    if (window.__axonSendUserData === false || window.__axonSendUserData === 'false') return undefined;
+    var up = (evt && evt.user_properties) || {};
+    var out = {};
+    var email = typeof up.customer_email === 'string' ? up.customer_email.trim().toLowerCase() : '';
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) out.email = email;
+    var phone = typeof up.customer_phone === 'string' ? up.customer_phone.replace(/[\s().-]/g, '') : '';
+    if (/^\+[1-9]\d{7,14}$/.test(phone)) out.phone = phone.slice(1);
+    var id = up.customer_id !== undefined && up.customer_id !== null ? String(up.customer_id) : '';
+    if (id.length >= 6) out.user_id = id;
+    return out.email || out.phone ? out : undefined;
+  }
+
+  // item_category_id: a positive integer (Google product taxonomy) or nothing.
+  function categoryId(raw) {
+    var s = raw === undefined || raw === null ? '' : String(raw).trim();
+    return /^\d+$/.test(s) && Number(s) > 0 ? Number(s) : undefined;
+  }
+  var fallbackCategoryId = categoryId(window.__axonItemCategoryId);
+
+  var IMAGE_RE = /^https?:\/\/[^\s?#]+\.(png|jpe?g)(?:[?#].*)?$/i;
+
+  // Axon payment_type enum; the SDK sends display labels (paymentMethodLabel). Unknown labels → 'other'.
+  var PAYMENT_TYPES = { credit_card: 1, redeemable: 1, deferred: 1, payment_on_delivery: 1, wallet: 1, other: 1 };
+  var PAYMENT_TYPE_BY_KEY = {
+    creditcard: 'credit_card', card: 'credit_card', cardtoken: 'credit_card', savedcard: 'credit_card', debitcard: 'credit_card',
+    applepay: 'wallet', googlepay: 'wallet', paypal: 'wallet', shoppay: 'wallet', link: 'wallet', swish: 'wallet', twint: 'wallet',
+    venmo: 'wallet', amazonpay: 'wallet', cashapp: 'wallet',
+    klarna: 'deferred', affirm: 'deferred', afterpay: 'deferred', clearpay: 'deferred', sezzle: 'deferred', zip: 'deferred',
+    giftcard: 'redeemable', voucher: 'redeemable', storecredit: 'redeemable',
+    cashondelivery: 'payment_on_delivery', cod: 'payment_on_delivery'
+  };
+  function paymentType(raw) {
+    var s = String(raw).trim();
+    if (PAYMENT_TYPES[s]) return s;
+    return PAYMENT_TYPE_BY_KEY[s.toLowerCase().replace(/[^a-z]/g, '')] || 'other';
+  }
+
   // Map an SDK EcommerceItem to Axon's item object (mostly GA4-shaped; a couple of renames).
   function mapItems(items) {
     return (items || []).map(function (it) {
@@ -66,8 +118,9 @@
       if (it.quantity !== undefined && it.quantity !== null) out.quantity = it.quantity;
       if (it.item_brand) out.item_brand = it.item_brand;
       if (it.item_variant_id) out.item_variant_id = it.item_variant_id;
-      if (it.item_category) out.item_category_id = it.item_category; // Axon: item_category_id
-      if (it.item_image) out.image_url = it.item_image;               // Axon: image_url
+      var cat = categoryId(it.item_category) || fallbackCategoryId;
+      if (cat) out.item_category_id = cat;                            // Axon: integer item_category_id
+      if (typeof it.item_image === 'string' && IMAGE_RE.test(it.item_image)) out.image_url = it.item_image;
       if (it.discount !== undefined && it.discount !== null && it.discount !== '') out.discount = it.discount;
       return out;
     });
@@ -114,6 +167,11 @@
       if (name === 'search' && evt.search_term) params.search_term = evt.search_term;
 
       copy(ec, params, EXTRA[name] || []);
+      if (params.payment_type !== undefined) params.payment_type = paymentType(params.payment_type);
+      if (USER_DATA_EVENTS[name]) {
+        var user = userData(evt);
+        if (user) params.user_data = user;
+      }
       window.axon('track', name, params);
     }
   });

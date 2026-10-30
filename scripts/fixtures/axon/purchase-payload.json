@@ -1,0 +1,27 @@
+[
+  "track",
+  "purchase",
+  {
+    "currency": "USD",
+    "value": 39,
+    "items": [
+      {
+        "item_id": "DEMO-1",
+        "item_name": "Demo Product",
+        "price": 39,
+        "quantity": 1,
+        "item_brand": "Demo Brand",
+        "item_variant_id": "15",
+        "item_category_id": 469
+      }
+    ],
+    "transaction_id": "101614",
+    "tax": 0,
+    "shipping": 0,
+    "user_data": {
+      "email": "jane.doe@example.com",
+      "phone": "18123158899",
+      "user_id": "1234567"
+    }
+  }
+]
