@@ -166,7 +166,17 @@ test('opt-out: window.__axonSendUserData = false (and the common spellings)', ()
     const { calls, warnings, adapter } = load({ __axonSendUserData: off });
     adapter.send('purchase', purchaseEc, evt(buyer));
     assert.equal('user_data' in calls[0][2], false, String(off));
-    assert.deepEqual(warnings, [], String(off));
+    // Suppressed user_data is not silent: one warning names the runtime switch.
+    assert.equal(warnings.length, 1, String(off));
+    assert.match(warnings[0], /purchase sent without user_data \(turned off at runtime/);
+  }
+  for (const optOut of [true, 'true', ' TRUE ', 'yes', '1']) {
+    const { calls, warnings, adapter } = load({ __axonUserDataOptOut: optOut });
+    adapter.send('purchase', purchaseEc, evt(buyer));
+    adapter.send('purchase', purchaseEc, evt(buyer));
+    assert.equal('user_data' in calls[0][2], false, String(optOut));
+    assert.equal(warnings.length, 1, String(optOut));
+    assert.match(warnings[0], /campaign opted out/);
   }
   for (const on of [undefined, '', 'true', true]) {
     const { calls, adapter } = load({ __axonSendUserData: on });
@@ -215,18 +225,22 @@ test('a purchase without an email still goes out, with one console warning per p
   assert.equal(r.warnings.length, 1);
 });
 
-test('string fields are sent as strings (transaction_id, currency, search_term)', () => {
+test('string fields are sent as strings; currency only as an ISO 4217 letter code', () => {
   const { calls, adapter } = load();
   adapter.send('purchase', { ...purchaseEc, transaction_id: 101614 }, evt(buyer));
   assert.equal(calls[0][2].transaction_id, '101614');
   assert.deepEqual(validate(SCHEMA.purchase, calls[0][2]).errors, []);
+  adapter.send('purchase', { ...purchaseEc, currency: ' usd ' }, evt(buyer));
+  assert.equal(calls[1][2].currency, 'USD');
+  assert.deepEqual(validate(SCHEMA.purchase, calls[1][2]).errors, []);
+  // A numeric ISO code is dropped, not forwarded as '840'.
   adapter.send('purchase', { ...purchaseEc, currency: 840 }, evt(buyer));
-  assert.equal(calls[1][2].currency, '840');
+  assert.equal('currency' in calls[2][2], false);
   adapter.send('search', {}, { search_term: 42 });
-  assert.equal(calls[2][2].search_term, '42');
+  assert.equal(calls[3][2].search_term, '42');
   // A search_term on the ecommerce payload goes through copy() and is still coerced.
   adapter.send('search', { search_term: 7 }, {});
-  assert.equal(calls[3][2].search_term, '7');
+  assert.equal(calls[4][2].search_term, '7');
 });
 
 test('image_url kept only for .png/.jpg/.jpeg', () => {

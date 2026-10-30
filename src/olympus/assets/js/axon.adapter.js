@@ -33,8 +33,10 @@
  * purchase without an email. ON by default and NOT gated on accepts_marketing (unlike the opt-in
  * onContact vendors); turn off with window.__axonSendUserData = false (campaigns.json
  * axon_send_user_data: "false" / "no" / "off" / "0", which also renders window.__axonUserDataOptOut =
- * true). The campaign opt-out is latched at load and nothing on the page can undo it; otherwise
- * window.__axonSendUserData is read on every event, so a consent script can turn user_data off and on.
+ * true). __axonUserDataOptOut is read ONCE, when this file loads, and nothing on the page can undo it;
+ * setting it later has no effect. window.__axonSendUserData is read on every event, so a consent script
+ * can turn user_data off and on. A purchase sent without user_data (or without an email) logs one
+ * console warning per page per reason.
  *
  * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus().
  */
@@ -80,11 +82,18 @@
     return !/^(false|no|off|0)$/i.test(String(window.__axonSendUserData).trim());
   }
   // The campaign opt-out (rendered from campaigns.json) is latched at load; the runtime flag is read per event.
-  var campaignOptOut = window.__axonUserDataOptOut === true;
+  var campaignOptOut = /^(true|yes|on|1)$/i.test(String(window.__axonUserDataOptOut).trim());
   function sendUserData() {
     return !campaignOptOut && userDataAllowed();
   }
-  var warnedNoEmail = {};
+  var warned = {};
+  // Axon flags a purchase without user_data.email. Upsells repeat the order's shopper, so only the
+  // order purchase warns, once per page per reason.
+  function warnPurchase(name, evt, missing, reason) {
+    if (name !== 'purchase' || (evt && evt.event === 'dl_upsell_purchase') || warned[reason] || !window.console) return;
+    warned[reason] = true;
+    console.warn('[axon.adapter] purchase sent without ' + missing + ' (' + reason + ')');
+  }
 
   function userData(evt) {
     var up = (evt && evt.user_properties) || {};
@@ -173,7 +182,9 @@
       if (name === 'page_view') { window.axon('track', 'page_view'); return; }
 
       var params = {};
-      if (ec.currency) params.currency = String(ec.currency);
+      // ISO 4217 alphabetic code only; a numeric code (840) or junk is dropped rather than forwarded.
+      var currency = typeof ec.currency === 'string' ? ec.currency.trim().toUpperCase() : '';
+      if (/^[A-Z]{3}$/.test(currency)) params.currency = currency;
       if (ec.value !== undefined && ec.value !== null) params.value = ec.value;
 
       var items = mapItems(ec.items);
@@ -188,18 +199,15 @@
       ['transaction_id', 'search_term'].forEach(function (k) {
         if (params[k] !== undefined && params[k] !== null) params[k] = String(params[k]);
       });
-      if (sendUserData() && USER_DATA_EVENTS[name]) {
+      if (USER_DATA_EVENTS[name] && !sendUserData()) {
+        warnPurchase(name, evt, 'user_data', campaignOptOut ? 'campaign opted out: axon_send_user_data'
+                                               : 'turned off at runtime: window.__axonSendUserData');
+      } else if (USER_DATA_EVENTS[name]) {
         var user = userData(evt);
         if (user) params.user_data = user;
-        // Axon errors on a purchase without user_data.email; say so once per page per reason. Upsells
-        // repeat the order's shopper, so only the order purchase warns.
-        if (name === 'purchase' && !(user && user.email) && evt && evt.event !== 'dl_upsell_purchase' && window.console) {
-          var raw = evt.user_properties && evt.user_properties.customer_email;
-          var reason = raw ? 'customer_email is not a valid address' : 'no customer_email on the event';
-          if (!warnedNoEmail[reason]) {
-            warnedNoEmail[reason] = true;
-            console.warn('[axon.adapter] purchase sent without user_data.email (' + reason + ')');
-          }
+        if (!(user && user.email)) {
+          var raw = evt && evt.user_properties && evt.user_properties.customer_email;
+          warnPurchase(name, evt, 'user_data.email', raw ? 'customer_email is not a valid address' : 'no customer_email on the event');
         }
       }
       window.axon('track', name, params);
