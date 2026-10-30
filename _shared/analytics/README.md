@@ -113,12 +113,15 @@ the Axon adapter also by `npm run test:axon-adapter` (in `lint:sdk:ci`).
   `user_properties` (`customer_email`, `customer_phone`, `customer_id`). Axon's `pixel.js` hashes email
   and phone in the browser, so the adapter passes them normalised but unhashed: email trimmed and
   lowercased, phone as E.164 digits without the `+` (the SDK only sets an E.164 `customer_phone`), and
-  `user_id` only when it is at least 6 characters. Any one of the three is enough to send `user_data`.
+  `user_id` only when it is at least 6 characters. Any one of the three is enough to send `user_data`;
+  a `user_id` alone gives Axon a partial match, but it still flags a `purchase` without an email.
   Browse events and `page_view` stay anonymous. Unlike the opt-in `onContact` vendors, this is **not**
   gated on `accepts_marketing`. Opt out per campaign with `axon_send_user_data: "false"` (`"no"`,
-  `"off"` and `"0"` work too; sets `window.__axonSendUserData = false`).
-- A purchase whose event has no `customer_email` still goes out, but Axon flags it, and the adapter logs
-  `[axon.adapter] purchase sent without user_data.email` to the console.
+  `"off"` and `"0"` work too; sets `window.__axonSendUserData = false`). The adapter reads the flag on
+  every event, so a consent script can also set it after the page loads.
+- A purchase without a valid `customer_email` still goes out, but Axon flags it. The adapter logs
+  `[axon.adapter] purchase sent without user_data.email` to the console once per page, with the reason
+  (no `customer_email`, or one that is not a valid address).
 - **`payment_type`** is mapped to Axon's enum (`credit_card`, `redeemable`, `deferred`,
   `payment_on_delivery`, `wallet`, `other`); the SDK sends labels such as "Credit Card".
 - **`image_url`** is sent only when it ends in `.png`/`.jpg`/`.jpeg` (Axon's rule). The SDK's package

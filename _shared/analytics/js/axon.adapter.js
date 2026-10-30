@@ -28,9 +28,11 @@
  * user_properties (customer_email / customer_phone / customer_id). Axon requires user_data.email on
  * purchase. Axon's pixel.js hashes email/phone in the browser, so they are passed plaintext: email trimmed
  * and lowercased, phone as E.164 digits without '+' (the SDK only ever sets an E.164 customer_phone),
- * user_id only when >= 6 chars. ON by default and NOT gated on accepts_marketing (unlike the opt-in
+ * user_id only when >= 6 chars. A user_id alone is still sent (partial match), but Axon keeps flagging a
+ * purchase without an email. ON by default and NOT gated on accepts_marketing (unlike the opt-in
  * onContact vendors); turn off with window.__axonSendUserData = false (campaigns.json
- * axon_send_user_data: "false" / "no" / "off" / "0").
+ * axon_send_user_data: "false" / "no" / "off" / "0"). The flag is read on every event, so a consent
+ * script may set it after this file loads.
  *
  * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus().
  */
@@ -72,7 +74,11 @@
   var USER_DATA_EVENTS = { purchase: 1, begin_checkout: 1, add_payment_info: 1 };
 
   var EMAIL_RE = window.NextForwarder.EMAIL_RE || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-  var sendUserData = !/^(false|no|off|0)$/i.test(String(window.__axonSendUserData).trim());
+  // Read per event so a consent script can flip it after load.
+  function sendUserData() {
+    return !/^(false|no|off|0)$/i.test(String(window.__axonSendUserData).trim());
+  }
+  var warnedNoEmail = false;
 
   function userData(evt) {
     var up = (evt && evt.user_properties) || {};
@@ -172,12 +178,16 @@
 
       copy(ec, params, EXTRA[name] || []);
       if (params.payment_type !== undefined) params.payment_type = paymentType(params.payment_type);
-      if (sendUserData && USER_DATA_EVENTS[name]) {
+      if (params.transaction_id !== undefined && params.transaction_id !== null) params.transaction_id = String(params.transaction_id);
+      if (sendUserData() && USER_DATA_EVENTS[name]) {
         var user = userData(evt);
         if (user) params.user_data = user;
-        // Axon errors on a purchase without user_data.email; say so instead of failing silently.
-        if (name === 'purchase' && !(user && user.email) && window.console) {
-          console.warn('[axon.adapter] purchase sent without user_data.email (no customer_email on the event)');
+        // Axon errors on a purchase without user_data.email; say so once per page (upsells repeat it).
+        if (name === 'purchase' && !(user && user.email) && !warnedNoEmail && window.console) {
+          warnedNoEmail = true;
+          var raw = evt && evt.user_properties && evt.user_properties.customer_email;
+          console.warn('[axon.adapter] purchase sent without user_data.email (' +
+            (raw ? 'customer_email is not a valid address' : 'no customer_email on the event') + ')');
         }
       }
       window.axon('track', name, params);

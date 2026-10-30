@@ -26,7 +26,7 @@ function load(win = {}) {
   }, win);
   window.console = { log() {}, warn: (...a) => warnings.push(a.join(' ')) };
   vm.runInNewContext(SRC, { window, console: window.console });
-  return { calls, warnings, adapter };
+  return { calls, warnings, adapter, window };
 }
 
 // Dispatch the way next-forwarder-core.js does: dl_* name -> adapter.map -> send(name, ecommerce, envelope).
@@ -65,7 +65,7 @@ function validate(struct, value, path = '', out = { errors: [], warnings: [] }) 
       if (typeof v !== 'number' || !Number.isInteger(v)) out.errors.push(`${p} not an integer`);
       else if (!CATEGORY_IDS.has(v)) out.warnings.push(`${p} unknown category`);
     } else if (s === 'number' && (typeof v !== 'number' || !Number.isFinite(v))) out.errors.push(`${p} not a number`);
-    else if (s === 'string' && typeof v !== 'string' && !(typeof v === 'number' && Number.isFinite(v))) out.errors.push(`${p} not a string`);
+    else if (s === 'string' && typeof v !== 'string') out.errors.push(`${p} not a string`);
   }
   return out;
 }
@@ -151,6 +151,8 @@ test('user_data normalisation: short ids and non-E.164 phones are left out; any 
   r = load();
   r.adapter.send('purchase', purchaseEc, evt({ customer_email: 'not-an-email', customer_id: '1234567' }));
   assert.deepEqual(r.calls[0][2].user_data, { user_id: '1234567' });
+  // A user_id alone is a partial match only: Axon still flags the purchase for the missing email.
+  assert.deepEqual(validate(SCHEMA.purchase, r.calls[0][2]).errors, ['user_data.email missing']);
   r = load();
   r.adapter.send('purchase', purchaseEc, evt({ customer_email: 'not-an-email', customer_phone: '18123158899' }));
   assert.equal('user_data' in r.calls[0][2], false);
@@ -171,16 +173,36 @@ test('opt-out: window.__axonSendUserData = false (and the common spellings)', ()
     adapter.send('purchase', purchaseEc, evt(buyer));
     assert.ok(calls[0][2].user_data, String(on));
   }
+  // Read per event: a consent script that sets the flag after load still turns user_data off.
+  const r = load();
+  r.adapter.send('purchase', purchaseEc, evt(buyer));
+  r.window.__axonSendUserData = false;
+  r.adapter.send('purchase', purchaseEc, evt(buyer));
+  assert.ok(r.calls[0][2].user_data);
+  assert.equal('user_data' in r.calls[1][2], false);
 });
 
-test('a purchase without an email still goes out, with a console warning', () => {
-  const { calls, warnings, adapter } = load();
-  adapter.send('purchase', purchaseEc, evt({ customer_id: '1234567' }));
-  assert.equal(calls.length, 1);
-  assert.equal(warnings.length, 1);
-  adapter.send('begin_checkout', purchaseEc, evt({}));
-  adapter.send('purchase', purchaseEc, evt(buyer));
-  assert.equal(warnings.length, 1);
+test('a purchase without an email still goes out, with one console warning per page', () => {
+  let r = load();
+  r.adapter.send('purchase', purchaseEc, evt({ customer_id: '1234567' }));
+  assert.equal(r.calls.length, 1);
+  assert.equal(r.warnings.length, 1);
+  assert.match(r.warnings[0], /no customer_email on the event/);
+  r.adapter.send('begin_checkout', purchaseEc, evt({}));
+  r.adapter.send('purchase', purchaseEc, evt({}));
+  r.adapter.send('purchase', purchaseEc, evt(buyer));
+  assert.equal(r.calls.length, 4);
+  assert.equal(r.warnings.length, 1);
+  r = load();
+  r.adapter.send('purchase', purchaseEc, evt({ customer_email: 'jane.doe@example' }));
+  assert.match(r.warnings[0], /customer_email is not a valid address/);
+});
+
+test('a numeric transaction_id is sent as a string', () => {
+  const { calls, adapter } = load();
+  adapter.send('purchase', { ...purchaseEc, transaction_id: 101614 }, evt(buyer));
+  assert.equal(calls[0][2].transaction_id, '101614');
+  assert.deepEqual(validate(SCHEMA.purchase, calls[0][2]).errors, []);
 });
 
 test('image_url kept only for .png/.jpg/.jpeg', () => {
