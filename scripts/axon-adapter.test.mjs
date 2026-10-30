@@ -173,16 +173,21 @@ test('opt-out: window.__axonSendUserData = false (and the common spellings)', ()
     adapter.send('purchase', purchaseEc, evt(buyer));
     assert.ok(calls[0][2].user_data, String(on));
   }
-  // Read per event: a consent script that sets the flag after load still turns user_data off.
-  const r = load();
+  // A page script can turn user_data off after load...
+  let r = load();
   r.adapter.send('purchase', purchaseEc, evt(buyer));
   r.window.__axonSendUserData = false;
   r.adapter.send('purchase', purchaseEc, evt(buyer));
   assert.ok(r.calls[0][2].user_data);
   assert.equal('user_data' in r.calls[1][2], false);
+  // ...but never back on once the campaign opted out.
+  r = load({ __axonSendUserData: false });
+  r.window.__axonSendUserData = true;
+  r.adapter.send('purchase', purchaseEc, evt(buyer));
+  assert.equal('user_data' in r.calls[0][2], false);
 });
 
-test('a purchase without an email still goes out, with one console warning per page', () => {
+test('a purchase without an email still goes out, with one console warning per page per reason', () => {
   let r = load();
   r.adapter.send('purchase', purchaseEc, evt({ customer_id: '1234567' }));
   assert.equal(r.calls.length, 1);
@@ -193,16 +198,25 @@ test('a purchase without an email still goes out, with one console warning per p
   r.adapter.send('purchase', purchaseEc, evt(buyer));
   assert.equal(r.calls.length, 4);
   assert.equal(r.warnings.length, 1);
-  r = load();
+  // A later malformed address is a different reason, so it still reaches the console.
   r.adapter.send('purchase', purchaseEc, evt({ customer_email: 'jane.doe@example' }));
-  assert.match(r.warnings[0], /customer_email is not a valid address/);
+  assert.equal(r.warnings.length, 2);
+  assert.match(r.warnings[1], /customer_email is not a valid address/);
+  // An upsell without an email doesn't warn or use up the order purchase's warning.
+  r = load();
+  r.adapter.send('purchase', purchaseEc, { event: 'dl_upsell_purchase', user_properties: {} });
+  assert.equal(r.warnings.length, 0);
+  r.adapter.send('purchase', purchaseEc, { event: 'dl_purchase', user_properties: {} });
+  assert.equal(r.warnings.length, 1);
 });
 
-test('a numeric transaction_id is sent as a string', () => {
+test('string fields are sent as strings (transaction_id, currency, search_term)', () => {
   const { calls, adapter } = load();
   adapter.send('purchase', { ...purchaseEc, transaction_id: 101614 }, evt(buyer));
   assert.equal(calls[0][2].transaction_id, '101614');
   assert.deepEqual(validate(SCHEMA.purchase, calls[0][2]).errors, []);
+  adapter.send('search', {}, { search_term: 42 });
+  assert.equal(calls[1][2].search_term, '42');
 });
 
 test('image_url kept only for .png/.jpg/.jpeg', () => {

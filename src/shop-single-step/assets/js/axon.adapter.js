@@ -32,8 +32,8 @@
  * user_id only when >= 6 chars. A user_id alone is still sent (partial match), but Axon keeps flagging a
  * purchase without an email. ON by default and NOT gated on accepts_marketing (unlike the opt-in
  * onContact vendors); turn off with window.__axonSendUserData = false (campaigns.json
- * axon_send_user_data: "false" / "no" / "off" / "0"). The flag is read on every event, so a consent
- * script may set it after this file loads.
+ * axon_send_user_data: "false" / "no" / "off" / "0"). The value at load is the campaign setting and
+ * sticks; a page script can set the flag to false later to turn user_data off, never back on.
  *
  * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus().
  */
@@ -75,11 +75,15 @@
   var USER_DATA_EVENTS = { purchase: 1, begin_checkout: 1, add_payment_info: 1 };
 
   var EMAIL_RE = window.NextForwarder.EMAIL_RE || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-  // Read per event so a consent script can flip it after load.
-  function sendUserData() {
+  function userDataAllowed() {
     return !/^(false|no|off|0)$/i.test(String(window.__axonSendUserData).trim());
   }
-  var warnedNoEmail = false;
+  // The campaign opt-out is latched at load; a later page script can only tighten it.
+  var userDataByCampaign = userDataAllowed();
+  function sendUserData() {
+    return userDataByCampaign && userDataAllowed();
+  }
+  var warnedNoEmail = {};
 
   function userData(evt) {
     var up = (evt && evt.user_properties) || {};
@@ -168,14 +172,14 @@
       if (name === 'page_view') { window.axon('track', 'page_view'); return; }
 
       var params = {};
-      if (ec.currency) params.currency = ec.currency;
+      if (ec.currency) params.currency = String(ec.currency);
       if (ec.value !== undefined && ec.value !== null) params.value = ec.value;
 
       var items = mapItems(ec.items);
       if (items.length) params.items = items;
 
       // search_term lives on the envelope for dl_view_search_results
-      if (name === 'search' && evt.search_term) params.search_term = evt.search_term;
+      if (name === 'search' && evt.search_term) params.search_term = String(evt.search_term);
 
       copy(ec, params, EXTRA[name] || []);
       if (params.payment_type !== undefined) params.payment_type = paymentType(params.payment_type);
@@ -183,12 +187,15 @@
       if (sendUserData() && USER_DATA_EVENTS[name]) {
         var user = userData(evt);
         if (user) params.user_data = user;
-        // Axon errors on a purchase without user_data.email; say so once per page (upsells repeat it).
-        if (name === 'purchase' && !(user && user.email) && !warnedNoEmail && window.console) {
-          warnedNoEmail = true;
-          var raw = evt && evt.user_properties && evt.user_properties.customer_email;
-          console.warn('[axon.adapter] purchase sent without user_data.email (' +
-            (raw ? 'customer_email is not a valid address' : 'no customer_email on the event') + ')');
+        // Axon errors on a purchase without user_data.email; say so once per page per reason. Upsells
+        // repeat the order's shopper, so only the order purchase warns.
+        if (name === 'purchase' && !(user && user.email) && evt && evt.event !== 'dl_upsell_purchase' && window.console) {
+          var raw = evt.user_properties && evt.user_properties.customer_email;
+          var reason = raw ? 'customer_email is not a valid address' : 'no customer_email on the event';
+          if (!warnedNoEmail[reason]) {
+            warnedNoEmail[reason] = true;
+            console.warn('[axon.adapter] purchase sent without user_data.email (' + reason + ')');
+          }
         }
       }
       window.axon('track', name, params);

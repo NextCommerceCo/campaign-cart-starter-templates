@@ -117,11 +117,12 @@ the Axon adapter also by `npm run test:axon-adapter` (in `lint:sdk:ci`).
   a `user_id` alone gives Axon a partial match, but it still flags a `purchase` without an email.
   Browse events and `page_view` stay anonymous. Unlike the opt-in `onContact` vendors, this is **not**
   gated on `accepts_marketing`. Opt out per campaign with `axon_send_user_data: "false"` (`"no"`,
-  `"off"` and `"0"` work too; sets `window.__axonSendUserData = false`). The adapter reads the flag on
-  every event, so a consent script can also set it after the page loads.
+  `"off"` and `"0"` work too; sets `window.__axonSendUserData = false`). The campaign setting sticks: a
+  consent script can set the flag to `false` after the page loads to stop `user_data`, but setting it
+  back on has no effect once the campaign opted out.
 - A purchase without a valid `customer_email` still goes out, but Axon flags it. The adapter logs
-  `[axon.adapter] purchase sent without user_data.email` to the console once per page, with the reason
-  (no `customer_email`, or one that is not a valid address).
+  `[axon.adapter] purchase sent without user_data.email` to the console once per page for each reason
+  (no `customer_email`, or one that is not a valid address). Upsell purchases don't warn.
 - **`payment_type`** is mapped to Axon's enum (`credit_card`, `redeemable`, `deferred`,
   `payment_on_delivery`, `wallet`, `other`); the SDK sends labels such as "Credit Card".
 - **`image_url`** is sent only when it ends in `.png`/`.jpg`/`.jpeg` (Axon's rule). The SDK's package
