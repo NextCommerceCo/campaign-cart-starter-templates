@@ -180,8 +180,13 @@ test('opt-out: window.__axonSendUserData = false (and the common spellings)', ()
   r.adapter.send('purchase', purchaseEc, evt(buyer));
   assert.ok(r.calls[0][2].user_data);
   assert.equal('user_data' in r.calls[1][2], false);
-  // ...but never back on once the campaign opted out.
+  // ...and back on: a flag set to false before load is not a campaign opt-out.
   r = load({ __axonSendUserData: false });
+  r.window.__axonSendUserData = true;
+  r.adapter.send('purchase', purchaseEc, evt(buyer));
+  assert.ok(r.calls[0][2].user_data);
+  // The campaign opt-out (what analytics-head.html renders) can't be undone by a page script.
+  r = load({ __axonUserDataOptOut: true, __axonSendUserData: false });
   r.window.__axonSendUserData = true;
   r.adapter.send('purchase', purchaseEc, evt(buyer));
   assert.equal('user_data' in r.calls[0][2], false);
@@ -215,8 +220,13 @@ test('string fields are sent as strings (transaction_id, currency, search_term)'
   adapter.send('purchase', { ...purchaseEc, transaction_id: 101614 }, evt(buyer));
   assert.equal(calls[0][2].transaction_id, '101614');
   assert.deepEqual(validate(SCHEMA.purchase, calls[0][2]).errors, []);
+  adapter.send('purchase', { ...purchaseEc, currency: 840 }, evt(buyer));
+  assert.equal(calls[1][2].currency, '840');
   adapter.send('search', {}, { search_term: 42 });
-  assert.equal(calls[1][2].search_term, '42');
+  assert.equal(calls[2][2].search_term, '42');
+  // A search_term on the ecommerce payload goes through copy() and is still coerced.
+  adapter.send('search', { search_term: 7 }, {});
+  assert.equal(calls[3][2].search_term, '7');
 });
 
 test('image_url kept only for .png/.jpg/.jpeg', () => {

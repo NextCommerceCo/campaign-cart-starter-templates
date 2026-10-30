@@ -130,7 +130,7 @@
   // user_data (email/phone/user_id, hashed by Axon's pixel.js) rides on purchase + checkout events;
   // Axon requires it on purchase. Opt out with axon_send_user_data: "false" (or "no" / "off" / "0").
   {%- assign _axon_user_data = campaign.axon_send_user_data | append: "" | strip | downcase %}
-  {% if _axon_user_data == "false" or _axon_user_data == "no" or _axon_user_data == "off" or _axon_user_data == "0" %}window.__axonSendUserData = false;{% endif %}
+  {% if _axon_user_data == "false" or _axon_user_data == "no" or _axon_user_data == "off" or _axon_user_data == "0" %}window.__axonUserDataOptOut = true; window.__axonSendUserData = false;{% endif %}
 </script>
 {% endif %}
 {% if campaign.taboola_account_id and campaign.taboola_account_id != "" %}

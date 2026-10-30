@@ -32,8 +32,9 @@
  * user_id only when >= 6 chars. A user_id alone is still sent (partial match), but Axon keeps flagging a
  * purchase without an email. ON by default and NOT gated on accepts_marketing (unlike the opt-in
  * onContact vendors); turn off with window.__axonSendUserData = false (campaigns.json
- * axon_send_user_data: "false" / "no" / "off" / "0"). The value at load is the campaign setting and
- * sticks; a page script can set the flag to false later to turn user_data off, never back on.
+ * axon_send_user_data: "false" / "no" / "off" / "0", which also renders window.__axonUserDataOptOut =
+ * true). The campaign opt-out is latched at load and nothing on the page can undo it; otherwise
+ * window.__axonSendUserData is read on every event, so a consent script can turn user_data off and on.
  *
  * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus().
  */
@@ -78,10 +79,10 @@
   function userDataAllowed() {
     return !/^(false|no|off|0)$/i.test(String(window.__axonSendUserData).trim());
   }
-  // The campaign opt-out is latched at load; a later page script can only tighten it.
-  var userDataByCampaign = userDataAllowed();
+  // The campaign opt-out (rendered from campaigns.json) is latched at load; the runtime flag is read per event.
+  var campaignOptOut = window.__axonUserDataOptOut === true;
   function sendUserData() {
-    return userDataByCampaign && userDataAllowed();
+    return !campaignOptOut && userDataAllowed();
   }
   var warnedNoEmail = {};
 
@@ -179,11 +180,14 @@
       if (items.length) params.items = items;
 
       // search_term lives on the envelope for dl_view_search_results
-      if (name === 'search' && evt.search_term) params.search_term = String(evt.search_term);
+      if (name === 'search' && evt.search_term) params.search_term = evt.search_term;
 
       copy(ec, params, EXTRA[name] || []);
       if (params.payment_type !== undefined) params.payment_type = paymentType(params.payment_type);
-      if (params.transaction_id !== undefined && params.transaction_id !== null) params.transaction_id = String(params.transaction_id);
+      // Axon types these as strings; coerce after copy() so an ecommerce value can't bring a raw one back.
+      ['transaction_id', 'search_term'].forEach(function (k) {
+        if (params[k] !== undefined && params[k] !== null) params[k] = String(params[k]);
+      });
       if (sendUserData() && USER_DATA_EVENTS[name]) {
         var user = userData(evt);
         if (user) params.user_data = user;
