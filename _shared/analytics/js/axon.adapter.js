@@ -23,7 +23,11 @@
  *   - image_url must end in .png/.jpg/.jpeg; the SDK's .webp package thumbnails are dropped.
  *   - payment_type is an enum (credit_card / redeemable / deferred / payment_on_delivery / wallet / other);
  *     the SDK's labels ("Credit Card", "Apple Pay", …) are mapped onto it.
- * Enhanced matching (`user_data` hashed email/phone) is NOT sent — see README (needs hashing+consent).
+ * Enhanced matching: `user_data` (email, phone, user_id) goes on the order and upsell `purchase` only, and
+ * only when window.__axonSendUserData === true (campaigns.json axon_send_user_data: "true"). OFF by default,
+ * like the applovin-axon storefront app: turn it on only when the store's consent policy covers sharing it
+ * with AppLovin. The flag is read on every event, so a consent script can set it. Axon's pixel.js hashes
+ * email/phone in the browser, so they are passed normalised but unhashed. Not gated on accepts_marketing.
  *
  * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus().
  */
@@ -60,6 +64,25 @@
     add_payment_info: ['payment_type'],
     search:           ['search_term']
   };
+
+  var DEBUG = /[?&]nfdebug=true/.test(window.location.search) ||
+    /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname);
+  var warnedUserData = false;
+
+  var EMAIL_RE = window.NextForwarder.EMAIL_RE || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  // email trimmed + lowercased; phone as E.164 digits without '+' (the SDK only sets E.164 with '+');
+  // user_id only when >= 6 chars. Undefined when none of the three is usable.
+  function userData(evt) {
+    var up = (evt && evt.user_properties) || {};
+    var out = {};
+    var email = typeof up.customer_email === 'string' ? up.customer_email.trim().toLowerCase() : '';
+    if (EMAIL_RE.test(email)) out.email = email;
+    var phone = typeof up.customer_phone === 'string' ? up.customer_phone.replace(/[\s().-]/g, '') : '';
+    if (/^\+[1-9]\d{7,14}$/.test(phone)) out.phone = phone.slice(1);
+    var id = up.customer_id !== undefined && up.customer_id !== null ? String(up.customer_id).trim() : '';
+    if (id.length >= 6) out.user_id = id;
+    return out.email || out.phone || out.user_id ? out : undefined;
+  }
 
   // item_category_id: a positive integer or nothing.
   function categoryId(raw) {
@@ -146,6 +169,15 @@
 
       copy(ec, params, EXTRA[name] || []);
       if (params.payment_type !== undefined) params.payment_type = paymentType(params.payment_type);
+      if (name === 'purchase') {
+        var user = window.__axonSendUserData === true ? userData(evt) : undefined;
+        if (user) params.user_data = user;
+        else if (DEBUG && !warnedUserData && window.console) {
+          warnedUserData = true;
+          console.warn('[axon.adapter] purchase sent without user_data (' +
+            (window.__axonSendUserData === true ? 'no usable email, phone or customer_id' : 'axon_send_user_data is off') + ')');
+        }
+      }
       window.axon('track', name, params);
     }
   });
