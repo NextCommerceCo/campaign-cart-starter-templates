@@ -21,9 +21,7 @@
  *     created) and, per adapter opt-in, as soon as a valid checkout email/phone is entered. Deduped
  *     per adapter per identifier. The accepts_marketing consent gate is PER ADAPTER (default on;
  *     attribution vendors turn it off — see the contact bridge below). Only active if an adapter opts
- *     in — GA4/Taboola never touch PII. Axon is the exception outside this hook: its adapter reads
- *     user_properties on purchase + checkout events itself and sends user_data by default (see
- *     axon.adapter.js).
+ *     in — non-identity adapters never touch PII.
  *   - debug — one switch (?nfdebug=true or localhost) + NextForwarder.getStatus()
  *
  * Load this BEFORE any adapter. Adapters call NextForwarder.register(adapter).
@@ -91,9 +89,8 @@
 
   // ---- contact / identity bridge (opt-in via adapter.onContact) -----------------------
   // For adapters that resolve identity (Triple Whale, Northbeam, TikTok/Snap/Pinterest advanced
-  // matching). Only active if an adapter opts in with onContact, so GA4/Taboola never touch PII. (Axon
-  // sends user_data from the event's own user_properties, outside this bridge — see axon.adapter.js.)
-  // Two sources feed it:
+  // matching). Only active if an adapter opts in with onContact, so non-identity adapters
+  // (GA4/Axon/Taboola) never touch PII. Two sources feed it:
   //
   //   1. PROSPECT CART — every contact adapter. The SDK's `next:prospect-cart-created` DOM event
   //      (ProspectCartEnhancer: a valid email and/or phone per data-trigger-on, PLUS first + last name,

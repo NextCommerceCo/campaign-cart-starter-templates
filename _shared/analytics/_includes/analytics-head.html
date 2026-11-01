@@ -21,9 +21,7 @@
   each vendor. Upsells: GA4/Taboola/Triple Whale send a distinct upsell event (Approach C, clean count);
   Axon and TikTok send `purchase` with a distinct id (Approach B — count inflates, keeps upsell revenue
   in ad-network optimization). page_view: GA4/Axon forward it from dl_user_data; Taboola/Triple Whale/
-  TikTok base pixels fire their own, so those adapters skip dl_user_data. Axon is the one exception to
-  opt-in identity: it sends user_data (pixel-hashed email/phone) on purchase + checkout events because
-  Axon requires it on purchase — opt out with axon_send_user_data: "false". Identity/PII (raw email/phone)
+  TikTok base pixels fire their own, so those adapters skip dl_user_data. Identity/PII (raw email/phone)
   via the core's onContact hook is OFF by default — opt in per vendor (triplewhale_contact_enabled →
   TW Contact; northbeam_identity_enabled → Northbeam.identify; tiktok_advanced_matching_enabled →
   ttq.identify; snap_/pinterest_ likewise). The accepts_marketing gate is PER ADAPTER: ad-platform
@@ -123,14 +121,9 @@
   window.__axonEventKey = AXON_EVENT_KEY;
   window.__axonAllowedEvents = "{{ campaign.axon_allowed_events }}";
   window.__axonBlockedEvents = "{{ campaign.axon_blocked_events }}";
-  // Integer Google product-taxonomy id for items whose SDK item_category is text (the campaign name,
-  // which Axon rejects with HTTP 400). Applies to EVERY item in the campaign. "" = send
-  // item_category_id only when the SDK's is numeric.
+  // Integer category id for items whose SDK item_category is text (the campaign name, which Axon
+  // rejects with HTTP 400). Applies to every item in the campaign; "" = left out.
   window.__axonItemCategoryId = "{{ campaign.axon_item_category_id }}";
-  // user_data (email/phone/user_id, hashed by Axon's pixel.js) rides on purchase + checkout events;
-  // Axon requires it on purchase. Opt out with axon_send_user_data: "false" (or "no" / "off" / "0").
-  {%- assign _axon_user_data = campaign.axon_send_user_data | append: "" | strip | downcase %}
-  {% if _axon_user_data == "false" or _axon_user_data == "no" or _axon_user_data == "off" or _axon_user_data == "0" %}window.__axonUserDataOptOut = true; window.__axonSendUserData = false;{% endif %}
 </script>
 {% endif %}
 {% if campaign.taboola_account_id and campaign.taboola_account_id != "" %}

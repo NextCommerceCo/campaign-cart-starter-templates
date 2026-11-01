@@ -17,25 +17,13 @@
  *   - `purchase` REQUIRES currency, items, value, tax, shipping, transaction_id (SDK provides all;
  *     upsells carry tax:0/shipping:0).
  *   - Identifier is an EVENT KEY, not a pixel id.
- *   - item_category_id is an INTEGER Google product-taxonomy id. The SDK's item_category is the campaign
- *     NAME (text), which Axon rejects with HTTP 400 for the whole event — so it is sent only when it is a
- *     positive integer, else the per-campaign window.__axonItemCategoryId (campaigns.json
- *     axon_item_category_id), else left out.
+ *   - item_category_id is an INTEGER category id. The SDK's item_category is the campaign NAME, which
+ *     Axon rejects with HTTP 400 — so it is sent only when it is a positive integer, else the campaign's
+ *     window.__axonItemCategoryId (campaigns.json axon_item_category_id), else left out.
  *   - image_url must end in .png/.jpg/.jpeg; the SDK's .webp package thumbnails are dropped.
  *   - payment_type is an enum (credit_card / redeemable / deferred / payment_on_delivery / wallet / other);
  *     the SDK's labels ("Credit Card", "Apple Pay", …) are mapped onto it.
- * Enhanced matching: `user_data` is sent on purchase + the checkout events (USER_DATA_EVENTS) from the SDK's
- * user_properties (customer_email / customer_phone / customer_id). Axon requires user_data.email on
- * purchase. Axon's pixel.js hashes email/phone in the browser, so they are passed plaintext: email trimmed
- * and lowercased, phone as E.164 digits without '+' (the SDK only ever sets an E.164 customer_phone),
- * user_id only when >= 6 chars. A user_id alone is still sent (partial match), but Axon keeps flagging a
- * purchase without an email. ON by default and NOT gated on accepts_marketing (unlike the opt-in
- * onContact vendors); turn off with window.__axonSendUserData = false (campaigns.json
- * axon_send_user_data: "false" / "no" / "off" / "0", which also renders window.__axonUserDataOptOut =
- * true). __axonUserDataOptOut is read ONCE, when this file loads, and nothing on the page can undo it;
- * setting it later has no effect. window.__axonSendUserData is read on every event, so a consent script
- * can turn user_data off and on. A purchase sent without user_data (or without an email) logs one
- * console warning per page per reason.
+ * Enhanced matching (`user_data` hashed email/phone) is NOT sent — see README (needs hashing+consent).
  *
  * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus().
  */
@@ -73,41 +61,7 @@
     search:           ['search_term']
   };
 
-  // Events that carry user_data when the shopper is known. page_view and browse events stay anonymous.
-  var USER_DATA_EVENTS = { purchase: 1, begin_checkout: 1, add_payment_info: 1 };
-
-  var EMAIL_RE = window.NextForwarder.EMAIL_RE || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-  function userDataAllowed() {
-    return !/^(false|no|off|0)$/i.test(String(window.__axonSendUserData).trim());
-  }
-  // The campaign opt-out (rendered from campaigns.json) is latched at load; the runtime flag is read per event.
-  var campaignOptOut = /^(true|yes|on|1)$/i.test(String(window.__axonUserDataOptOut).trim());
-  function sendUserData() {
-    return !campaignOptOut && userDataAllowed();
-  }
-  var warned = {};
-  // Axon flags a purchase without user_data.email. Upsells repeat the order's shopper, so only the
-  // order purchase warns, once per page per reason.
-  function warnPurchase(name, evt, missing, reason) {
-    if (name !== 'purchase' || (evt && evt.event === 'dl_upsell_purchase') || warned[reason] || !window.console) return;
-    warned[reason] = true;
-    console.warn('[axon.adapter] purchase sent without ' + missing + ' (' + reason + ')');
-  }
-
-  function userData(evt) {
-    var up = (evt && evt.user_properties) || {};
-    var out = {};
-    var email = typeof up.customer_email === 'string' ? up.customer_email.trim().toLowerCase() : '';
-    if (EMAIL_RE.test(email)) out.email = email;
-    // A '+'-less number can't be told apart from a national one, so only E.164 with '+' is sent.
-    var phone = typeof up.customer_phone === 'string' ? up.customer_phone.replace(/[\s().-]/g, '') : '';
-    if (/^\+[1-9]\d{7,14}$/.test(phone)) out.phone = phone.slice(1);
-    var id = up.customer_id !== undefined && up.customer_id !== null ? String(up.customer_id).trim() : '';
-    if (id.length >= 6) out.user_id = id;
-    return out.email || out.phone || out.user_id ? out : undefined;
-  }
-
-  // item_category_id: a positive integer (Google product taxonomy) or nothing.
+  // item_category_id: a positive integer or nothing.
   function categoryId(raw) {
     var s = raw === undefined || raw === null ? '' : String(raw).trim();
     return /^\d+$/.test(s) && Number.isSafeInteger(Number(s)) && Number(s) > 0 ? Number(s) : undefined;
@@ -181,9 +135,7 @@
       if (name === 'page_view') { window.axon('track', 'page_view'); return; }
 
       var params = {};
-      // ISO 4217 alphabetic code only; a numeric code (840) or junk is dropped rather than forwarded.
-      var currency = typeof ec.currency === 'string' ? ec.currency.trim().toUpperCase() : '';
-      if (/^[A-Z]{3}$/.test(currency)) params.currency = currency;
+      if (ec.currency) params.currency = ec.currency;
       if (ec.value !== undefined && ec.value !== null) params.value = ec.value;
 
       var items = mapItems(ec.items);
@@ -194,21 +146,6 @@
 
       copy(ec, params, EXTRA[name] || []);
       if (params.payment_type !== undefined) params.payment_type = paymentType(params.payment_type);
-      // Axon types these as strings; coerce after copy() so an ecommerce value can't bring a raw one back.
-      ['transaction_id', 'search_term'].forEach(function (k) {
-        if (params[k] !== undefined && params[k] !== null) params[k] = String(params[k]);
-      });
-      if (USER_DATA_EVENTS[name] && !sendUserData()) {
-        warnPurchase(name, evt, 'user_data', campaignOptOut ? 'campaign opted out: axon_send_user_data'
-                                               : 'turned off at runtime: window.__axonSendUserData');
-      } else if (USER_DATA_EVENTS[name]) {
-        var user = userData(evt);
-        if (user) params.user_data = user;
-        if (!(user && user.email)) {
-          var raw = evt && evt.user_properties && evt.user_properties.customer_email;
-          warnPurchase(name, evt, 'user_data.email', raw ? 'customer_email is not a valid address' : 'no customer_email on the event');
-        }
-      }
       window.axon('track', name, params);
     }
   });

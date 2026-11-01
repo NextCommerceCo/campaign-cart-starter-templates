@@ -45,7 +45,7 @@ entry.
 | Meta Pixel | `fb_pixel_id` | — |
 | RudderStack | `rudderstack_write_key` **and** `rudderstack_dataplane_url` (both required) | — |
 | GA4 | `ga4_id` | `ga4_allowed_events`, `ga4_blocked_events` |
-| AppLovin Axon | `axon_event_key` | `axon_item_category_id` (integer), `axon_send_user_data` (`"false"` = off), `axon_allowed_events`, `axon_blocked_events` |
+| AppLovin Axon | `axon_event_key` | `axon_item_category_id` (integer), `axon_allowed_events`, `axon_blocked_events` |
 | Taboola | `taboola_account_id` (numeric) | `taboola_allowed_events`, `taboola_blocked_events` |
 | Triple Whale | `triplewhale_name` | `triplewhale_platform`, `triplewhale_contact_enabled` (PII), `*_allowed/blocked_events` |
 | TikTok | `tiktok_pixel_id` | `tiktok_advanced_matching_enabled` (PII), `*_allowed/blocked_events` |
@@ -64,7 +64,6 @@ entry (keep only the vendors you need; delete the rest — absent = off):
 "ga4_blocked_events": "",
 "axon_event_key": "",
 "axon_item_category_id": "",
-"axon_send_user_data": "",
 "axon_allowed_events": "",
 "axon_blocked_events": "",
 "taboola_account_id": "",
@@ -94,45 +93,22 @@ entry (keep only the vendors you need; delete the rest — absent = off):
 ```
 
 The shared forwarder core loads once when **any** Route C id is set; each adapter loads only when its own
-id is set. Identity/PII (raw email/phone) is off unless the vendor's `*_enabled` flag is set, with one
-exception: Axon (below). Adapter behaviour is regression-tested by `analytics-tracking-docs/examples/_harness/`;
-the Axon adapter also by `npm run test:axon-adapter` (in `lint:sdk:ci`).
+id is set. Identity/PII (raw email/phone) is off unless the vendor's `*_enabled` flag is set. Adapter
+behaviour is regression-tested by `analytics-tracking-docs/examples/_harness/`; the Axon adapter also by
+`npm run test:axon-adapter` (in `lint:sdk:ci`).
 
-### Axon: `item_category_id` and `user_data`
+### Axon item fields
 
-- **`item_category_id` must be an integer** from Google's product taxonomy. The SDK's `item_category` is the
-  campaign *name*, and Axon rejects the whole event with HTTP 400 when it gets text (seen live on
-  `view_item`, `begin_checkout` and `purchase`). The adapter sends `item_category_id` only when the SDK's
-  value is a positive integer, otherwise the campaign's `axon_item_category_id`
-  (`window.__axonItemCategoryId`), otherwise not at all. Set `axon_item_category_id` per campaign (e.g.
-  `469` Health & Beauty) or Axon's Pixel Helper warns once per item. The fallback applies to **every
-  item** in the campaign, so on a campaign that sells products from different taxonomy branches pick the
-  main product's id (or leave it empty and accept the per-item warning).
-- **Enhanced matching (`user_data`) is sent by default** on `purchase`, `begin_checkout` and
-  `add_payment_info`: Axon flags a `purchase` without `user_data.email` as an error. Source is the SDK's
-  `user_properties` (`customer_email`, `customer_phone`, `customer_id`). Axon's `pixel.js` hashes email
-  and phone in the browser, so the adapter passes them normalised but unhashed: email trimmed and
-  lowercased, phone as E.164 digits without the `+` (the SDK only sets an E.164 `customer_phone`), and
-  `user_id` only when it is at least 6 characters. Any one of the three is enough to send `user_data`;
-  a `user_id` alone gives Axon a partial match, but it still flags a `purchase` without an email.
-  Browse events and `page_view` stay anonymous. Unlike the opt-in `onContact` vendors, this is **not**
-  gated on `accepts_marketing`. Opt out per campaign with `axon_send_user_data: "false"` (`"no"`,
-  `"off"` and `"0"` work too). That renders `window.__axonUserDataOptOut = true`, which the adapter
-  reads once when it loads; nothing on the page can undo it, and setting it later has no effect. Without
-  it, a consent script can turn `user_data` off and on at any time with
-  `window.__axonSendUserData = false` / `true`; the adapter reads that flag on every event.
-- A purchase without `user_data`, or without a valid email in it, still goes out, but Axon flags it. The
-  adapter logs `[axon.adapter] purchase sent without user_data…` to the console once per page for each
-  reason: campaign opt-out, runtime switch off, no `customer_email`, or an invalid one. Upsell purchases
-  don't warn.
-- **`currency`** is sent only as a three-letter ISO 4217 code (upper-cased); anything else is dropped.
-- **`payment_type`** is mapped to Axon's enum (`credit_card`, `redeemable`, `deferred`,
+- **`item_category_id` must be an integer.** The SDK's `item_category` is the campaign name, and Axon rejects
+  the whole event with HTTP 400 when it gets text. The adapter sends the SDK value only when it is a positive
+  integer, otherwise the campaign's `axon_item_category_id`, otherwise nothing. The fallback applies to every
+  item in the campaign, so pick the main product's category.
+- **`image_url`** is sent only when it ends in `.png`, `.jpg` or `.jpeg`, which Axon requires. The SDK's
+  package thumbnails are `.webp`, so most items go without one.
+- **`payment_type`** is mapped onto Axon's enum (`credit_card`, `redeemable`, `deferred`,
   `payment_on_delivery`, `wallet`, `other`); the SDK sends labels such as "Credit Card".
-- **`image_url`** is sent only when it ends in `.png`/`.jpg`/`.jpeg` (Axon's rule). The SDK's package
-  thumbnails are `.webp`, so most items go without one.
-- **Ahead of upstream.** These fixes are not yet in `analytics-tracking-docs/examples/direct-axon/axon.adapter.js`,
-  so `lint:upstream` reports drift for `axon.adapter.js` and `next-forwarder-core.js` until they land there.
-  Do not copy the upstream files over `_shared/` before then: `npm run test:axon-adapter` (in CI) fails on a revert.
+- `axon.adapter.js` is ahead of `analytics-tracking-docs/examples/`, so `lint:upstream` reports drift for it
+  until upstream is synced.
 
 ### Identity: the `accepts_marketing` gate is per adapter
 
