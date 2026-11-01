@@ -45,7 +45,7 @@ entry.
 | Meta Pixel | `fb_pixel_id` | — |
 | RudderStack | `rudderstack_write_key` **and** `rudderstack_dataplane_url` (both required) | — |
 | GA4 | `ga4_id` | `ga4_allowed_events`, `ga4_blocked_events` |
-| AppLovin Axon | `axon_event_key` | `axon_item_category_id` (integer), `axon_allowed_events`, `axon_blocked_events` |
+| AppLovin Axon | `axon_event_key` | `axon_item_category_id` (integer), `axon_send_user_data` (`"true"` = on, PII), `axon_allowed_events`, `axon_blocked_events` |
 | Taboola | `taboola_account_id` (numeric) | `taboola_allowed_events`, `taboola_blocked_events` |
 | Triple Whale | `triplewhale_name` | `triplewhale_platform`, `triplewhale_contact_enabled` (PII), `*_allowed/blocked_events` |
 | TikTok | `tiktok_pixel_id` | `tiktok_advanced_matching_enabled` (PII), `*_allowed/blocked_events` |
@@ -64,6 +64,7 @@ entry (keep only the vendors you need; delete the rest — absent = off):
 "ga4_blocked_events": "",
 "axon_event_key": "",
 "axon_item_category_id": "",
+"axon_send_user_data": "",
 "axon_allowed_events": "",
 "axon_blocked_events": "",
 "taboola_account_id": "",
@@ -107,6 +108,17 @@ behaviour is regression-tested by `analytics-tracking-docs/examples/_harness/`; 
   package thumbnails are `.webp`, so most items go without one.
 - **`payment_type`** is mapped onto Axon's enum (`credit_card`, `redeemable`, `deferred`,
   `payment_on_delivery`, `wallet`, `other`); the SDK sends labels such as "Credit Card".
+- **`user_data` on `purchase` is off by default.** Set `axon_send_user_data: "true"` only when the store's
+  consent policy covers sharing the shopper's details with AppLovin, the same rule as the `applovin-axon`
+  storefront app's "Send Customer Email and Phone on Purchase" setting. It renders
+  `window.__axonSendUserData = true`, the one runtime flag; the adapter reads it on every event, so a consent
+  script can set it instead. When on, the order and upsell `purchase` carry `user_data` from the SDK's
+  `user_properties`: email trimmed and lowercased, phone as E.164 digits without the `+`, and `customer_id`
+  as `user_id` when it is at least 6 characters. Axon's pixel hashes email and phone in the browser. Other
+  events stay anonymous, and `accepts_marketing` plays no part (many checkouts don't render that box).
+- **Without `user_data`, Axon flags the purchase but still records it**: revenue and `transaction_id`
+  arrive as normal. With `?nfdebug=true` (or on localhost) the adapter logs one console warning per page
+  when a purchase goes out without it.
 - `axon.adapter.js` is ahead of `analytics-tracking-docs/examples/`, so `lint:upstream` reports drift for it
   until upstream is synced.
 

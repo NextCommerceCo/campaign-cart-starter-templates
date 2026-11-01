@@ -11,15 +11,17 @@ const SDK_PURCHASE = JSON.parse(readFileSync(new URL('fixtures/axon/sdk-dl-purch
 
 function load(win = {}) {
   const calls = [];
+  const warnings = [];
   let adapter;
   const window = Object.assign({
     __axonEventKey: 'k',
     axon: (...a) => calls.push(JSON.parse(JSON.stringify(a))),
     NextForwarder: { DEFAULT_MAIN_EVENTS: null, register: (a) => { adapter = a; } },
-    console: { log() {}, warn() {} },
+    location: { search: '', hostname: 'shop.example.com' },
+    console: { log() {}, warn: (...a) => warnings.push(a.join(' ')) },
   }, win);
   vm.runInNewContext(SRC, { window, console: window.console });
-  return { calls, adapter };
+  return { calls, warnings, adapter, window };
 }
 
 // Dispatch the way next-forwarder-core.js does: dl_* name -> adapter.map -> send(name, ecommerce, envelope).
@@ -29,7 +31,7 @@ function dispatch(adapter, envelope) {
 
 const sdkItem = SDK_PURCHASE.ecommerce.items[0];
 
-test('SDK dl_purchase through adapter.map: integer item_category_id, no .webp image, no user_data', () => {
+test('SDK dl_purchase through adapter.map: integer item_category_id, no .webp image, no user_data by default', () => {
   const { calls, adapter } = load({ __axonItemCategoryId: '469' });
   dispatch(adapter, SDK_PURCHASE);
   const [, name, p] = calls[0];
@@ -79,4 +81,57 @@ test('payment_type maps SDK labels to the Axon enum', () => {
     adapter.send('add_payment_info', { currency: 'USD', value: 1, payment_type: label }, {});
     assert.equal(calls[0][2].payment_type, want, label);
   }
+});
+
+test('user_data is off by default, on purchase only when __axonSendUserData === true', () => {
+  let r = load();
+  dispatch(r.adapter, SDK_PURCHASE);
+  assert.equal('user_data' in r.calls[0][2], false);
+  for (const notTrue of ['true', 1, 'yes']) {
+    r = load({ __axonSendUserData: notTrue });
+    dispatch(r.adapter, SDK_PURCHASE);
+    assert.equal('user_data' in r.calls[0][2], false, String(notTrue));
+  }
+  r = load({ __axonSendUserData: true });
+  const carried = [];
+  for (const dl of Object.keys(r.adapter.map)) {
+    const before = r.calls.length;
+    dispatch(r.adapter, { ...SDK_PURCHASE, event: dl });
+    if (r.calls[before][2]?.user_data) carried.push(dl);
+  }
+  assert.deepEqual(carried.sort(), ['dl_purchase', 'dl_upsell_purchase']);
+  assert.deepEqual(r.calls.find((c) => c[2]?.user_data)[2].user_data, { email: 'jane.doe@example.com', phone: '18123158899' });
+});
+
+test('a consent script can set the flag after load', () => {
+  const r = load();
+  dispatch(r.adapter, SDK_PURCHASE);
+  r.window.__axonSendUserData = true;
+  dispatch(r.adapter, SDK_PURCHASE);
+  assert.equal('user_data' in r.calls[0][2], false);
+  assert.ok(r.calls[1][2].user_data);
+});
+
+test('user_data normalisation: short ids and non-E.164 phones are left out', () => {
+  const send = (up) => {
+    const r = load({ __axonSendUserData: true });
+    r.adapter.send('purchase', SDK_PURCHASE.ecommerce, { event: 'dl_purchase', user_properties: up });
+    return r.calls[0][2].user_data;
+  };
+  assert.deepEqual(send({ customer_email: 'a@b.co', customer_phone: '812-315-8899', customer_id: '5' }), { email: 'a@b.co' });
+  assert.deepEqual(send({ customer_phone: '+447700900123' }), { phone: '447700900123' });
+  assert.deepEqual(send({ customer_email: 'not-an-email', customer_id: '1234567' }), { user_id: '1234567' });
+  assert.equal(send({ customer_email: 'not-an-email' }), undefined);
+});
+
+test('one console warning per page for a purchase without user_data, only with ?nfdebug=true', () => {
+  let r = load();
+  dispatch(r.adapter, SDK_PURCHASE);
+  assert.equal(r.warnings.length, 0);
+  r = load({ location: { search: '?nfdebug=true', hostname: 'shop.example.com' } });
+  dispatch(r.adapter, SDK_PURCHASE);
+  dispatch(r.adapter, SDK_PURCHASE);
+  assert.equal(r.calls.length, 2);
+  assert.equal(r.warnings.length, 1);
+  assert.match(r.warnings[0], /purchase sent without user_data \(axon_send_user_data is off\)/);
 });
