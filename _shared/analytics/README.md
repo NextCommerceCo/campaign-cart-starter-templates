@@ -45,7 +45,7 @@ entry.
 | Meta Pixel | `fb_pixel_id` | — |
 | RudderStack | `rudderstack_write_key` **and** `rudderstack_dataplane_url` (both required) | — |
 | GA4 | `ga4_id` | `ga4_allowed_events`, `ga4_blocked_events` |
-| AppLovin Axon | `axon_event_key` | `axon_allowed_events`, `axon_blocked_events` |
+| AppLovin Axon | `axon_event_key` | `axon_item_category_id` (integer), `axon_allowed_events`, `axon_blocked_events` |
 | Taboola | `taboola_account_id` (numeric) | `taboola_allowed_events`, `taboola_blocked_events` |
 | Triple Whale | `triplewhale_name` | `triplewhale_platform`, `triplewhale_contact_enabled` (PII), `*_allowed/blocked_events` |
 | TikTok | `tiktok_pixel_id` | `tiktok_advanced_matching_enabled` (PII), `*_allowed/blocked_events` |
@@ -63,6 +63,7 @@ entry (keep only the vendors you need; delete the rest — absent = off):
 "ga4_allowed_events": "",
 "ga4_blocked_events": "",
 "axon_event_key": "",
+"axon_item_category_id": "",
 "axon_allowed_events": "",
 "axon_blocked_events": "",
 "taboola_account_id": "",
@@ -93,7 +94,21 @@ entry (keep only the vendors you need; delete the rest — absent = off):
 
 The shared forwarder core loads once when **any** Route C id is set; each adapter loads only when its own
 id is set. Identity/PII (raw email/phone) is off unless the vendor's `*_enabled` flag is set. Adapter
-behaviour is regression-tested by `analytics-tracking-docs/examples/_harness/`.
+behaviour is regression-tested by `analytics-tracking-docs/examples/_harness/`; the Axon adapter also by
+`npm run test:axon-adapter` (in `lint:sdk:ci`).
+
+### Axon item fields
+
+- **`item_category_id` must be an integer.** The SDK's `item_category` is the campaign name, and Axon rejects
+  the whole event with HTTP 400 when it gets text. The adapter sends the SDK value only when it is a positive
+  integer, otherwise the campaign's `axon_item_category_id`, otherwise nothing. The fallback applies to every
+  item in the campaign, so pick the main product's category.
+- **`image_url`** is sent only when it ends in `.png`, `.jpg` or `.jpeg`, which Axon requires. The SDK's
+  package thumbnails are `.webp`, so most items go without one.
+- **`payment_type`** is mapped onto Axon's enum (`credit_card`, `redeemable`, `deferred`,
+  `payment_on_delivery`, `wallet`, `other`); the SDK sends labels such as "Credit Card".
+- `axon.adapter.js` is ahead of `analytics-tracking-docs/examples/`, so `lint:upstream` reports drift for it
+  until upstream is synced.
 
 ### Identity: the `accepts_marketing` gate is per adapter
 

@@ -18,6 +18,12 @@
  *   - `purchase` REQUIRES currency, items, value, tax, shipping, transaction_id (SDK provides all;
  *     upsells carry tax:0/shipping:0).
  *   - Identifier is an EVENT KEY, not a pixel id.
+ *   - item_category_id is an INTEGER category id. The SDK's item_category is the campaign NAME, which
+ *     Axon rejects with HTTP 400 — so it is sent only when it is a positive integer, else the campaign's
+ *     window.__axonItemCategoryId (campaigns.json axon_item_category_id), else left out.
+ *   - image_url must end in .png/.jpg/.jpeg; the SDK's .webp package thumbnails are dropped.
+ *   - payment_type is an enum (credit_card / redeemable / deferred / payment_on_delivery / wallet / other);
+ *     the SDK's labels ("Credit Card", "Apple Pay", …) are mapped onto it.
  * Enhanced matching (`user_data` hashed email/phone) is NOT sent — see README (needs hashing+consent).
  *
  * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus().
@@ -56,6 +62,31 @@
     search:           ['search_term']
   };
 
+  // item_category_id: a positive integer or nothing.
+  function categoryId(raw) {
+    var s = raw === undefined || raw === null ? '' : String(raw).trim();
+    return /^\d+$/.test(s) && Number.isSafeInteger(Number(s)) && Number(s) > 0 ? Number(s) : undefined;
+  }
+  var fallbackCategoryId = categoryId(window.__axonItemCategoryId);
+
+  var IMAGE_RE = /^https?:\/\/[^\s?#]+\.(png|jpe?g)(?:[?#].*)?$/i;
+
+  // Axon payment_type enum; the SDK sends display labels (paymentMethodLabel). Unknown labels → 'other'.
+  var PAYMENT_TYPES = { credit_card: 1, redeemable: 1, deferred: 1, payment_on_delivery: 1, wallet: 1, other: 1 };
+  var PAYMENT_TYPE_BY_KEY = {
+    creditcard: 'credit_card', card: 'credit_card', cardtoken: 'credit_card', savedcard: 'credit_card', debitcard: 'credit_card',
+    applepay: 'wallet', googlepay: 'wallet', paypal: 'wallet', shoppay: 'wallet', link: 'wallet', swish: 'wallet', twint: 'wallet',
+    venmo: 'wallet', amazonpay: 'wallet', cashapp: 'wallet',
+    klarna: 'deferred', affirm: 'deferred', afterpay: 'deferred', clearpay: 'deferred', sezzle: 'deferred', zip: 'deferred',
+    giftcard: 'redeemable', voucher: 'redeemable', storecredit: 'redeemable',
+    cashondelivery: 'payment_on_delivery', cod: 'payment_on_delivery'
+  };
+  function paymentType(raw) {
+    var s = String(raw).trim();
+    if (PAYMENT_TYPES[s]) return s;
+    return PAYMENT_TYPE_BY_KEY[s.toLowerCase().replace(/[^a-z]/g, '')] || 'other';
+  }
+
   // Map an SDK EcommerceItem to Axon's item object (mostly GA4-shaped; a couple of renames).
   function mapItems(items) {
     return (items || []).map(function (it) {
@@ -66,8 +97,9 @@
       if (it.quantity !== undefined && it.quantity !== null) out.quantity = it.quantity;
       if (it.item_brand) out.item_brand = it.item_brand;
       if (it.item_variant_id) out.item_variant_id = it.item_variant_id;
-      if (it.item_category) out.item_category_id = it.item_category; // Axon: item_category_id
-      if (it.item_image) out.image_url = it.item_image;               // Axon: image_url
+      var cat = categoryId(it.item_category) || fallbackCategoryId;
+      if (cat) out.item_category_id = cat;                            // Axon: integer item_category_id
+      if (typeof it.item_image === 'string' && IMAGE_RE.test(it.item_image)) out.image_url = it.item_image;
       if (it.discount !== undefined && it.discount !== null && it.discount !== '') out.discount = it.discount;
       return out;
     });
@@ -114,6 +146,7 @@
       if (name === 'search' && evt.search_term) params.search_term = evt.search_term;
 
       copy(ec, params, EXTRA[name] || []);
+      if (params.payment_type !== undefined) params.payment_type = paymentType(params.payment_type);
       window.axon('track', name, params);
     }
   });
