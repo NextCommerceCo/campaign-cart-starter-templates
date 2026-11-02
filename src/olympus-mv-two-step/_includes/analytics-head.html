@@ -25,8 +25,9 @@
   TikTok base pixels fire their own, so those adapters skip dl_user_data. Identity/PII (raw email/phone)
   via the core's onContact hook is OFF by default — opt in per vendor (triplewhale_contact_enabled →
   TW Contact; northbeam_identity_enabled → Northbeam.identify; tiktok_advanced_matching_enabled →
-  ttq.identify; snap_/pinterest_ likewise). The accepts_marketing gate is PER ADAPTER: ad-platform
-  advanced matching (TikTok/Snap/Pinterest) fires only on prospect-cart creation and only when the
+  ttq.identify; snap_/pinterest_ likewise); Axon's purchase user_data is opt-in the same way
+  (axon_send_user_data: "true", read by the adapter itself, not the onContact hook). The
+  accepts_marketing gate is PER ADAPTER: ad-platform advanced matching (TikTok/Snap/Pinterest) fires only on prospect-cart creation and only when the
   newsletter box is ticked; attribution vendors (Northbeam, Triple Whale) fire regardless of that box —
   it is the newsletter opt-in, not a precondition of identity — and also on valid email/phone field
   entry, so a backend order (Shopify Connector on Shop Sync) can be joined to the session. Rationale in
@@ -125,6 +126,9 @@
   // Integer category id for items whose SDK item_category is text (the campaign name, which Axon
   // rejects with HTTP 400). Applies to every item in the campaign; "" = left out.
   window.__axonItemCategoryId = "{{ campaign.axon_item_category_id }}";
+  // user_data (email/phone/customer id, hashed by Axon's pixel) on purchase. Off unless the campaign sets
+  // axon_send_user_data: "true"; only when the store's consent policy covers sharing it with AppLovin.
+  {% if campaign.axon_send_user_data == true or campaign.axon_send_user_data == "true" %}window.__axonSendUserData = true;{% endif %}
 </script>
 {% endif %}
 {% if campaign.taboola_account_id and campaign.taboola_account_id != "" %}
