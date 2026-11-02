@@ -1,0 +1,205 @@
+/* GENERATED from _shared/analytics/js/meta.adapter.js — edit the source and run `npm run sync:shared`. Do not edit this copy. */
+/**
+ * meta.adapter.js — Meta Pixel extras for next-forwarder-core.js (Route C helper, no GTM).
+ *
+ * Sends NO events of its own and loads nothing from Meta: the SDK's facebook provider
+ * (analytics.providers.facebook in config.js) sends every Meta event, and the base pixel in
+ * analytics-head.html loads fbevents.js. This file only works through that pixel. Two jobs:
+ *   A. Cookie re-sync — always on whenever fb_pixel_id is set.
+ *   B. Advanced matching — opt-in via meta_advanced_matching_enabled: "true".
+ *
+ * Load order (gated on campaign.fb_pixel_id, on EVERY page incl. receipt/upsell):
+ *   1. Meta base pixel (analytics-head.html) — defines window.fbq, bare fbq('init', id),
+ *      sets window.__metaPixelId and window.__metaAdvancedMatching
+ *   2. next-forwarder-core.js
+ *   3. this file
+ *
+ * A. Cookie re-sync (works around campaign-cart#132; delete once that ships):
+ *   The SDK reads the pixel's _fbp / _fbc cookies once at boot, before fbevents.js has set them on a
+ *   first visit, and keeps that empty value for the session — so the order (and a server-side Purchase
+ *   built from it) goes without them. This copies the cookies into the SDK's attribution metadata
+ *   (next.addMetadata('fb_fbp' / 'fb_fbc')) when the SDK is ready, polls every 500 ms for up to 10 s
+ *   while one is missing, and re-syncs after cart:updated and popstate (SDK 0.4.38–0.4.43 can put the
+ *   stale value back on a cart update). Read-only: it never writes a cookie.
+ *
+ * B. Advanced matching (works toward campaign-cart#133):
+ *   The SDK's facebook provider passes no customer data, and the base code is a bare fbq('init', id).
+ *   This re-inits the pixel WITH customer data so the SDK's next fbq('track') carries it:
+ *   - Checkout: onContact (prospect cart + valid email/phone field entry) → em, ph, fn, ln.
+ *   - dl_begin_checkout / dl_add_payment_info / dl_purchase: user_properties → em, ph, fn, ln, ct, st,
+ *     zp, country. send() runs inside NextDataLayerTransformFn, i.e. BEFORE the SDK notifies its
+ *     providers, so the init lands before the SDK's fbq('track') for the same event. On the receipt /
+ *     upsell page this is the redirect-queued dl_purchase.
+ *   - ph is digits including the country code: the SDK's E.164 (input data-next-phone-e164, SDK ≥ 0.4.41)
+ *     at checkout, user_properties.customer_phone at purchase. No dial code is ever guessed.
+ *   - external_id = the SDK's anonymous visitor_id (localStorage visitor_id__{scope}; no public getter
+ *     in SDK 0.4.43), passed raw — the pixel sends its SHA-256. The same raw value is saved to attribution
+ *     metadata fb_external_id so a server-side Purchase can send it too. Never a customer id: the
+ *     Campaigns API is public and carries none.
+ *
+ *   FIRST INIT WINS (fbevents 2.9.x): the pixel keeps the user data from the first fbq('init', id, data)
+ *   on a page and ignores later re-inits. So the adapter collects data and inits ONCE per page, and only
+ *   once it has an email or phone; anything learned after that on the same page is not sent.
+ *
+ *   Consent: NOT gated on the accepts_marketing checkbox (unlike TikTok/Snap/Pinterest advanced matching).
+ *   That box is the newsletter opt-in. Meta's Business Tools Terms tie customer data to the pixel's own
+ *   notice / lawful basis / cookie consent, not to marketing opt-in: if the pixel may fire, so may this,
+ *   and a cookie banner or fbq('consent', 'revoke') gates both. Turning the flag on still means the
+ *   campaign has handled the region's rules for sending customer data to Meta.
+ *
+ * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus(). QA with Meta Pixel Helper
+ * (Advanced Matching parameters show on events after the init).
+ */
+(function () {
+  'use strict';
+
+  // ---- A. Cookie re-sync (independent of the forwarder and of the advanced-matching flag) ----------------
+  function cookie(name) {
+    var parts = ('; ' + document.cookie).split('; ' + name + '=');
+    return parts.length === 2 ? (parts.pop().split(';').shift() || '') : '';
+  }
+
+  // true once nothing is left to wait for.
+  function syncCookies(sdk) {
+    var attr = sdk.getAttribution && sdk.getAttribution();
+    var m = attr && attr.metadata;
+    if (!m) return false;
+    var fbp = cookie('_fbp');
+    var fbc = cookie('_fbc');
+    if (fbp && m.fb_fbp !== fbp) sdk.addMetadata('fb_fbp', fbp);
+    if (fbc && m.fb_fbc !== fbc) sdk.addMetadata('fb_fbc', fbc);
+    return !!fbp && (!!fbc || !m.fbclid); // _fbc is only expected after an ad click (fbclid)
+  }
+
+  window.nextReady = window.nextReady || [];
+  window.nextReady.push(function (sdk) {
+    if (!sdk || typeof sdk.addMetadata !== 'function') return;
+    var polls = 0;
+    if (!syncCookies(sdk)) {
+      var timer = setInterval(function () {
+        polls++;
+        if (syncCookies(sdk) || polls >= 20) clearInterval(timer);
+      }, 500);
+    }
+    if (typeof sdk.on === 'function') sdk.on('cart:updated', function () { syncCookies(sdk); });
+    window.addEventListener('popstate', function () { syncCookies(sdk); });
+  });
+
+  // ---- B. Advanced matching ----------------------------------------------------------------------------
+  if (!window.NextForwarder) {
+    if (window.console) console.warn('[meta.adapter] next-forwarder-core.js must load first');
+    return;
+  }
+  if (!/^(true|1|yes)$/i.test(window.__metaAdvancedMatching || '')) return;
+
+  var DEBUG =
+    /[?&]nfdebug=true/.test(window.location.search) ||
+    /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname);
+
+  var EMAIL_RE = window.NextForwarder.EMAIL_RE || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  // User data collected so far on this page, and whether the one effective init has happened.
+  var pending = {};
+  var initialised = false;
+
+  function clean(v) { return (v === undefined || v === null) ? '' : String(v).trim().toLowerCase(); }
+
+  // The SDK's visitor_id (scoped key visitor_id__<scope>, or legacy visitor_id). '' when absent or
+  // storage is blocked.
+  function visitorId() {
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (/^visitor_id(__|$)/.test(k)) return localStorage.getItem(k) || '';
+      }
+    } catch (e) {}
+    return '';
+  }
+
+  // SDK user_properties -> Meta advanced matching keys. The pixel hashes the values itself; here they
+  // are only trimmed and lowercased (spaces removed from city and zip).
+  function fromUserProperties(up) {
+    up = up || {};
+    var d = {};
+    var email = clean(up.customer_email);
+    if (email && EMAIL_RE.test(email)) d.em = email;
+    var phone = clean(up.customer_phone).replace(/\D/g, ''); // digits incl. country code
+    if (phone) d.ph = phone;
+    if (clean(up.customer_first_name)) d.fn = clean(up.customer_first_name);
+    if (clean(up.customer_last_name)) d.ln = clean(up.customer_last_name);
+    if (clean(up.customer_city)) d.ct = clean(up.customer_city).replace(/\s+/g, '');
+    if (clean(up.customer_province_code)) d.st = clean(up.customer_province_code);
+    if (clean(up.customer_zip)) d.zp = clean(up.customer_zip).replace(/\s+/g, '');
+    if (clean(up.customer_country)) d.country = clean(up.customer_country);
+    return d;
+  }
+
+  // Checkout form value by SDK field name ('' when absent).
+  function field(name) {
+    var el = document.querySelector('[data-next-checkout-field="' + name + '"]');
+    return el ? clean(el.value) : '';
+  }
+
+  // Merge, then init once — and only once there is an email or phone (see FIRST INIT WINS).
+  function apply(d, source) {
+    for (var k in d) if (d[k]) pending[k] = d[k];
+    if (initialised) {
+      if (DEBUG && window.console) console.log('[meta.adapter] skip (already initialised)', source);
+      return;
+    }
+    if (!pending.em && !pending.ph) {
+      if (DEBUG && window.console) console.log('[meta.adapter] hold (no em/ph yet)', source, Object.keys(pending));
+      return;
+    }
+    var copy = {};
+    for (var c in pending) copy[c] = pending[c];
+    var vid = visitorId();
+    if (vid) copy.external_id = vid;
+    window.fbq('init', window.__metaPixelId, copy);
+    initialised = true;
+    if (DEBUG && window.console) console.log('[meta.adapter] init', source, Object.keys(copy));
+  }
+
+  // Save the visitor_id on the order for a server-side Purchase, on every page once the SDK is ready.
+  window.nextReady.push(function (sdk) {
+    var vid = visitorId();
+    if (!vid || !sdk || typeof sdk.addMetadata !== 'function') return;
+    sdk.addMetadata('fb_external_id', vid);
+    if (DEBUG && window.console) console.log('[meta.adapter] fb_external_id', vid);
+  });
+
+  window.NextForwarder.register({
+    name: 'meta',
+    isActive: function () {
+      return !!window.__metaPixelId && typeof window.fbq === 'function';
+    },
+    // Names are labels only: send() never fires a Meta event, the SDK's facebook provider does.
+    map: {
+      dl_begin_checkout:   'InitiateCheckout',
+      dl_add_payment_info: 'AddPaymentInfo',
+      dl_purchase:         'Purchase'
+    },
+    allowedEvents: ['dl_begin_checkout', 'dl_add_payment_info', 'dl_purchase'],
+    send: function (name, ec, evt) {
+      apply(fromUserProperties(evt && evt.user_properties), name);
+    },
+    onContact: function (c) {
+      var d = {};
+      if (c.email) d.em = clean(c.email);
+      // Digits with the country code. c.phone can be the raw national value when the prospect cart had
+      // no phone, so prefer the SDK's E.164 on the input (data-next-phone-e164); otherwise only a number
+      // that already starts with +.
+      var el = document.querySelector('[data-next-checkout-field="phone"][data-next-phone-e164]');
+      var e164 = el ? el.getAttribute('data-next-phone-e164') : '';
+      var phone = /^\+\d{8,15}$/.test(e164 || '') ? e164 : (/^\+/.test(String(c.phone || '')) ? c.phone : '');
+      if (phone) d.ph = String(phone).replace(/\D/g, '');
+      // The prospect cart requires first/last name; on field entry they may not be typed yet.
+      if (field('fname')) d.fn = field('fname');
+      if (field('lname')) d.ln = field('lname');
+      if (field('country')) d.country = field('country');
+      apply(d, 'contact:' + c.source);
+    },
+    contactRequiresMarketingConsent: false, // see Consent in the header
+    contactOnFieldEntry: true
+  });
+})();
