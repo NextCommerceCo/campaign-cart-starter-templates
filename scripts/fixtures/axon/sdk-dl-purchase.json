@@ -1,0 +1,41 @@
+{
+  "_source": "dl_purchase as Campaign Cart SDK builds it (NextCommerceCo/campaign-cart 4c00ba06): key names from src/core/analytics/types.ts (UserProperties), user_properties from order.user / order.billing_address and ecommerce from createPurchaseEvent in src/core/analytics/events/ecommerce-events.checkout.ts. customer_phone is always E.164 with '+' (user-data-storage.ts drops anything else). item_category is the campaign name; item_image is the package thumbnail (.webp). Values are illustrative and contain no shopper data.",
+  "event": "dl_purchase",
+  "event_id": "101614",
+  "user_properties": {
+    "visitor_type": "guest",
+    "customer_email": "Jane.Doe@Example.com",
+    "customer_first_name": "Jane",
+    "customer_last_name": "Doe",
+    "customer_phone": "+18123158899",
+    "customer_address_1": "1 Example St",
+    "customer_address_2": "",
+    "customer_city": "Springfield",
+    "customer_province": "IL",
+    "customer_province_code": "IL",
+    "customer_zip": "62701",
+    "customer_country": "US"
+  },
+  "ecommerce": {
+    "currency": "USD",
+    "transaction_id": "101614",
+    "value": 39,
+    "tax": 0,
+    "shipping": 0,
+    "affiliation": "Online Store",
+    "items": [
+      {
+        "item_id": "DEMO-1",
+        "item_name": "Demo Product",
+        "item_brand": "Demo Product",
+        "item_category": "Demo Campaign",
+        "item_variant": "",
+        "item_variant_id": "15",
+        "price": 39,
+        "quantity": 1,
+        "currency": "USD",
+        "item_image": "https://d1w87fp8j98gad.cloudfront.net/media/thumbnails/demo.webp"
+      }
+    ]
+  }
+}

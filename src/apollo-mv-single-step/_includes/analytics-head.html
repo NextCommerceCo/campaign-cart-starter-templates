@@ -122,6 +122,9 @@
   window.__axonEventKey = AXON_EVENT_KEY;
   window.__axonAllowedEvents = "{{ campaign.axon_allowed_events }}";
   window.__axonBlockedEvents = "{{ campaign.axon_blocked_events }}";
+  // Integer category id for items whose SDK item_category is text (the campaign name, which Axon
+  // rejects with HTTP 400). Applies to every item in the campaign; "" = left out.
+  window.__axonItemCategoryId = "{{ campaign.axon_item_category_id }}";
 </script>
 {% endif %}
 {% if campaign.taboola_account_id and campaign.taboola_account_id != "" %}
