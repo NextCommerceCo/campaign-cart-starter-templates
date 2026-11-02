@@ -116,6 +116,11 @@ behaviour is regression-tested by `analytics-tracking-docs/examples/_harness/`; 
   `user_properties`: email trimmed and lowercased, phone as E.164 digits without the `+`, and `customer_id`
   as `user_id` when it is at least 6 characters. Axon's pixel hashes email and phone in the browser. Other
   events stay anonymous, and `accepts_marketing` plays no part (many checkouts don't render that box).
+- **Upsell purchases take `user_data` from the page's `dl_user_data`.** The SDK resets its checkout state
+  before the post-checkout redirect, so `dl_upsell_purchase` arrives with `user_properties` holding only
+  `visitor_type`, and Axon flags the upsell `purchase` as missing required `user_data`. The SDK fires
+  `dl_user_data` first on every page from its persisted user data, which still has the email, so the adapter
+  uses it for an upsell purchase that has none. Keep `dl_user_data` in `axon_allowed_events` if you narrow it.
 - **Without `user_data`, Axon flags the purchase but still records it**: revenue and `transaction_id`
   arrive as normal. With `?nfdebug=true` (or on localhost) the adapter logs one console warning per page
   when a purchase goes out without it.

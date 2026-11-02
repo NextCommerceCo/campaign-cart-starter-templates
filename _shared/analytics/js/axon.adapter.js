@@ -28,6 +28,10 @@
  * like the applovin-axon storefront app: turn it on only when the store's consent policy covers sharing it
  * with AppLovin. The flag is read on every event, so a consent script can set it. Axon's pixel.js hashes
  * email/phone in the browser, so they are passed normalised but unhashed. Not gated on accepts_marketing.
+ * Upsell purchases: the SDK builds dl_upsell_purchase's user_properties from checkout state it resets before
+ * the post-checkout redirect, so they arrive with visitor_type only. The page's own dl_user_data (fired
+ * first on every page, from the SDK's persisted user data) still carries the email, so an upsell purchase
+ * with none takes user_data from it. Nothing is stored by the adapter.
  *
  * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus().
  */
@@ -83,6 +87,10 @@
     if (id.length >= 6) out.user_id = id;
     return out.email || out.phone || out.user_id ? out : undefined;
   }
+
+  // The shopper as this page's dl_user_data reported it. The SDK fires dl_user_data before replaying the
+  // queued dl_upsell_purchase, whose own user_properties come from already-reset checkout state.
+  var pageUser;
 
   // item_category_id: a positive integer or nothing.
   function categoryId(raw) {
@@ -155,7 +163,11 @@
     blockedEvents: blocked,
     send: function (name, ec, evt) {
       // page_view is not an ecommerce event — send it bare.
-      if (name === 'page_view') { window.axon('track', 'page_view'); return; }
+      if (name === 'page_view') {
+        if (evt && evt.event === 'dl_user_data') pageUser = userData(evt);
+        window.axon('track', 'page_view');
+        return;
+      }
 
       var params = {};
       if (ec.currency) params.currency = ec.currency;
@@ -170,7 +182,11 @@
       copy(ec, params, EXTRA[name] || []);
       if (params.payment_type !== undefined) params.payment_type = paymentType(params.payment_type);
       if (name === 'purchase') {
-        var user = window.__axonSendUserData === true ? userData(evt) : undefined;
+        var user;
+        if (window.__axonSendUserData === true) {
+          user = userData(evt);
+          if (!user && evt && evt.event === 'dl_upsell_purchase') user = pageUser;
+        }
         if (user) params.user_data = user;
         else if (DEBUG && !warnedUserData && window.console) {
           warnedUserData = true;

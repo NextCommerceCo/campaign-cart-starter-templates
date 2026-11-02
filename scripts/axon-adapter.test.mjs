@@ -135,3 +135,36 @@ test('one console warning per page for a purchase without user_data, only with ?
   assert.equal(r.warnings.length, 1);
   assert.match(r.warnings[0], /purchase sent without user_data \(axon_send_user_data is off\)/);
 });
+
+// dl_upsell_purchase and dl_user_data as the SDK pushes them on the page after an upsell
+// (browser-verified 2026-11-02): the upsell's user_properties hold only visitor_type, the page's
+// dl_user_data still has the email from the SDK's persisted user data.
+const SDK_UPSELL = { ...SDK_PURCHASE, event: 'dl_upsell_purchase', user_properties: { visitor_type: 'guest' },
+  ecommerce: { ...SDK_PURCHASE.ecommerce, transaction_id: 'abc123-US1', affiliation: 'Upsell' } };
+const SDK_USER_DATA = { event: 'dl_user_data', user_properties: { visitor_type: 'guest', customer_email: 'Jane.Doe@Example.com' }, ecommerce: { currency: 'USD', value: 0, items: [] } };
+
+test('upsell purchase takes user_data from the page dl_user_data', () => {
+  const r = load({ __axonSendUserData: true });
+  dispatch(r.adapter, SDK_USER_DATA);
+  dispatch(r.adapter, SDK_UPSELL);
+  assert.equal(r.calls[0][1], 'page_view');
+  assert.equal(r.calls[0].length, 2, 'page_view stays bare');
+  assert.equal(r.calls[1][2].transaction_id, 'abc123-US1');
+  assert.deepEqual(r.calls[1][2].user_data, { email: 'jane.doe@example.com' });
+});
+
+test('page dl_user_data fallback: not without the flag, not without dl_user_data, never for an order purchase', () => {
+  let r = load();
+  dispatch(r.adapter, SDK_USER_DATA);
+  dispatch(r.adapter, SDK_UPSELL);
+  assert.equal('user_data' in r.calls[1][2], false, 'flag off');
+
+  r = load({ __axonSendUserData: true });
+  dispatch(r.adapter, SDK_UPSELL);
+  assert.equal('user_data' in r.calls[0][2], false, 'no dl_user_data on the page');
+
+  r = load({ __axonSendUserData: true });
+  dispatch(r.adapter, SDK_USER_DATA);
+  dispatch(r.adapter, { ...SDK_PURCHASE, user_properties: { visitor_type: 'guest' } });
+  assert.equal('user_data' in r.calls[1][2], false, 'order purchase never borrows');
+});
