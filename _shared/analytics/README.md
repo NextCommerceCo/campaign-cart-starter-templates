@@ -120,7 +120,8 @@ behaviour is regression-tested by `analytics-tracking-docs/examples/_harness/`; 
   before the post-checkout redirect, so `dl_upsell_purchase` arrives with `user_properties` holding only
   `visitor_type`, and Axon flags the upsell `purchase` as missing required `user_data`. The SDK fires
   `dl_user_data` first on every page from its persisted user data, which still has the email, so the adapter
-  fills any field the upsell lacks from it. It reads that event from `window.NextDataLayer` at send time, so
+  uses that identity whole for an upsell with none of its own (never a mix of the two), from the newest
+  `dl_user_data` only. It reads that event from `window.NextDataLayer` at send time, so
   `axon_allowed_events` and `axon_blocked_events` don't affect it.
 - **Without `user_data`, Axon flags the purchase but still records it**: revenue and `transaction_id`
   arrive as normal. With `?nfdebug=true` (or on localhost) the adapter logs one console warning per page

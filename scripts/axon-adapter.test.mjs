@@ -22,15 +22,20 @@ function load(win = {}) {
     console: { log() {}, warn: (...a) => warnings.push(a.join(' ')) },
   }, win);
   vm.runInNewContext(SRC, { window, console: window.console });
-  return { calls, warnings, adapter, window };
+  return { calls, warnings, adapter, window, seen: new Set() };
 }
 
-// Dispatch the way the SDK + next-forwarder-core.js do: dl_* name -> adapter.map -> the adapter's allow/block
-// lists -> send(name, ecommerce, envelope); then the SDK appends the event to window.NextDataLayer.
-function dispatch({ adapter, window }, envelope) {
+// Dispatch the way the SDK + next-forwarder-core.js do: a _willRedirect event is queued for the next page (no
+// send, no push); otherwise isActive() -> adapter.map -> the adapter's allow/block lists -> per-adapter
+// event_id dedup -> send(name, ecommerce, envelope); then the SDK appends the event to window.NextDataLayer.
+function dispatch({ adapter, window, seen }, envelope) {
+  if (envelope._willRedirect) return;
   const name = adapter.map[envelope.event];
   const on = (list) => list.includes(envelope.event) || list.includes(name);
-  if (name && (!adapter.allowedEvents || on(adapter.allowedEvents)) && !on(adapter.blockedEvents || [])) {
+  const id = envelope.event_id;
+  if (adapter.isActive() && name && (!adapter.allowedEvents || on(adapter.allowedEvents)) &&
+      !on(adapter.blockedEvents || []) && !(id && seen.has(id))) {
+    if (id) seen.add(id);
     adapter.send(name, envelope.ecommerce || {}, envelope);
   }
   window.NextDataLayer.push(envelope);
@@ -51,7 +56,7 @@ test('SDK dl_purchase through adapter.map: integer item_category_id, no .webp im
 
 test('text item_category is never sent as item_category_id (the Axon 400)', () => {
   const r = load();
-  for (const dl of ['dl_view_item', 'dl_add_to_cart', 'dl_begin_checkout', 'dl_purchase']) dispatch(r, { ...SDK_PURCHASE, event: dl });
+  for (const dl of ['dl_view_item', 'dl_add_to_cart', 'dl_begin_checkout', 'dl_purchase']) dispatch(r, { ...SDK_PURCHASE, event: dl, event_id: dl });
   for (const [, name, p] of r.calls) assert.equal('item_category_id' in p.items[0], false, name);
 });
 
@@ -103,7 +108,7 @@ test('user_data is off by default, on purchase only when __axonSendUserData === 
   const carried = [];
   for (const dl of Object.keys(r.adapter.map)) {
     const before = r.calls.length;
-    dispatch(r, { ...SDK_PURCHASE, event: dl });
+    dispatch(r, { ...SDK_PURCHASE, event: dl, event_id: dl });
     if (r.calls[before][2]?.user_data) carried.push(dl);
   }
   assert.deepEqual(carried.sort(), ['dl_purchase', 'dl_upsell_purchase']);
@@ -114,7 +119,7 @@ test('a consent script can set the flag after load', () => {
   const r = load();
   dispatch(r, SDK_PURCHASE);
   r.window.__axonSendUserData = true;
-  dispatch(r, SDK_PURCHASE);
+  dispatch(r, { ...SDK_PURCHASE, event_id: 'evt-2' });
   assert.equal('user_data' in r.calls[0][2], false);
   assert.ok(r.calls[1][2].user_data);
 });
@@ -137,7 +142,7 @@ test('one console warning per page for a purchase without user_data, only with ?
   assert.equal(r.warnings.length, 0);
   r = load({ location: { search: '?nfdebug=true', hostname: 'shop.example.com' } });
   dispatch(r, SDK_PURCHASE);
-  dispatch(r, SDK_PURCHASE);
+  dispatch(r, { ...SDK_PURCHASE, event_id: 'evt-2' });
   assert.equal(r.calls.length, 2);
   assert.equal(r.warnings.length, 1);
   assert.match(r.warnings[0], /purchase sent without user_data \(axon_send_user_data is off\)/);
@@ -146,7 +151,7 @@ test('one console warning per page for a purchase without user_data, only with ?
 // dl_upsell_purchase and dl_user_data as the SDK pushes them on the page after an upsell
 // (browser-verified 2026-11-02): the upsell's user_properties hold only visitor_type, the page's
 // dl_user_data still has the email from the SDK's persisted user data.
-const SDK_UPSELL = { ...SDK_PURCHASE, event: 'dl_upsell_purchase', user_properties: { visitor_type: 'guest' },
+const SDK_UPSELL = { ...SDK_PURCHASE, event: 'dl_upsell_purchase', event_id: 'evt-upsell-1', user_properties: { visitor_type: 'guest' },
   ecommerce: { ...SDK_PURCHASE.ecommerce, transaction_id: 'abc123-US1', affiliation: 'Upsell' } };
 const SDK_USER_DATA = { event: 'dl_user_data', user_properties: { visitor_type: 'guest', customer_email: 'Jane.Doe@Example.com' }, ecommerce: { currency: 'USD', value: 0, items: [] } };
 
@@ -170,15 +175,27 @@ test('upsell fallback ignores the event toggles: dl_user_data need not be forwar
   }
 });
 
-test('upsell fallback merges per field; the upsell\'s own values win', () => {
-  const send = (up) => {
-    const r = load({ __axonSendUserData: true });
-    dispatch(r, SDK_USER_DATA);
-    dispatch(r, { ...SDK_UPSELL, user_properties: up });
-    return r.calls[1][2].user_data;
-  };
-  assert.deepEqual(send({ customer_id: '1234567' }), { email: 'jane.doe@example.com', user_id: '1234567' });
-  assert.deepEqual(send({ customer_email: 'a@b.co', customer_phone: '+447700900123' }), { email: 'a@b.co', phone: '447700900123' });
+test('identities are never mixed: an upsell with its own keeps it whole; only the newest dl_user_data counts', () => {
+  let r = load({ __axonSendUserData: true });
+  dispatch(r, SDK_USER_DATA);
+  dispatch(r, { ...SDK_UPSELL, user_properties: { customer_id: '1234567' } });
+  assert.deepEqual(r.calls[1][2].user_data, { user_id: '1234567' }, 'no page email stitched onto the upsell id');
+
+  r = load({ __axonSendUserData: true });
+  dispatch(r, SDK_USER_DATA);
+  dispatch(r, { event: 'dl_user_data', user_properties: { visitor_type: 'guest' }, ecommerce: {} });
+  dispatch(r, SDK_UPSELL);
+  assert.equal('user_data' in r.calls[2][2], false, 'an older visitor is not reached past the newest dl_user_data');
+});
+
+test('the order and upsell purchases on one page each reach Axon (distinct event_id); a redirect-queued one does not', () => {
+  const r = load({ __axonSendUserData: true });
+  dispatch(r, { ...SDK_UPSELL, _willRedirect: true });
+  dispatch(r, SDK_USER_DATA);
+  dispatch(r, SDK_PURCHASE);
+  dispatch(r, SDK_UPSELL);
+  dispatch(r, SDK_UPSELL);
+  assert.deepEqual(r.calls.map((c) => c[2]?.transaction_id ?? c[1]), ['page_view', '101614', 'abc123-US1']);
 });
 
 test('page dl_user_data fallback: not without the flag, not without dl_user_data, never for an order purchase', () => {

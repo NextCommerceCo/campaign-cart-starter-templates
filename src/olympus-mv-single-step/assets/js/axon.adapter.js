@@ -32,8 +32,9 @@
  * Upsell purchases: the SDK builds dl_upsell_purchase's user_properties from checkout state it resets before
  * the post-checkout redirect, so they arrive with visitor_type only. The page's own dl_user_data (fired
  * first on every page, from the SDK's persisted user data) still carries the email, so an upsell purchase
- * fills any field it lacks from it. It is read from window.NextDataLayer at that moment, only with the flag
- * on, so it works whatever axon_allowed_events / axon_blocked_events say and the adapter keeps no PII.
+ * with no identity of its own takes the newest dl_user_data's identity whole (never a mix of the two). It is
+ * read from window.NextDataLayer at that moment, only with the flag on, so it works whatever
+ * axon_allowed_events / axon_blocked_events say and the adapter keeps no PII.
  *
  * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus().
  */
@@ -90,27 +91,18 @@
     return out.email || out.phone || out.user_id ? out : undefined;
   }
 
-  // The shopper as this page's latest usable dl_user_data reported it. The SDK pushes dl_user_data to
-  // window.NextDataLayer before it replays the queued dl_upsell_purchase, whose own user_properties come from
-  // already-reset checkout state. NextDataLayer holds every event that survived the consent transform,
-  // whether or not this adapter forwarded it.
+  // The shopper as the page's newest dl_user_data reports it (undefined when that one has no identity; an
+  // older entry may be a different visitor). The SDK pushes dl_user_data to window.NextDataLayer before it
+  // replays the queued dl_upsell_purchase, whose own user_properties come from already-reset checkout state.
+  // NextDataLayer holds every event that survived the consent transform, whether or not this adapter
+  // forwarded it.
   function pageUserData() {
     var dl = window.NextDataLayer;
     if (!dl || typeof dl.length !== 'number') return undefined;
     for (var i = dl.length - 1; i >= 0; i--) {
-      var user = dl[i] && dl[i].event === 'dl_user_data' ? userData(dl[i]) : undefined;
-      if (user) return user;
+      if (dl[i] && dl[i].event === 'dl_user_data') return userData(dl[i]);
     }
     return undefined;
-  }
-
-  // Per field: the event's own value wins, the page fills the gaps.
-  function mergeUser(page, own) {
-    if (!page) return own;
-    var out = {}, k;
-    for (k in page) out[k] = page[k];
-    for (k in own || {}) out[k] = own[k];
-    return out;
   }
 
   // item_category_id: a positive integer or nothing.
@@ -202,7 +194,7 @@
         var user;
         if (window.__axonSendUserData === true) {
           user = userData(evt);
-          if (evt && evt.event === 'dl_upsell_purchase') user = mergeUser(pageUserData(), user);
+          if (!user && evt && evt.event === 'dl_upsell_purchase') user = pageUserData();
         }
         if (user) params.user_data = user;
         else if (DEBUG && !warnedUserData && window.console) {
