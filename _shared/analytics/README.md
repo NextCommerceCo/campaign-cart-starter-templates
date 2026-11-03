@@ -112,20 +112,26 @@ base pixel block does a bare `fbq('init', id)`. `meta.adapter.js` loads whenever
   cookies into the attribution metadata with `next.addMetadata('fb_fbp' / 'fb_fbc')` when the SDK is ready
   (polling every 500 ms for up to 10 s while one is missing) and again after `cart:updated` and `popstate`.
   It only reads cookies, never writes them. Delete this part once #132 ships.
-- **Advanced matching — opt-in, `meta_advanced_matching_enabled: "true"`.** One `fbq('init', pixelId,
-  userData)` per page, as soon as an email or phone is known; the pixel keeps only the first init with data
-  on a page, so later details on that page are not sent. Checkout: `em`, `ph`, `fn`, `ln`, `country` from the
-  form on valid email/phone entry or the prospect cart. Receipt/upsell: from the redirect-queued
-  `dl_purchase` `user_properties` (adds `ct`, `st`, `zp`). `ph` is digits including the country code — the
-  input's `data-next-phone-e164` at checkout, never a guessed dial code. `external_id` is the SDK's anonymous
-  `visitor_id` (`localStorage` `visitor_id__<scope>`), passed raw (the pixel hashes it) and also saved as
-  `next.addMetadata('fb_external_id', id)` for a server-side Purchase
-  ([campaign-cart#133](https://github.com/NextCommerceCo/campaign-cart/issues/133)). Never a customer id —
-  the Campaigns API is public. Not gated on `accepts_marketing`: Meta ties customer data to the pixel's own
-  notice and cookie consent, so if the pixel may fire, so may this. Set the flag only when the campaign's
-  consent handling covers sending customer data to Meta.
+- **Advanced matching — opt-in, `meta_advanced_matching_enabled: "true"`.** Collect on entry, init at the
+  first Meta event with an email or phone. Valid checkout email/phone entry and the prospect cart only
+  *collect* `em`, `ph`, `fn`, `ln`. On `dl_begin_checkout`, `dl_add_payment_info` and `dl_purchase` the
+  adapter merges the form at that moment with the event's `user_properties` (`em`, `ph`, `fn`, `ln`, `ct`,
+  `st`, `zp`, `country`) and does one `fbq('init', pixelId, userData)` before the SDK's `fbq('track')` for
+  that event. The pixel keeps only the first init with data on a page, so details learned later on that page
+  are not sent; collecting first means a phone typed after the email still makes it in. Phone is optional —
+  the init never waits for one. `ph` is digits including the country code — the input's
+  `data-next-phone-e164` at checkout, `customer_phone` at purchase, never a guessed dial code. Known gap: on a
+  return visit the SDK refills the phone after `dl_begin_checkout`, so that InitiateCheckout has no `ph`.
+  `external_id` is the SDK's anonymous `visitor_id` (`localStorage` `visitor_id__<scope>`), passed raw (the
+  pixel hashes it) and also saved as `next.addMetadata('fb_external_id', id)` for a server-side Purchase. The
+  scope is per API key + first path segment, so when more than one `visitor_id` key exists the adapter skips
+  `external_id` rather than guess (a public SDK getter would remove this). Never a customer id — the Campaigns
+  API is public. Not gated on `accepts_marketing`: Meta ties customer data to the pixel's own notice and
+  cookie consent, so if the pixel may fire, so may this. Set the flag only when the campaign's consent
+  handling covers sending customer data to Meta.
 - Debug: `?nfdebug=true` (or localhost) logs `[meta.adapter]` lines; `NextForwarder.getStatus()` lists
-  it as `meta`. Never test with `?ignore=true` — it turns analytics off.
+  it as `meta`. Never test with `?ignore=true` — it turns analytics off. When checking `ud[...]` by hand,
+  capture POST bodies as well as GET query strings: the pixel sends some events as hidden form POSTs.
 - `meta.adapter.js` has no counterpart in `analytics-tracking-docs/examples/` yet, so it is not in
   `lint:upstream`'s file map; add it there once upstream gains a copy.
 
@@ -170,7 +176,7 @@ adapter declares `contactRequiresMarketingConsent` and `contactOnFieldEntry` whe
 |---|---|---|---|
 | Northbeam (`northbeam_identity_enabled`) | valid checkout **email entry** + prospect cart | **No** | Attribution: `identify(email)` joins the backend order to the session. Northbeam: "identify on every email input". |
 | Triple Whale (`triplewhale_contact_enabled`) | valid checkout **email/phone entry** + prospect cart | **No** | Attribution: `Contact` ties the session to the order (incl. the Shopify-ingested order on shop-sync). |
-| Meta (`meta_advanced_matching_enabled`) | valid checkout **email/phone entry** + prospect cart | **No** | Meta ties customer data to the pixel's own notice / cookie consent, not the newsletter box. One init per page (see Meta Pixel extras). |
+| Meta (`meta_advanced_matching_enabled`) | valid checkout **email/phone entry** + prospect cart (collect only; init at the next Meta event) | **No** | Meta ties customer data to the pixel's own notice / cookie consent, not the newsletter box. One init per page (see Meta Pixel extras). |
 | TikTok / Snapchat / Pinterest (`*_advanced_matching_enabled`, `pinterest_enhanced_match_enabled`) | prospect cart only | **Yes** (default) | Ad-platform advanced matching is marketing use — it feeds the platform's identity graph and audiences. |
 
 Gating attribution identity on the newsletter box caps the attribution match rate at the newsletter opt-in

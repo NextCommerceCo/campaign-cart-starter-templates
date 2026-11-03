@@ -106,35 +106,66 @@ test('advanced matching off: no fb_external_id, no init, even with forwarder pre
   assert.equal(r.adapter, undefined);
 });
 
-test('checkout contact: one init with em, E.164 ph digits, fn, ln, country, raw visitor_id', () => {
+test('checkout contact only collects; the next Meta event inits once with em, E.164 ph, fn, ln, country', () => {
   const r = load({
     win: { __metaAdvancedMatching: 'true' },
-    fields: { phone: { value: '(650) 555-0194', e164: '+16505550194' }, fname: { value: ' Jane ' }, lname: { value: 'Doe' }, country: { value: 'US' } },
+    fields: { fname: { value: ' Jane ' }, lname: { value: 'Doe' } },
   });
   const a = r.adapter;
   assert.equal(a.contactRequiresMarketingConsent, false);
   assert.equal(a.contactOnFieldEntry, true);
-  a.onContact({ email: ' Jane@Example.com ', phone: '(650) 555-0194', source: 'field' });
-  assert.deepEqual(r.fbq, [['init', '123456', { em: 'jane@example.com', ph: '16505550194', fn: 'jane', ln: 'doe', country: 'us', external_id: 'vid-123' }]]);
-  a.onContact({ email: 'other@example.com', source: 'prospect' });
+  a.onContact({ email: ' Jane@Example.com ', source: 'field' });
+  assert.equal(r.fbq.length, 0, 'email entry never inits');
+  // Phone typed after the email: picked up from the SDK's E.164 attribute.
+  r.doc.querySelector = ((orig) => (sel) => (sel.includes('"phone"') && sel.includes('e164')
+    ? { value: '(650) 555-0194', getAttribute: () => '+16505550194' } : orig(sel)))(r.doc.querySelector);
+  a.onContact({ phone: '(650) 555-0194', source: 'field' });
+  assert.equal(r.fbq.length, 0, 'phone entry never inits');
+  a.send('AddPaymentInfo', {}, { event: 'dl_add_payment_info', user_properties: { customer_country: 'US' } });
+  assert.deepEqual(r.fbq, [['init', '123456', { em: 'jane@example.com', fn: 'jane', ln: 'doe', ph: '16505550194', country: 'us', external_id: 'vid-123' }]]);
   a.send('Purchase', {}, { user_properties: { customer_email: 'other@example.com' } });
   assert.equal(r.fbq.length, 1, 'first init wins: never re-inits on the same page');
 });
 
-test('checkout contact: a national phone with no E.164 attribute is not sent', () => {
-  const r = load({ win: { __metaAdvancedMatching: 'true' }, fields: { phone: { value: '(650) 555-0194' } } });
-  r.adapter.onContact({ phone: '(650) 555-0194', source: 'field' });
-  assert.equal(r.fbq.length, 0, 'held: no em and no usable ph');
-  r.adapter.onContact({ email: 'a@b.co', source: 'field' });
-  assert.equal('ph' in r.fbq[0][2], false);
+test('send reads the form at event time (no prior onContact); country is never read from the form', () => {
+  const r = load({
+    win: { __metaAdvancedMatching: 'true' },
+    fields: { email: { value: 'A@B.co' }, phone: { value: '07700 900123', e164: '+447700900123' }, country: { value: 'GB' } },
+  });
+  r.adapter.send('InitiateCheckout', {}, { event: 'dl_begin_checkout', user_properties: {} });
+  assert.deepEqual(r.fbq[0][2], { em: 'a@b.co', ph: '447700900123', external_id: 'vid-123' });
 });
 
-test('holds until an email or phone is known, keeping the names collected meanwhile', () => {
+test('a national phone with no E.164 attribute is not sent; init does not wait for a phone', () => {
+  const r = load({ win: { __metaAdvancedMatching: 'true' }, fields: { phone: { value: '(650) 555-0194' } } });
+  r.adapter.onContact({ phone: '(650) 555-0194', email: 'a@b.co', source: 'field' });
+  r.adapter.send('InitiateCheckout', {}, { user_properties: {} });
+  assert.deepEqual(r.fbq[0][2], { em: 'a@b.co', external_id: 'vid-123' });
+});
+
+test('holds while there is no email or phone, keeping the names collected meanwhile', () => {
   const r = load({ win: { __metaAdvancedMatching: '1' }, fields: { fname: { value: 'Jane' } } });
   r.adapter.onContact({ source: 'field' });
+  r.adapter.send('InitiateCheckout', {}, { user_properties: {} });
   assert.equal(r.fbq.length, 0);
-  r.adapter.onContact({ phone: '+447700900123', source: 'prospect' });
+  r.adapter.send('AddPaymentInfo', {}, { user_properties: { customer_phone: '+44 7700 900123' } });
   assert.deepEqual(r.fbq[0][2], { fn: 'jane', ph: '447700900123', external_id: 'vid-123' });
+});
+
+test('invalid email from contact is dropped', () => {
+  const r = load({ win: { __metaAdvancedMatching: 'true' } });
+  r.adapter.onContact({ email: 'not-an-email', source: 'field' });
+  r.adapter.send('InitiateCheckout', {}, { user_properties: {} });
+  assert.equal(r.fbq.length, 0);
+});
+
+test('visitor_id: more than one scoped key -> no external_id and no fb_external_id', () => {
+  const r = load({ win: { __metaAdvancedMatching: 'true' }, store: { visitor_id__a: 'one', visitor_id__b: 'two' } });
+  const s = sdk({});
+  ready(r, s);
+  assert.equal(s.added.some(([k]) => k === 'fb_external_id'), false);
+  r.adapter.send('Purchase', {}, { user_properties: { customer_email: 'a@b.co' } });
+  assert.deepEqual(r.fbq[0][2], { em: 'a@b.co' });
 });
 
 test('receipt dl_purchase: user_properties -> em, ph, fn, ln, ct, st, zp, country', () => {

@@ -21,24 +21,32 @@
  *   while one is missing, and re-syncs after cart:updated and popstate (SDK 0.4.38–0.4.43 can put the
  *   stale value back on a cart update). Read-only: it never writes a cookie.
  *
- * B. Advanced matching (works toward campaign-cart#133):
+ * B. Advanced matching:
  *   The SDK's facebook provider passes no customer data, and the base code is a bare fbq('init', id).
- *   This re-inits the pixel WITH customer data so the SDK's next fbq('track') carries it:
- *   - Checkout: onContact (prospect cart + valid email/phone field entry) → em, ph, fn, ln.
- *   - dl_begin_checkout / dl_add_payment_info / dl_purchase: user_properties → em, ph, fn, ln, ct, st,
- *     zp, country. send() runs inside NextDataLayerTransformFn, i.e. BEFORE the SDK notifies its
- *     providers, so the init lands before the SDK's fbq('track') for the same event. On the receipt /
- *     upsell page this is the redirect-queued dl_purchase.
- *   - ph is digits including the country code: the SDK's E.164 (input data-next-phone-e164, SDK ≥ 0.4.41)
- *     at checkout, user_properties.customer_phone at purchase. No dial code is ever guessed.
- *   - external_id = the SDK's anonymous visitor_id (localStorage visitor_id__{scope}; no public getter
- *     in SDK 0.4.43), passed raw — the pixel sends its SHA-256. The same raw value is saved to attribution
- *     metadata fb_external_id so a server-side Purchase can send it too. Never a customer id: the
- *     Campaigns API is public and carries none.
+ *   This re-inits the pixel WITH customer data so the SDK's next fbq('track') carries it.
+ *   Collect on entry, init at the first Meta event with em/ph:
+ *   - Checkout field entry (onContact: prospect cart + valid email/phone) only COLLECTS em, ph, fn, ln.
+ *     It never inits, so a phone typed after the email is not lost.
+ *   - dl_begin_checkout / dl_add_payment_info / dl_purchase: send() merges the form (em, ph, fn, ln read
+ *     at that moment) and the event's user_properties (em, ph, fn, ln, ct, st, zp, country), then inits
+ *     once if an email or phone is known, otherwise holds. send() runs inside NextDataLayerTransformFn,
+ *     i.e. BEFORE the SDK notifies its providers, so the init lands before the SDK's fbq('track') for the
+ *     same event. On the receipt / upsell page this is the redirect-queued dl_purchase. Phone is optional:
+ *     the init never waits for one.
+ *   - ph is digits including the country code: the SDK's E.164 (input data-next-phone-e164, SDK >= 0.4.41)
+ *     at checkout, user_properties.customer_phone at purchase. No dial code is ever guessed. Known gap: on a
+ *     return visit the SDK refills the phone (and data-next-phone-e164) after dl_begin_checkout, so that
+ *     InitiateCheckout goes without ph.
+ *   - external_id = the SDK's anonymous visitor_id, passed raw — the pixel sends its SHA-256. The same raw
+ *     value is saved to attribution metadata fb_external_id so a server-side Purchase can send it too.
+ *     SDK 0.4.43 has no public getter, so it is read from localStorage visitor_id{__scope}; the scope is
+ *     per API key + first path segment, so when more than one key exists it is ambiguous and external_id is
+ *     skipped. A public SDK getter would remove this guard. Never a customer id: the Campaigns API is
+ *     public and carries none.
  *
  *   FIRST INIT WINS (fbevents 2.9.x): the pixel keeps the user data from the first fbq('init', id, data)
- *   on a page and ignores later re-inits. So the adapter collects data and inits ONCE per page, and only
- *   once it has an email or phone; anything learned after that on the same page is not sent.
+ *   on a page and ignores later re-inits. So the adapter inits ONCE per page; anything learned after that
+ *   on the same page is not sent.
  *
  *   Consent: NOT gated on the accepts_marketing checkbox (unlike TikTok/Snap/Pinterest advanced matching).
  *   That box is the newsletter opt-in. Meta's Business Tools Terms tie customer data to the pixel's own
@@ -47,7 +55,8 @@
  *   campaign has handled the region's rules for sending customer data to Meta.
  *
  * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus(). QA with Meta Pixel Helper
- * (Advanced Matching parameters show on events after the init).
+ * (Advanced Matching parameters show on events after the init). When checking ud[...] by hand, capture
+ * POST bodies as well as GET query strings: the pixel sends some events as hidden form POSTs.
  */
 (function () {
   'use strict';
@@ -103,15 +112,19 @@
 
   function clean(v) { return (v === undefined || v === null) ? '' : String(v).trim().toLowerCase(); }
 
-  // The SDK's visitor_id (scoped key visitor_id__<scope>, or legacy visitor_id). '' when absent or
-  // storage is blocked.
+  // The SDK's visitor_id (scoped key visitor_id__<scope>, or legacy visitor_id). Only when exactly one
+  // such key exists: the scope is per API key + first path segment, so with several the right one is
+  // unknown. '' when absent, ambiguous or storage is blocked.
   function visitorId() {
+    var found = [];
     try {
       for (var i = 0; i < localStorage.length; i++) {
         var k = localStorage.key(i);
-        if (/^visitor_id(__|$)/.test(k)) return localStorage.getItem(k) || '';
+        if (/^visitor_id(__|$)/.test(k)) found.push(localStorage.getItem(k) || '');
       }
     } catch (e) {}
+    if (found.length === 1) return found[0];
+    if (DEBUG && window.console) console.log('[meta.adapter] external_id skipped:', found.length, 'visitor_id keys');
     return '';
   }
 
@@ -139,9 +152,31 @@
     return el ? clean(el.value) : '';
   }
 
-  // Merge, then init once — and only once there is an email or phone (see FIRST INIT WINS).
-  function apply(d, source) {
+  // Phone as digits incl. country code, only from the SDK's E.164 (data-next-phone-e164). '' otherwise.
+  function formPhone() {
+    var el = document.querySelector('[data-next-checkout-field="phone"][data-next-phone-e164]');
+    var e164 = el ? el.getAttribute('data-next-phone-e164') : '';
+    return /^\+\d{8,15}$/.test(e164 || '') ? e164.replace(/\D/g, '') : '';
+  }
+
+  // em, ph, fn, ln from the checkout form as it is now (absent on receipt / upsell pages).
+  function fromForm() {
+    var d = {};
+    var email = field('email');
+    if (email && EMAIL_RE.test(email)) d.em = email;
+    var ph = formPhone();
+    if (ph) d.ph = ph;
+    if (field('fname')) d.fn = field('fname');
+    if (field('lname')) d.ln = field('lname');
+    return d;
+  }
+
+  function collect(d) {
     for (var k in d) if (d[k]) pending[k] = d[k];
+  }
+
+  // Init once — and only once there is an email or phone (see FIRST INIT WINS).
+  function apply(source) {
     if (initialised) {
       if (DEBUG && window.console) console.log('[meta.adapter] skip (already initialised)', source);
       return;
@@ -180,23 +215,21 @@
     },
     allowedEvents: ['dl_begin_checkout', 'dl_add_payment_info', 'dl_purchase'],
     send: function (name, ec, evt) {
-      apply(fromUserProperties(evt && evt.user_properties), name);
+      collect(fromForm());
+      collect(fromUserProperties(evt && evt.user_properties));
+      apply(name);
     },
+    // Collect only — the init waits for the next Meta event (see B in the header).
     onContact: function (c) {
       var d = {};
-      if (c.email) d.em = clean(c.email);
-      // Digits with the country code. c.phone can be the raw national value when the prospect cart had
-      // no phone, so prefer the SDK's E.164 on the input (data-next-phone-e164); otherwise only a number
-      // that already starts with +.
-      var el = document.querySelector('[data-next-checkout-field="phone"][data-next-phone-e164]');
-      var e164 = el ? el.getAttribute('data-next-phone-e164') : '';
-      var phone = /^\+\d{8,15}$/.test(e164 || '') ? e164 : (/^\+/.test(String(c.phone || '')) ? c.phone : '');
-      if (phone) d.ph = String(phone).replace(/\D/g, '');
-      // The prospect cart requires first/last name; on field entry they may not be typed yet.
+      var email = clean(c.email);
+      if (email && EMAIL_RE.test(email)) d.em = email;
+      var ph = formPhone();
+      if (ph) d.ph = ph;
       if (field('fname')) d.fn = field('fname');
       if (field('lname')) d.ln = field('lname');
-      if (field('country')) d.country = field('country');
-      apply(d, 'contact:' + c.source);
+      collect(d);
+      if (DEBUG && window.console) console.log('[meta.adapter] collect', 'contact:' + c.source, Object.keys(pending));
     },
     contactRequiresMarketingConsent: false, // see Consent in the header
     contactOnFieldEntry: true
