@@ -260,3 +260,22 @@ test('event user_properties win over the page dl_user_data', () => {
   assert.equal(r.fbq[0][2].em, 'new@example.com');
   assert.equal(r.fbq[0][2].country, 'us');
 });
+
+test('Meta format: names and city lose punctuation, city loses spaces, US zip+4 cut to 5 digits', () => {
+  const r = load({ win: { __metaAdvancedMatching: 'true' } });
+  r.adapter.send('Purchase', {}, { event: 'dl_purchase', user_properties: {
+    customer_email: 'jane@example.com', customer_first_name: 'Mary-Jane', customer_last_name: "O'Brien",
+    customer_city: "St. John's", customer_zip: '10118-1234', customer_country: 'US' } });
+  const d = r.fbq[0][2];
+  assert.equal(d.fn, 'maryjane');
+  assert.equal(d.ln, 'obrien');
+  assert.equal(d.ct, 'stjohns');
+  assert.equal(d.zp, '10118');
+});
+
+test('Meta format: non-US postcode keeps its letters and digits, loses spaces and dash', () => {
+  const r = load({ win: { __metaAdvancedMatching: 'true' } });
+  r.adapter.send('Purchase', {}, { event: 'dl_purchase', user_properties: {
+    customer_email: 'jane@example.com', customer_zip: 'SW1A 1AA', customer_country: 'GB' } });
+  assert.equal(r.fbq[0][2].zp, 'sw1a1aa');
+});

@@ -114,13 +114,16 @@ base pixel block does a bare `fbq('init', id)`. `meta.adapter.js` loads whenever
   It only reads cookies, never writes them. Delete this part once #132 ships.
 - **Advanced matching — opt-in, `meta_advanced_matching_enabled: "true"`.** Collect on entry, init at the
   first Meta event with an email or phone. Valid checkout email/phone entry and the prospect cart only
-  *collect* `em`, `ph`, `fn`, `ln`. On `dl_begin_checkout`, `dl_add_payment_info` and `dl_purchase` the
+  *collect* `em`, `ph`, `fn`, `ln`. On `dl_begin_checkout`, `dl_add_payment_info`, `dl_purchase` and `dl_upsell_purchase` the
   adapter merges the event's `user_properties` and then the form at that moment (`em`, `ph`, `fn`, `ln`,
   `ct`, `st`, `zp`, `country`) and does one `fbq('init', pixelId, userData)` before the SDK's `fbq('track')`
   for that event. The form wins on checkout: in SDK 0.4.43 checkout-time `user_properties` keep the form's
   starting country and leave name, city, state and zip empty until Purchase. Receipt and upsell pages have
   no form: there the event's `user_properties` stand, and the page's `dl_user_data` fills the gaps (an
-  upsell purchase's own `user_properties` come from already-reset checkout state). A phone is used only as a valid E.164. The pixel keeps only the first init with data on a page, so details learned later on that page
+  upsell purchase's own `user_properties` come from already-reset checkout state). A phone is used only as a valid E.164.
+  Values follow Meta's format before the init: lowercase; names without punctuation; city without
+  punctuation or spaces; zip without spaces or dash, US zips cut to 5 digits. `dl_add_shipping_info` is not
+  used: the SDK fires it while the address is still being typed, so an init there would lose later fields. The pixel keeps only the first init with data on a page, so details learned later on that page
   are not sent; collecting first means a phone typed after the email still makes it in. Phone is optional —
   the init never waits for one. `ph` is digits including the country code — the input's
   `data-next-phone-e164` at checkout, `customer_phone` at purchase, never a guessed dial code. Known gap: on a

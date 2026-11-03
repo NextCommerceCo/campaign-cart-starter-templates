@@ -45,7 +45,10 @@
  *     the customer there. send() runs inside NextDataLayerTransformFn,
  *     i.e. BEFORE the SDK notifies its providers, so the init lands before the SDK's fbq('track') for the
  *     same event. On the receipt / upsell page this is the redirect-queued dl_purchase or dl_upsell_purchase. Phone is optional:
- *     the init never waits for one.
+ *     the init never waits for one. dl_add_shipping_info is deliberately not mapped: the SDK fires it while
+ *     the address is still being typed, so an init there would lose the fields typed after it.
+ *   - Values follow Meta's format before the init (see normalize()): lowercase; names without punctuation;
+ *     city without punctuation or spaces; zip without spaces or dash, US zips cut to 5 digits.
  *   - ph is digits including the country code: the SDK's E.164 (input data-next-phone-e164, SDK >= 0.4.41)
  *     at checkout (or the forwarder core's E.164 on field entry), user_properties.customer_phone at purchase, only
  *     when it is a valid E.164. No dial code is ever guessed. Known gap: on a
@@ -144,7 +147,7 @@
   }
 
   // SDK user_properties -> Meta advanced matching keys. The pixel hashes the values itself; here they
-  // are only trimmed and lowercased (spaces removed from city and zip).
+  // are only trimmed and lowercased here; normalize() applies Meta's format rules before the init.
   function fromUserProperties(up) {
     up = up || {};
     var d = {};
@@ -208,6 +211,23 @@
     return d;
   }
 
+  // Meta's customer-data format (pixel advanced matching + Conversions API customer information
+  // parameters): names lowercase with no punctuation; city lowercase with no punctuation and no spaces;
+  // zip lowercase with no spaces or dash, US zips cut to their first 5 digits.
+  var PUNCT = /[!-\/:-@\[-`{-~\u2018\u2019\u201c\u201d]/g; // ASCII punctuation + curly quotes
+  function normalize(d) {
+    if (d.fn) d.fn = d.fn.replace(PUNCT, '').trim();
+    if (d.ln) d.ln = d.ln.replace(PUNCT, '').trim();
+    if (d.ct) d.ct = d.ct.replace(PUNCT, '').replace(/\s+/g, '');
+    if (d.zp) {
+      var us = d.country === 'us' || /^\d{5}-\d{4}$/.test(d.zp);
+      d.zp = d.zp.replace(/[\s-]/g, '');
+      if (us && /^\d{9}$/.test(d.zp)) d.zp = d.zp.slice(0, 5);
+    }
+    for (var k in d) if (!d[k]) delete d[k];
+    return d;
+  }
+
   function collect(d) {
     for (var k in d) if (d[k]) pending[k] = d[k];
   }
@@ -224,6 +244,7 @@
     }
     var copy = {};
     for (var c in pending) copy[c] = pending[c];
+    normalize(copy);
     var vid = visitorId();
     if (vid) copy.external_id = vid;
     window.fbq('init', window.__metaPixelId, copy);
