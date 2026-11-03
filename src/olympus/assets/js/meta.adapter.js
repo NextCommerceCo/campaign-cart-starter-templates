@@ -14,7 +14,14 @@
  *   2. next-forwarder-core.js
  *   3. this file
  *
- * A. Cookie re-sync (works around campaign-cart#132; delete once that ships):
+ * Delete when (this file is a stopgap; each part goes when the SDK does the job itself):
+ *   - Part A cookie re-sync: delete when campaign-cart#132 ships.
+ *   - Part B form read on checkout (address, name, phone from the form): delete when campaign-cart#134 ships.
+ *   - Part B as a whole (advanced matching + fb_external_id): delete when the SDK's facebook provider sends
+ *     customer data and external_id itself. Remove it in that same release: the first fbq('init') with data
+ *     wins on a page, so the adapter and the SDK would fight over it.
+ *
+ * A. Cookie re-sync (works around campaign-cart#132):
  *   The SDK reads the pixel's _fbp / _fbc cookies once at boot, before fbevents.js has set them on a
  *   first visit, and keeps that empty value for the session — so the order (and a server-side Purchase
  *   built from it) goes without them. This copies the cookies into the SDK's attribution metadata
@@ -32,7 +39,7 @@
  *     and then the form at that moment (em, ph, fn, ln, ct, st, zp, country), then inits once if an email
  *     or phone is known, otherwise holds. The form wins on checkout: in SDK 0.4.43 checkout-time
  *     user_properties keep the form's starting country and leave name / city / state / zip empty until
- *     Purchase. Receipt / upsell pages have no form, so user_properties stand there. send() runs inside NextDataLayerTransformFn,
+ *     Purchase (campaign-cart#134). Receipt / upsell pages have no form, so user_properties stand there. send() runs inside NextDataLayerTransformFn,
  *     i.e. BEFORE the SDK notifies its providers, so the init lands before the SDK's fbq('track') for the
  *     same event. On the receipt / upsell page this is the redirect-queued dl_purchase. Phone is optional:
  *     the init never waits for one.
