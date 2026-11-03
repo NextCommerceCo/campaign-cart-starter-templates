@@ -25,7 +25,9 @@
   TikTok base pixels fire their own, so those adapters skip dl_user_data. Identity/PII (raw email/phone)
   via the core's onContact hook is OFF by default — opt in per vendor (triplewhale_contact_enabled →
   TW Contact; northbeam_identity_enabled → Northbeam.identify; tiktok_advanced_matching_enabled →
-  ttq.identify; snap_/pinterest_ likewise); Axon's purchase user_data is opt-in the same way
+  ttq.identify; snap_/pinterest_ likewise; meta_advanced_matching_enabled → one fbq('init', id, userData)
+  per page via meta.adapter.js, which also re-syncs _fbp/_fbc into the SDK whenever fb_pixel_id is set,
+  so the forwarder core now loads for pixel-only campaigns too); Axon's purchase user_data is opt-in the same way
   (axon_send_user_data: "true", read by the adapter itself, not the onContact hook). The
   accepts_marketing gate is PER ADAPTER: ad-platform advanced matching (TikTok/Snap/Pinterest) fires only on prospect-cart creation and only when the
   newsletter box is ticked; attribution vendors (Northbeam, Triple Whale) fire regardless of that box —
@@ -60,6 +62,11 @@
   // PageView and ecommerce events are sent by the Campaign Cart SDK when
   // analytics.providers.facebook.enabled is true in config.js. Do not add
   // a manual fbq('track', 'PageView') here — it double-fires the PageView.
+  // Exposed for meta.adapter.js (no events of its own): the _fbp/_fbc cookie re-sync always runs;
+  // advanced matching (one fbq('init', id, userData) per page) only when meta_advanced_matching_enabled
+  // is "true" — customer data, so only when the campaign's consent handling covers Meta.
+  window.__metaPixelId = '{{ campaign.fb_pixel_id }}';
+  window.__metaAdvancedMatching = '{{ campaign.meta_advanced_matching_enabled }}';
 </script>
 {% endif %}
 {% if campaign.rudderstack_write_key and campaign.rudderstack_write_key != "" and campaign.rudderstack_dataplane_url and campaign.rudderstack_dataplane_url != "" %}
@@ -266,7 +273,7 @@ window.TriplePixelData={TripleName:"{{ campaign.triplewhale_name }}",ver:"2.17",
 </script>
 {% comment %} End Pinterest Tag {% endcomment %}
 {% endif %}
-{%- capture _analytics_on -%}{{ campaign.ga4_id }}{{ campaign.axon_event_key }}{{ campaign.taboola_account_id }}{{ campaign.triplewhale_name }}{{ campaign.tiktok_pixel_id }}{{ campaign.northbeam_client_id }}{{ campaign.snap_pixel_id }}{{ campaign.pinterest_tag_id }}{%- endcapture -%}
+{%- capture _analytics_on -%}{{ campaign.fb_pixel_id }}{{ campaign.ga4_id }}{{ campaign.axon_event_key }}{{ campaign.taboola_account_id }}{{ campaign.triplewhale_name }}{{ campaign.tiktok_pixel_id }}{{ campaign.northbeam_client_id }}{{ campaign.snap_pixel_id }}{{ campaign.pinterest_tag_id }}{%- endcapture -%}
 {% if _analytics_on != "" %}
 {% comment %} Route C forwarder: shared core once, then each active vendor adapter. Plain (non-deferred) so the
      transformFn hook registers before the SDK module inits and fires events. On every page (this partial
@@ -280,5 +287,8 @@ window.TriplePixelData={TripleName:"{{ campaign.triplewhale_name }}",ver:"2.17",
 {% if campaign.northbeam_client_id and campaign.northbeam_client_id != "" %}<script src="{{ 'js/northbeam.adapter.js' | campaign_asset }}"></script>{% endif %}
 {% if campaign.snap_pixel_id and campaign.snap_pixel_id != "" %}<script src="{{ 'js/snapchat.adapter.js' | campaign_asset }}"></script>{% endif %}
 {% if campaign.pinterest_tag_id and campaign.pinterest_tag_id != "" %}<script src="{{ 'js/pinterest.adapter.js' | campaign_asset }}"></script>{% endif %}
+{% comment %} Meta extras — sends no events (the SDK's facebook provider does). Cookie re-sync always; advanced
+     matching only when meta_advanced_matching_enabled is "true" (checked in the file). {% endcomment %}
+{% if campaign.fb_pixel_id and campaign.fb_pixel_id != "" %}<script src="{{ 'js/meta.adapter.js' | campaign_asset }}"></script>{% endif %}
 {% endif %}
 {% endunless %}

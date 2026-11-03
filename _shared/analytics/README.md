@@ -12,7 +12,8 @@ _shared/analytics/
 │   └── analytics-body.html   → generated into every src/<family>/_includes/
 └── js/
     ├── next-forwarder-core.js   → generated into every src/<family>/assets/js/
-    └── <vendor>.adapter.js       (8 adapters)   → …/assets/js/
+    ├── <vendor>.adapter.js       (8 vendor adapters) → …/assets/js/
+    └── meta.adapter.js           (Meta Pixel extras, no events) → …/assets/js/
 ```
 
 ## Edit here, never the copies
@@ -42,7 +43,7 @@ entry.
 | Vendor | `campaigns.json` id (set to enable) | Optional |
 |---|---|---|
 | GTM | `gtm_id` | — |
-| Meta Pixel | `fb_pixel_id` | — |
+| Meta Pixel | `fb_pixel_id` | `meta_advanced_matching_enabled` (`"true"` = on, PII) — see [Meta Pixel extras](#meta-pixel-extras-metaadapterjs) |
 | RudderStack | `rudderstack_write_key` **and** `rudderstack_dataplane_url` (both required) | — |
 | GA4 | `ga4_id` | `ga4_allowed_events`, `ga4_blocked_events` |
 | AppLovin Axon | `axon_event_key` | `axon_item_category_id` (integer), `axon_send_user_data` (`"true"` = on, PII), `axon_allowed_events`, `axon_blocked_events` |
@@ -57,6 +58,7 @@ entry.
 entry (keep only the vendors you need; delete the rest — absent = off):
 
 ```json
+"meta_advanced_matching_enabled": "",
 "rudderstack_write_key": "",
 "rudderstack_dataplane_url": "",
 "ga4_id": "",
@@ -93,10 +95,51 @@ entry (keep only the vendors you need; delete the rest — absent = off):
 "pinterest_blocked_events": ""
 ```
 
-The shared forwarder core loads once when **any** Route C id is set; each adapter loads only when its own
+The shared forwarder core loads once when **any** Route C id or `fb_pixel_id` is set; each adapter loads only when its own
 id is set. Identity/PII (raw email/phone) is off unless the vendor's `*_enabled` flag is set. Adapter
 behaviour is regression-tested by `analytics-tracking-docs/examples/_harness/`; the Axon adapter also by
-`npm run test:axon-adapter` (in `lint:sdk:ci`).
+`npm run test:axon-adapter` and the Meta extras by `npm run test:meta-adapter` (both in `lint:sdk:ci`).
+
+### Meta Pixel extras (`meta.adapter.js`)
+
+The SDK's facebook provider (`analytics.providers.facebook` in `config.js`) sends every Meta event, and the
+base pixel block does a bare `fbq('init', id)`. `meta.adapter.js` loads whenever `fb_pixel_id` is set, after
+`next-forwarder-core.js`. It sends **no events of its own** and loads nothing from Meta.
+
+- **Cookie re-sync — always on with the pixel.** The SDK reads `_fbp` / `_fbc` once at boot, before
+  `fbevents.js` has set them on a first visit, and keeps the empty value for the session
+  ([campaign-cart#132](https://github.com/NextCommerceCo/campaign-cart/issues/132)). The adapter copies the
+  cookies into the attribution metadata with `next.addMetadata('fb_fbp' / 'fb_fbc')` when the SDK is ready
+  (polling every 500 ms for up to 10 s while one is missing) and again after `cart:updated` and `popstate`.
+  It only reads cookies, never writes them. Delete this part once #132 ships.
+- **Advanced matching — opt-in, `meta_advanced_matching_enabled: "true"`.** Collect on entry, init at the
+  first Meta event with an email or phone. Valid checkout email/phone entry and the prospect cart only
+  *collect* `em`, `ph`, `fn`, `ln`. On `dl_begin_checkout`, `dl_add_payment_info`, `dl_purchase` and `dl_upsell_purchase` the
+  adapter merges the event's `user_properties` and then the form at that moment (`em`, `ph`, `fn`, `ln`,
+  `ct`, `st`, `zp`, `country`) and does one `fbq('init', pixelId, userData)` before the SDK's `fbq('track')`
+  for that event. The form wins on checkout: in SDK 0.4.43 checkout-time `user_properties` keep the form's
+  starting country and leave name, city, state and zip empty until Purchase. Receipt and upsell pages have
+  no form: there the event's `user_properties` stand, and on an upsell purchase only the page's `dl_user_data` fills the gaps (an
+  upsell purchase's own `user_properties` come from already-reset checkout state). A phone is used only as a valid E.164.
+  Values follow Meta's format before the init: lowercase; names without punctuation; city without
+  punctuation or spaces; zip without spaces or dash, US zips cut to 5 digits. `dl_add_shipping_info` is not
+  used: the SDK fires it while the address is still being typed, so an init there would lose later fields. The pixel keeps only the first init with data on a page, so details learned later on that page
+  are not sent; collecting first means a phone typed after the email still makes it in. Phone is optional —
+  the init never waits for one. `ph` is digits including the country code — the input's
+  `data-next-phone-e164` at checkout, `customer_phone` at purchase, never a guessed dial code. Known gap: on a
+  return visit the SDK refills the phone after `dl_begin_checkout`, so that InitiateCheckout has no `ph`.
+  `external_id` is the SDK's anonymous `visitor_id` (`localStorage` `visitor_id__<scope>`), passed raw (the
+  pixel hashes it) and also saved as `next.addMetadata('fb_external_id', id)` for a server-side Purchase. The
+  scope is per API key + first path segment, so when more than one `visitor_id` key exists the adapter skips
+  `external_id` rather than guess (a public SDK getter would remove this). Never a customer id — the Campaigns
+  API is public. Not gated on `accepts_marketing`: Meta ties customer data to the pixel's own notice and
+  cookie consent, so if the pixel may fire, so may this. Set the flag only when the campaign's consent
+  handling covers sending customer data to Meta.
+- Debug: `?nfdebug=true` (or localhost) logs `[meta.adapter]` lines; `NextForwarder.getStatus()` lists
+  it as `meta` only when advanced matching is on (the cookie re-sync does not register with the forwarder). Never test with `?ignore=true` — it turns analytics off. When checking `ud[...]` by hand,
+  capture POST bodies as well as GET query strings: the pixel sends some events as hidden form POSTs.
+- `meta.adapter.js` has no counterpart in `analytics-tracking-docs/examples/` yet, so it is not in
+  `lint:upstream`'s file map; add it there once upstream gains a copy.
 
 ### Axon item fields
 
@@ -139,6 +182,7 @@ adapter declares `contactRequiresMarketingConsent` and `contactOnFieldEntry` whe
 |---|---|---|---|
 | Northbeam (`northbeam_identity_enabled`) | valid checkout **email entry** + prospect cart | **No** | Attribution: `identify(email)` joins the backend order to the session. Northbeam: "identify on every email input". |
 | Triple Whale (`triplewhale_contact_enabled`) | valid checkout **email/phone entry** + prospect cart | **No** | Attribution: `Contact` ties the session to the order (incl. the Shopify-ingested order on shop-sync). |
+| Meta (`meta_advanced_matching_enabled`) | valid checkout **email/phone entry** + prospect cart (collect only; init at the next Meta event) | **No** | Meta ties customer data to the pixel's own notice / cookie consent, not the newsletter box. One init per page (see Meta Pixel extras). |
 | TikTok / Snapchat / Pinterest (`*_advanced_matching_enabled`, `pinterest_enhanced_match_enabled`) | prospect cart only | **Yes** (default) | Ad-platform advanced matching is marketing use — it feeds the platform's identity graph and audiences. |
 
 Gating attribution identity on the newsletter box caps the attribution match rate at the newsletter opt-in
