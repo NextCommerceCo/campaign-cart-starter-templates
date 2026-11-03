@@ -119,7 +119,7 @@ base pixel block does a bare `fbq('init', id)`. `meta.adapter.js` loads whenever
   `ct`, `st`, `zp`, `country`) and does one `fbq('init', pixelId, userData)` before the SDK's `fbq('track')`
   for that event. The form wins on checkout: in SDK 0.4.43 checkout-time `user_properties` keep the form's
   starting country and leave name, city, state and zip empty until Purchase. Receipt and upsell pages have
-  no form: there the event's `user_properties` stand, and the page's `dl_user_data` fills the gaps (an
+  no form: there the event's `user_properties` stand, and on an upsell purchase only the page's `dl_user_data` fills the gaps (an
   upsell purchase's own `user_properties` come from already-reset checkout state). A phone is used only as a valid E.164.
   Values follow Meta's format before the init: lowercase; names without punctuation; city without
   punctuation or spaces; zip without spaces or dash, US zips cut to 5 digits. `dl_add_shipping_info` is not

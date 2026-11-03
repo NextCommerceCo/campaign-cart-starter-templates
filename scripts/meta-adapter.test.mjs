@@ -252,11 +252,11 @@ test('upsell page: dl_upsell_purchase with reset user_properties is filled from 
   assert.deepEqual(r.fbq[0][2], { em: 'jane@example.com', ph: '16505550194', fn: 'jane', country: 'us', external_id: 'vid-123' });
 });
 
-test('event user_properties win over the page dl_user_data', () => {
+test('upsell purchase: event user_properties win over the page dl_user_data', () => {
   const r = load({ win: { __metaAdvancedMatching: 'true', NextDataLayer: [
     { event: 'dl_user_data', user_properties: { customer_email: 'old@example.com', customer_country: 'CA' } },
   ] } });
-  r.adapter.send('Purchase', {}, { event: 'dl_purchase', user_properties: { customer_email: 'new@example.com', customer_country: 'US' } });
+  r.adapter.send('Purchase', {}, { event: 'dl_upsell_purchase', user_properties: { customer_email: 'new@example.com', customer_country: 'US' } });
   assert.equal(r.fbq[0][2].em, 'new@example.com');
   assert.equal(r.fbq[0][2].country, 'us');
 });
@@ -278,4 +278,18 @@ test('Meta format: non-US postcode keeps its letters and digits, loses spaces an
   r.adapter.send('Purchase', {}, { event: 'dl_purchase', user_properties: {
     customer_email: 'jane@example.com', customer_zip: 'SW1A 1AA', customer_country: 'GB' } });
   assert.equal(r.fbq[0][2].zp, 'sw1a1aa');
+});
+
+test('dl_user_data is not used outside the upsell purchase', () => {
+  const r = load({ win: { __metaAdvancedMatching: 'true', NextDataLayer: [
+    { event: 'dl_user_data', user_properties: { customer_email: 'saved@example.com', customer_first_name: 'Saved' } },
+  ] } });
+  r.adapter.send('InitiateCheckout', {}, { event: 'dl_begin_checkout', user_properties: {} });
+  assert.equal(r.fbq.length, 0, 'holds: no em/ph from the event or the form');
+});
+
+test('E.164 minimum matches the core: 7 digits after "+" is kept', () => {
+  const r = load({ win: { __metaAdvancedMatching: 'true' } });
+  r.adapter.send('Purchase', {}, { event: 'dl_purchase', user_properties: { customer_phone: '+2901234' } });
+  assert.equal(r.fbq[0][2].ph, '2901234');
 });

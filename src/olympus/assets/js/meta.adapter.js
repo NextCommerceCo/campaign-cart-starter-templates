@@ -35,8 +35,8 @@
  *   Collect on entry, init at the first Meta event with em/ph:
  *   - Checkout field entry (onContact: prospect cart + valid email/phone) only COLLECTS em, ph, fn, ln.
  *     It never inits, so a phone typed after the email is not lost.
- *   - dl_begin_checkout / dl_add_payment_info / dl_purchase / dl_upsell_purchase: send() merges the page's
- *     latest dl_user_data (the SDK's saved shopper), then the event's user_properties, then the form at
+ *   - dl_begin_checkout / dl_add_payment_info / dl_purchase / dl_upsell_purchase: send() merges the event's
+ *     user_properties (on dl_upsell_purchase, filled from the page's latest dl_user_data first), then the form at
  *     that moment (em, ph, fn, ln, ct, st, zp, country), each later source winning, then inits once if an email
  *     or phone is known, otherwise holds. The form wins on checkout: in SDK 0.4.43 checkout-time
  *     user_properties keep the form's starting country and leave name / city / state / zip empty until
@@ -164,10 +164,11 @@
     return d;
   }
 
-  // E.164 ("+" then 8-15 digits) -> digits without "+". '' for anything else: no dial code is guessed.
+  // E.164 ("+" then 7-15 digits, the forwarder core's / SDK's minimum) -> digits without "+". '' for anything
+  // else: no dial code is guessed.
   function digitsE164(v) {
     var s = (v === undefined || v === null) ? '' : String(v).replace(/[\s().-]/g, '');
-    return /^\+\d{8,15}$/.test(s) ? s.slice(1) : '';
+    return /^\+\d{7,15}$/.test(s) ? s.slice(1) : '';
   }
 
   // The shopper as this page's latest dl_user_data reported it (the SDK's persisted user data). On an
@@ -274,8 +275,9 @@
     },
     allowedEvents: ['dl_begin_checkout', 'dl_add_payment_info', 'dl_purchase', 'dl_upsell_purchase'],
     send: function (name, ec, evt) {
-      // Lowest to highest: the page's dl_user_data, the event's user_properties, the form (see B).
-      collect(fromUserProperties(pageUserProperties()));
+      // Lowest to highest: the page's dl_user_data (upsell purchase only), the event's user_properties,
+      // the form (see B).
+      if (evt && evt.event === 'dl_upsell_purchase') collect(fromUserProperties(pageUserProperties()));
       collect(fromUserProperties(evt && evt.user_properties));
       collect(fromForm());
       apply(name);
