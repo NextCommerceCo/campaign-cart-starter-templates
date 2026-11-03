@@ -34,16 +34,20 @@
  *   Collect on entry, init at the first Meta event with em/ph:
  *   - Checkout field entry (onContact: prospect cart + valid email/phone) only COLLECTS em, ph, fn, ln.
  *     It never inits, so a phone typed after the email is not lost.
- *   - dl_begin_checkout / dl_add_payment_info / dl_purchase: send() merges the event's user_properties
- *     and then the form at that moment (em, ph, fn, ln, ct, st, zp, country), then inits once if an email
+ *   - dl_begin_checkout / dl_add_payment_info / dl_purchase / dl_upsell_purchase: send() merges the page's
+ *     latest dl_user_data (the SDK's saved shopper), then the event's user_properties, then the form at
+ *     that moment (em, ph, fn, ln, ct, st, zp, country), each later source winning, then inits once if an email
  *     or phone is known, otherwise holds. The form wins on checkout: in SDK 0.4.43 checkout-time
  *     user_properties keep the form's starting country and leave name / city / state / zip empty until
- *     Purchase (campaign-cart#134). Receipt / upsell pages have no form, so user_properties stand there. send() runs inside NextDataLayerTransformFn,
+ *     Purchase (campaign-cart#134). Receipt / upsell pages have no form. On an upsell page the
+ *     dl_upsell_purchase user_properties come from already-reset checkout state, so dl_user_data fills
+ *     the customer there. send() runs inside NextDataLayerTransformFn,
  *     i.e. BEFORE the SDK notifies its providers, so the init lands before the SDK's fbq('track') for the
- *     same event. On the receipt / upsell page this is the redirect-queued dl_purchase. Phone is optional:
+ *     same event. On the receipt / upsell page this is the redirect-queued dl_purchase or dl_upsell_purchase. Phone is optional:
  *     the init never waits for one.
  *   - ph is digits including the country code: the SDK's E.164 (input data-next-phone-e164, SDK >= 0.4.41)
- *     at checkout, user_properties.customer_phone at purchase. No dial code is ever guessed. Known gap: on a
+ *     at checkout (or the forwarder core's E.164 on field entry), user_properties.customer_phone at purchase, only
+ *     when it is a valid E.164. No dial code is ever guessed. Known gap: on a
  *     return visit the SDK refills the phone (and data-next-phone-e164) after dl_begin_checkout, so that
  *     InitiateCheckout goes without ph.
  *   - external_id = the SDK's anonymous visitor_id, passed raw — the pixel sends its SHA-256. The same raw
@@ -72,8 +76,9 @@
 
   // ---- A. Cookie re-sync (independent of the forwarder and of the advanced-matching flag) ----------------
   function cookie(name) {
+    // First match: the jar can hold two same-named cookies (different path / domain).
     var parts = ('; ' + document.cookie).split('; ' + name + '=');
-    return parts.length === 2 ? (parts.pop().split(';').shift() || '') : '';
+    return parts.length >= 2 ? (parts[1].split(';').shift() || '') : '';
   }
 
   // true once nothing is left to wait for.
@@ -144,7 +149,7 @@
     var d = {};
     var email = clean(up.customer_email);
     if (email && EMAIL_RE.test(email)) d.em = email;
-    var phone = clean(up.customer_phone).replace(/\D/g, ''); // digits incl. country code
+    var phone = digitsE164(up.customer_phone); // digits incl. country code
     if (phone) d.ph = phone;
     if (clean(up.customer_first_name)) d.fn = clean(up.customer_first_name);
     if (clean(up.customer_last_name)) d.ln = clean(up.customer_last_name);
@@ -153,6 +158,24 @@
     if (clean(up.customer_zip)) d.zp = clean(up.customer_zip).replace(/\s+/g, '');
     if (clean(up.customer_country)) d.country = clean(up.customer_country);
     return d;
+  }
+
+  // E.164 ("+" then 8-15 digits) -> digits without "+". '' for anything else: no dial code is guessed.
+  function digitsE164(v) {
+    var s = (v === undefined || v === null) ? '' : String(v).replace(/[\s().-]/g, '');
+    return /^\+\d{8,15}$/.test(s) ? s.slice(1) : '';
+  }
+
+  // The shopper as this page's latest dl_user_data reported it (the SDK's persisted user data). On an
+  // upsell page this is the only source with the customer: the SDK builds dl_upsell_purchase's
+  // user_properties from checkout state it has already reset.
+  function pageUserProperties() {
+    var dl = window.NextDataLayer;
+    if (!dl || typeof dl.length !== 'number') return undefined;
+    for (var i = dl.length - 1; i >= 0; i--) {
+      if (dl[i] && dl[i].event === 'dl_user_data' && dl[i].user_properties) return dl[i].user_properties;
+    }
+    return undefined;
   }
 
   // Checkout form value by SDK field name ('' when absent).
@@ -164,8 +187,7 @@
   // Phone as digits incl. country code, only from the SDK's E.164 (data-next-phone-e164). '' otherwise.
   function formPhone() {
     var el = document.querySelector('[data-next-checkout-field="phone"][data-next-phone-e164]');
-    var e164 = el ? el.getAttribute('data-next-phone-e164') : '';
-    return /^\+\d{8,15}$/.test(e164 || '') ? e164.replace(/\D/g, '') : '';
+    return el ? digitsE164(el.getAttribute('data-next-phone-e164')) : '';
   }
 
   // The checkout form as it is now (absent on receipt / upsell pages): em, ph, fn, ln and the shipping
@@ -225,11 +247,13 @@
     map: {
       dl_begin_checkout:   'InitiateCheckout',
       dl_add_payment_info: 'AddPaymentInfo',
-      dl_purchase:         'Purchase'
+      dl_purchase:         'Purchase',
+      dl_upsell_purchase:  'Purchase'
     },
-    allowedEvents: ['dl_begin_checkout', 'dl_add_payment_info', 'dl_purchase'],
+    allowedEvents: ['dl_begin_checkout', 'dl_add_payment_info', 'dl_purchase', 'dl_upsell_purchase'],
     send: function (name, ec, evt) {
-      // The event's user_properties first, then the form, so the form wins on checkout (see B).
+      // Lowest to highest: the page's dl_user_data, the event's user_properties, the form (see B).
+      collect(fromUserProperties(pageUserProperties()));
       collect(fromUserProperties(evt && evt.user_properties));
       collect(fromForm());
       apply(name);
@@ -239,7 +263,8 @@
       var d = {};
       var email = clean(c.email);
       if (email && EMAIL_RE.test(email)) d.em = email;
-      var ph = formPhone();
+      // The core's phone is already E.164-or-nothing (SDK attribute, intl-tel-input or a typed "+").
+      var ph = digitsE164(c.phone) || formPhone();
       if (ph) d.ph = ph;
       if (field('fname')) d.fn = field('fname');
       if (field('lname')) d.ln = field('lname');

@@ -182,7 +182,7 @@ test('visitor_id: more than one scoped key -> no external_id and no fb_external_
 
 test('receipt dl_purchase: user_properties -> em, ph, fn, ln, ct, st, zp, country', () => {
   const r = load({ win: { __metaAdvancedMatching: 'yes' } });
-  assert.deepEqual(Object.keys(r.adapter.map), ['dl_begin_checkout', 'dl_add_payment_info', 'dl_purchase']);
+  assert.deepEqual(Object.keys(r.adapter.map), ['dl_begin_checkout', 'dl_add_payment_info', 'dl_purchase', 'dl_upsell_purchase']);
   r.adapter.send('Purchase', {}, { event: 'dl_purchase', user_properties: {
     customer_email: 'JANE@example.com', customer_phone: '+1 650 555 0194', customer_first_name: 'Jane',
     customer_last_name: 'Doe', customer_city: 'San Francisco', customer_province_code: 'CA',
@@ -219,4 +219,44 @@ test('without next-forwarder-core.js the cookie re-sync still runs', () => {
   const s = sdk({});
   ready(r, s);
   assert.deepEqual(s.added, [['fb_fbp', 'fb.1.1.2']]);
+});
+
+test('cookie re-sync: two same-named cookies -> the first one is used, not dropped', () => {
+  const r = load({ cookie: '_fbp=fb.1.111.first; _fbp=fb.1.111.second' });
+  const s = sdk({});
+  ready(r, s);
+  assert.deepEqual(s.added, [['fb_fbp', 'fb.1.111.first']]);
+});
+
+test('user_properties phone must be E.164; anything else is dropped, never guessed', () => {
+  const r = load({ win: { __metaAdvancedMatching: 'true' } });
+  r.adapter.send('Purchase', {}, { event: 'dl_purchase', user_properties: {
+    customer_email: 'jane@example.com', customer_phone: '555 0194' } });
+  assert.equal(r.fbq[0][2].ph, undefined);
+  assert.equal(r.fbq[0][2].em, 'jane@example.com');
+});
+
+test('onContact uses the core\'s E.164 phone when the input has no data-next-phone-e164', () => {
+  const r = load({ win: { __metaAdvancedMatching: 'true' }, fields: { phone: { value: '(650) 555-0194' } } });
+  r.adapter.onContact({ email: 'jane@example.com', phone: '+16505550194', source: 'field' });
+  r.adapter.send('InitiateCheckout', {}, { event: 'dl_begin_checkout', user_properties: {} });
+  assert.equal(r.fbq[0][2].ph, '16505550194');
+});
+
+test('upsell page: dl_upsell_purchase with reset user_properties is filled from the page dl_user_data', () => {
+  const r = load({ win: { __metaAdvancedMatching: 'true', NextDataLayer: [
+    { event: 'dl_user_data', user_properties: { customer_email: 'jane@example.com', customer_phone: '+16505550194',
+      customer_first_name: 'Jane', customer_country: 'US' } },
+  ] } });
+  r.adapter.send('Purchase', {}, { event: 'dl_upsell_purchase', user_properties: { visitor_type: 'guest' } });
+  assert.deepEqual(r.fbq[0][2], { em: 'jane@example.com', ph: '16505550194', fn: 'jane', country: 'us', external_id: 'vid-123' });
+});
+
+test('event user_properties win over the page dl_user_data', () => {
+  const r = load({ win: { __metaAdvancedMatching: 'true', NextDataLayer: [
+    { event: 'dl_user_data', user_properties: { customer_email: 'old@example.com', customer_country: 'CA' } },
+  ] } });
+  r.adapter.send('Purchase', {}, { event: 'dl_purchase', user_properties: { customer_email: 'new@example.com', customer_country: 'US' } });
+  assert.equal(r.fbq[0][2].em, 'new@example.com');
+  assert.equal(r.fbq[0][2].country, 'us');
 });

@@ -119,7 +119,8 @@ base pixel block does a bare `fbq('init', id)`. `meta.adapter.js` loads whenever
   `ct`, `st`, `zp`, `country`) and does one `fbq('init', pixelId, userData)` before the SDK's `fbq('track')`
   for that event. The form wins on checkout: in SDK 0.4.43 checkout-time `user_properties` keep the form's
   starting country and leave name, city, state and zip empty until Purchase. Receipt and upsell pages have
-  no form, so `user_properties` stand there. The pixel keeps only the first init with data on a page, so details learned later on that page
+  no form: there the event's `user_properties` stand, and the page's `dl_user_data` fills the gaps (an
+  upsell purchase's own `user_properties` come from already-reset checkout state). A phone is used only as a valid E.164. The pixel keeps only the first init with data on a page, so details learned later on that page
   are not sent; collecting first means a phone typed after the email still makes it in. Phone is optional —
   the init never waits for one. `ph` is digits including the country code — the input's
   `data-next-phone-e164` at checkout, `customer_phone` at purchase, never a guessed dial code. Known gap: on a
@@ -132,7 +133,7 @@ base pixel block does a bare `fbq('init', id)`. `meta.adapter.js` loads whenever
   cookie consent, so if the pixel may fire, so may this. Set the flag only when the campaign's consent
   handling covers sending customer data to Meta.
 - Debug: `?nfdebug=true` (or localhost) logs `[meta.adapter]` lines; `NextForwarder.getStatus()` lists
-  it as `meta`. Never test with `?ignore=true` — it turns analytics off. When checking `ud[...]` by hand,
+  it as `meta` only when advanced matching is on (the cookie re-sync does not register with the forwarder). Never test with `?ignore=true` — it turns analytics off. When checking `ud[...]` by hand,
   capture POST bodies as well as GET query strings: the pixel sends some events as hidden form POSTs.
 - `meta.adapter.js` has no counterpart in `analytics-tracking-docs/examples/` yet, so it is not in
   `lint:upstream`'s file map; add it there once upstream gains a copy.
