@@ -127,13 +127,25 @@ test('checkout contact only collects; the next Meta event inits once with em, E.
   assert.equal(r.fbq.length, 1, 'first init wins: never re-inits on the same page');
 });
 
-test('send reads the form at event time (no prior onContact); country is never read from the form', () => {
+test('send reads the form at event time (no prior onContact), address included', () => {
   const r = load({
     win: { __metaAdvancedMatching: 'true' },
-    fields: { email: { value: 'A@B.co' }, phone: { value: '07700 900123', e164: '+447700900123' }, country: { value: 'GB' } },
+    fields: { email: { value: 'A@B.co' }, phone: { value: '07700 900123', e164: '+447700900123' }, country: { value: 'GB' },
+      city: { value: 'Long Sutton' }, province: { value: 'LIN' }, postal: { value: 'PE12 9AA' } },
   });
   r.adapter.send('InitiateCheckout', {}, { event: 'dl_begin_checkout', user_properties: {} });
-  assert.deepEqual(r.fbq[0][2], { em: 'a@b.co', ph: '447700900123', external_id: 'vid-123' });
+  assert.deepEqual(r.fbq[0][2], { em: 'a@b.co', ph: '447700900123', ct: 'longsutton', st: 'lin', zp: 'pe129aa', country: 'gb', external_id: 'vid-123' });
+});
+
+test('on checkout the form wins over stale user_properties (starting country, empty address)', () => {
+  const r = load({
+    win: { __metaAdvancedMatching: 'true' },
+    fields: { fname: { value: 'Jane' }, country: { value: 'US' }, city: { value: 'New York' }, province: { value: 'NY' }, postal: { value: '10118' } },
+  });
+  r.adapter.send('AddPaymentInfo', {}, { event: 'dl_add_payment_info', user_properties: {
+    customer_email: 'jane@example.com', customer_country: 'CA', customer_first_name: '', customer_city: '', customer_zip: '',
+  } });
+  assert.deepEqual(r.fbq[0][2], { em: 'jane@example.com', country: 'us', fn: 'jane', ct: 'newyork', st: 'ny', zp: '10118', external_id: 'vid-123' });
 });
 
 test('a national phone with no E.164 attribute is not sent; init does not wait for a phone', () => {

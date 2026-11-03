@@ -115,9 +115,11 @@ base pixel block does a bare `fbq('init', id)`. `meta.adapter.js` loads whenever
 - **Advanced matching — opt-in, `meta_advanced_matching_enabled: "true"`.** Collect on entry, init at the
   first Meta event with an email or phone. Valid checkout email/phone entry and the prospect cart only
   *collect* `em`, `ph`, `fn`, `ln`. On `dl_begin_checkout`, `dl_add_payment_info` and `dl_purchase` the
-  adapter merges the form at that moment with the event's `user_properties` (`em`, `ph`, `fn`, `ln`, `ct`,
-  `st`, `zp`, `country`) and does one `fbq('init', pixelId, userData)` before the SDK's `fbq('track')` for
-  that event. The pixel keeps only the first init with data on a page, so details learned later on that page
+  adapter merges the event's `user_properties` and then the form at that moment (`em`, `ph`, `fn`, `ln`,
+  `ct`, `st`, `zp`, `country`) and does one `fbq('init', pixelId, userData)` before the SDK's `fbq('track')`
+  for that event. The form wins on checkout: in SDK 0.4.43 checkout-time `user_properties` keep the form's
+  starting country and leave name, city, state and zip empty until Purchase. Receipt and upsell pages have
+  no form, so `user_properties` stand there. The pixel keeps only the first init with data on a page, so details learned later on that page
   are not sent; collecting first means a phone typed after the email still makes it in. Phone is optional —
   the init never waits for one. `ph` is digits including the country code — the input's
   `data-next-phone-e164` at checkout, `customer_phone` at purchase, never a guessed dial code. Known gap: on a

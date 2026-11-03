@@ -27,9 +27,11 @@
  *   Collect on entry, init at the first Meta event with em/ph:
  *   - Checkout field entry (onContact: prospect cart + valid email/phone) only COLLECTS em, ph, fn, ln.
  *     It never inits, so a phone typed after the email is not lost.
- *   - dl_begin_checkout / dl_add_payment_info / dl_purchase: send() merges the form (em, ph, fn, ln read
- *     at that moment) and the event's user_properties (em, ph, fn, ln, ct, st, zp, country), then inits
- *     once if an email or phone is known, otherwise holds. send() runs inside NextDataLayerTransformFn,
+ *   - dl_begin_checkout / dl_add_payment_info / dl_purchase: send() merges the event's user_properties
+ *     and then the form at that moment (em, ph, fn, ln, ct, st, zp, country), then inits once if an email
+ *     or phone is known, otherwise holds. The form wins on checkout: in SDK 0.4.43 checkout-time
+ *     user_properties keep the form's starting country and leave name / city / state / zip empty until
+ *     Purchase. Receipt / upsell pages have no form, so user_properties stand there. send() runs inside NextDataLayerTransformFn,
  *     i.e. BEFORE the SDK notifies its providers, so the init lands before the SDK's fbq('track') for the
  *     same event. On the receipt / upsell page this is the redirect-queued dl_purchase. Phone is optional:
  *     the init never waits for one.
@@ -159,7 +161,8 @@
     return /^\+\d{8,15}$/.test(e164 || '') ? e164.replace(/\D/g, '') : '';
   }
 
-  // em, ph, fn, ln from the checkout form as it is now (absent on receipt / upsell pages).
+  // The checkout form as it is now (absent on receipt / upsell pages): em, ph, fn, ln and the shipping
+  // address, cleaned like fromUserProperties().
   function fromForm() {
     var d = {};
     var email = field('email');
@@ -168,6 +171,10 @@
     if (ph) d.ph = ph;
     if (field('fname')) d.fn = field('fname');
     if (field('lname')) d.ln = field('lname');
+    if (field('city')) d.ct = field('city').replace(/\s+/g, '');
+    if (field('province')) d.st = field('province');
+    if (field('postal')) d.zp = field('postal').replace(/\s+/g, '');
+    if (field('country')) d.country = field('country');
     return d;
   }
 
@@ -215,8 +222,9 @@
     },
     allowedEvents: ['dl_begin_checkout', 'dl_add_payment_info', 'dl_purchase'],
     send: function (name, ec, evt) {
-      collect(fromForm());
+      // The event's user_properties first, then the form, so the form wins on checkout (see B).
       collect(fromUserProperties(evt && evt.user_properties));
+      collect(fromForm());
       apply(name);
     },
     // Collect only — the init waits for the next Meta event (see B in the header).
