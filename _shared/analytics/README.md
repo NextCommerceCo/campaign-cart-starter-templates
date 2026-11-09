@@ -168,8 +168,24 @@ base pixel block does a bare `fbq('init', id)`. `meta.adapter.js` loads whenever
 - **Without `user_data`, Axon flags the purchase but still records it**: revenue and `transaction_id`
   arrive as normal. With `?nfdebug=true` (or on localhost) the adapter logs one console warning per page
   when a purchase goes out without it.
+- **On SDK 0.5 `user_data` comes from the order.** 0.5's `user_properties` carry `visitor_type` only, so the
+  adapter reads the order's email and phone through the forwarder core's customer bridge. `user_id` is
+  0.4.x-only: 0.5's order has no customer id, so a 0.5 purchase sends email and phone.
 - `axon.adapter.js` is ahead of `analytics-tracking-docs/examples/`, so `lint:upstream` reports drift for it
   until upstream is synced.
+
+### AddToCart on SDK 0.5: forwarder adapters count shoppers, Meta counts adds
+
+SDK 0.5 pushes `dl_add_to_cart` for every cart change, including a cart filled before the page (default
+bundle, `forcePackageId`) and every bundle swap, and marks the first add in the tab `first_in_session: true`.
+The forwarder core passes only that first add to its adapters (GA4, Axon, Taboola, TikTok, Snapchat,
+Pinterest, Triple Whale, Northbeam), so their AddToCart counts shoppers. An adapter that wants every add sets
+`allAddToCart: true` when it registers. SDK 0.4.x pushes carry no `first_in_session` and all pass.
+
+The SDK's own Meta and GTM destinations don't go through the forwarder: on 0.5 Meta gets `AddToCart` for every
+add, so the same funnel shows more AddToCart in Meta than in GA4 or Axon. That gap is expected; compare
+Meta's AddToCart with the forwarder vendors' only on 0.4.x, or count first adds in GTM with a trigger on
+`first_in_session`.
 
 ### Identity: the `accepts_marketing` gate is per adapter
 

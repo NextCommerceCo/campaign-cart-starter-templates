@@ -80,7 +80,7 @@ test('uses own-property checks for picker slugs and evidence references', () => 
 
 test('rejects malformed current SDK metadata', () => {
   const errors = validate(structuredClone(base), { registry: { olympus: { sdk_version: 'latest' } } });
-  assert.ok(errors.some((error) => error.includes('sdk_version must match x.y.z')));
+  assert.ok(errors.some((error) => error.includes('sdk_version must be an exact SDK release')));
 });
 
 test('accepts a minor SDK bump (0.5.x) in the registry and evidence', () => {

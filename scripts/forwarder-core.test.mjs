@@ -76,13 +76,18 @@ const CHECKOUT = {
   shipping_address: { first_name: 'Jan', last_name: 'D', line1: '2 Side', city: 'Leeds', postcode: 'LS1 1AA', country: 'GB', phone: '+447700900123' },
 };
 
+// An adapter that opts into the customer bridge.
+const optIn = (r, customerData = true) => r.fwd.register(r.adapter({ name: 'id', customerData }));
+
 test('customer(): {} on SDK 0.4 (no next.snapshot, no next.analytics)', () => {
   const r = load({ next: { on() {} } });
+  optIn(r);
   assert.deepEqual({ ...r.fwd.customer({ event: 'dl_purchase' }) }, {});
 });
 
 test('customer(): purchase reads next.snapshot().order, flat and trimmed', () => {
   const r = load({ next: { snapshot: () => ({ order: ORDER, checkout: CHECKOUT }) } });
+  optIn(r);
   assert.deepEqual({ ...r.fwd.customer({ event: 'dl_purchase' }) }, {
     email: 'jane@example.com', phone: '+16505550194', first_name: 'Jane', last_name: 'Doe',
     city: 'San Francisco', state: 'CA', postcode: '94107', country: 'US',
@@ -91,16 +96,61 @@ test('customer(): purchase reads next.snapshot().order, flat and trimmed', () =>
 
 test('customer(): checkout events read the checkout, address phone and names filling the user', () => {
   const r = load({ next: { snapshot: () => ({ checkout: CHECKOUT }) } });
+  optIn(r);
   assert.deepEqual({ ...r.fwd.customer({ event: 'dl_begin_checkout' }) }, {
     email: 'typed@example.com', phone: '+447700900123', first_name: 'Jan', last_name: 'D',
     city: 'Leeds', postcode: 'LS1 1AA', country: 'GB',
   });
 });
 
+test('customer(): one source wholesale, never the order email with the checkout address', () => {
+  const order = { user: { email: 'jane@example.com' } }; // no address on the order
+  const r = load({ next: { snapshot: () => ({ order, checkout: CHECKOUT }) } });
+  optIn(r);
+  assert.deepEqual({ ...r.fwd.customer({ event: 'dl_purchase' }) }, { email: 'jane@example.com' });
+  const empty = load({ next: { snapshot: () => ({ order: {}, checkout: CHECKOUT }) } });
+  optIn(empty);
+  assert.equal(empty.fwd.customer({ event: 'dl_purchase' }).email, 'typed@example.com', 'an empty order falls back whole');
+});
+
+test('customer(): an empty shipping address gives way to the billing address, whole', () => {
+  const checkout = {
+    user: { email: 'jane@example.com' },
+    shipping_address: { first_name: 'Jane' },
+    billing_address: { city: 'Leeds', postcode: 'LS1 1AA', country: 'GB' },
+  };
+  const r = load({ next: { snapshot: () => ({ checkout }) } });
+  optIn(r);
+  assert.deepEqual({ ...r.fwd.customer({ event: 'dl_begin_checkout' }) }, {
+    email: 'jane@example.com', city: 'Leeds', postcode: 'LS1 1AA', country: 'GB',
+  });
+});
+
+test('customer(): no opt-in adapter -> {} and no next.analytics subscription', () => {
+  let calls = 0;
+  const r = load({ next: { snapshot: () => ({ order: ORDER }), analytics: { on: () => { calls++; } } } });
+  r.fwd.register(r.adapter());
+  assert.deepEqual({ ...r.fwd.customer({ event: 'dl_purchase' }) }, {});
+  r.listeners['next:initialized']?.forEach((fn) => fn());
+  (r.window.nextReady || []).forEach((fn) => fn(r.window.next));
+  assert.equal(calls, 0);
+});
+
+test('customer(): a customerData function opts in only while it returns true', () => {
+  let calls = 0, on = false;
+  const r = load({ next: { snapshot: () => ({ order: ORDER }), analytics: { on: () => { calls++; } } } });
+  optIn(r, () => on);
+  assert.deepEqual({ ...r.fwd.customer({ event: 'dl_purchase' }) }, {});
+  assert.equal(calls, 0);
+  on = true;
+  assert.equal(r.fwd.customer({ event: 'dl_purchase' }).email, 'jane@example.com');
+  assert.equal(calls, 1);
+});
+
 test('customer(): falls back to the latest next.analytics.on order / checkout when snapshot has none', () => {
   let handler;
   const r = load({ next: { snapshot: () => ({}), analytics: { on: (name, fn) => { assert.equal(name, '*'); handler = fn; } } } });
-  r.fwd.customer({ event: 'dl_purchase' }); // hooks lazily
+  optIn(r);
   handler({ object: 'order', event_type: 'checkout_completed', data: ORDER });
   handler({ object: 'cart_line', event_type: 'product_added_to_cart', data: {} });
   assert.equal(r.fwd.customer({ event: 'dl_upsell_purchase' }).email, 'jane@example.com');
@@ -110,8 +160,35 @@ test('customer(): falls back to the latest next.analytics.on order / checkout wh
 test('customer(): next.analytics.on is hooked once, at next:initialized when the SDK loads after the core', () => {
   let calls = 0;
   const r = load();
+  optIn(r);
   r.window.next = { analytics: { on: () => { calls++; } } };
   r.listeners['next:initialized'].forEach((fn) => fn());
   r.fwd.customer({ event: 'dl_purchase' });
   assert.equal(calls, 1);
+});
+
+test('customer(): a throwing next.analytics.on is retried, not given up on', () => {
+  let calls = 0;
+  const r = load({ next: { analytics: { on: () => { calls++; if (calls === 1) throw new Error('not ready'); } } } });
+  optIn(r);
+  r.fwd.customer({ event: 'dl_purchase' });
+  r.fwd.customer({ event: 'dl_purchase' });
+  assert.equal(calls, 2, 'second attempt subscribes');
+});
+
+test('customer(): uses the SDK instance window.nextReady hands over when window.next is not set', () => {
+  let calls = 0;
+  const instance = { snapshot: () => ({ order: ORDER }), analytics: { on: () => { calls++; } } };
+  const r = load();
+  optIn(r);
+  r.window.nextReady.forEach((fn) => fn(instance));
+  assert.equal(calls, 1);
+  assert.equal(r.fwd.customer({ event: 'dl_purchase' }).email, 'jane@example.com');
+});
+
+test('a dl_add_to_cart flag encoded other than true counts as a repeat add', () => {
+  const r = load();
+  r.fwd.register(r.adapter());
+  ['false', 0, null].forEach((v, i) => r.push({ event: 'dl_add_to_cart', event_id: 'x' + i, first_in_session: v, ecommerce: {} }));
+  assert.deepEqual(r.sent, []);
 });

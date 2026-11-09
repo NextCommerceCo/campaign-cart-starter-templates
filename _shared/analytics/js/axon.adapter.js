@@ -36,7 +36,8 @@
  *
  * SDK 0.5: user_properties carry { visitor_type: 'guest' } only, so user_data falls back to the order's user
  * (email, phone) from the SDK's tracking events through NextForwarder.customer(evt); user_properties still
- * win where they carry a value (0.4.x).
+ * win where they carry a value (0.4.x). user_id is 0.4.x-only: 0.5's tracking Order.user has email, phone
+ * and names but no customer id, so a 0.5 purchase sends email and phone only.
  *
  * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus().
  */
@@ -192,6 +193,8 @@
     map: MAP,
     allowedEvents: allowed,
     blockedEvents: blocked,
+    // The core's SDK 0.5 customer bridge, only while user_data is on (read at call time, like the flag).
+    customerData: function () { return window.__axonSendUserData === true; },
     send: function (name, ec, evt) {
       // page_view is not an ecommerce event — send it bare.
       if (name === 'page_view') { window.axon('track', 'page_view'); return; }

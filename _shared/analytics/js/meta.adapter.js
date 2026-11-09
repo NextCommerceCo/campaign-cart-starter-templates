@@ -314,6 +314,7 @@
       if (DEBUG && window.console) console.log('[meta.adapter] collect', 'contact:' + c.source, Object.keys(pending));
     },
     contactRequiresMarketingConsent: false, // see Consent in the header
-    contactOnFieldEntry: true
+    contactOnFieldEntry: true,
+    customerData: true // SDK 0.5 shopper (fromCustomer); this registration only runs with advanced matching on
   });
 })();

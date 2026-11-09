@@ -52,7 +52,7 @@ export function validateVerificationManifest({
       continue;
     }
     if (!SDK_VERSION_RE.test(record.sdk_version || '')) {
-      errors.push(`evidence.${evidenceId}.sdk_version must match x.y.z`);
+      errors.push(`evidence.${evidenceId}.sdk_version must be an exact SDK release such as 0.4.43 (x.y.z), not a tag or range`);
     }
     if (!isDateTime(record.verified_at)) {
       errors.push(`evidence.${evidenceId}.verified_at must be an ISO date-time`);
@@ -98,7 +98,7 @@ export function validateVerificationManifest({
 
   for (const [family, current] of Object.entries(registry || {})) {
     if (!SDK_VERSION_RE.test(current?.sdk_version || '')) {
-      errors.push(`_data/campaigns.json ${family}.sdk_version must match x.y.z`);
+      errors.push(`_data/campaigns.json ${family}.sdk_version must be an exact SDK release such as 0.4.43 (x.y.z), not a tag or range`);
     }
   }
 
