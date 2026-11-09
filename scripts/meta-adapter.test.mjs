@@ -323,9 +323,19 @@ test('SDK 0.5 upsell purchase on a page with no form: the loaded order customer 
   assert.deepEqual(r.fbq[0][2], { em: 'jane@example.com' });
 });
 
-test('SDK 0.5 checkout: the form still wins over the tracking-event customer', () => {
+test('SDK 0.5 checkout: the bridge is not read before a purchase, so a restored shopper cannot win the init', () => {
+  const restored = loadV05({ email: 'old@example.com', city: 'Leeds', country: 'GB' });
+  restored.adapter.send('InitiateCheckout', {}, { event: 'dl_begin_checkout', user_properties: { visitor_type: 'guest' } });
+  assert.deepEqual(restored.seen, []);
+  assert.equal(restored.fbq.length, 0, 'no init from the SDK checkout state alone');
+  const typed = loadV05({ email: 'old@example.com' }, { fields: { email: { value: 'new@example.com' } } });
+  typed.adapter.send('InitiateCheckout', {}, { event: 'dl_begin_checkout', user_properties: { visitor_type: 'guest' } });
+  assert.deepEqual(typed.fbq[0][2], { em: 'new@example.com' });
+});
+
+test('SDK 0.5 purchase: the form still wins over the order customer', () => {
   const r = loadV05({ email: 'old@example.com', country: 'US' }, { fields: { email: { value: 'new@example.com' }, country: { value: 'GB' } } });
-  r.adapter.send('InitiateCheckout', {}, { event: 'dl_begin_checkout', user_properties: { visitor_type: 'guest' } });
+  r.adapter.send('Purchase', {}, { event: 'dl_purchase', user_properties: { visitor_type: 'guest' } });
   assert.equal(r.fbq[0][2].em, 'new@example.com');
   assert.equal(r.fbq[0][2].country, 'gb');
 });

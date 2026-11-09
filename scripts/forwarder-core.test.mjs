@@ -126,6 +126,19 @@ test('customer(): an empty shipping address gives way to the billing address, wh
   });
 });
 
+test('customer(): a preselected country alone does not make the shipping address win over billing', () => {
+  const checkout = {
+    user: { email: 'jane@example.com' },
+    shipping_address: { country: 'US' },
+    billing_address: { city: 'Leeds', state: 'WYK', postcode: 'LS1 1AA', country: 'GB' },
+  };
+  const r = load({ next: { snapshot: () => ({ checkout }) } });
+  optIn(r);
+  assert.deepEqual({ ...r.fwd.customer({ event: 'dl_begin_checkout' }) }, {
+    email: 'jane@example.com', city: 'Leeds', state: 'WYK', postcode: 'LS1 1AA', country: 'GB',
+  });
+});
+
 test('customer(): no opt-in adapter -> {} and no next.analytics subscription', () => {
   let calls = 0;
   const r = load({ next: { snapshot: () => ({ order: ORDER }), analytics: { on: () => { calls++; } } } });
@@ -136,15 +149,45 @@ test('customer(): no opt-in adapter -> {} and no next.analytics subscription', (
   assert.equal(calls, 0);
 });
 
-test('customer(): a customerData function opts in only while it returns true', () => {
+test('customer(): a customerData function subscribes at register and returns data only while it is true', () => {
   let calls = 0, on = false;
   const r = load({ next: { snapshot: () => ({ order: ORDER }), analytics: { on: () => { calls++; } } } });
   optIn(r, () => on);
+  assert.equal(calls, 1, 'subscribed at register, before any customer() call');
   assert.deepEqual({ ...r.fwd.customer({ event: 'dl_purchase' }) }, {});
-  assert.equal(calls, 0);
   on = true;
   assert.equal(r.fwd.customer({ event: 'dl_purchase' }).email, 'jane@example.com');
+  on = false; // consent withdrawn
+  assert.deepEqual({ ...r.fwd.customer({ event: 'dl_purchase' }) }, {}, 'no latch: revoking the flag closes the gate');
+  assert.equal(r.fwd.getStatus()[0].customerData, false);
   assert.equal(calls, 1);
+});
+
+test('customer(): window.next wins over the nextReady instance, and a new instance resets what was tracked', () => {
+  let handlerA, handlerB;
+  const a = { snapshot: () => ({}), analytics: { on: (n, fn) => { handlerA = fn; } } };
+  const b = { snapshot: () => ({}), analytics: { on: (n, fn) => { handlerB = fn; } } };
+  const r = load({ next: a });
+  optIn(r);
+  r.window.nextReady.forEach((fn) => fn({ snapshot: () => ({ order: { user: { email: 'facade@example.com' } } }) }));
+  handlerA({ object: 'order', data: ORDER });
+  assert.equal(r.fwd.customer({ event: 'dl_purchase' }).email, 'jane@example.com', 'window.next is read, not the facade');
+  r.window.next = b;
+  assert.deepEqual({ ...r.fwd.customer({ event: 'dl_purchase' }) }, {}, 'the old instance\'s order is dropped');
+  handlerA({ object: 'order', data: ORDER });
+  assert.deepEqual({ ...r.fwd.customer({ event: 'dl_purchase' }) }, {}, 'the old listener goes quiet');
+  handlerB({ object: 'order', data: { user: { email: 'new@example.com' } } });
+  assert.equal(r.fwd.customer({ event: 'dl_purchase' }).email, 'new@example.com');
+});
+
+test('getStatus() reports allAddToCart and customerData per adapter', () => {
+  const r = load();
+  r.fwd.register(r.adapter({ name: 'plain' }));
+  r.fwd.register(r.adapter({ name: 'all', allAddToCart: true, customerData: true }));
+  assert.deepEqual(JSON.parse(JSON.stringify(r.fwd.getStatus().map(({ name, allAddToCart, customerData }) => ({ name, allAddToCart, customerData })))), [
+    { name: 'plain', allAddToCart: false, customerData: null },
+    { name: 'all', allAddToCart: true, customerData: true },
+  ]);
 });
 
 test('customer(): falls back to the latest next.analytics.on order / checkout when snapshot has none', () => {

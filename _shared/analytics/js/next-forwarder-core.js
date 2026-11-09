@@ -48,11 +48,14 @@
  *                                                       //   moment a valid checkout email/phone is entered
  *                                                       //   (no name/cart needed), deduped per identifier
  *     allAddToCart: false,                              // optional (default false): forward every SDK 0.5
- *                                                       //   dl_add_to_cart, not only first_in_session
- *     customerData: false                               // optional (default false): true turns on the SDK 0.5
- *                                                       //   customer bridge (NextForwarder.customer) at
- *                                                       //   register; a function turns it on at the first
- *                                                       //   customer() call made while it returns true
+ *                                                       //   dl_add_to_cart, not only first_in_session. For
+ *                                                       //   hand-written adapters: no campaigns.json key
+ *                                                       //   sets it on the shipped ones
+ *     customerData: false                               // optional (default false): true or a function starts
+ *                                                       //   the SDK 0.5 customer bridge at register;
+ *                                                       //   NextForwarder.customer returns the shopper only
+ *                                                       //   while some adapter's value is true (a function
+ *                                                       //   is called each time)
  *   }
  */
 (function () {
@@ -266,39 +269,43 @@
   // checkout_completed), then from the latest tracking event next.analytics.on replayed or delivered.
   // On 0.4.x neither API exists and it returns {}: adapters keep reading user_properties there.
   //
-  // Like the contact bridge, it is only active once an adapter opts in with customerData: true (Meta
-  // advanced matching) or a customerData function that returns true when called (Axon, whose user_data flag
-  // a consent script may set after load). Until then nothing subscribes and customer() returns {}, so a
-  // GA4- or Taboola-only page holds no shopper data here. A late subscription loses nothing:
-  // next.analytics.on replays the events already sent. Nothing is stored beyond this page's memory.
-  // The SDK's own next.snapshot() exposes the same data to any page script; this adds no new reader.
+  // The subscription starts when an adapter registers with a customerData option (true, or a function).
+  // The data is a separate decision made on every call: customer() returns {} unless an adapter wants it
+  // right now (customerData: true for Meta advanced matching, or a function that returns true when called,
+  // like Axon's user_data flag, which a consent script may set or clear after load). A GA4- or Taboola-only
+  // page never subscribes. Nothing is stored beyond this page's memory, and the SDK's own next.snapshot()
+  // already exposes the same data to any page script; this adds no new reader.
   var tracked = { order: null, checkout: null };
-  var trackingHooked = false;
-  var customerOptIn = false;
+  var hookedOn = null; // the SDK instance the subscription is on
+  var bridgeInstalled = false;
   var customerAdapters = [];
-  var sdkRef = null; // the instance window.nextReady hands over, preferred to window.next
+  var sdkRef = null; // the instance window.nextReady hands over, used only while window.next is absent
 
-  function sdk() { return sdkRef || window.next || null; }
+  function sdk() { return window.next || sdkRef || null; }
 
+  // Subscribes once per SDK instance. A new instance (re-initialised SDK, replaced window.next) drops what
+  // the previous one reported and subscribes again; the old listener goes quiet.
   function hookTracking(instance) {
     if (instance && typeof instance === 'object') sdkRef = instance;
-    if (trackingHooked || !customerOptIn) return;
+    if (!bridgeInstalled) return;
     var s = sdk();
-    var a = s && s.analytics;
+    if (!s || s === hookedOn) return;
+    var a = s.analytics;
     if (!a || typeof a.on !== 'function') return;
     try {
       a.on('*', function (e) {
-        if (!e || !e.data) return;
+        if (s !== hookedOn || !e || !e.data) return;
         if (e.object === 'order') tracked.order = e.data;
         else if (e.object === 'checkout') tracked.checkout = e.data;
       });
-      trackingHooked = true; // only once subscribed: a throw leaves the next attempt free to retry
+      if (hookedOn) tracked = { order: null, checkout: null };
+      hookedOn = s; // only once subscribed: a throw leaves the next attempt free to retry
     } catch (err) { log('next.analytics.on failed', err); }
   }
 
   function installTrackingHook() {
-    if (customerOptIn) return;
-    customerOptIn = true;
+    if (bridgeInstalled) return;
+    bridgeInstalled = true;
     if (typeof document !== 'undefined') {
       document.addEventListener('next:initialized', function () { hookTracking(); });
       if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { hookTracking(); });
@@ -310,7 +317,8 @@
 
   function str(v) { return (v === undefined || v === null) ? '' : String(v).trim(); }
 
-  var ADDRESS_KEYS = ['city', 'state', 'postcode', 'country'];
+  // country is left out on purpose: the checkout preselects it, so a country alone is not yet an address.
+  var ADDRESS_KEYS = ['city', 'state', 'postcode'];
   function hasAddress(a) {
     if (!a) return false;
     for (var i = 0; i < ADDRESS_KEYS.length; i++) if (str(a[ADDRESS_KEYS[i]])) return true;
@@ -318,7 +326,7 @@
   }
 
   // An Order or Checkout -> { email, phone, first_name, last_name, city, state, postcode, country }.
-  // One address, whole: the shipping address when it has any location field, else the billing address.
+  // One address, whole: the shipping address when it has a city, state or postcode, else the billing address.
   // Fields are never mixed across the two, so city, state and postcode always describe one place.
   function customerOf(src) {
     if (!src) return {};
@@ -341,16 +349,18 @@
 
   var ORDER_EVENTS = { dl_purchase: 1, dl_upsell_purchase: 1 };
 
+  function wants(adapter) {
+    var want = adapter.customerData;
+    try { return want === true || (typeof want === 'function' && want() === true); } catch (err) { return false; }
+  }
+
   function customerWanted() {
-    for (var i = 0; i < customerAdapters.length; i++) {
-      var want = customerAdapters[i].customerData;
-      try { if (want === true || (typeof want === 'function' && want() === true)) return true; } catch (err) {}
-    }
+    for (var i = 0; i < customerAdapters.length; i++) if (wants(customerAdapters[i])) return true;
     return false;
   }
 
   function customer(evt) {
-    if (!customerOptIn && !customerWanted()) return {};
+    if (!customerWanted()) return {};
     installTrackingHook();
     hookTracking();
     var s = sdk(), snap;
@@ -484,7 +494,7 @@
     DEFAULT_MAIN_EVENTS: DEFAULT_MAIN_EVENTS,
     EMAIL_RE: EMAIL_RE, // the field-entry email shape; adapters re-validating prospect emails should use it
     customer: customer, // SDK 0.5: the shopper behind a dl_* event (see the customer bridge); {} on 0.4.x or
-                        //   until an adapter registers with customerData: true
+                        //   while no adapter's customerData is true
     register: function (adapter) {
       if (!adapter || !adapter.name || typeof adapter.send !== 'function' ||
           typeof adapter.isActive !== 'function' || !adapter.map) {
@@ -497,7 +507,7 @@
       adapter._contacts = 0;
       adapter._contactSeen = {};
       if (adapter.customerData === true || typeof adapter.customerData === 'function') customerAdapters.push(adapter);
-      if (adapter.customerData === true) installTrackingHook();
+      if (adapter.customerData === true || typeof adapter.customerData === 'function') installTrackingHook();
       if (typeof adapter.onContact === 'function') {
         contactAdapters.push(adapter);
         installProspectHook();
@@ -536,7 +546,10 @@
           allowed: a._allowed ? Object.keys(a._allowed) : 'all', blocked: a.blockedEvents || [],
           contact: typeof a.onContact === 'function'
             ? { requiresMarketingConsent: a.contactRequiresMarketingConsent !== false, onFieldEntry: !!a.contactOnFieldEntry }
-            : null
+            : null,
+          allAddToCart: !!a.allAddToCart,
+          // whether this adapter wants the shopper right now (a function is evaluated here); null = never asks
+          customerData: customerAdapters.indexOf(a) === -1 ? null : wants(a)
         };
       });
     },

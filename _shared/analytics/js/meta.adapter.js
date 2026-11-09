@@ -21,8 +21,9 @@
  *     wins on a page, so the adapter and the SDK would fight over it.
  *
  * SDK 0.5: dl_* user_properties carry { visitor_type: 'guest' } only, so Part B takes the shopper from the
- * SDK's tracking events through NextForwarder.customer(evt) (Order.user + addresses on a purchase, the
- * Checkout's user + shipping address before it), between user_properties and the form. Part A and
+ * SDK's order through NextForwarder.customer(evt) (Order.user + one address) on a purchase, between
+ * user_properties and the form. Earlier events use the form only: the SDK's checkout state can hold a
+ * previous visit's restored shopper, and the first init with data wins the page. Part A and
  * external_id do nothing on 0.5: getAttribution / addMetadata are gone and the SDK no longer writes a
  * visitor_id key. 0.5 still reads _fbp / _fbc once at boot, so campaign-cart#132 stays open there with no
  * page-side workaround until the SDK re-reads the cookies or exposes a way to set order metadata.
@@ -293,10 +294,12 @@
     allowedEvents: ['dl_begin_checkout', 'dl_add_payment_info', 'dl_purchase', 'dl_upsell_purchase'],
     send: function (name, ec, evt) {
       // Lowest to highest: the page's dl_user_data (upsell purchase only), the event's user_properties,
-      // the SDK 0.5 tracking-event shopper, the form (see B).
+      // the SDK 0.5 order's shopper (purchases only), the form (see B). Before the order exists the SDK's
+      // checkout can still hold a previous visit's restored shopper, which must not win the one init.
+      var purchase = evt && (evt.event === 'dl_purchase' || evt.event === 'dl_upsell_purchase');
       if (evt && evt.event === 'dl_upsell_purchase') collect(fromUserProperties(pageUserProperties()));
       collect(fromUserProperties(evt && evt.user_properties));
-      collect(fromCustomer(evt));
+      if (purchase) collect(fromCustomer(evt));
       collect(fromForm());
       apply(name);
     },

@@ -178,9 +178,12 @@ base pixel block does a bare `fbq('init', id)`. `meta.adapter.js` loads whenever
 
 SDK 0.5 pushes `dl_add_to_cart` for every cart change, including a cart filled before the page (default
 bundle, `forcePackageId`) and every bundle swap, and marks the first add in the tab `first_in_session: true`.
-The forwarder core passes only that first add to its adapters (GA4, Axon, Taboola, TikTok, Snapchat,
-Pinterest, Triple Whale, Northbeam), so their AddToCart counts shoppers. An adapter that wants every add sets
-`allAddToCart: true` when it registers. SDK 0.4.x pushes carry no `first_in_session` and all pass.
+The forwarder core passes only that first add to the adapters that send AddToCart (GA4, Axon, Taboola,
+TikTok, Snapchat, Pinterest, Triple Whale; Northbeam sends purchases only), so their AddToCart counts
+shoppers. There is no `campaigns.json` key to change that on the shipped adapters: `allAddToCart: true` is a
+registration option for a hand-written adapter that wants every add. `NextForwarder.getStatus()` shows
+`allAddToCart` and `customerData` for each adapter. SDK 0.4.x pushes carry no `first_in_session` and all
+pass.
 
 The SDK's own Meta and GTM destinations don't go through the forwarder: on 0.5 Meta gets `AddToCart` for every
 add, so the same funnel shows more AddToCart in Meta than in GA4 or Axon. That gap is expected; compare
