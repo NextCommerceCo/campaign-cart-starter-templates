@@ -293,15 +293,21 @@
     if (!s || s === hookedOn) return;
     var a = s.analytics;
     if (!a || typeof a.on !== 'function') return;
+    // Set before subscribing: next.analytics.on replays past events inside the call, and they must pass the
+    // listener's instance check. A throw restores both, so the next attempt can retry.
+    var prevHooked = hookedOn, prevTracked = tracked;
+    hookedOn = s;
+    if (prevHooked) tracked = { order: null, checkout: null };
     try {
       a.on('*', function (e) {
         if (s !== hookedOn || !e || !e.data) return;
         if (e.object === 'order') tracked.order = e.data;
         else if (e.object === 'checkout') tracked.checkout = e.data;
       });
-      if (hookedOn) tracked = { order: null, checkout: null };
-      hookedOn = s; // only once subscribed: a throw leaves the next attempt free to retry
-    } catch (err) { log('next.analytics.on failed', err); }
+    } catch (err) {
+      hookedOn = prevHooked; tracked = prevTracked;
+      log('next.analytics.on failed', err);
+    }
   }
 
   function installTrackingHook() {

@@ -79,6 +79,7 @@
   var DEBUG = /[?&]nfdebug=true/.test(window.location.search) ||
     /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname);
   var warnedUserData = false;
+  var warnedPhone = false;
 
   var EMAIL_RE = window.NextForwarder.EMAIL_RE || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   // email trimmed + lowercased; phone as E.164 digits without '+' (the SDK only sets E.164 with '+');
@@ -112,12 +113,13 @@
   // SDK 0.5: the shopper from its tracking events (the core's customer bridge; Order.user on a purchase).
   // undefined on 0.4.x, where user_properties already carry the shopper.
   // A phone without a "+" country code (an address phone typed in national format) is not E.164: Axon
-  // would reject it, and no dial code is guessed, so it is dropped with a debug note.
+  // would reject it, and no dial code is guessed, so it is dropped with a one-time debug note.
   function customerUserData(evt) {
     var c = window.NextForwarder.customer ? window.NextForwarder.customer(evt) : {};
     var out = userData({ user_properties: { customer_email: c.email, customer_phone: c.phone } });
-    if (c.phone && !(out && out.phone) && DEBUG && window.console) {
-      console.warn('[axon.adapter] order phone dropped (not E.164 with a "+" country code)');
+    if (c.phone && !(out && out.phone) && DEBUG && !warnedPhone && window.console) {
+      warnedPhone = true;
+      console.warn('[axon.adapter] phone dropped (not E.164 with a "+" country code)');
     }
     return out;
   }

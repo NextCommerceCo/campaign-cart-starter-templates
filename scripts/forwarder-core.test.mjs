@@ -180,6 +180,18 @@ test('customer(): window.next wins over the nextReady instance, and a new instan
   assert.equal(r.fwd.customer({ event: 'dl_purchase' }).email, 'new@example.com');
 });
 
+test('customer(): events next.analytics.on replays inside the call are kept (upsell page: order only in the replay)', () => {
+  const replayed = (data) => ({
+    snapshot: () => ({}),
+    analytics: { on: (name, fn) => { fn({ object: 'order', event_type: 'checkout_completed', data }); } },
+  });
+  const r = load({ next: replayed(ORDER) });
+  optIn(r);
+  assert.equal(r.fwd.customer({ event: 'dl_upsell_purchase' }).email, 'jane@example.com');
+  r.window.next = replayed({ user: { email: 'next@example.com' } });
+  assert.equal(r.fwd.customer({ event: 'dl_upsell_purchase' }).email, 'next@example.com', 'a new instance\'s replay is kept too');
+});
+
 test('getStatus() reports allAddToCart and customerData per adapter', () => {
   const r = load();
   r.fwd.register(r.adapter({ name: 'plain' }));
