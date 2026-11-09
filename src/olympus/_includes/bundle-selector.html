@@ -6,7 +6,7 @@
   next_params:
     selector_id:        string, default "main". data-next-selector-id value. Stable per page.
     await:              bool, default true. Renders skeleton while bundle prices hydrate.
-    include_shipping:   bool, default true. Required when any card has data-next-shipping-id.
+    include_shipping:   bool, default true. Inert (SDK 0.4.x never sent it to the API; 0.5 ignores it).
     selection_mode:     enum [swap, select], default "swap". checkout=swap; upsell may select.
     packages:           object, optional. Dict with main_package, prepurchase_1, prepurchase_2 keys. Defaults for card package IDs.
     shipping_methods:   object, optional. Dict of Campaigns App shipping method ref_ids, e.g. standard/free. Blank values emit no data-next-shipping-id.
@@ -51,7 +51,7 @@
   next_gotchas:
     - Per-card data-next-shipping-id matters when tiers have different shipping (e.g. 3x free, 1x/2x standard).
     - The Olympus starter page sets demo shipping_methods in frontmatter to demonstrate a free-shipping tier. The build/operator must replace those refs from the CampaignSpec/Campaigns App for each campaign.
-    - data-next-include-shipping="true" required when any card uses tier-specific shipping or totals will be wrong.
+    - data-next-include-shipping="true" is inert: SDK 0.4.x read it but never sent it to the API, and 0.5 ignores it.
     - data-next-selected="true" on the initial card; SDK toggles next-selected class at runtime.
     - data-next-await="" on outer wrapper renders skeleton until SDK hydrates prices.
     - hasDiscount tokens resolve to a CSS class string ('hide' when no discount); use as classname, not boolean.

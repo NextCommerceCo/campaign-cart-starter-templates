@@ -34,6 +34,11 @@
  * fills any field it lacks from it. It is read from window.NextDataLayer at that moment, only with the flag
  * on, so it works whatever axon_allowed_events / axon_blocked_events say and the adapter keeps no PII.
  *
+ * SDK 0.5: user_properties carry { visitor_type: 'guest' } only, so user_data falls back to the order's user
+ * (email, phone) from the SDK's tracking events through NextForwarder.customer(evt); user_properties still
+ * win where they carry a value (0.4.x). user_id is 0.4.x-only: 0.5's tracking Order.user has email, phone
+ * and names but no customer id, so a 0.5 purchase sends email and phone only.
+ *
  * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus().
  */
 (function () {
@@ -73,6 +78,7 @@
   var DEBUG = /[?&]nfdebug=true/.test(window.location.search) ||
     /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname);
   var warnedUserData = false;
+  var warnedPhone = false;
 
   var EMAIL_RE = window.NextForwarder.EMAIL_RE || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   // email trimmed + lowercased; phone as E.164 digits without '+' (the SDK only sets E.164 with '+');
@@ -101,6 +107,20 @@
       if (user) return user;
     }
     return undefined;
+  }
+
+  // SDK 0.5: the shopper from its tracking events (the core's customer bridge; Order.user on a purchase).
+  // undefined on 0.4.x, where user_properties already carry the shopper.
+  // A phone without a "+" country code (an address phone typed in national format) is not E.164: Axon
+  // would reject it, and no dial code is guessed, so it is dropped with a one-time debug note.
+  function customerUserData(evt) {
+    var c = window.NextForwarder.customer ? window.NextForwarder.customer(evt) : {};
+    var out = userData({ user_properties: { customer_email: c.email, customer_phone: c.phone } });
+    if (c.phone && !(out && out.phone) && DEBUG && !warnedPhone && window.console) {
+      warnedPhone = true;
+      console.warn('[axon.adapter] phone dropped (not E.164 with a "+" country code)');
+    }
+    return out;
   }
 
   // Per field: the event's own value wins, the page fills the gaps.
@@ -181,6 +201,8 @@
     map: MAP,
     allowedEvents: allowed,
     blockedEvents: blocked,
+    // The core's SDK 0.5 customer bridge, only while user_data is on (read at call time, like the flag).
+    customerData: function () { return window.__axonSendUserData === true; },
     send: function (name, ec, evt) {
       // page_view is not an ecommerce event — send it bare.
       if (name === 'page_view') { window.axon('track', 'page_view'); return; }
@@ -202,6 +224,7 @@
         if (window.__axonSendUserData === true) {
           user = userData(evt);
           if (evt && evt.event === 'dl_upsell_purchase') user = mergeUser(pageUserData(), user);
+          user = mergeUser(customerUserData(evt), user);
         }
         if (user) params.user_data = user;
         else if (DEBUG && !warnedUserData && window.console) {

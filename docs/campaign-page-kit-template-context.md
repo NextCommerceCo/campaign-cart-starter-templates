@@ -190,7 +190,9 @@ These starter templates inject **Google Tag Manager** and **Meta Pixel** from tw
 
 The layout snippet and SDK provider work together: layout injection initialises GTM/Pixel, the SDK provider forwards ecommerce events into it. Enable both — set `gtm_id` / `fb_pixel_id` in `campaigns.json` **and** enable the matching provider in `config.js`.
 
-**Meta Pixel — the layout bootstraps, the SDK tracks.** The GTM + Meta Pixel blocks (in `_includes/analytics-head.html` / `analytics-body.html`) are loaded by every layout that loads `config.js` — `base.html` (checkout/upsell/receipt) and `base-landing.html` / `base-presell.html` (landing/presell). The Meta Pixel block only loads `fbevents.js`, calls `fbq('init', …)`, and keeps the `<noscript>` `PageView` fallback. It does **not** call `fbq('track', 'PageView')` — when `analytics.providers.facebook.enabled` is `true`, the SDK's Facebook adapter sends `PageView` (and `AddToCart`, `Purchase`, etc.) on init via `dl_user_data`. Adding a manual `fbq('track', 'PageView')` to the layout double-fires the PageView, because the adapter does not dedupe it. If a campaign disables the SDK Facebook provider and relies on template-only tracking, add the manual `fbq('track', 'PageView')` back to that layout.
+**Meta Pixel — the layout bootstraps, the SDK tracks.** The GTM + Meta Pixel blocks (in `_includes/analytics-head.html` / `analytics-body.html`) are loaded by every layout that loads `config.js` — `base.html` (checkout/upsell/receipt) and `base-landing.html` / `base-presell.html` (landing/presell). The Meta Pixel block only loads `fbevents.js`, calls `fbq('init', …)`, and keeps the `<noscript>` `PageView` fallback. It does **not** call `fbq('track', 'PageView')` — when `analytics.providers.facebook.enabled` is `true`, the SDK's Facebook adapter sends `AddToCart`, `Purchase`, etc., and on SDK 0.4.x also `PageView` on init via `dl_user_data`. On 0.4.x, adding a manual `fbq('track', 'PageView')` to the layout double-fires the PageView, because the adapter does not dedupe it. SDK 0.5 sends no Meta PageView (campaign-cart#139); settle that before moving a campaign to 0.5. If a campaign disables the SDK Facebook provider and relies on template-only tracking, add the manual `fbq('track', 'PageView')` back to that layout.
+
+**AddToCart counts differ by vendor on SDK 0.5.** 0.5 pushes `dl_add_to_cart` on every cart change (a pre-filled cart and each bundle swap included) and marks the first add `first_in_session: true`. The forwarder adapters (GA4, Axon, Taboola, …) receive only that first add; the SDK's Meta and GTM destinations receive all of them. Expect Meta's AddToCart to run higher than GA4's on the same funnel; details in `_shared/analytics/README.md`.
 
 ### Direct vendor analytics — Route C (`ga4_id`, `tiktok_pixel_id`, …)
 
@@ -453,7 +455,7 @@ window.nextConfig = {
   // (config.js already is).
   // storageScope: 'my-campaign',
 
-  currencyBehavior: 'auto', // 'auto' | 'manual'
+  currencyBehavior: 'auto', // 'auto' | 'manual' — SDK 0.4.x only; 0.5 shows the campaign currency unless the URL has ?currency=
 
   paymentConfig: {
     expressCheckout: {
@@ -471,12 +473,12 @@ window.nextConfig = {
     dontShowStates: [], // US territories (AS, GU, MP, PR, VI, UM) are always hidden by the SDK; add other state/province codes to hide (note: a code is hidden in every country, see campaign-cart#107)
     // AUTOCOMPLETE PROVIDER:
     //   Option 1 (active): NextCommerce — enableAutocomplete: true, leave googleMaps.apiKey empty
-    //   Option 2: Google Maps — fill in googleMaps.apiKey below; takes priority when apiKey is non-empty
+    //   Option 2: Google Maps — fill in googleMaps.apiKey below; takes priority when apiKey is non-empty (SDK 0.4.x only: 0.5 removed googleMaps)
     //   Option 3: Disabled — remove enableAutocomplete and leave googleMaps.apiKey empty
     enableAutocomplete: true,
   },
 
-  // Google Maps API key — leave empty to use NextCommerce autocomplete (Option 1 above)
+  // Google Maps API key — leave empty to use NextCommerce autocomplete (Option 1 above). Ignored from SDK 0.5.
   googleMaps: {
     apiKey: '',
     region: 'US',
@@ -1186,10 +1188,22 @@ For single-package upsells without voucher-driven pricing. If the upsell uses Ca
 
 ### Upsell quantity controls
 
+A bundle selector inside the offer carries the quantity; the −/+ controls point at it with `data-next-bundle-qty-for`. This is what `upsell/offer.html` renders for `upsell_offer.type: stepper`, so set the frontmatter rather than hand-writing it. Do not use `data-next-upsell-quantity`: SDK 0.5 removed it.
+
 ```html
-<button data-next-upsell-quantity="decrease">-</button>
-<span data-next-upsell-quantity="display"></span>
-<button data-next-upsell-quantity="increase">+</button>
+<div data-next-upsell="offer">
+  <div data-next-bundle-selector data-next-upsell-context data-next-selector-id="upsell-qty" style="display:none">
+    <div data-next-bundle-card data-next-bundle-id="upsell-bundle-1x"
+         data-next-bundle-items='[{"packageId":789,"quantity":1}]'
+         data-next-quantity="1" data-next-min-quantity="1" data-next-max-quantity="5"
+         data-next-selected="true"></div>
+  </div>
+  <div data-next-bundle-qty-for="upsell-qty">
+    <button type="button" data-next-quantity-decrease>-</button>
+    <span data-next-quantity-display>1</span>
+    <button type="button" data-next-quantity-increase>+</button>
+  </div>
+</div>
 ```
 
 ### Display tokens on upsell pages

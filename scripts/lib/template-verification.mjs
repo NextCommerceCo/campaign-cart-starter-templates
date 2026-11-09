@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 
 export const TEMPLATE_VERIFICATION_SCHEMA = 'template-verification-manifest/v1';
-export const SDK_VERSION_RE = /^0\.4\.\d+$/;
+export const SDK_VERSION_RE = /^\d+\.\d+\.\d+$/;
 export const FINGERPRINT_RE = /^git-index-sha256:[0-9a-f]{64}$/;
 export const SHA_RE = /^[0-9a-f]{40}$/;
 
@@ -52,7 +52,7 @@ export function validateVerificationManifest({
       continue;
     }
     if (!SDK_VERSION_RE.test(record.sdk_version || '')) {
-      errors.push(`evidence.${evidenceId}.sdk_version must match 0.4.x`);
+      errors.push(`evidence.${evidenceId}.sdk_version must be an exact SDK release such as 0.4.43 (x.y.z), not a tag or range`);
     }
     if (!isDateTime(record.verified_at)) {
       errors.push(`evidence.${evidenceId}.verified_at must be an ISO date-time`);
@@ -98,7 +98,7 @@ export function validateVerificationManifest({
 
   for (const [family, current] of Object.entries(registry || {})) {
     if (!SDK_VERSION_RE.test(current?.sdk_version || '')) {
-      errors.push(`_data/campaigns.json ${family}.sdk_version must match 0.4.x`);
+      errors.push(`_data/campaigns.json ${family}.sdk_version must be an exact SDK release such as 0.4.43 (x.y.z), not a tag or range`);
     }
   }
 

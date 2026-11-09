@@ -293,3 +293,61 @@ test('E.164 minimum matches the core: 7 digits after "+" is kept', () => {
   r.adapter.send('Purchase', {}, { event: 'dl_purchase', user_properties: { customer_phone: '+2901234' } });
   assert.equal(r.fbq[0][2].ph, '2901234');
 });
+
+// SDK 0.5: user_properties carry { visitor_type: 'guest' } only; the shopper comes from the core's
+// NextForwarder.customer(evt) (Order.user + shipping address from the SDK's tracking events).
+const ORDER_CUSTOMER = {
+  email: 'Jane@Example.com', phone: '+16505550194', first_name: 'Jane', last_name: "O'Doe",
+  city: 'San Francisco', state: 'CA', postcode: '94107-1234', country: 'US',
+};
+function loadV05(customer, opts = {}) {
+  const r = load({ store: {}, ...opts, win: { __metaAdvancedMatching: 'true', ...(opts.win || {}) } });
+  const seen = [];
+  r.window.NextForwarder.customer = (evt) => { seen.push(evt && evt.event); return customer; };
+  return Object.assign(r, { seen });
+}
+
+test('SDK 0.5 purchase: guest-only user_properties -> the order customer, Meta-normalised, no external_id', () => {
+  const r = loadV05(ORDER_CUSTOMER);
+  r.adapter.send('Purchase', {}, { event: 'dl_purchase', user_properties: { visitor_type: 'guest' } });
+  assert.deepEqual(r.seen, ['dl_purchase']);
+  assert.deepEqual(r.fbq[0][2], {
+    em: 'jane@example.com', ph: '16505550194', fn: 'jane', ln: 'odoe', ct: 'sanfrancisco', st: 'ca',
+    zp: '94107', country: 'us',
+  });
+});
+
+test('SDK 0.5 upsell purchase on a page with no form: the loaded order customer inits', () => {
+  const r = loadV05({ email: 'jane@example.com' });
+  r.adapter.send('Purchase', {}, { event: 'dl_upsell_purchase', user_properties: { visitor_type: 'guest' } });
+  assert.deepEqual(r.fbq[0][2], { em: 'jane@example.com' });
+});
+
+test('SDK 0.5 checkout: the bridge is not read before a purchase, so a restored shopper cannot win the init', () => {
+  const restored = loadV05({ email: 'old@example.com', city: 'Leeds', country: 'GB' });
+  restored.adapter.send('InitiateCheckout', {}, { event: 'dl_begin_checkout', user_properties: { visitor_type: 'guest' } });
+  assert.deepEqual(restored.seen, []);
+  assert.equal(restored.fbq.length, 0, 'no init from the SDK checkout state alone');
+  const typed = loadV05({ email: 'old@example.com' }, { fields: { email: { value: 'new@example.com' } } });
+  typed.adapter.send('InitiateCheckout', {}, { event: 'dl_begin_checkout', user_properties: { visitor_type: 'guest' } });
+  assert.deepEqual(typed.fbq[0][2], { em: 'new@example.com' });
+});
+
+test('SDK 0.5 purchase: the form still wins over the order customer', () => {
+  const r = loadV05({ email: 'old@example.com', country: 'US' }, { fields: { email: { value: 'new@example.com' }, country: { value: 'GB' } } });
+  r.adapter.send('Purchase', {}, { event: 'dl_purchase', user_properties: { visitor_type: 'guest' } });
+  assert.equal(r.fbq[0][2].em, 'new@example.com');
+  assert.equal(r.fbq[0][2].country, 'gb');
+});
+
+test('user_properties and the tracking-event customer merge per field; a non-E.164 customer phone is dropped', () => {
+  const r = loadV05({ phone: '6505550194', first_name: 'Jane' });
+  r.adapter.send('Purchase', {}, { event: 'dl_purchase', user_properties: { customer_email: 'jane@example.com' } });
+  assert.deepEqual(r.fbq[0][2], { em: 'jane@example.com', fn: 'jane' });
+});
+
+test('SDK 0.5: Part A cookie re-sync is a no-op without getAttribution / addMetadata', () => {
+  const r = load({ cookie: '_fbp=fb.1.111.222' });
+  assert.doesNotThrow(() => ready(r, { on() {}, analytics: { on() {} } }));
+  assert.equal(r.timers.length, 0);
+});

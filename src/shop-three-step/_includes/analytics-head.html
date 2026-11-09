@@ -2,8 +2,9 @@
 {%- comment -%}
   Analytics loaders (head). Included by base.html, base-presell.html and base-landing.html
   so the three layouts never drift. Bootstraps GTM + Meta Pixel + RudderStack + (Route C) GA4 + AppLovin Axon + Taboola + Triple Whale + TikTok +
-  Northbeam + Snapchat + Pinterest — the Campaign Cart SDK (config.js analytics providers) sends PageView + ecommerce events,
-  so there is intentionally no manual fbq('track','PageView') here (it would double-fire, #79).
+  Northbeam + Snapchat + Pinterest — the Campaign Cart SDK (config.js analytics providers) sends ecommerce events and, on
+  0.4.x, the Meta PageView, so there is intentionally no manual fbq('track','PageView') here (it would double-fire, #79).
+  SDK 0.5 sends no Meta PageView (campaign-cart#139): settle that before moving the pin to 0.5.
   Gated on a non-empty id (`!= ""`, LiquidJS treats "" as truthy) and non-development builds.
   Set gtm_id / fb_pixel_id / rudderstack_write_key + rudderstack_dataplane_url / ga4_id /
   axon_event_key / taboola_account_id / triplewhale_name / tiktok_pixel_id / northbeam_client_id /
@@ -59,9 +60,10 @@
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
   fbq('init', '{{ campaign.fb_pixel_id }}');
-  // PageView and ecommerce events are sent by the Campaign Cart SDK when
-  // analytics.providers.facebook.enabled is true in config.js. Do not add
-  // a manual fbq('track', 'PageView') here — it double-fires the PageView.
+  // Ecommerce events, and on SDK 0.4.x the PageView, are sent by the Campaign
+  // Cart SDK when analytics.providers.facebook.enabled is true in config.js.
+  // Do not add a manual fbq('track', 'PageView') here on 0.4.x — it double-fires
+  // the PageView. SDK 0.5 sends no PageView (campaign-cart#139).
   // Exposed for meta.adapter.js (no events of its own): the _fbp/_fbc cookie re-sync always runs;
   // advanced matching (one fbq('init', id, userData) per page) only when meta_advanced_matching_enabled
   // is "true" — customer data, so only when the campaign's consent handling covers Meta.
