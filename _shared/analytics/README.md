@@ -186,8 +186,9 @@ registration option for a hand-written adapter that wants every add. `NextForwar
 pass.
 
 The SDK's own Meta and GTM destinations don't go through the forwarder: on 0.5 Meta gets `AddToCart` for every
-add, so the same funnel shows more AddToCart in Meta than in GA4 or Axon. That gap is expected; compare
-Meta's AddToCart with the forwarder vendors' only on 0.4.x, or count first adds in GTM with a trigger on
+add, so the same funnel shows more AddToCart in Meta than in GA4 or Axon. That gap is open, not accepted:
+campaign-cart#126 asks for the Meta destination to honour `first_in_session`. Until it does, compare Meta's
+AddToCart with the forwarder vendors' only on 0.4.x, or count first adds in GTM with a trigger on
 `first_in_session`.
 
 ### Identity: the `accepts_marketing` gate is per adapter
