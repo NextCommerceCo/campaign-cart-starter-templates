@@ -34,6 +34,10 @@
  * fills any field it lacks from it. It is read from window.NextDataLayer at that moment, only with the flag
  * on, so it works whatever axon_allowed_events / axon_blocked_events say and the adapter keeps no PII.
  *
+ * SDK 0.5: user_properties carry { visitor_type: 'guest' } only, so user_data falls back to the order's user
+ * (email, phone) from the SDK's tracking events through NextForwarder.customer(evt); user_properties still
+ * win where they carry a value (0.4.x).
+ *
  * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus().
  */
 (function () {
@@ -101,6 +105,13 @@
       if (user) return user;
     }
     return undefined;
+  }
+
+  // SDK 0.5: the shopper from its tracking events (the core's customer bridge; Order.user on a purchase).
+  // undefined on 0.4.x, where user_properties already carry the shopper.
+  function customerUserData(evt) {
+    var c = window.NextForwarder.customer ? window.NextForwarder.customer(evt) : {};
+    return userData({ user_properties: { customer_email: c.email, customer_phone: c.phone } });
   }
 
   // Per field: the event's own value wins, the page fills the gaps.
@@ -202,6 +213,7 @@
         if (window.__axonSendUserData === true) {
           user = userData(evt);
           if (evt && evt.event === 'dl_upsell_purchase') user = mergeUser(pageUserData(), user);
+          user = mergeUser(customerUserData(evt), user);
         }
         if (user) params.user_data = user;
         else if (DEBUG && !warnedUserData && window.console) {

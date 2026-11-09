@@ -37,7 +37,7 @@
   next_gotchas:
     - Tier shipping price = one method + a card coupon, not a second method per price. A campaign lists each
       storefront shipping method once; coupons only take a percentage OFF, so price the method at the highest rate.
-    - data-next-include-shipping="true" required when tiers use tier-specific shipping or totals will be wrong.
+    - data-next-include-shipping="true" is inert: SDK 0.4.x read it but never sent it to the API, and 0.5 ignores it. Tier shipping comes from the campaign method + vouchers.
     - data-next-selected="true" on the initial card; SDK toggles .next-selected at runtime.
     - hasDiscount resolves to a class string ('hide' when no discount) — render on the SAVE badge, struck price and savings line.
     - subtitle_text / shipping_label are FREE TEXT — visual review is the gate.

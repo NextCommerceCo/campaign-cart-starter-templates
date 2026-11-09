@@ -9,6 +9,9 @@
  *     post-redirect through the transformFn; forwarding only the replay prevents a cross-page
  *     double-fire and matches the SDK's own providers, which fire only after the redirect)
  *   - dedup — per-adapter, keyed on event_id (guards same-page-load duplicates)
+ *   - AddToCart — SDK 0.5 dl_add_to_cart is forwarded only when first_in_session (see processForAdapter)
+ *   - customer — NextForwarder.customer(evt): the shopper behind an event on SDK 0.5, whose user_properties
+ *     no longer carry one (see the customer bridge)
  *   - replay — re-plays events already queued in NextDataLayer when an adapter registers late
  *   - event toggles — per-adapter allowedEvents (allowlist) + blockedEvents (denylist), both
  *     client-configurable per campaign and matched against the dl_* source name (precise) or the
@@ -41,9 +44,11 @@
  *                                                       //   accepts_marketing checkbox is present AND
  *                                                       //   unchecked. false = fire regardless (attribution
  *                                                       //   identity); acceptsMarketing is still passed
- *     contactOnFieldEntry: false                        // optional (default false): also fire onContact the
+ *     contactOnFieldEntry: false,                       // optional (default false): also fire onContact the
  *                                                       //   moment a valid checkout email/phone is entered
  *                                                       //   (no name/cart needed), deduped per identifier
+ *     allAddToCart: false                               // optional (default false): forward every SDK 0.5
+ *                                                       //   dl_add_to_cart, not only first_in_session
  *   }
  */
 (function () {
@@ -247,8 +252,87 @@
     if (window.next) setTimeout(capturePrefilled, 0);
   }
 
+  // ---- SDK 0.5 customer bridge (customer(evt)) -----------------------------------------------
+  // SDK 0.4.x put the shopper's email, phone, names and address in every dl_* user_properties. 0.5 sends
+  // { visitor_type: 'guest' } only (an open SDK decision, campaign-cart docs/architecture/parity-0.4.md)
+  // and carries the shopper on its tracking events instead: the checkout_* events (Checkout: user,
+  // shipping_address, billing_address) and checkout_completed / upsell_completed (Order: user, addresses).
+  // customer(evt) returns that shopper for a dl_* event as flat strings, read first from next.snapshot() at
+  // push time (on a purchase the SDK pushes dl_purchase before a page's next.analytics.on listener hears
+  // checkout_completed), then from the latest tracking event next.analytics.on replayed or delivered.
+  // On 0.4.x neither API exists and it returns {}: adapters keep reading user_properties there.
+  // Nothing is stored beyond this page's memory.
+  var tracked = { order: null, checkout: null };
+  var trackingHooked = false;
+
+  function hookTracking() {
+    if (trackingHooked) return;
+    var a = window.next && window.next.analytics;
+    if (!a || typeof a.on !== 'function') return;
+    trackingHooked = true;
+    try {
+      a.on('*', function (e) {
+        if (!e || !e.data) return;
+        if (e.object === 'order') tracked.order = e.data;
+        else if (e.object === 'checkout') tracked.checkout = e.data;
+      });
+    } catch (err) { log('next.analytics.on failed', err); }
+  }
+  if (typeof document !== 'undefined') {
+    document.addEventListener('next:initialized', hookTracking);
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', hookTracking);
+  }
+  window.nextReady = window.nextReady || [];
+  window.nextReady.push(hookTracking);
+
+  function str(v) { return (v === undefined || v === null) ? '' : String(v).trim(); }
+
+  // An Order or Checkout -> { email, phone, first_name, last_name, city, state, postcode, country }.
+  function customerOf(src) {
+    if (!src) return {};
+    var u = src.user || {};
+    var addr = src.shipping_address || src.billing_address || {};
+    var out = {
+      email: str(u.email),
+      phone: str(u.phone) || str(addr.phone),
+      first_name: str(u.first_name) || str(addr.first_name),
+      last_name: str(u.last_name) || str(addr.last_name),
+      city: str(addr.city),
+      state: str(addr.state),
+      postcode: str(addr.postcode),
+      country: str(addr.country)
+    };
+    for (var k in out) if (!out[k]) delete out[k];
+    return out;
+  }
+
+  var ORDER_EVENTS = { dl_purchase: 1, dl_upsell_purchase: 1 };
+
+  function customer(evt) {
+    hookTracking();
+    var snap;
+    try { snap = window.next && typeof window.next.snapshot === 'function' ? window.next.snapshot() : null; }
+    catch (err) { snap = null; }
+    var order = (snap && snap.order) || tracked.order;
+    var checkout = (snap && snap.checkout) || tracked.checkout;
+    // A purchase reads the order; any other event the checkout, falling back to a loaded order (upsell pages).
+    var first = evt && ORDER_EVENTS[evt.event] ? order : checkout;
+    var second = first === order ? checkout : order;
+    var out = customerOf(second), own = customerOf(first);
+    for (var k in own) out[k] = own[k];
+    return out;
+  }
+
   function processForAdapter(adapter, evt) {
     if (!evt || !evt.event) return;
+    // SDK 0.5 sends dl_add_to_cart for every cart change at the cart price — a cart filled before the page
+    // (default bundle, forcePackageId) and every bundle swap included — and marks the first add in the tab
+    // first_in_session: true. 0.4.x sent none for a pre-filled cart and dl_package_swapped for a swap.
+    // Forward only the first add so AddToCart counts shoppers, not selector clicks. 0.4.x pushes carry no
+    // first_in_session and pass. An adapter that wants every add sets allAddToCart: true.
+    if (evt.event === 'dl_add_to_cart' && evt.first_in_session === false && !adapter.allAddToCart) {
+      log(adapter.name, 'add_to_cart dropped (not first_in_session)'); return;
+    }
     // Redirect-queued events (e.g. dl_purchase, dl_upsell_purchase) fire on the checkout page with
     // this flag, BEFORE the SDK queues them across the redirect. The transformFn runs at push()
     // time — before the SDK's willRedirect check — so we'd see the event here (pre-redirect) AND
@@ -351,6 +435,7 @@
   window.NextForwarder = {
     DEFAULT_MAIN_EVENTS: DEFAULT_MAIN_EVENTS,
     EMAIL_RE: EMAIL_RE, // the field-entry email shape; adapters re-validating prospect emails should use it
+    customer: customer, // SDK 0.5: the shopper behind a dl_* event (see the customer bridge); {} on 0.4.x
     register: function (adapter) {
       if (!adapter || !adapter.name || typeof adapter.send !== 'function' ||
           typeof adapter.isActive !== 'function' || !adapter.map) {

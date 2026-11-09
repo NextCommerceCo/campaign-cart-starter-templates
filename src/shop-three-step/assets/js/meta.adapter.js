@@ -21,6 +21,13 @@
  *     customer data and external_id itself. Remove it in that same release: the first fbq('init') with data
  *     wins on a page, so the adapter and the SDK would fight over it.
  *
+ * SDK 0.5: dl_* user_properties carry { visitor_type: 'guest' } only, so Part B takes the shopper from the
+ * SDK's tracking events through NextForwarder.customer(evt) (Order.user + addresses on a purchase, the
+ * Checkout's user + shipping address before it), between user_properties and the form. Part A and
+ * external_id do nothing on 0.5: getAttribution / addMetadata are gone and the SDK no longer writes a
+ * visitor_id key. 0.5 still reads _fbp / _fbc once at boot, so campaign-cart#132 stays open there with no
+ * page-side workaround until the SDK re-reads the cookies or exposes a way to set order metadata.
+ *
  * A. Cookie re-sync (works around campaign-cart#132):
  *   The SDK reads the pixel's _fbp / _fbc cookies once at boot, before fbevents.js has set them on a
  *   first visit, and keeps that empty value for the session — so the order (and a server-side Purchase
@@ -164,6 +171,17 @@
     return d;
   }
 
+  // SDK 0.5: the shopper from its tracking events (the core's customer bridge), in the user_properties shape.
+  // {} on 0.4.x, where user_properties already carry the shopper.
+  function fromCustomer(evt) {
+    var c = window.NextForwarder.customer ? window.NextForwarder.customer(evt) : {};
+    return fromUserProperties({
+      customer_email: c.email, customer_phone: c.phone,
+      customer_first_name: c.first_name, customer_last_name: c.last_name,
+      customer_city: c.city, customer_province_code: c.state, customer_zip: c.postcode, customer_country: c.country
+    });
+  }
+
   // E.164 ("+" then 7-15 digits, the forwarder core's / SDK's minimum) -> digits without "+". '' for anything
   // else: no dial code is guessed.
   function digitsE164(v) {
@@ -276,9 +294,10 @@
     allowedEvents: ['dl_begin_checkout', 'dl_add_payment_info', 'dl_purchase', 'dl_upsell_purchase'],
     send: function (name, ec, evt) {
       // Lowest to highest: the page's dl_user_data (upsell purchase only), the event's user_properties,
-      // the form (see B).
+      // the SDK 0.5 tracking-event shopper, the form (see B).
       if (evt && evt.event === 'dl_upsell_purchase') collect(fromUserProperties(pageUserProperties()));
       collect(fromUserProperties(evt && evt.user_properties));
+      collect(fromCustomer(evt));
       collect(fromForm());
       apply(name);
     },

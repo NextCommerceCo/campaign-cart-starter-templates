@@ -453,7 +453,7 @@ window.nextConfig = {
   // (config.js already is).
   // storageScope: 'my-campaign',
 
-  currencyBehavior: 'auto', // 'auto' | 'manual'
+  currencyBehavior: 'auto', // 'auto' | 'manual' — SDK 0.4.x only; 0.5 shows the campaign currency unless the URL has ?currency=
 
   paymentConfig: {
     expressCheckout: {
@@ -471,12 +471,12 @@ window.nextConfig = {
     dontShowStates: [], // US territories (AS, GU, MP, PR, VI, UM) are always hidden by the SDK; add other state/province codes to hide (note: a code is hidden in every country, see campaign-cart#107)
     // AUTOCOMPLETE PROVIDER:
     //   Option 1 (active): NextCommerce — enableAutocomplete: true, leave googleMaps.apiKey empty
-    //   Option 2: Google Maps — fill in googleMaps.apiKey below; takes priority when apiKey is non-empty
+    //   Option 2: Google Maps — fill in googleMaps.apiKey below; takes priority when apiKey is non-empty (SDK 0.4.x only: 0.5 removed googleMaps)
     //   Option 3: Disabled — remove enableAutocomplete and leave googleMaps.apiKey empty
     enableAutocomplete: true,
   },
 
-  // Google Maps API key — leave empty to use NextCommerce autocomplete (Option 1 above)
+  // Google Maps API key — leave empty to use NextCommerce autocomplete (Option 1 above). Ignored from SDK 0.5.
   googleMaps: {
     apiKey: '',
     region: 'US',
@@ -1186,10 +1186,22 @@ For single-package upsells without voucher-driven pricing. If the upsell uses Ca
 
 ### Upsell quantity controls
 
+A bundle selector inside the offer carries the quantity; the −/+ controls point at it with `data-next-bundle-qty-for`. This is what `upsell/offer.html` renders for `upsell_offer.type: stepper`, so set the frontmatter rather than hand-writing it. Do not use `data-next-upsell-quantity`: SDK 0.5 removed it.
+
 ```html
-<button data-next-upsell-quantity="decrease">-</button>
-<span data-next-upsell-quantity="display"></span>
-<button data-next-upsell-quantity="increase">+</button>
+<div data-next-upsell="offer">
+  <div data-next-bundle-selector data-next-upsell-context data-next-selector-id="upsell-qty" style="display:none">
+    <div data-next-bundle-card data-next-bundle-id="upsell-bundle-1x"
+         data-next-bundle-items='[{"packageId":789,"quantity":1}]'
+         data-next-quantity="1" data-next-min-quantity="1" data-next-max-quantity="5"
+         data-next-selected="true"></div>
+  </div>
+  <div data-next-bundle-qty-for="upsell-qty">
+    <button type="button" data-next-quantity-decrease>-</button>
+    <span data-next-quantity-display>1</span>
+    <button type="button" data-next-quantity-increase>+</button>
+  </div>
+</div>
 ```
 
 ### Display tokens on upsell pages
