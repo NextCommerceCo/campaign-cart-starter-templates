@@ -885,8 +885,10 @@ The starter `bump-check01.html` partial is identical in every template family (o
 - Legacy bools still work when passed explicitly *without* `pricing_mode`: `show_per_unit_price` (default `true`, the stable `unitPrice`/ea row), `show_line_total_price` (default `false`, the line-total `originalPrice + price` row), `show_compare_price` (default `false`, the struck `originalUnitPrice`). If both styles are passed, `pricing_mode` wins and the legacy bools are ignored.
 
 Quantity sync supports both SDK models:
-- `package_sync` / `order_bump.check01.sync_quantity` → `data-next-package-sync` (packageId match; default `packages.main_package` or 1). Right for single-package main products. Set `false` to disable sync.
+- `package_sync` / `order_bump.check01.package_sync` (legacy alias: `sync_quantity` / `order_bump.check01.sync_quantity`) → `data-next-package-sync` (packageId match; default `packages.main_package` or 1). Right for single-package main products. Set `false` to disable sync.
 - `product_sync` / `order_bump.check01.product_sync` → `data-next-product-sync` (product_id match, SDK 0.4.25+; sums quantity across every variant of the product). Required when the main product is MV/configurable — packageId matching under-counts on variant swap. Wins over `package_sync` when both are set; `false` disables sync entirely.
+
+`bump-check02.html` accepts the `package_sync` include arg or `order_bump.check02.package_sync` (legacy frontmatter alias: `sync_quantity`), with the same default (`packages.main_package` or 1); `false` disables sync. For check01/check02, include args win over frontmatter; within either source, `package_sync` wins over `sync_quantity` where the alias is supported. `bump-switch01.html` always omits quantity sync and accepts neither key.
 
 Migration note for existing cloned campaigns: starter bumps default to a single visible sale price row. Pass `pricing_mode='discounted'` (or legacy `show_compare_price=true`) to restore the struck `originalUnitPrice` row for bumps that should visibly compare against a prior price.
 
@@ -894,11 +896,11 @@ Migration note for existing cloned campaigns: starter bumps default to a single 
 
 Every starter bump include (`bump-check01.html`, `bump-check02.html`, `bump-check03.html`, `bump-switch01.html`) takes `is_upsell`, a bool that defaults to `true`. The default is deliberate: the bump card renders `data-next-is-upsell="true"`, which tags the bump line as an upsell in order reports. It does not change what the customer pays. Pass `is_upsell=false` to the `campaign_include` — or set `order_bump.<variant>.is_upsell: false` in the page frontmatter — when a bump (a guarantee or protection add-on, say) should be reported as a core line instead.
 
-Shared checkout templates also include `bump-check03.html`, an unsynced product-card bump for a single add-on offer (opt-in quantity sync via `order_bump.check03.sync_quantity`).
+Shared checkout templates also include `bump-check03.html`, an unsynced product-card bump for a single add-on offer (opt-in quantity sync via `order_bump.check03.package_sync`, legacy alias `order_bump.check03.sync_quantity`; frontmatter only, not include args).
 
 **Two bump slots on Apollo and Apollo MV:** `selector_order_bump_variant` controls the check03 bump immediately below the bundle/MV selector (`"check03"` or `"none"`). `order_bump_variant` controls only the later `.order-bumps` form-section slot — do not use it to mean "all bumps on the page." On other families, select check03 with `order_bump_variant: "check03"` or include the partial directly when a checkout should show more than one bump.
 
-By default check03 omits `data-next-product-sync` / `data-next-package-sync` (one standalone add-on). Apollo demo sets `sync_quantity` on the selector-area check03 so the Travel Case scales with 1x/2x/3x; MV/configurable mains need `data-next-product-sync` instead.
+For check03, `package_sync` takes precedence over `sync_quantity`; `false` disables sync. By default check03 omits `data-next-product-sync` / `data-next-package-sync` (one standalone add-on). Apollo demo sets `sync_quantity` on the selector-area check03 so the Travel Case scales with 1x/2x/3x; MV/configurable mains need `data-next-product-sync` instead.
 
 Configure it with `order_bump.check03`:
 - `package_id`, `title`, `subtitle`, `image_src`, `image_alt`, `badge_text`, and `savings_text` control the visible card.
