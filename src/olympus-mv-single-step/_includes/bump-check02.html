@@ -6,9 +6,9 @@
   next_purpose: Pre-purchase add-on offer rendered as an expanded checkbox-style card.
   next_params:
     packages:             object, optional. Dict with main_package, prepurchase_1, prepurchase_2 keys.
-    order_bump.check02:   optional frontmatter object for package_id, sync_quantity, title, image_src, image_alt, description_prefix, description_suffix, and is_upsell.
+    order_bump.check02:   optional frontmatter object for package_id, package_sync, sync_quantity, title, image_src, image_alt, description_prefix, description_suffix, and is_upsell.
     package_id:           number, default packages.prepurchase_2 or 9.
-    package_sync:         number|false, default packages.main_package or 1. Set false to disable sync.
+    package_sync:         number|false, default packages.main_package or 1. Set false to disable sync. Also settable via order_bump.check02.package_sync (legacy alias: order_bump.check02.sync_quantity). Include arg wins; frontmatter package_sync wins over sync_quantity.
     is_upsell:            bool, default true (deliberate). data-next-is-upsell flag; false keeps the bump a plain line on the initial order.
   next_sdk_owns:
     - data-next-package-toggle
@@ -38,7 +38,10 @@
 {% endcomment %}
 {% assign bump = order_bump.check02 -%}
 {% assign pkg_id = package_id | default: bump.package_id | default: packages.prepurchase_2 | default: 9 -%}
-{% if package_sync == nil and bump.sync_quantity == nil %}{% assign sync_qty = packages.main_package | default: 1 %}{% elsif package_sync != nil %}{% assign sync_qty = package_sync %}{% else %}{% assign sync_qty = bump.sync_quantity %}{% endif -%}
+{% if package_sync != nil %}{% assign sync_qty = package_sync -%}
+{% elsif bump.package_sync != nil %}{% assign sync_qty = bump.package_sync -%}
+{% elsif bump.sync_quantity != nil %}{% assign sync_qty = bump.sync_quantity -%}
+{% else %}{% assign sync_qty = packages.main_package | default: 1 %}{% endif -%}
 {% comment %} Resolve into a private local — never assign the public arg name: campaign_include shares scope, so a public assign here would leak into sibling bumps on the page and defeat their own frontmatter fallbacks. {% endcomment -%}
 {% if is_upsell != nil %}{% assign b_is_upsell = is_upsell %}{% elsif bump.is_upsell != nil %}{% assign b_is_upsell = bump.is_upsell %}{% else %}{% assign b_is_upsell = true %}{% endif -%}
 {% assign b_title = bump_title | default: bump.title | default: 'Order Bump Title' -%}
