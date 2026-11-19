@@ -196,3 +196,19 @@ test('page dl_user_data fallback: not without the flag, not without dl_user_data
   dispatch(r, { ...SDK_PURCHASE, user_properties: { visitor_type: 'guest' } });
   assert.equal('user_data' in r.calls[1][2], false, 'order purchase never borrows');
 });
+
+test('order purchase carries dedupe_id = its order number; upsell purchases and other events carry none', () => {
+  const r = load();
+  dispatch(r, SDK_PURCHASE);
+  dispatch(r, SDK_UPSELL);
+  dispatch(r, { ...SDK_PURCHASE, event: 'dl_begin_checkout' });
+  assert.deepEqual(r.calls[0].slice(0, 2), ['track', 'purchase']);
+  assert.deepEqual(r.calls[0][3], { dedupe_id: '101614' });
+  assert.equal(r.calls[1][2].transaction_id, 'abc123-US1');
+  assert.equal(r.calls[1].length, 3, 'upsell purchase has no options argument');
+  assert.equal(r.calls[2].length, 3, 'begin_checkout has no options argument');
+
+  const numeric = load();
+  dispatch(numeric, { ...SDK_PURCHASE, ecommerce: { ...SDK_PURCHASE.ecommerce, transaction_id: 101614 } });
+  assert.deepEqual(numeric.calls[0][3], { dedupe_id: '101614' });
+});
