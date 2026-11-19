@@ -7,7 +7,7 @@ window.nextConfig = {
   apiKey: "Fdm0h0Jcm8TfhkBvhIhP0xDQzc5F5Ev8oNHnlv91",
   
   // Currency behavior when country changes
-  currencyBehavior: 'auto', // 'auto' | 'manual'
+  currencyBehavior: 'auto', // 'auto' | 'manual' — SDK 0.4.x only; 0.5 shows the campaign currency unless the URL has ?currency=
   
   // Payment and checkout configuration
   paymentConfig: {
@@ -42,12 +42,12 @@ window.nextConfig = {
     dontShowStates: [], // US territories (AS, GU, MP, PR, VI, UM) are always hidden by the SDK; add other state/province codes to hide (note: a code is hidden in every country, see campaign-cart#107)
     // AUTOCOMPLETE PROVIDER:
     //   Option 1 (active): NextCommerce — enableAutocomplete: true, leave googleMaps.apiKey empty
-    //   Option 2: Google Maps — fill in googleMaps.apiKey below; takes priority when apiKey is non-empty
+    //   Option 2: Google Maps — fill in googleMaps.apiKey below; takes priority when apiKey is non-empty (SDK 0.4.x only: 0.5 removed googleMaps)
     //   Option 3: Disabled — remove enableAutocomplete and leave googleMaps.apiKey empty
     enableAutocomplete: true,
   },
 
-  // Google Maps API key — leave empty to use NextCommerce autocomplete (Option 1 above)
+  // Google Maps API key — leave empty to use NextCommerce autocomplete (Option 1 above). Ignored from SDK 0.5.
   googleMaps: {
     apiKey: "",
     region: "US",

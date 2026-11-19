@@ -196,3 +196,37 @@ test('page dl_user_data fallback: not without the flag, not without dl_user_data
   dispatch(r, { ...SDK_PURCHASE, user_properties: { visitor_type: 'guest' } });
   assert.equal('user_data' in r.calls[1][2], false, 'order purchase never borrows');
 });
+
+// SDK 0.5: user_properties carry { visitor_type: 'guest' } only; user_data falls back to the order's user
+// from the core's NextForwarder.customer(evt).
+function loadV05(customer, win = {}) {
+  const seen = [];
+  const r = load({ __axonSendUserData: true, ...win });
+  r.window.NextForwarder.customer = (evt) => { seen.push(evt && evt.event); return customer; };
+  return Object.assign(r, { seen });
+}
+const GUEST = { user_properties: { visitor_type: 'guest' } };
+
+test('SDK 0.5 order purchase: user_data from the order customer (email, E.164 phone)', () => {
+  const r = loadV05({ email: ' Jane.Doe@Example.com ', phone: '+447700900123', first_name: 'Jane' });
+  dispatch(r, { ...SDK_PURCHASE, ...GUEST });
+  assert.deepEqual(r.seen, ['dl_purchase']);
+  assert.deepEqual(r.calls[0][2].user_data, { email: 'jane.doe@example.com', phone: '447700900123' });
+});
+
+test('SDK 0.5 upsell purchase: user_data from the loaded order customer', () => {
+  const r = loadV05({ email: 'jane@example.com' });
+  dispatch(r, { ...SDK_UPSELL, ...GUEST });
+  assert.deepEqual(r.calls[0][2].user_data, { email: 'jane@example.com' });
+});
+
+test('SDK 0.5 customer only fills gaps: user_properties win, flag off sends nothing', () => {
+  let r = loadV05({ email: 'other@example.com', phone: '+447700900123' });
+  dispatch(r, { ...SDK_PURCHASE, user_properties: { customer_email: 'jane@example.com' } });
+  assert.deepEqual(r.calls[0][2].user_data, { email: 'jane@example.com', phone: '447700900123' });
+
+  r = loadV05({ email: 'jane@example.com' }, { __axonSendUserData: undefined });
+  dispatch(r, { ...SDK_PURCHASE, ...GUEST });
+  assert.equal('user_data' in r.calls[0][2], false);
+  assert.deepEqual(r.seen, [], 'customer is not read with the flag off');
+});

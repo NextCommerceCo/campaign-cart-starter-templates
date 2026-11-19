@@ -815,7 +815,7 @@
         "id": "template-reference-apollo",
         "family": "apollo",
         "version": "sdk-0.4.43-shipping-coupon-tiers-2026-10-23",
-        "source_commit": "11af184434963340df74bee96a1f8559fcbf9028",
+        "source_commit": "d07294a663b031e69ff6f24fa45cf39a9bdda92c",
         "provenance_path": "docs/template-references/apollo/README.md",
         "provenance_url": "https://raw.githubusercontent.com/NextCommerceCo/campaign-cart-starter-templates/main/docs/template-references/apollo/README.md",
         "contract_path": "docs/commerce-surface-catalog.json",

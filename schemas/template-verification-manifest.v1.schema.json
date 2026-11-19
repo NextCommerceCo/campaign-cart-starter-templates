@@ -29,7 +29,7 @@
       "additionalProperties": false,
       "required": ["sdk_version", "source", "verified_at", "checks"],
       "properties": {
-        "sdk_version": { "type": "string", "pattern": "^0\\.4\\.[0-9]+$" },
+        "sdk_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
         "source": {
           "type": "object",
           "additionalProperties": false,

@@ -10,6 +10,9 @@
  *     post-redirect through the transformFn; forwarding only the replay prevents a cross-page
  *     double-fire and matches the SDK's own providers, which fire only after the redirect)
  *   - dedup — per-adapter, keyed on event_id (guards same-page-load duplicates)
+ *   - AddToCart — SDK 0.5 dl_add_to_cart is forwarded only when first_in_session (see processForAdapter)
+ *   - customer — NextForwarder.customer(evt): the shopper behind an event on SDK 0.5, whose user_properties
+ *     no longer carry one (see the customer bridge). Only active if an adapter opts in with customerData.
  *   - replay — re-plays events already queued in NextDataLayer when an adapter registers late
  *   - event toggles — per-adapter allowedEvents (allowlist) + blockedEvents (denylist), both
  *     client-configurable per campaign and matched against the dl_* source name (precise) or the
@@ -42,9 +45,18 @@
  *                                                       //   accepts_marketing checkbox is present AND
  *                                                       //   unchecked. false = fire regardless (attribution
  *                                                       //   identity); acceptsMarketing is still passed
- *     contactOnFieldEntry: false                        // optional (default false): also fire onContact the
+ *     contactOnFieldEntry: false,                       // optional (default false): also fire onContact the
  *                                                       //   moment a valid checkout email/phone is entered
  *                                                       //   (no name/cart needed), deduped per identifier
+ *     allAddToCart: false,                              // optional (default false): forward every SDK 0.5
+ *                                                       //   dl_add_to_cart, not only first_in_session. For
+ *                                                       //   hand-written adapters: no campaigns.json key
+ *                                                       //   sets it on the shipped ones
+ *     customerData: false                               // optional (default false): true or a function starts
+ *                                                       //   the SDK 0.5 customer bridge at register;
+ *                                                       //   NextForwarder.customer returns the shopper only
+ *                                                       //   while some adapter's value is true (a function
+ *                                                       //   is called each time)
  *   }
  */
 (function () {
@@ -248,8 +260,144 @@
     if (window.next) setTimeout(capturePrefilled, 0);
   }
 
+  // ---- SDK 0.5 customer bridge (customer(evt), opt-in via adapter.customerData) ---------------------
+  // SDK 0.4.x put the shopper's email, phone, names and address in every dl_* user_properties. 0.5 sends
+  // { visitor_type: 'guest' } only (an open SDK decision, campaign-cart docs/architecture/parity-0.4.md)
+  // and carries the shopper on its tracking events instead: the checkout_* events (Checkout: user,
+  // shipping_address, billing_address) and checkout_completed / upsell_completed (Order: user, addresses).
+  // customer(evt) returns that shopper for a dl_* event as flat strings, read first from next.snapshot() at
+  // push time (on a purchase the SDK pushes dl_purchase before a page's next.analytics.on listener hears
+  // checkout_completed), then from the latest tracking event next.analytics.on replayed or delivered.
+  // On 0.4.x neither API exists and it returns {}: adapters keep reading user_properties there.
+  //
+  // The subscription starts when an adapter registers with a customerData option (true, or a function).
+  // The data is a separate decision made on every call: customer() returns {} unless an adapter wants it
+  // right now (customerData: true for Meta advanced matching, or a function that returns true when called,
+  // like Axon's user_data flag, which a consent script may set or clear after load). A GA4- or Taboola-only
+  // page never subscribes. Nothing is stored beyond this page's memory, and the SDK's own next.snapshot()
+  // already exposes the same data to any page script; this adds no new reader.
+  var tracked = { order: null, checkout: null };
+  var hookedOn = null; // the SDK instance the subscription is on
+  var bridgeInstalled = false;
+  var customerAdapters = [];
+  var sdkRef = null; // the instance window.nextReady hands over, used only while window.next is absent
+
+  function sdk() { return window.next || sdkRef || null; }
+
+  // Subscribes once per SDK instance. A new instance (re-initialised SDK, replaced window.next) drops what
+  // the previous one reported and subscribes again; the old listener goes quiet.
+  function hookTracking(instance) {
+    if (instance && typeof instance === 'object') sdkRef = instance;
+    if (!bridgeInstalled) return;
+    var s = sdk();
+    if (!s || s === hookedOn) return;
+    var a = s.analytics;
+    if (!a || typeof a.on !== 'function') return;
+    // Set before subscribing: next.analytics.on replays past events inside the call, and they must pass the
+    // listener's instance check. A throw restores both, so the next attempt can retry.
+    var prevHooked = hookedOn, prevTracked = tracked;
+    hookedOn = s;
+    if (prevHooked) tracked = { order: null, checkout: null };
+    try {
+      a.on('*', function (e) {
+        if (s !== hookedOn || !e || !e.data) return;
+        if (e.object === 'order') tracked.order = e.data;
+        else if (e.object === 'checkout') tracked.checkout = e.data;
+      });
+    } catch (err) {
+      hookedOn = prevHooked; tracked = prevTracked;
+      log('next.analytics.on failed', err);
+    }
+  }
+
+  function installTrackingHook() {
+    if (bridgeInstalled) return;
+    bridgeInstalled = true;
+    if (typeof document !== 'undefined') {
+      document.addEventListener('next:initialized', function () { hookTracking(); });
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { hookTracking(); });
+    }
+    window.nextReady = window.nextReady || [];
+    window.nextReady.push(function (instance) { hookTracking(instance); });
+    hookTracking();
+  }
+
+  function str(v) { return (v === undefined || v === null) ? '' : String(v).trim(); }
+
+  // country is left out on purpose: the checkout preselects it, so a country alone is not yet an address.
+  var ADDRESS_KEYS = ['city', 'state', 'postcode'];
+  function hasAddress(a) {
+    if (!a) return false;
+    for (var i = 0; i < ADDRESS_KEYS.length; i++) if (str(a[ADDRESS_KEYS[i]])) return true;
+    return false;
+  }
+
+  // An Order or Checkout -> { email, phone, first_name, last_name, city, state, postcode, country }.
+  // One address, whole: the shipping address when it has a city, state or postcode, else the billing address.
+  // Fields are never mixed across the two, so city, state and postcode always describe one place.
+  function customerOf(src) {
+    if (!src) return {};
+    var u = src.user || {};
+    var addr = hasAddress(src.shipping_address) ? src.shipping_address
+      : (hasAddress(src.billing_address) ? src.billing_address : (src.shipping_address || src.billing_address || {}));
+    var out = {
+      email: str(u.email),
+      phone: str(u.phone) || str(addr.phone),
+      first_name: str(u.first_name) || str(addr.first_name),
+      last_name: str(u.last_name) || str(addr.last_name),
+      city: str(addr.city),
+      state: str(addr.state),
+      postcode: str(addr.postcode),
+      country: str(addr.country)
+    };
+    for (var k in out) if (!out[k]) delete out[k];
+    return out;
+  }
+
+  var ORDER_EVENTS = { dl_purchase: 1, dl_upsell_purchase: 1 };
+
+  function wants(adapter) {
+    var want = adapter.customerData;
+    try { return want === true || (typeof want === 'function' && want() === true); } catch (err) { return false; }
+  }
+
+  function customerWanted() {
+    for (var i = 0; i < customerAdapters.length; i++) if (wants(customerAdapters[i])) return true;
+    return false;
+  }
+
+  function customer(evt) {
+    if (!customerWanted()) return {};
+    installTrackingHook();
+    hookTracking();
+    var s = sdk(), snap;
+    try { snap = s && typeof s.snapshot === 'function' ? s.snapshot() : null; }
+    catch (err) { snap = null; }
+    var order = (snap && snap.order) || tracked.order;
+    var checkout = (snap && snap.checkout) || tracked.checkout;
+    // A purchase reads the order; any other event the checkout, falling back to a loaded order (upsell
+    // pages). Whole sources, never merged field by field: an order's email never travels with a
+    // checkout's address.
+    var first = evt && ORDER_EVENTS[evt.event] ? order : checkout;
+    var second = first === order ? checkout : order;
+    var own = customerOf(first);
+    return Object.keys(own).length ? own : customerOf(second);
+  }
+
   function processForAdapter(adapter, evt) {
     if (!evt || !evt.event) return;
+    // SDK 0.5 sends dl_add_to_cart for every cart change at the cart price — a cart filled before the page
+    // (default bundle, forcePackageId) and every bundle swap included — and marks the first add in the tab
+    // first_in_session: true. 0.4.x sent none for a pre-filled cart and dl_package_swapped for a swap.
+    // Forward only the first add so AddToCart counts shoppers, not selector clicks. 0.4.x pushes carry no
+    // first_in_session and pass. An adapter that wants every add sets allAddToCart: true.
+    // Anything defined other than true counts as a repeat add, so a differently encoded flag cannot turn the
+    // filter off. The SDK's own facebook destination does not pass through here and sends every add: see
+    // _shared/analytics/README.md (AddToCart on SDK 0.5).
+    if (evt.event === 'dl_add_to_cart' && !adapter.allAddToCart &&
+        evt.first_in_session !== undefined && evt.first_in_session !== true) {
+      log(adapter.name, 'add_to_cart dropped (not first_in_session)'); return;
+    }
     // Redirect-queued events (e.g. dl_purchase, dl_upsell_purchase) fire on the checkout page with
     // this flag, BEFORE the SDK queues them across the redirect. The transformFn runs at push()
     // time — before the SDK's willRedirect check — so we'd see the event here (pre-redirect) AND
@@ -352,6 +500,8 @@
   window.NextForwarder = {
     DEFAULT_MAIN_EVENTS: DEFAULT_MAIN_EVENTS,
     EMAIL_RE: EMAIL_RE, // the field-entry email shape; adapters re-validating prospect emails should use it
+    customer: customer, // SDK 0.5: the shopper behind a dl_* event (see the customer bridge); {} on 0.4.x or
+                        //   while no adapter's customerData is true
     register: function (adapter) {
       if (!adapter || !adapter.name || typeof adapter.send !== 'function' ||
           typeof adapter.isActive !== 'function' || !adapter.map) {
@@ -363,6 +513,8 @@
       adapter._count = 0;
       adapter._contacts = 0;
       adapter._contactSeen = {};
+      if (adapter.customerData === true || typeof adapter.customerData === 'function') customerAdapters.push(adapter);
+      if (adapter.customerData === true || typeof adapter.customerData === 'function') installTrackingHook();
       if (typeof adapter.onContact === 'function') {
         contactAdapters.push(adapter);
         installProspectHook();
@@ -401,7 +553,10 @@
           allowed: a._allowed ? Object.keys(a._allowed) : 'all', blocked: a.blockedEvents || [],
           contact: typeof a.onContact === 'function'
             ? { requiresMarketingConsent: a.contactRequiresMarketingConsent !== false, onFieldEntry: !!a.contactOnFieldEntry }
-            : null
+            : null,
+          allAddToCart: !!a.allAddToCart,
+          // whether this adapter wants the shopper right now (a function is evaluated here); null = never asks
+          customerData: customerAdapters.indexOf(a) === -1 ? null : wants(a)
         };
       });
     },

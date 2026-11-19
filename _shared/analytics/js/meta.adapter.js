@@ -20,6 +20,14 @@
  *     customer data and external_id itself. Remove it in that same release: the first fbq('init') with data
  *     wins on a page, so the adapter and the SDK would fight over it.
  *
+ * SDK 0.5: dl_* user_properties carry { visitor_type: 'guest' } only, so Part B takes the shopper from the
+ * SDK's order through NextForwarder.customer(evt) (Order.user + one address) on a purchase, between
+ * user_properties and the form. Earlier events use the form only: the SDK's checkout state can hold a
+ * previous visit's restored shopper, and the first init with data wins the page. Part A and
+ * external_id do nothing on 0.5: getAttribution / addMetadata are gone and the SDK no longer writes a
+ * visitor_id key. 0.5 still reads _fbp / _fbc once at boot, so campaign-cart#132 stays open there with no
+ * page-side workaround until the SDK re-reads the cookies or exposes a way to set order metadata.
+ *
  * A. Cookie re-sync (works around campaign-cart#132):
  *   The SDK reads the pixel's _fbp / _fbc cookies once at boot, before fbevents.js has set them on a
  *   first visit, and keeps that empty value for the session — so the order (and a server-side Purchase
@@ -163,6 +171,17 @@
     return d;
   }
 
+  // SDK 0.5: the shopper from its tracking events (the core's customer bridge), in the user_properties shape.
+  // {} on 0.4.x, where user_properties already carry the shopper.
+  function fromCustomer(evt) {
+    var c = window.NextForwarder.customer ? window.NextForwarder.customer(evt) : {};
+    return fromUserProperties({
+      customer_email: c.email, customer_phone: c.phone,
+      customer_first_name: c.first_name, customer_last_name: c.last_name,
+      customer_city: c.city, customer_province_code: c.state, customer_zip: c.postcode, customer_country: c.country
+    });
+  }
+
   // E.164 ("+" then 7-15 digits, the forwarder core's / SDK's minimum) -> digits without "+". '' for anything
   // else: no dial code is guessed.
   function digitsE164(v) {
@@ -275,9 +294,12 @@
     allowedEvents: ['dl_begin_checkout', 'dl_add_payment_info', 'dl_purchase', 'dl_upsell_purchase'],
     send: function (name, ec, evt) {
       // Lowest to highest: the page's dl_user_data (upsell purchase only), the event's user_properties,
-      // the form (see B).
+      // the SDK 0.5 order's shopper (purchases only), the form (see B). Before the order exists the SDK's
+      // checkout can still hold a previous visit's restored shopper, which must not win the one init.
+      var purchase = evt && (evt.event === 'dl_purchase' || evt.event === 'dl_upsell_purchase');
       if (evt && evt.event === 'dl_upsell_purchase') collect(fromUserProperties(pageUserProperties()));
       collect(fromUserProperties(evt && evt.user_properties));
+      if (purchase) collect(fromCustomer(evt));
       collect(fromForm());
       apply(name);
     },
@@ -295,6 +317,7 @@
       if (DEBUG && window.console) console.log('[meta.adapter] collect', 'contact:' + c.source, Object.keys(pending));
     },
     contactRequiresMarketingConsent: false, // see Consent in the header
-    contactOnFieldEntry: true
+    contactOnFieldEntry: true,
+    customerData: true // SDK 0.5 shopper (fromCustomer); this registration only runs with advanced matching on
   });
 })();

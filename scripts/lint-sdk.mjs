@@ -79,6 +79,37 @@ const SDK_ATTR_ROOTS = [
   'data-next-default-property',
 ];
 
+// SDK 0.5 (v2) surface attributes — the markup that turns on its v2 bindings (campaign-cart src/boot.ts V2)
+// plus the v2 payment / express / slot widgets. Matched by exact attribute name, not substring:
+// `data-next-for` must not catch `data-next-format`, nor `data-next-selector` the 0.4 `data-next-selector-id`.
+// Templates stay on the 0.4 attributes for now; this keeps a v2 surface pasted into a page from escaping lint.
+const SDK_V2_ATTRS = [
+  'data-next-selector',
+  'data-next-option',
+  'data-next-for',
+  'data-next-each',
+  'data-next-payment',
+  'data-next-express',
+  'data-next-slots',
+];
+const SDK_ATTRS = [...SDK_ATTR_ROOTS, ...SDK_V2_ATTRS];
+const V2_NAME_END = /[\s=>\/]/;
+
+// Indexes of attr in text: a substring match for the 0.4 roots, an exact attribute name for v2.
+function attrIndexes(text, attr) {
+  const exact = SDK_V2_ATTRS.includes(attr);
+  const out = [];
+  for (let idx = text.indexOf(attr); idx !== -1; idx = text.indexOf(attr, idx + attr.length)) {
+    if (exact) {
+      const before = text[idx - 1];
+      const after = text[idx + attr.length];
+      if ((before !== undefined && !/[\s"'<]/.test(before)) || (after !== undefined && !V2_NAME_END.test(after))) continue;
+    }
+    out.push(idx);
+  }
+  return out;
+}
+
 // Required-for-checkout attribute fields. Their absence (or wrong location) is a
 // hard fail in the 95% gate spec.
 const REQUIRED_CHECKOUT_FIELDS = ['email', 'fname', 'lname', 'address1', 'country'];
@@ -161,8 +192,8 @@ function lintSource() {
       const stripped = blankIgnoredMarkup(content);
       const lines = stripped.split('\n');
       for (let i = 0; i < lines.length; i++) {
-        for (const attr of SDK_ATTR_ROOTS) {
-          if (lines[i].includes(attr)) {
+        for (const attr of SDK_ATTRS) {
+          if (attrIndexes(lines[i], attr).length) {
             violations.push({
               kind: 'inlined-sdk-root',
               file: relative(repoRoot, file),
@@ -217,12 +248,8 @@ function lintRendered() {
       // the nearest ancestor with data-next-catalog-component="<name>" exists.
       // Cheap heuristic without a full parser: find each attr index, then search
       // backwards for the most recent open-tag with data-next-catalog-component.
-      for (const attr of SDK_ATTR_ROOTS) {
-        let from = 0;
-        while (true) {
-          const idx = content.indexOf(attr, from);
-          if (idx === -1) break;
-          from = idx + attr.length;
+      for (const attr of SDK_ATTRS) {
+        for (const idx of attrIndexes(content, attr)) {
           if (!hasOpenCatalogWrapper(content, idx)) {
             violations.push({
               kind: 'rendered-sdk-outside-wrapper',
@@ -313,6 +340,13 @@ function includeSuggestion(attr) {
     'data-next-quantity-increase': "{% campaign_include 'single-offer-quantity-selector.html' %}",
     'data-next-quantity-display': "{% campaign_include 'single-offer-quantity-selector.html' %}",
     'data-next-default-property': "{% campaign_include 'personalization-field.html' order_personalization=order_personalization %}",
+    'data-next-selector': "{% campaign_include 'bundle-selector.html' %}",
+    'data-next-option': "{% campaign_include 'bundle-selector.html' %}",
+    'data-next-for': "{% campaign_include 'bundle-selector.html' %}",
+    'data-next-each': "{% campaign_include 'cart-summary01.html' %}",
+    'data-next-payment': "{% campaign_include 'payment-methods.html' %}",
+    'data-next-express': "{% campaign_include 'express-checkout.html' %}",
+    'data-next-slots': "{% campaign_include 'mv-slot-stage.html' %}",
   };
   return map[attr] ?? '(see catalog: apollo/_includes/)';
 }
