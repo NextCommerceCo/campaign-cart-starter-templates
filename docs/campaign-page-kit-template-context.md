@@ -1427,7 +1427,8 @@ window.next.track('event_name', data)  // fire a custom analytics event
 
 // SDK info
 window.next.version                    // SDK version string
-window.next.ready(callback)            // run callback once SDK is initialized
+window.nextReady = window.nextReady || [];
+window.nextReady.push(callback)        // callback(sdk) once the SDK is up (queued before boot, immediate after); use the sdk argument, window.next may still be unassigned
 ```
 
 For anything cart/checkout/upsell related, prefer data attributes over calling the API directly — they are more declarative and easier to maintain.
