@@ -35,6 +35,14 @@
  * fills any field it lacks from it. It is read from window.NextDataLayer at that moment, only with the flag
  * on, so it works whatever axon_allowed_events / axon_blocked_events say and the adapter keeps no PII.
  *
+ * Server dedupe: the applovin-axon app's server sends each order's purchase to AppLovin's Conversions API
+ * about 10 minutes after the order, with dedupe_id = the order number. AppLovin drops a same-dedupe_id
+ * purchase arriving more than 5 minutes after the first (support.applovin.com, "Deduplicating events"), so
+ * the order purchase here carries dedupe_id = its transaction_id (the SDK's order number) and the server
+ * copy counts only when this one never arrived.
+ * Without it AppLovin counts both. Upsell purchases ({orderId}-US{n}) carry none: the server sends one
+ * purchase per order.
+ *
  * Debug: ?nfdebug=true or localhost, then window.NextForwarder.getStatus().
  */
 (function () {
@@ -210,6 +218,10 @@
           console.warn('[axon.adapter] purchase sent without user_data (' +
             (window.__axonSendUserData === true ? 'no usable email, phone or customer_id' : 'axon_send_user_data is off') + ')');
         }
+      }
+      if (name === 'purchase' && evt && evt.event === 'dl_purchase' && params.transaction_id !== undefined) {
+        window.axon('track', name, params, { dedupe_id: String(params.transaction_id) });
+        return;
       }
       window.axon('track', name, params);
     }

@@ -168,6 +168,13 @@ base pixel block does a bare `fbq('init', id)`. `meta.adapter.js` loads whenever
 - **Without `user_data`, Axon flags the purchase but still records it**: revenue and `transaction_id`
   arrive as normal. With `?nfdebug=true` (or on localhost) the adapter logs one console warning per page
   when a purchase goes out without it.
+- **The order `purchase` carries `dedupe_id` = its `transaction_id`** (the SDK's order number), as the fourth
+  argument of `axon('track', 'purchase', params, { dedupe_id })`. The `applovin-axon` app's server sends each
+  order's purchase to AppLovin's Conversions API about 10 minutes later with the same `dedupe_id`, and AppLovin
+  drops a same-`dedupe_id` purchase arriving more than 5 minutes after the first
+  ([Deduplicating events](https://support.applovin.com/en/growth/promoting-your-websites/track-and-optimize/deduplicating-events)),
+  so the server copy counts only when the pixel missed the order. Without it AppLovin counts both. Upsell purchases
+  (`{orderId}-US{n}`) carry none, because the server sends one purchase per order.
 - `axon.adapter.js` is ahead of `analytics-tracking-docs/examples/`, so `lint:upstream` reports drift for it
   until upstream is synced.
 
