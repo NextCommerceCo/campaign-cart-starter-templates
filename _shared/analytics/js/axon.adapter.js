@@ -35,9 +35,10 @@
  * on, so it works whatever axon_allowed_events / axon_blocked_events say and the adapter keeps no PII.
  *
  * Server dedupe: the applovin-axon app's server sends each order's purchase to AppLovin's Conversions API
- * about 10 minutes after the order, with dedupe_id = the order number. AppLovin drops a purchase that arrives
- * within 5 minutes after one with the same dedupe_id, so the order purchase here carries dedupe_id = its
- * transaction_id (the SDK's order number) and the server copy counts only when this one never arrived.
+ * about 10 minutes after the order, with dedupe_id = the order number. AppLovin drops a same-dedupe_id
+ * purchase arriving more than 5 minutes after the first (support.applovin.com, "Deduplicating events"), so
+ * the order purchase here carries dedupe_id = its transaction_id (the SDK's order number) and the server
+ * copy counts only when this one never arrived.
  * Without it AppLovin counts both. Upsell purchases ({orderId}-US{n}) carry none: the server sends one
  * purchase per order.
  *
