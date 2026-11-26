@@ -7,7 +7,7 @@
  * analytics-head.html loads fbevents.js. This file only works through that pixel. One job: advanced
  * matching, opt-in via meta_advanced_matching_enabled: "true".
  *
- * Load order (gated on campaign.fb_pixel_id, on EVERY page incl. receipt/upsell):
+ * Load order (gated on campaign.fb_pixel_id + meta_advanced_matching_enabled, on EVERY page incl. receipt/upsell):
  *   1. Meta base pixel (analytics-head.html) — defines window.fbq, bare fbq('init', id),
  *      sets window.__metaPixelId and window.__metaAdvancedMatching
  *   2. next-forwarder-core.js

@@ -104,7 +104,7 @@ behaviour is regression-tested by `analytics-tracking-docs/examples/_harness/`; 
 
 The SDK's facebook provider (`analytics.providers.facebook` in `config.js`) sends every Meta event, puts the
 `_fbp` / `_fbc` cookies on the order itself (SDK 0.5.1, campaign-cart#132), and the
-base pixel block does a bare `fbq('init', id)`. `meta.adapter.js` loads whenever `fb_pixel_id` is set, after
+base pixel block does a bare `fbq('init', id)`. `meta.adapter.js` loads when `fb_pixel_id` and `meta_advanced_matching_enabled` are both set, after
 `next-forwarder-core.js`. It sends **no events of its own** and loads nothing from Meta.
 
 - **Advanced matching — opt-in, `meta_advanced_matching_enabled: "true"`.** Collect on entry, init at the

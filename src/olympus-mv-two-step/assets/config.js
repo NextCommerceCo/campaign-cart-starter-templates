@@ -40,17 +40,11 @@ window.nextConfig = {
     // Preselected country: the shopper's location if the campaign ships there, otherwise US, otherwise the first country listed.
     // (showCountries only applies if the campaign has no shipping countries; defaultCountry only if no country is left at all — both rarely useful.)
     dontShowStates: [], // US territories (AS, GU, MP, PR, VI, UM) are always hidden by the SDK; add other state/province codes to hide (note: a code is hidden in every country, see campaign-cart#107)
-    // AUTOCOMPLETE PROVIDER:
-    //   Option 1 (active): NextCommerce — enableAutocomplete: true, leave googleMaps.apiKey empty
-    //   Option 2: Google Maps — fill in googleMaps.apiKey below; takes priority when apiKey is non-empty (SDK 0.4.x only: 0.5 removed googleMaps)
-    //   Option 3: Disabled — remove enableAutocomplete and leave googleMaps.apiKey empty
+    // ADDRESS AUTOCOMPLETE:
+    //   On (active): NextCommerce autocomplete — enableAutocomplete: true
+    //   Off: remove enableAutocomplete (or set it to false)
+    // SDK 0.5 removed nextConfig.googleMaps: a Google key set there is ignored.
     enableAutocomplete: true,
-  },
-
-  // Google Maps API key — leave empty to use NextCommerce autocomplete (Option 1 above). Ignored from SDK 0.5.
-  googleMaps: {
-    apiKey: "",
-    region: "US",
   },
 
   // Discount codes configuration
