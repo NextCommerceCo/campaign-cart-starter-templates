@@ -7,7 +7,7 @@ window.nextConfig = {
   apiKey: "Fdm0h0Jcm8TfhkBvhIhP0xDQzc5F5Ev8oNHnlv91",
   
   // Currency behavior when country changes
-  currencyBehavior: 'auto', // 'auto' | 'manual' — SDK 0.4.x only; 0.5 shows the campaign currency unless the URL has ?currency=
+  currencyBehavior: 'auto', // 'auto' | 'manual' — 'auto' shows the visitor's currency (first page in a tab waits up to 1.5 s for the lookup; CAD/AUD/NZD/HKD/MXN show CA$/A$/NZ$/HK$/MX$ outside their home market)
   
   // Payment and checkout configuration
   paymentConfig: {
@@ -117,7 +117,7 @@ window.nextConfig = {
         settings: {
           pixelId: "YOUR_PIXEL_ID"
         },
-        // Optional: blockedEvents: ["PageView"]
+        // Optional: blockedEvents: ["dl_add_to_cart"]  (exact dl_* names; dl_user_data is the PageView)
       },
       // RudderStack
       rudderstack: {
@@ -126,7 +126,7 @@ window.nextConfig = {
             // RudderStack configuration is handled by the RudderStack SDK itself
             // This just enables the adapter
         },
-        // Optional: blockedEvents: ["PageView"]
+        // Optional: blockedEvents: ["dl_add_to_cart"]  (exact dl_* names; dl_user_data is the page view)
       },
       // Custom analytics endpoint
       custom: {

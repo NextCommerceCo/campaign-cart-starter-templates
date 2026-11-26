@@ -102,25 +102,20 @@ behaviour is regression-tested by `analytics-tracking-docs/examples/_harness/`; 
 
 ### Meta Pixel extras (`meta.adapter.js`)
 
-The SDK's facebook provider (`analytics.providers.facebook` in `config.js`) sends every Meta event, and the
+The SDK's facebook provider (`analytics.providers.facebook` in `config.js`) sends every Meta event, puts the
+`_fbp` / `_fbc` cookies on the order itself (SDK 0.5.1, campaign-cart#132), and the
 base pixel block does a bare `fbq('init', id)`. `meta.adapter.js` loads whenever `fb_pixel_id` is set, after
 `next-forwarder-core.js`. It sends **no events of its own** and loads nothing from Meta.
 
-- **Cookie re-sync — always on with the pixel.** The SDK reads `_fbp` / `_fbc` once at boot, before
-  `fbevents.js` has set them on a first visit, and keeps the empty value for the session
-  ([campaign-cart#132](https://github.com/NextCommerceCo/campaign-cart/issues/132)). The adapter copies the
-  cookies into the attribution metadata with `next.addMetadata('fb_fbp' / 'fb_fbc')` when the SDK is ready
-  (polling every 500 ms for up to 10 s while one is missing) and again after `cart:updated` and `popstate`.
-  It only reads cookies, never writes them. Delete this part once #132 ships.
 - **Advanced matching — opt-in, `meta_advanced_matching_enabled: "true"`.** Collect on entry, init at the
   first Meta event with an email or phone. Valid checkout email/phone entry and the prospect cart only
-  *collect* `em`, `ph`, `fn`, `ln`. On `dl_begin_checkout`, `dl_add_payment_info`, `dl_purchase` and `dl_upsell_purchase` the
+  *collect* `em`, `ph`, `fn`, `ln`. On `dl_begin_checkout`, `dl_add_payment_info` and `dl_purchase` the
   adapter merges the event's `user_properties` and then the form at that moment (`em`, `ph`, `fn`, `ln`,
   `ct`, `st`, `zp`, `country`) and does one `fbq('init', pixelId, userData)` before the SDK's `fbq('track')`
-  for that event. The form wins on checkout: in SDK 0.4.43 checkout-time `user_properties` keep the form's
-  starting country and leave name, city, state and zip empty until Purchase. Receipt and upsell pages have
-  no form: there the event's `user_properties` stand, and on an upsell purchase only the page's `dl_user_data` fills the gaps (an
-  upsell purchase's own `user_properties` come from already-reset checkout state). A phone is used only as a valid E.164.
+  for that event. The form wins on checkout: before the purchase the SDK's `user_properties` carry only the
+  email and country typed so far. On `dl_purchase` they carry the order's customer and billing address, and
+  receipt and upsell pages have no form. `dl_upsell_purchase` is not used: the SDK sends Meta one Purchase per
+  order and none for an upsell. A phone is used only as a valid E.164.
   Values follow Meta's format before the init: lowercase; names without punctuation; city without
   punctuation or spaces; zip without spaces or dash, US zips cut to 5 digits. `dl_add_shipping_info` is not
   used: the SDK fires it while the address is still being typed, so an init there would lose later fields. The pixel keeps only the first init with data on a page, so details learned later on that page
@@ -128,15 +123,12 @@ base pixel block does a bare `fbq('init', id)`. `meta.adapter.js` loads whenever
   the init never waits for one. `ph` is digits including the country code — the input's
   `data-next-phone-e164` at checkout, `customer_phone` at purchase, never a guessed dial code. Known gap: on a
   return visit the SDK refills the phone after `dl_begin_checkout`, so that InitiateCheckout has no `ph`.
-  `external_id` is the SDK's anonymous `visitor_id` (`localStorage` `visitor_id__<scope>`), passed raw (the
-  pixel hashes it) and also saved as `next.addMetadata('fb_external_id', id)` for a server-side Purchase. The
-  scope is per API key + first path segment, so when more than one `visitor_id` key exists the adapter skips
-  `external_id` rather than guess (a public SDK getter would remove this). Never a customer id — the Campaigns
-  API is public. Not gated on `accepts_marketing`: Meta ties customer data to the pixel's own notice and
+  No `external_id`: on SDK 0.5.1 the `localStorage` `visitor_id__<scope>` key holds the campaign session id,
+  which resets after an hour idle, so it would split one shopper into several Meta users. Not gated on `accepts_marketing`: Meta ties customer data to the pixel's own notice and
   cookie consent, so if the pixel may fire, so may this. Set the flag only when the campaign's consent
   handling covers sending customer data to Meta.
 - Debug: `?nfdebug=true` (or localhost) logs `[meta.adapter]` lines; `NextForwarder.getStatus()` lists
-  it as `meta` only when advanced matching is on (the cookie re-sync does not register with the forwarder). Never test with `?ignore=true` — it turns analytics off. When checking `ud[...]` by hand,
+  it as `meta` only when advanced matching is on. Never test with `?ignore=true` — it turns analytics off. When checking `ud[...]` by hand,
   capture POST bodies as well as GET query strings: the pixel sends some events as hidden form POSTs.
 - `meta.adapter.js` has no counterpart in `analytics-tracking-docs/examples/` yet, so it is not in
   `lint:upstream`'s file map; add it there once upstream gains a copy.
@@ -168,13 +160,10 @@ base pixel block does a bare `fbq('init', id)`. `meta.adapter.js` loads whenever
 - **Without `user_data`, Axon flags the purchase but still records it**: revenue and `transaction_id`
   arrive as normal. With `?nfdebug=true` (or on localhost) the adapter logs one console warning per page
   when a purchase goes out without it.
-- **On SDK 0.5 `user_data` comes from the order.** 0.5's `user_properties` carry `visitor_type` only, so the
-  adapter reads the order's email and phone through the forwarder core's customer bridge. `user_id` is
-  0.4.x-only: 0.5's order has no customer id, so a 0.5 purchase sends email and phone.
 - `axon.adapter.js` is ahead of `analytics-tracking-docs/examples/`, so `lint:upstream` reports drift for it
   until upstream is synced.
 
-### AddToCart on SDK 0.5: forwarder adapters count shoppers, Meta counts adds
+### AddToCart on SDK 0.5: Meta and the forwarder adapters count shoppers, GTM counts adds
 
 SDK 0.5 pushes `dl_add_to_cart` for every cart change, including a cart filled before the page (default
 bundle, `forcePackageId`) and every bundle swap, and marks the first add in the tab `first_in_session: true`.
@@ -182,14 +171,11 @@ The forwarder core passes only that first add to the adapters that send AddToCar
 TikTok, Snapchat, Pinterest, Triple Whale; Northbeam sends purchases only), so their AddToCart counts
 shoppers. There is no `campaigns.json` key to change that on the shipped adapters: `allAddToCart: true` is a
 registration option for a hand-written adapter that wants every add. `NextForwarder.getStatus()` shows
-`allAddToCart` and `customerData` for each adapter. SDK 0.4.x pushes carry no `first_in_session` and all
-pass.
+`allAddToCart` for each adapter. SDK 0.4.x pushes carry no `first_in_session` and all pass.
 
-The SDK's own Meta and GTM destinations don't go through the forwarder: on 0.5 Meta gets `AddToCart` for every
-add, so the same funnel shows more AddToCart in Meta than in GA4 or Axon. That gap is open, not accepted:
-campaign-cart#126 asks for the Meta destination to honour `first_in_session`. Until it does, compare Meta's
-AddToCart with the forwarder vendors' only on 0.4.x, or count first adds in GTM with a trigger on
-`first_in_session`.
+The SDK's own destinations don't go through the forwarder. From 0.5.1 its Meta destination also sends
+`AddToCart` for the first add only, so Meta, GA4 and Axon count the same shoppers. GTM (`window.dataLayer`) and
+RudderStack get every add: count shoppers there with a trigger or filter on `first_in_session`.
 
 ### Identity: the `accepts_marketing` gate is per adapter
 

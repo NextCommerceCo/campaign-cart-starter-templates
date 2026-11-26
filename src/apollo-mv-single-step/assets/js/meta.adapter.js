@@ -4,9 +4,8 @@
  *
  * Sends NO events of its own and loads nothing from Meta: the SDK's facebook provider
  * (analytics.providers.facebook in config.js) sends every Meta event, and the base pixel in
- * analytics-head.html loads fbevents.js. This file only works through that pixel. Two jobs:
- *   A. Cookie re-sync — always on whenever fb_pixel_id is set.
- *   B. Advanced matching — opt-in via meta_advanced_matching_enabled: "true".
+ * analytics-head.html loads fbevents.js. This file only works through that pixel. One job: advanced
+ * matching, opt-in via meta_advanced_matching_enabled: "true".
  *
  * Load order (gated on campaign.fb_pixel_id, on EVERY page incl. receipt/upsell):
  *   1. Meta base pixel (analytics-head.html) — defines window.fbq, bare fbq('init', id),
@@ -14,47 +13,26 @@
  *   2. next-forwarder-core.js
  *   3. this file
  *
- * Delete when (this file is a stopgap; each part goes when the SDK does the job itself):
- *   - Part A cookie re-sync: delete when campaign-cart#132 ships.
- *   - Part B form read on checkout (address, name, phone from the form): delete when campaign-cart#134 ships.
- *   - Part B as a whole (advanced matching + fb_external_id): delete when the SDK's facebook provider sends
- *     customer data and external_id itself. Remove it in that same release: the first fbq('init') with data
- *     wins on a page, so the adapter and the SDK would fight over it.
+ * Delete when the SDK's Meta destination sends customer data itself. Remove it in that same release: the
+ * first fbq('init') with data wins on a page, so the adapter and the SDK would fight over it. (The _fbp /
+ * _fbc cookie re-sync and the fb_external_id metadata this file used to write are gone: SDK 0.5.1 puts the
+ * cookies on the order itself, campaign-cart#132.)
  *
- * SDK 0.5: dl_* user_properties carry { visitor_type: 'guest' } only, so Part B takes the shopper from the
- * SDK's order through NextForwarder.customer(evt) (Order.user + one address) on a purchase, between
- * user_properties and the form. Earlier events use the form only: the SDK's checkout state can hold a
- * previous visit's restored shopper, and the first init with data wins the page. Part A and
- * external_id do nothing on 0.5: getAttribution / addMetadata are gone and the SDK no longer writes a
- * visitor_id key. 0.5 still reads _fbp / _fbc once at boot, so campaign-cart#132 stays open there with no
- * page-side workaround until the SDK re-reads the cookies or exposes a way to set order metadata.
- *
- * A. Cookie re-sync (works around campaign-cart#132):
- *   The SDK reads the pixel's _fbp / _fbc cookies once at boot, before fbevents.js has set them on a
- *   first visit, and keeps that empty value for the session — so the order (and a server-side Purchase
- *   built from it) goes without them. This copies the cookies into the SDK's attribution metadata
- *   (next.addMetadata('fb_fbp' / 'fb_fbc')) when the SDK is ready, polls every 500 ms for up to 10 s
- *   while one is missing, and re-syncs after cart:updated and popstate (SDK 0.4.38–0.4.43 can put the
- *   stale value back on a cart update). Read-only: it never writes a cookie.
- *
- * B. Advanced matching:
- *   The SDK's facebook provider passes no customer data, and the base code is a bare fbq('init', id).
+ * Advanced matching:
+ *   The SDK's Meta destination passes no customer data, and the base code is a bare fbq('init', id).
  *   This re-inits the pixel WITH customer data so the SDK's next fbq('track') carries it.
  *   Collect on entry, init at the first Meta event with em/ph:
  *   - Checkout field entry (onContact: prospect cart + valid email/phone) only COLLECTS em, ph, fn, ln.
  *     It never inits, so a phone typed after the email is not lost.
- *   - dl_begin_checkout / dl_add_payment_info / dl_purchase / dl_upsell_purchase: send() merges the event's
- *     user_properties (on dl_upsell_purchase, filled from the page's latest dl_user_data first), then the form at
- *     that moment (em, ph, fn, ln, ct, st, zp, country), each later source winning, then inits once if an email
- *     or phone is known, otherwise holds. The form wins on checkout: in SDK 0.4.43 checkout-time
- *     user_properties keep the form's starting country and leave name / city / state / zip empty until
- *     Purchase (campaign-cart#134). Receipt / upsell pages have no form. On an upsell page the
- *     dl_upsell_purchase user_properties come from already-reset checkout state, so dl_user_data fills
- *     the customer there. send() runs inside NextDataLayerTransformFn,
- *     i.e. BEFORE the SDK notifies its providers, so the init lands before the SDK's fbq('track') for the
- *     same event. On the receipt / upsell page this is the redirect-queued dl_purchase or dl_upsell_purchase. Phone is optional:
- *     the init never waits for one. dl_add_shipping_info is deliberately not mapped: the SDK fires it while
- *     the address is still being typed, so an init there would lose the fields typed after it.
+ *   - dl_begin_checkout / dl_add_payment_info / dl_purchase: send() merges the event's user_properties, then
+ *     the form at that moment (em, ph, fn, ln, ct, st, zp, country), each later source winning, then inits
+ *     once if an email or phone is known, otherwise holds. The form wins on checkout: before the purchase the
+ *     SDK's user_properties carry only the email and country typed so far. On dl_purchase they carry the
+ *     order's customer and billing address, and receipt / upsell pages have no form. send() runs inside
+ *     NextDataLayerTransformFn, i.e. BEFORE the SDK notifies its destinations, so the init lands before the
+ *     SDK's fbq('track') for the same event. Phone is optional: the init never waits for one.
+ *     dl_upsell_purchase is not mapped: the SDK sends Meta one Purchase per order and none for an upsell.
+ *     dl_add_shipping_info is deliberately not mapped: an init there would lose the fields typed after it.
  *   - Values follow Meta's format before the init (see normalize()): lowercase; names without punctuation;
  *     city without punctuation or spaces; zip without spaces or dash, US zips cut to 5 digits.
  *   - ph is digits including the country code: the SDK's E.164 (input data-next-phone-e164, SDK >= 0.4.41)
@@ -62,12 +40,8 @@
  *     when it is a valid E.164. No dial code is ever guessed. Known gap: on a
  *     return visit the SDK refills the phone (and data-next-phone-e164) after dl_begin_checkout, so that
  *     InitiateCheckout goes without ph.
- *   - external_id = the SDK's anonymous visitor_id, passed raw — the pixel sends its SHA-256. The same raw
- *     value is saved to attribution metadata fb_external_id so a server-side Purchase can send it too.
- *     SDK 0.4.43 has no public getter, so it is read from localStorage visitor_id{__scope}; the scope is
- *     per API key + first path segment, so when more than one key exists it is ambiguous and external_id is
- *     skipped. A public SDK getter would remove this guard. Never a customer id: the Campaigns API is
- *     public and carries none.
+ *   - No external_id: on SDK 0.5.1 the localStorage visitor_id key holds the campaign session id, which
+ *     resets after an hour idle, so it would split one shopper into several Meta users.
  *
  *   FIRST INIT WINS (fbevents 2.9.x): the pixel keeps the user data from the first fbq('init', id, data)
  *   on a page and ignores later re-inits. So the adapter inits ONCE per page; anything learned after that
@@ -86,40 +60,7 @@
 (function () {
   'use strict';
 
-  // ---- A. Cookie re-sync (independent of the forwarder and of the advanced-matching flag) ----------------
-  function cookie(name) {
-    // First match: the jar can hold two same-named cookies (different path / domain).
-    var parts = ('; ' + document.cookie).split('; ' + name + '=');
-    return parts.length >= 2 ? (parts[1].split(';').shift() || '') : '';
-  }
-
-  // true once nothing is left to wait for.
-  function syncCookies(sdk) {
-    var attr = sdk.getAttribution && sdk.getAttribution();
-    var m = attr && attr.metadata;
-    if (!m) return false;
-    var fbp = cookie('_fbp');
-    var fbc = cookie('_fbc');
-    if (fbp && m.fb_fbp !== fbp) sdk.addMetadata('fb_fbp', fbp);
-    if (fbc && m.fb_fbc !== fbc) sdk.addMetadata('fb_fbc', fbc);
-    return !!fbp && (!!fbc || !m.fbclid); // _fbc is only expected after an ad click (fbclid)
-  }
-
-  window.nextReady = window.nextReady || [];
-  window.nextReady.push(function (sdk) {
-    if (!sdk || typeof sdk.addMetadata !== 'function') return;
-    var polls = 0;
-    if (!syncCookies(sdk)) {
-      var timer = setInterval(function () {
-        polls++;
-        if (syncCookies(sdk) || polls >= 20) clearInterval(timer);
-      }, 500);
-    }
-    if (typeof sdk.on === 'function') sdk.on('cart:updated', function () { syncCookies(sdk); });
-    window.addEventListener('popstate', function () { syncCookies(sdk); });
-  });
-
-  // ---- B. Advanced matching ----------------------------------------------------------------------------
+  // ---- Advanced matching ----------------------------------------------------------------------------
   if (!window.NextForwarder) {
     if (window.console) console.warn('[meta.adapter] next-forwarder-core.js must load first');
     return;
@@ -137,22 +78,6 @@
   var initialised = false;
 
   function clean(v) { return (v === undefined || v === null) ? '' : String(v).trim().toLowerCase(); }
-
-  // The SDK's visitor_id (scoped key visitor_id__<scope>, or legacy visitor_id). Only when exactly one
-  // such key exists: the scope is per API key + first path segment, so with several the right one is
-  // unknown. '' when absent, ambiguous or storage is blocked.
-  function visitorId() {
-    var found = [];
-    try {
-      for (var i = 0; i < localStorage.length; i++) {
-        var k = localStorage.key(i);
-        if (/^visitor_id(__|$)/.test(k)) found.push(localStorage.getItem(k) || '');
-      }
-    } catch (e) {}
-    if (found.length === 1) return found[0];
-    if (DEBUG && window.console) console.log('[meta.adapter] external_id skipped:', found.length, 'visitor_id keys');
-    return '';
-  }
 
   // SDK user_properties -> Meta advanced matching keys. The pixel hashes the values itself; here they
   // are only trimmed and lowercased here; normalize() applies Meta's format rules before the init.
@@ -172,34 +97,11 @@
     return d;
   }
 
-  // SDK 0.5: the shopper from its tracking events (the core's customer bridge), in the user_properties shape.
-  // {} on 0.4.x, where user_properties already carry the shopper.
-  function fromCustomer(evt) {
-    var c = window.NextForwarder.customer ? window.NextForwarder.customer(evt) : {};
-    return fromUserProperties({
-      customer_email: c.email, customer_phone: c.phone,
-      customer_first_name: c.first_name, customer_last_name: c.last_name,
-      customer_city: c.city, customer_province_code: c.state, customer_zip: c.postcode, customer_country: c.country
-    });
-  }
-
   // E.164 ("+" then 7-15 digits, the forwarder core's / SDK's minimum) -> digits without "+". '' for anything
   // else: no dial code is guessed.
   function digitsE164(v) {
     var s = (v === undefined || v === null) ? '' : String(v).replace(/[\s().-]/g, '');
     return /^\+\d{7,15}$/.test(s) ? s.slice(1) : '';
-  }
-
-  // The shopper as this page's latest dl_user_data reported it (the SDK's persisted user data). On an
-  // upsell page this is the only source with the customer: the SDK builds dl_upsell_purchase's
-  // user_properties from checkout state it has already reset.
-  function pageUserProperties() {
-    var dl = window.NextDataLayer;
-    if (!dl || typeof dl.length !== 'number') return undefined;
-    for (var i = dl.length - 1; i >= 0; i--) {
-      if (dl[i] && dl[i].event === 'dl_user_data' && dl[i].user_properties) return dl[i].user_properties;
-    }
-    return undefined;
   }
 
   // Checkout form value by SDK field name ('' when absent).
@@ -265,20 +167,10 @@
     var copy = {};
     for (var c in pending) copy[c] = pending[c];
     normalize(copy);
-    var vid = visitorId();
-    if (vid) copy.external_id = vid;
     window.fbq('init', window.__metaPixelId, copy);
     initialised = true;
     if (DEBUG && window.console) console.log('[meta.adapter] init', source, Object.keys(copy));
   }
-
-  // Save the visitor_id on the order for a server-side Purchase, on every page once the SDK is ready.
-  window.nextReady.push(function (sdk) {
-    var vid = visitorId();
-    if (!vid || !sdk || typeof sdk.addMetadata !== 'function') return;
-    sdk.addMetadata('fb_external_id', vid);
-    if (DEBUG && window.console) console.log('[meta.adapter] fb_external_id', vid);
-  });
 
   window.NextForwarder.register({
     name: 'meta',
@@ -289,22 +181,16 @@
     map: {
       dl_begin_checkout:   'InitiateCheckout',
       dl_add_payment_info: 'AddPaymentInfo',
-      dl_purchase:         'Purchase',
-      dl_upsell_purchase:  'Purchase'
+      dl_purchase:         'Purchase'
     },
-    allowedEvents: ['dl_begin_checkout', 'dl_add_payment_info', 'dl_purchase', 'dl_upsell_purchase'],
+    allowedEvents: ['dl_begin_checkout', 'dl_add_payment_info', 'dl_purchase'],
     send: function (name, ec, evt) {
-      // Lowest to highest: the page's dl_user_data (upsell purchase only), the event's user_properties,
-      // the SDK 0.5 order's shopper (purchases only), the form (see B). Before the order exists the SDK's
-      // checkout can still hold a previous visit's restored shopper, which must not win the one init.
-      var purchase = evt && (evt.event === 'dl_purchase' || evt.event === 'dl_upsell_purchase');
-      if (evt && evt.event === 'dl_upsell_purchase') collect(fromUserProperties(pageUserProperties()));
+      // Lower to higher: the event's user_properties, the form (see Advanced matching in the header).
       collect(fromUserProperties(evt && evt.user_properties));
-      if (purchase) collect(fromCustomer(evt));
       collect(fromForm());
       apply(name);
     },
-    // Collect only — the init waits for the next Meta event (see B in the header).
+    // Collect only — the init waits for the next Meta event (see Advanced matching in the header).
     onContact: function (c) {
       var d = {};
       var email = clean(c.email);
@@ -318,7 +204,6 @@
       if (DEBUG && window.console) console.log('[meta.adapter] collect', 'contact:' + c.source, Object.keys(pending));
     },
     contactRequiresMarketingConsent: false, // see Consent in the header
-    contactOnFieldEntry: true,
-    customerData: true // SDK 0.5 shopper (fromCustomer); this registration only runs with advanced matching on
+    contactOnFieldEntry: true
   });
 })();
