@@ -5,12 +5,12 @@
   next_purpose: Pre-purchase add-on offer rendered as a checkbox-style card. Customer opts in with one click; SDK adds the package to cart at checkout.
   next_params:
     packages:             object, optional. Dict with main_package, prepurchase_1, prepurchase_2 keys. Defaults for package_id and the package-sync fallback when not passed explicitly.
-    order_bump.check01:   optional frontmatter object for package_id, sync_quantity, product_sync, title, image_src, image_alt, features, pricing_mode, the legacy show_* bools, and is_upsell.
+    order_bump.check01:   optional frontmatter object for package_id, package_sync, sync_quantity, product_sync, title, image_src, image_alt, features, pricing_mode, the legacy show_* bools, and is_upsell.
     package_id:           number, default packages.prepurchase_1 or 7. data-next-package-id (the bump's package).
     bump_title:           string, default "Order Bump Title". Bump headline.
     bump_image:           string asset path, default "images/1x1_1.svg". Product imagery. (image_src is the legacy alias; order_bump.check01.image_src works too.)
     bump_image_alt:       string, default the resolved title.
-    package_sync:         number|false. data-next-package-sync — mirrors the main bundle qty, matched by packageId. Default packages.main_package or 1; set false to disable sync. (sync_quantity is the legacy alias; order_bump.check01.sync_quantity works too.)
+    package_sync:         number|false. data-next-package-sync — mirrors the main bundle qty, matched by packageId. Default packages.main_package or 1; set false to disable sync. (sync_quantity is the legacy alias; both keys also work under order_bump.check01. Include args win over frontmatter; package_sync wins over sync_quantity within each source.)
     product_sync:         number|false. data-next-product-sync (SDK 0.4.25+) — sums qty across every variant of a product, matched by product_id. REQUIRED instead of package_sync when the main product is MV/configurable (see comment below). Wins over package_sync when both are set; false disables sync entirely. Also settable via order_bump.check01.product_sync.
     features:             array of bullet strings, default placeholder list. Bullet list shown under price.
     pricing_mode:         enum [full_price, discounted, compare_at, unit_total, unit_only], default "full_price"
@@ -44,7 +44,7 @@
     css_vars_designer_owns: []
   next_dont_touch:
     - data-next-package-sync mirrors main-bundle quantity; this is a product decision, not just mechanical wiring.
-    - Default to sync OFF (package_sync=false) unless the campaign explicitly wants quantity-synced bumps
+    - Set sync OFF (package_sync=false) unless the campaign explicitly wants quantity-synced bumps
     - originalUnitPrice/ea is per-unit (stable); originalPrice is line total (scales with synced qty)
   next_gotchas:
     - Receipt must render bumps as separate line items
@@ -80,6 +80,7 @@
 {% elsif bump.product_sync != nil %}{% assign b_sync = bump.product_sync %}{% assign b_sync_mode = 'product' -%}
 {% elsif package_sync != nil %}{% assign b_sync = package_sync -%}
 {% elsif sync_quantity != nil %}{% assign b_sync = sync_quantity -%}
+{% elsif bump.package_sync != nil %}{% assign b_sync = bump.package_sync -%}
 {% elsif bump.sync_quantity != nil %}{% assign b_sync = bump.sync_quantity -%}
 {% else %}{% assign b_sync = packages.main_package | default: 1 %}{% endif -%}
 {% comment %} PRICING — pricing_mode (include arg, then bump.pricing_mode) wins; the legacy show_* bools are

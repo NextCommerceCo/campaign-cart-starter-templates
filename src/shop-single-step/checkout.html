@@ -11,7 +11,8 @@ packages:
 order_bump:
   check02:
     # Pre-purchase add-on (expanded checkbox). Optional keys:
-    #   sync_quantity: <main packageId> -> add-on qty mirrors the main bundle (omit = fixed qty 1)
+    #   package_sync: <main packageId>|false -> mirrors the main bundle qty; false = fixed qty 1
+    #   sync_quantity: legacy alias; omitted sync keys default to packages.main_package or 1
     #   description_prefix / description_suffix wrap the inline price (single total; no compare/per-unit toggle)
     package_id: 9
     sync_quantity: 1

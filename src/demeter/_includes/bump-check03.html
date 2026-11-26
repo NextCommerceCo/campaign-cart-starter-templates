@@ -5,10 +5,10 @@
   next_sdk_min: 0.4.27
   next_purpose: Product-card pre-purchase upsell with an optional line-item property field. Unsynced by default (one add-on product); can opt into quantity-sync with the main bundle.
   next_params:
-    order_bump.check03: optional frontmatter object for package_id, title, subtitle, image_src, image_alt, badge_text, savings_text, personalization, exclude_property, sync_quantity, and is_upsell.
+    order_bump.check03: optional frontmatter object for package_id, title, subtitle, image_src, image_alt, badge_text, savings_text, personalization, exclude_property, package_sync, sync_quantity, and is_upsell.
     package_id:         number, default order_bump.check03.package_id or packages.prepurchase_2 or 78 (distinct from bump-check01's demo defaults, so the two bumps never share a package when both render with unset ids).
     NOTE: the toggles below are read from order_bump.check03 (frontmatter) ONLY, not bare include args — sibling bumps leak shared arg names into campaign_include's scope (see the assign block below).
-    order_bump.check03.sync_quantity:      number|nil. data-next-package-sync — the packageId whose cart quantity the bump mirrors (set to packages.main_package to scale the add-on with the main bundle selection). Default nil (unsynced).
+    order_bump.check03.package_sync:       number|false|nil. data-next-package-sync — the packageId whose cart quantity the bump mirrors (set to packages.main_package to scale the add-on with the main bundle selection). Default nil (unsynced); false disables sync. Legacy alias: order_bump.check03.sync_quantity; package_sync wins when both are set.
     order_bump.check03.price_mode:         'total' (default) | 'unit'. 'total' shows originalPrice + price (LINE TOTALS that multiply with synced qty). 'unit' shows unitPrice/ea (per-unit, STABLE — does not change on sync, like bump-check01). Savings line (savings_text) renders in both modes.
     order_bump.check03.show_compare_price: bool, default true. Render the struck compare price (originalPrice in 'total' mode, originalUnitPrice in 'unit' mode). It, the badge and the savings line show only while the SDK reports a discount (hasDiscount), so a no-discount add-on shows its price alone.
     is_upsell:          bool, default true (deliberate). data-next-is-upsell flag; false keeps the bump a plain line on the initial order.
@@ -23,7 +23,7 @@
     - data-next-property
     - data-next-exclude-property
   next_dont_touch:
-    - Unsynced by default (one add-on product). Opt into quantity-sync via package_sync / order_bump.check03.sync_quantity. Uses data-next-package-sync (packageId match) — for an MV/configurable main product switch to data-next-product-sync (product_id match) instead; see CLAUDE.md.
+    - Unsynced by default (one add-on product). Opt into quantity-sync via order_bump.check03.package_sync (legacy alias: order_bump.check03.sync_quantity); not bare include args. Uses data-next-package-sync (packageId match) — for an MV/configurable main product switch to data-next-product-sync (product_id match) instead; see CLAUDE.md.
   next_note:
     - The optional personalization input sits INSIDE the PackageToggle click target (data-next-toggle-card).
       A click/keydown inside the field must NOT toggle the bump; that protection is guardBumpPersonalization(),
@@ -36,7 +36,7 @@
 {% assign bump = order_bump.check03 -%}
 {% assign pkg_id = package_id | default: bump.package_id | default: packages.prepurchase_2 | default: 78 -%}
 {%- comment -%} Config is read from order_bump.check03 (frontmatter) only — NOT bare include args — because sibling bumps (check01/check02) assign shared names like package_sync / show_compare_price into the shared campaign_include scope, which would leak in here. {%- endcomment -%}
-{% assign bump_sync = bump.sync_quantity -%}
+{% if bump.package_sync != nil %}{% assign bump_sync = bump.package_sync %}{% else %}{% assign bump_sync = bump.sync_quantity %}{% endif -%}
 {% assign b_price_mode = bump.price_mode | default: 'total' -%}
 {% if bump.show_compare_price != nil %}{% assign b_compare = bump.show_compare_price %}{% else %}{% assign b_compare = true %}{% endif -%}
 {% comment %} Resolve into a private local — never assign the public arg name: campaign_include shares scope, so a public assign here would leak into sibling bumps on the page and defeat their own frontmatter fallbacks. {% endcomment -%}

@@ -787,43 +787,91 @@
           "completed_at": "2026-11-03T23:30:56Z"
         }
       ]
+    },
+    "sdk-0.4.43-2026-11-15": {
+      "sdk_version": "0.4.43",
+      "source": {
+        "sha": "e369b57dfd4555ff0538e4e235d567408acfc974",
+        "fingerprint": "git-index-sha256:4c9ef17e828a137a974ad249afb575d862d5baea285b7fdf1e5207bf1cbd0c57"
+      },
+      "verified_at": "2026-11-15T07:20:51Z",
+      "checks": [
+        {
+          "name": "lint-sdk",
+          "status": "passed",
+          "url": "https://github.com/NextCommerceCo/campaign-cart-starter-templates/actions/runs/43689501943",
+          "completed_at": "2026-11-15T07:20:51Z"
+        }
+      ]
+    },
+    "sdk-0.4.43-2026-11-17": {
+      "sdk_version": "0.4.43",
+      "source": {
+        "sha": "c2c47169680a09de80960d3036bce2f8ea55b07d",
+        "fingerprint": "git-index-sha256:ce0458a702cc420966e75fe91266464ef1d10fa75b1e34bad5dd6b87908c63d6"
+      },
+      "verified_at": "2026-11-17T19:23:58Z",
+      "checks": [
+        {
+          "name": "lint-sdk",
+          "status": "passed",
+          "url": "https://github.com/NextCommerceCo/campaign-cart-starter-templates/actions/runs/44158080542",
+          "completed_at": "2026-11-17T19:23:58Z"
+        }
+      ]
+    },
+    "sdk-0.4.43-2026-11-20": {
+      "sdk_version": "0.4.43",
+      "source": {
+        "sha": "ab8fedae7dbe197c27d801609e54111da9ea0eab",
+        "fingerprint": "git-index-sha256:622c8c73482a4154a7d1a9a87be7a8550c4bdb4769ca124d565b5e21f2d1355e"
+      },
+      "verified_at": "2026-11-20T03:53:53Z",
+      "checks": [
+        {
+          "name": "lint-sdk",
+          "status": "passed",
+          "url": "https://github.com/NextCommerceCo/campaign-cart-starter-templates/actions/runs/44670735666",
+          "completed_at": "2026-11-20T03:53:53Z"
+        }
+      ]
     }
   },
   "families": {
     "apollo": {
-      "evidence": "sdk-0.4.43-2026-11-03",
+      "evidence": "sdk-0.4.43-2026-11-20",
       "campaigns_os_status": "certified"
     },
     "olympus": {
-      "evidence": "sdk-0.4.43-2026-11-03",
+      "evidence": "sdk-0.4.43-2026-11-20",
       "campaigns_os_status": "certified"
     },
     "apollo-mv-single-step": {
-      "evidence": "sdk-0.4.43-2026-11-03",
+      "evidence": "sdk-0.4.43-2026-11-20",
       "campaigns_os_status": "certified"
     },
     "olympus-mv-single-step": {
-      "evidence": "sdk-0.4.43-2026-11-03",
+      "evidence": "sdk-0.4.43-2026-11-20",
       "campaigns_os_status": "certified"
     },
     "olympus-mv-two-step": {
-      "evidence": "sdk-0.4.43-2026-11-03",
+      "evidence": "sdk-0.4.43-2026-11-20",
       "campaigns_os_status": "certified"
     },
     "demeter": {
-      "evidence": "sdk-0.4.43-2026-11-03",
+      "evidence": "sdk-0.4.43-2026-11-20",
       "campaigns_os_status": "certified"
     },
     "shop-single-step": {
-      "evidence": "sdk-0.4.43-2026-11-03",
+      "evidence": "sdk-0.4.43-2026-11-20",
       "campaigns_os_status": "certified"
     },
     "shop-three-step": {
-      "evidence": "sdk-0.4.43-2026-11-03",
+      "evidence": "sdk-0.4.43-2026-11-20",
       "campaigns_os_status": "certified"
     },
     "landing": {
-      "evidence": "sdk-0.4.43-2026-11-03",
+      "evidence": "sdk-0.4.43-2026-11-20",
       "campaigns_os_status": "not_applicable"
     }
   }
