@@ -9,6 +9,7 @@
  *     post-redirect through the transformFn; forwarding only the replay prevents a cross-page
  *     double-fire and matches the SDK's own providers, which fire only after the redirect)
  *   - dedup — per-adapter, keyed on event_id (guards same-page-load duplicates)
+ *   - AddToCart — SDK 0.5 dl_add_to_cart is forwarded only when first_in_session (see processForAdapter)
  *   - replay — re-plays events already queued in NextDataLayer when an adapter registers late
  *   - event toggles — per-adapter allowedEvents (allowlist) + blockedEvents (denylist), both
  *     client-configurable per campaign and matched against the dl_* source name (precise) or the
@@ -41,9 +42,13 @@
  *                                                       //   accepts_marketing checkbox is present AND
  *                                                       //   unchecked. false = fire regardless (attribution
  *                                                       //   identity); acceptsMarketing is still passed
- *     contactOnFieldEntry: false                        // optional (default false): also fire onContact the
+ *     contactOnFieldEntry: false,                       // optional (default false): also fire onContact the
  *                                                       //   moment a valid checkout email/phone is entered
  *                                                       //   (no name/cart needed), deduped per identifier
+ *     allAddToCart: false                               // optional (default false): forward every SDK 0.5
+ *                                                       //   dl_add_to_cart, not only first_in_session. For
+ *                                                       //   hand-written adapters: no campaigns.json key
+ *                                                       //   sets it on the shipped ones
  *   }
  */
 (function () {
@@ -249,6 +254,18 @@
 
   function processForAdapter(adapter, evt) {
     if (!evt || !evt.event) return;
+    // SDK 0.5 sends dl_add_to_cart for every cart change at the cart price — a cart filled before the page
+    // (default bundle, forcePackageId) and every bundle swap included — and marks the first add in the tab
+    // first_in_session: true. 0.4.x sent none for a pre-filled cart and dl_package_swapped for a swap.
+    // Forward only the first add so AddToCart counts shoppers, not selector clicks. 0.4.x pushes carry no
+    // first_in_session and pass. An adapter that wants every add sets allAddToCart: true.
+    // Anything defined other than true counts as a repeat add, so a differently encoded flag cannot turn the
+    // filter off. The SDK's own destinations do not pass through here: from 0.5.1 Meta also counts first adds
+    // only, while GTM and RudderStack get every add (see _shared/analytics/README.md, AddToCart on SDK 0.5).
+    if (evt.event === 'dl_add_to_cart' && !adapter.allAddToCart &&
+        evt.first_in_session !== undefined && evt.first_in_session !== true) {
+      log(adapter.name, 'add_to_cart dropped (not first_in_session)'); return;
+    }
     // Redirect-queued events (e.g. dl_purchase, dl_upsell_purchase) fire on the checkout page with
     // this flag, BEFORE the SDK queues them across the redirect. The transformFn runs at push()
     // time — before the SDK's willRedirect check — so we'd see the event here (pre-redirect) AND
@@ -400,7 +417,8 @@
           allowed: a._allowed ? Object.keys(a._allowed) : 'all', blocked: a.blockedEvents || [],
           contact: typeof a.onContact === 'function'
             ? { requiresMarketingConsent: a.contactRequiresMarketingConsent !== false, onFieldEntry: !!a.contactOnFieldEntry }
-            : null
+            : null,
+          allAddToCart: !!a.allAddToCart
         };
       });
     },
